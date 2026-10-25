@@ -11561,8 +11561,9 @@ function cfApp(m){
     bar: som(c => c.naam !== "Fooi" && c.naam !== "Overnachting" && c.naam !== "Korting"),
     overn: som(c => c.naam === "Overnachting"), fooi: som(c => c.naam === "Fooi"), korting: som(c => c.naam === "Korting"),
     afspr: bn.filter(x => x.soort === "afspraken").reduce((t,x) => t + Number(x.totaal || 0), 0),
-    contant: bn.filter(x => x.soort !== "afspraken").reduce((t,x) => t + Number(x.contant || 0), 0),
-    tikkie: bn.filter(x => x.soort !== "afspraken").reduce((t,x) => t + Number(x.tikkie || 0), 0) };
+    /* 25-10-2026 g (Bart): "Hoe er betaald is" telt ook de afspraken van groepen mee, zelfde verdeling als Exporteren (bonVerdeling) */
+    contant: bn.reduce((t,x) => t + bonVerdeling(x).contant, 0),
+    tikkie: bn.reduce((t,x) => t + bonVerdeling(x).tikkie, 0) };
   r.totaal = r.campers + r.bar + r.overn + r.fooi + r.korting + r.afspr;
   return r;
 }
