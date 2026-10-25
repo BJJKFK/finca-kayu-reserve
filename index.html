@@ -19,12 +19,15 @@
    (start_url "./"), dan opende het beginscherm-icoon van een gast het inlogscherm van het planbord (gast Alma, 07-10-2026). */
 (function(){
   var href = "manifest.json";
+  /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub),
+     zodat dezelfde bestanden op allebei werken */
+  var MAP = location.pathname.replace(/[^/]*$/, "");
   try {
     var q = new URLSearchParams(location.search), gast = q.get("ontbijt"), poets = q.get("poets");
     if(gast || poets){
       var m = { name: gast ? "Finca KaYu" : "Limpieza Finca KaYu", short_name: gast ? "Finca KaYu" : "Limpieza KaYu",
-        start_url: location.href, scope: location.origin + "/", display: "standalone", background_color: "#FAF9F5", theme_color: "#FAF9F5",
-        icons: [{ src: location.origin + "/icon-192.png", sizes: "192x192", type: "image/png" }, { src: location.origin + "/icon-512.png", sizes: "512x512", type: "image/png" }] };
+        start_url: location.href, scope: location.origin + MAP, display: "standalone", background_color: "#FAF9F5", theme_color: "#FAF9F5",
+        icons: [{ src: location.origin + MAP + "icon-192.png", sizes: "192x192", type: "image/png" }, { src: location.origin + MAP + "icon-512.png", sizes: "512x512", type: "image/png" }] };
       href = "data:application/manifest+json," + encodeURIComponent(JSON.stringify(m));
     }
   } catch(e){}
@@ -2280,7 +2283,9 @@ if(NIEUW) document.documentElement.classList.add("nieuw");
    gasten, en elke wijziging blijft alleen op dit toestel. Geen inloggen, geen SES, geen MyTourist, geen echte gegevens.
    Zo kan de eigenaar van een ander bedrijf (en Bart zelf) de app proberen en in Meer > Instellingen zien wat instelbaar wordt.
    De echte app wordt hier niet door geraakt: zonder ?proef=1 en buiten kayu-proef.… bestaat deze code alleen als tekst. */
-const PROEF = /^kayu-proef\./.test(location.hostname) || (new URLSearchParams(location.search).get("proef") === "1" && !/^finca-kayu(-test)?\./.test(location.hostname)); /* review c: nooit op de echte app of de testsite */
+const PROEF = /^kayu-proef\./.test(location.hostname) || (new URLSearchParams(location.search).get("proef") === "1" && !/^finca-kayu(-test)?\./.test(location.hostname) && !/github\.io$|fincakayu\.com$/.test(location.hostname)); /* review c: nooit op de echte app of de testsite; review e: ook niet op het reserve-adres */
+/* 25-10-2026 e (review): op het reserve-adres (buiten Cloudflare) een smal bandje, omdat links die je daar maakt naar dat adres wijzen */
+const RESERVE = /github\.io$/.test(location.hostname);
 function proefZaad(){
   const d0 = new Date(); d0.setHours(12, 0, 0, 0);
   const dag = n => { const d = new Date(d0); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
@@ -2478,6 +2483,7 @@ if(PROEF){ (() => { const b = document.createElement("div"); b.id = "proefband";
   b.style.cssText = "position:sticky;top:0;z-index:99;background:#2F4F3F;color:#fff;font-size:12px;font-weight:700;text-align:center;padding:5px 10px;letter-spacing:.02em;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap";
   document.body.prepend(b); b.querySelector("#proefOpnieuw").style.cssText = "font:inherit;font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid #fff;background:transparent;color:#fff;cursor:pointer";
   b.querySelector("#proefOpnieuw").onclick = () => { if(confirm("Alles terugzetten naar de verzonnen beginstand?")) db.proefOpnieuw(); }; })(); }
+if(RESERVE && !new URLSearchParams(location.search).get("ontbijt") && !new URLSearchParams(location.search).get("poets")){ (() => { const b = document.createElement("div"); b.id = "reserveband"; b.textContent = "Reserve-adres: zelfde app en gegevens; links die je hier maakt wijzen naar dit adres"; b.style.cssText = "position:sticky;top:0;z-index:99;background:#F0EEE6;color:#141413;font-size:12px;text-align:center;padding:5px 10px;border-bottom:1px solid #D9D4CB"; document.body.prepend(b); })(); }
 if(TESTVERSIE){ (() => { const b = document.createElement("div"); b.id = "testband"; b.textContent = "TESTVERSIE: alleen kijken, er wordt niets opgeslagen"; b.style.cssText = "position:sticky;top:0;z-index:99;background:#B4462F;color:#fff;font-size:12px;font-weight:700;text-align:center;padding:5px 10px;letter-spacing:.04em"; document.body.prepend(b); })(); }
 
 const VAST = Array.from({length:10}, (_,i) => `Pitch ${i+1}`);
@@ -2593,7 +2599,7 @@ document.getElementById("lVergeten").onclick = async () => {
   const err = document.getElementById("lErr"), email = document.getElementById("lMail").value.trim();
   if(!email){ err.textContent = "Vul eerst je e-mailadres in, dan sturen we een link."; return; }
   err.textContent = "Bezig…";
-  const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: location.origin + "/?nieuwww=1" });
+  const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: location.origin + MAP + "?nieuwww=1" });
   err.textContent = error ? "Versturen mislukt: " + error.message : "Kijk in je mail (ook bij spam): de link opent deze app en laat je een nieuw wachtwoord kiezen.";
 };
 document.getElementById("nwGo").onclick = async () => {
@@ -2616,7 +2622,7 @@ document.getElementById("nwGo").onclick = async () => {
 /* eigen beginscherm-icoon voor gast- en poetspagina: start_url is de eigen link */
 function eigenManifest(kort_, lang_){
   const m = { name: lang_, short_name: kort_, start_url: location.href, display: "standalone", background_color: "#FAF9F5", theme_color: "#FAF9F5",
-    icons: [{ src: location.origin + "/icon-192.png", sizes: "192x192", type: "image/png" }, { src: location.origin + "/icon-512.png", sizes: "512x512", type: "image/png" }] };
+    icons: [{ src: location.origin + MAP + "icon-192.png", sizes: "192x192", type: "image/png" }, { src: location.origin + MAP + "icon-512.png", sizes: "512x512", type: "image/png" }] };
   const l = document.querySelector('link[rel="manifest"]'); if(l) l.href = "data:application/manifest+json," + encodeURIComponent(JSON.stringify(m));
   const t = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if(t) t.content = kort_;
 }
@@ -3770,7 +3776,11 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "25-10-2026 d";
+const VERSIE = "25-10-2026 e";
+/* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
+   Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
+   tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
+const MAP = location.pathname.replace(/[^/]*$/, "");
 /* een ochtend waarvoor "geen ontbijt" is doorgegeven: wel een regel, maar niets erop */
 const leegOntbijt = x => !x || (!Object.values(x.gerechten || {}).some(n => Number(n) > 0) && !Number(x.kind));
 /* wachtpagina en routeknop voor campers met de nieuwe check-in (plan 29-09-2026) */
@@ -3978,8 +3988,8 @@ async function aanvraagOpen(code){
   catch(e){ return false; }
 }
 async function startGast(code){
-  if(await checkinNodig(code)){ location.replace("/checkin.html?c=" + encodeURIComponent(code)); return; }
-  if(await aanvraagOpen(code)){ location.replace("/checkin.html?c=" + encodeURIComponent(code) + "&aanvraag=1"); return; }
+  if(await checkinNodig(code)){ location.replace(MAP + "checkin.html?c=" + encodeURIComponent(code)); return; }
+  if(await aanvraagOpen(code)){ location.replace(MAP + "checkin.html?c=" + encodeURIComponent(code) + "&aanvraag=1"); return; }
   gastCode = code; gastTaal = gastTaalKies(); gastVasteLijst = null; gastWieLaad();
   document.title = "Finca KaYu";
   toon("gast");
@@ -4237,7 +4247,7 @@ const SAMEN_GT = {
 };
 const samenGt = taal => SAMEN_GT[taal] || SAMEN_GT.en;
 const kamerNummer = kamer => String(kamer || "").replace(/^Kamer\s*/, "");
-const linkVanCode = code => `${location.origin}/?ontbijt=${encodeURIComponent(code)}`;
+const linkVanCode = code => `${location.origin}${MAP}?ontbijt=${encodeURIComponent(code)}`;
 /* de andere kamers op dezelfde naam (alleen voor de kamer waar is ingecheckt), uit gast_samen_links; null = nog niet opgehaald of niet beschikbaar */
 let gastSamen = null;
 async function gastSamenHaal(){
@@ -4274,7 +4284,7 @@ function vergetenHtml(){
   /* 16-10-2026 a (review): een kamer die via een andere kamer is ingecheckt, voegt hier geen personen toe (die zouden bij de verkeerde boeking komen en niet naar SES gaan) */
   if(c.samen_met) return "";
   const t = CI_VERGETEN[gastTaal] || CI_VERGETEN.en;
-  return `<p class="civergeten">${t[0]} <a href="/checkin.html?c=${encodeURIComponent(gastCode)}">${t[1]} ›</a></p>`;
+  return `<p class="civergeten">${t[0]} <a href="${MAP}checkin.html?c=${encodeURIComponent(gastCode)}">${t[1]} ›</a></p>`;
 }
 function gastInfoHtml(){
   const tk = (window.TEKSTEN || {})[gastTaal] || (window.TEKSTEN || {}).nl; if(!tk) return "";
@@ -5390,7 +5400,7 @@ async function wisOudeKamerNamen(){
     if(!error) l.gast = null;
   }
 }
-const gastLinkVan = nr => gastLinks[nr] ? `${location.origin}${location.pathname}?ontbijt=${gastLinks[nr].code}` : "";
+const gastLinkVan = nr => gastLinks[nr] ? `${location.origin}${MAP}?ontbijt=${gastLinks[nr].code}` : ""; /* 25-10-2026 e (review): één vorm, via MAP */
 /* de gastenpagina openen zoals de gast hem ziet (kijk=1: bandje "je kijkt mee", geen huisregelscherm, geen installatietip);
    de link zelf staat in het welkomstbericht, dus kopiëren hoeft hier niet meer */
 async function gastenpaginaOpen(nr, uitId){
@@ -9150,7 +9160,7 @@ document.getElementById("pLinks").onclick = () => {
   const m = poetsMelding((poetsLinks.length ? poetsLinks.map(l => `<div style="margin-bottom:6px"><b>${l.naam}</b>${l.laatst_gezien ? ` · laatst gekeken ${kort(l.laatst_gezien.slice(0,10))}` : " · nog nooit geopend"}<br><button data-plkopie="${l.code}" style="margin-top:4px">Link van ${l.naam} kopiëren</button></div>`).join("") : "") +
     `<button data-plnieuw="1" style="margin-top:4px">Nieuwe poetslink maken</button>`, "gelukt");
   m.querySelectorAll("[data-plkopie]").forEach(b => b.onclick = async () => {
-    const link = `${location.origin}${location.pathname}?poets=${b.dataset.plkopie}`;
+    const link = `${location.origin}${MAP}?poets=${b.dataset.plkopie}`; /* 25-10-2026 e (review): één vorm, via MAP */
     const ok = await kopieer(link); b.textContent = ok ? "Gekopieerd, plak hem in WhatsApp" : link;
   });
   m.querySelector("[data-plnieuw]").onclick = async () => {
@@ -10232,7 +10242,7 @@ function toonKamerDetail(k){
     const l = gastLinks[k.nr];
     if(!l || !l.code){ alert("Er is nog geen gastenlink voor deze boeking."); return; }
     const taal = taalVan(k.nr), t = TK(taal);
-    const link = `${location.origin}/checkin?c=${encodeURIComponent(l.code)}`;
+    const link = `${location.origin}${MAP}checkin.html?c=${encodeURIComponent(l.code)}`; /* 25-10-2026 e: werkt ook op het reserve-adres */
     const tekst = (t.checkinLink || TK("nl").checkinLink)(aanhef(kNaam(k)), link).join("\n");
     return profielBericht("kdUit", tekst, null, kTelWa(k), { titel:"Check-inlink sturen", wie:`${kNaam(k) || k.kamer} · ${taalNaam(k.nr)}` });
   });
@@ -10642,7 +10652,7 @@ async function aanvraagMaak(knop, taal, naam, uit){
   const { error } = await db.from("camper_aanvragen").insert({ code, taal, naam: naam || null });
   knop.disabled = false;
   if(error){ uit.innerHTML = `<div class="berichtuit waarschuw">De link kon niet gemaakt worden. (${vrij(error.message)})</div>`; return null; }
-  return `${location.origin}${location.pathname}?ontbijt=${code}`;
+  return `${location.origin}${MAP}?ontbijt=${code}`; /* 25-10-2026 e (review): één vorm, via MAP */
 }
 async function aanvraagKopieer(){
   const taal = document.getElementById("aTaal").value, naam = document.getElementById("aNaam").value.trim(), uit = document.getElementById("aUit");

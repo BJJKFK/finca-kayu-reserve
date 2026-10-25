@@ -3,7 +3,7 @@
   "short_name": "Finca KaYu",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#FBEEE1",
+  "background_color": "#FAF9F5",
   "theme_color": "#FAF9F5",
   "icons": [
     {

@@ -1423,7 +1423,7 @@ sv: {
   function laadGemeenten(){
     if (GEMEENTEN || gemeentenBezig) return;
     gemeentenBezig = true; gemeentenPogingen++;
-    fetch('/gemeenten.txt').then(function(r){ if (!r.ok) throw new Error('status ' + r.status); return r.text(); }).then(function(txt){
+    fetch('gemeenten.txt').then(function(r){ if (!r.ok) throw new Error('status ' + r.status); return r.text(); }).then(function(txt){
       var lijst = [];
       txt.split('\n').forEach(function(regel){
         var m = /^(\d{5})\|(.+)$/.exec(regel.replace(/\r$/, '')); if (!m) return;
@@ -1550,14 +1550,14 @@ sv: {
       /* 16-10-2026 a: ingecheckt via een andere kamer van dezelfde boeker: daar horen nieuwe personen bij, dus hier niets toevoegen */
       var samenTekst = boeking.samen_met ? t('alSamen', { kamer: String(boeking.samen_met).replace(/^Kamer(?= )/, t('kamer')) }) : '';
       r += '<span><b>' + esc(t('alIn')) + '</b> ' + namen + ' ✓</span><span>' + esc(samenTekst || t('fAlGemeld')) + '</span>' +
-           '<a href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+           '<a href="./?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
     } else if (modus === 'erbij'){
       r += '<span><b>' + esc(t('alIn')) + '</b> ' + namen + ' ✓</span><span>' + esc(t('toevoegUitleg')) + '</span>' +
            '<a href="#" id="allesOpnieuw">' + esc(t('allesOpnieuw')) + '</a>' +
-           '<a href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+           '<a href="./?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
     } else if (boeking.aantal_ingevuld > 0){
       r += '<span>' + esc(t('alGeregistreerd', { n: boeking.aantal_ingevuld, p: meervoud(boeking.aantal_ingevuld) })) + '</span>' +
-           '<a href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+           '<a href="./?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
     }
     boekingBox.className = 'verdict good'; boekingBox.innerHTML = r;
     var ao = $('allesOpnieuw');
@@ -1701,7 +1701,7 @@ sv: {
     verzoek.then(function(j){
       if (!j || j.fout){ knop.disabled = false; knop.textContent = t('versturen'); if (j && (j.fout === 'onbekend' || j.fout === 'verlopen')) toonFoutMetApp(t('fLink')); /* 18-10-2026 a: verlopen link (24 uur na uitchecken) */ else if (j && j.fout === 'al gemeld'){ conceptWis(); toonFout(t('fAlGemeld')); } else toonOpslaanFout(); return; }
       conceptWis();
-      var naarGast = '/?ontbijt=' + encodeURIComponent(CODE);
+      var naarGast = './?ontbijt=' + encodeURIComponent(CODE);
       /* 13-10-2026 a (Bart): gasten dachten na de check-in dat ze klaar waren. Moeten ze nog akkoord geven op de huisregels
          en is de gastenpagina nu al open, dan eerst een duidelijke volgende stap met een knop (na 5 seconden vanzelf verder). */
       var akkoordAl = false; try { akkoordAl = !!localStorage.getItem('kayu_akkoord_' + CODE); } catch(e){}
@@ -1769,7 +1769,7 @@ sv: {
   /* 30-09-2026 b: ook de melding "al ingevuld" blijft staan bij een taalwissel */
   function toonAlIngevuld(){
     verdictBox.hidden = false; verdictBox.className = 'verdict good';
-    verdictBox.innerHTML = '<span><b>' + esc(t('fAIngevuld')) + '</b></span><a href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+    verdictBox.innerHTML = '<span><b>' + esc(t('fAIngevuld')) + '</b></span><a href="./?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
   }
   function toonAanvraagKlaar(){
     var k = aanvraagKlaar; if (!k) return;
@@ -1780,7 +1780,7 @@ sv: {
     verdictBox.hidden = false; verdictBox.className = 'verdict good klaarblok';
     verdictBox.innerHTML = '<span><b>' + esc(t('aKlaar')) + '</b></span>' +
       '<a class="appknop" id="appKnop" href="https://wa.me/34722162962?text=' + encodeURIComponent(app) + '" target="_blank" rel="noopener">' + esc(t('aAppKnop')) + '</a>' +
-      '<a class="naargast" href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+      '<a class="naargast" href="./?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
     document.querySelectorAll('header p, .uitleg, #verblijfKaart, #form, .legenda').forEach(function(el){ el.hidden = true; });
   }
   /* 21-10-2026 d (review): de lengte in meter. "7,5", "7.5 m" en "7m50" of "7 m 50" (= 7,50) tellen. Een tweede getal ("7,5 x 2,3"),
@@ -1903,7 +1903,7 @@ sv: {
   if (CODE && aanvraag){
     rpc('camper_aanvraag_lees', { p_code: CODE }).then(function(j){
       if (!j || j.fout){ boekingStatus = 'ongeldig'; form.querySelector('.submit').disabled = true; toonBoeking(); return; }
-      if (j.status !== 'open'){ location.replace('/?ontbijt=' + encodeURIComponent(CODE)); return; }
+      if (j.status !== 'open'){ location.replace('./?ontbijt=' + encodeURIComponent(CODE)); return; }
       boekingStatus = 'aanvraag';
       zetMaxLengte(j);
       aanvraagNaam = typeof j.naam === 'string' ? j.naam : '';
