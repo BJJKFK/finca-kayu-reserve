@@ -3777,7 +3777,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "25-10-2026 f";
+const VERSIE = "25-10-2026 g";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -9936,8 +9936,11 @@ async function afsprakenAfrekenen(k, alleenBewaren){
     /* eerst het vinkje, dan pas de bon: nooit een bon zonder betaalde afspraken */
     if(!al){ const ok = await kamerVink(k, "afspraken_betaald", true); if(ok === false) return; }
     const datum = iso(new Date());
+    /* 25-10-2026 g (Bart): alles buiten de kamerboekingen om is extra en hoort in de kas, dus ook de afspraken van groepen;
+       daarom nu met verdeling contant/bank, net als een kamer- of camperbon */
     const rij = { nr: k.nr, boeking_id: null, soort: "afspraken", plek: k.kamer, gast: naam, aankomst: k.in, vertrek: k.uit, datum,
                   regels: regels.map(r => ({ naam:r.naam, prijs:Number(r.prijs), aantal:r.aantal })), totaal,
+                  contant: wijze === "contant" ? totaal : 0, tikkie: wijze === "overgemaakt" ? totaal : 0, tikkie_binnen: wijze === "overgemaakt" ? new Date().toISOString() : null,
                   tekst: afsprakenBonTekst(naam, k.kamer, regels, totaal, wijze, datum) };
     const { error } = await db.from("bonnen").insert(rij);
     await haal();
@@ -12089,7 +12092,7 @@ function tekenBalans(){
    tellen niet in de kas). Kas buiten de boekhouding: wat via de app is afgerekend (contant en per bankoverschrijving) min de
    kosten per maand (die betaalt Bart contant), voor de periode én lopend sinds een startdatum (instelling kas_start, standaard
    01-10-2026; te wijzigen via het potloodje). Gefactureerd via MyTourist staat niet hier maar in Cijfers (gaat naar de boekhouder).
-   Zelfde rekenregels als Cijfers (bonnen zonder afspraken, kosten per maand). */
+   Alle bonnen (sinds g ook de afspraken van groepen, Bart 25-10) min de kosten per maand; Cijfers toont de afspraken apart op een eigen regel. */
 let expInkoop = null; /* inkoopbonnen (datum, bedrag), apart opgehaald bij het openen van Exporteren */
 const kasStart = () => /^\d{4}-\d{2}-\d{2}$/.test(String(instellingen.kas_start || "")) ? String(instellingen.kas_start) : "2026-10-01";
 /* begin (jjjj-mm) en eind (jjjj-mm) van een gekozen periode; alles = geen grens */
@@ -12097,17 +12100,28 @@ function periodeGrens(keuze){
   if(!keuze || keuze === "alles") return { van: "0000-00", tot: "9999-99" };
   return keuze.length === 4 ? { van: keuze + "-01", tot: keuze + "-12" } : { van: keuze, tot: keuze };
 }
+/* 25-10-2026 g: verdeling contant/bank van een bon; een afsprakenbon van vóór versie g heeft die velden niet, maar de bontekst
+   eindigt op "Betaald bij inchecken, contant" of "..., overgemaakt" en daar halen we hem uit */
+function bonVerdeling(x){
+  if(x.contant != null || x.tikkie != null) return { contant: Number(x.contant || 0), tikkie: Number(x.tikkie || 0), binnen: !!x.tikkie_binnen, bekend: true };
+  if(x.soort === "afspraken"){
+    const m = /Betaald bij inchecken, (contant|overgemaakt)\s*$/.exec(String(x.tekst || ""));
+    if(m) return { contant: m[1] === "contant" ? Number(x.totaal || 0) : 0, tikkie: m[1] === "overgemaakt" ? Number(x.totaal || 0) : 0, binnen: true, bekend: true };
+  }
+  return { contant: 0, tikkie: 0, binnen: false, bekend: false };
+}
 function kasCijfers(vanMaand, totMaand){
-  /* zelfde telling als "Afgerekend, per betaalwijze" en Cijfers: alle bonnen behalve afspraken; een terugbetaling staat er met
-     negatieve bedragen in en telt dus vanzelf af (apart zichtbaar gemaakt in de regel Terugbetaald) */
-  const bn = bonnen.filter(x => x.soort !== "afspraken" && String(x.datum || "").slice(0, 7) >= vanMaand && String(x.datum || "").slice(0, 7) <= totMaand);
-  const contant = bn.reduce((t, x) => t + Number(x.contant || 0), 0), bank = bn.reduce((t, x) => t + Number(x.tikkie || 0), 0);
+  /* zelfde telling als "Afgerekend, per betaalwijze": alle bonnen, sinds versie g ook de afspraken van groepen (Bart 25-10: alles
+     buiten de kamerboekingen om is extra en hoort in de kas); een terugbetaling staat er met negatieve bedragen in en telt dus
+     vanzelf af (apart zichtbaar gemaakt in de regel Terugbetaald) */
+  const bn = bonnen.filter(x => String(x.datum || "").slice(0, 7) >= vanMaand && String(x.datum || "").slice(0, 7) <= totMaand).map(x => Object.assign({ v: bonVerdeling(x) }, x));
+  const contant = bn.reduce((t, x) => t + x.v.contant, 0), bank = bn.reduce((t, x) => t + x.v.tikkie, 0);
   const terug = bn.filter(x => x.soort === "terugbetaling").reduce((t, x) => t + Number(x.totaal || 0), 0);
   const ko = kosten.filter(k => String(k.maand).slice(0, 7) >= vanMaand && String(k.maand).slice(0, 7) <= totMaand);
   const perSoort = {}; ko.forEach(k => { perSoort[k.soort] = (perSoort[k.soort] || 0) + Number(k.bedrag || 0); });
   const kostenTot = Object.values(perSoort).reduce((t, v) => t + v, 0);
   /* review f: bonnen zonder verdeling (vóór 25-09-2026: contant en tikkie leeg) tellen niet mee; wel benoemen */
-  const zonderLijst = bn.filter(x => x.contant == null && x.tikkie == null);
+  const zonderLijst = bn.filter(x => !x.v.bekend);
   return { contant, bank, terug, perSoort, kostenTot, zonder: zonderLijst.length, zonderSom: zonderLijst.reduce((t, x) => t + Number(x.totaal || 0), 0), saldo: Math.round((contant + bank - kostenTot) * 100) / 100 };
 }
 function kostenKasBalans(keuze){
@@ -12155,15 +12169,15 @@ async function expInkoopHaal(){
   catch(e){ expInkoop = "fout"; }
   if(document.getElementById("exporteren").open) tekenBalans();
 }
-/* hoe de afgeronde bonnen (kamers en campers) betaald zijn: contant of bankoverschrijving (tot 23-10-2026 d: Tikkie); oudere bonnen hebben geen verdeling */
+/* hoe de afgeronde bonnen (kamers, campers en sinds g ook afspraken van groepen) betaald zijn: contant of bankoverschrijving (tot 23-10-2026 d: Tikkie); oudere bonnen hebben geen verdeling */
 function betaalwijzeBalans(keuze){
-  const lijst = bonnen.filter(x => x.soort !== "afspraken" && periodePast(String(x.datum || "").slice(0,7), keuze));
+  const lijst = bonnen.filter(x => periodePast(String(x.datum || "").slice(0,7), keuze)).map(x => Object.assign({ v: bonVerdeling(x) }, x)); /* g: ook afspraken */
   if(!lijst.length) return "";
-  const met = lijst.filter(x => x.contant != null || x.tikkie != null), zonder = lijst.filter(x => x.contant == null && x.tikkie == null);
-  const ct = met.reduce((t,x) => t + Number(x.contant || 0), 0), tk = met.reduce((t,x) => t + Number(x.tikkie || 0), 0);
-  const open = met.filter(x => Number(x.tikkie) > 0 && !x.tikkie_binnen).reduce((t,x) => t + Number(x.tikkie), 0);
+  const met = lijst.filter(x => x.v.bekend), zonder = lijst.filter(x => !x.v.bekend);
+  const ct = met.reduce((t,x) => t + x.v.contant, 0), tk = met.reduce((t,x) => t + x.v.tikkie, 0);
+  const open = met.filter(x => x.v.tikkie > 0 && !x.v.binnen).reduce((t,x) => t + x.v.tikkie, 0);
   const zt = zonder.reduce((t,x) => t + Number(x.totaal || 0), 0);
-  return `<p class="kop" style="margin-top:14px">Afgerekend, per betaalwijze<em>afgeronde bonnen kamers en campers</em></p>` +
+  return `<p class="kop" style="margin-top:14px">Afgerekend, per betaalwijze<em>afgeronde bonnen van kamers, campers en afspraken van groepen</em></p>` +
     `<div><span>Contant<em>hoort in de kas</em></span><b>${eur(ct)}</b></div>` +
     `<div><span>Bankoverschrijving${open ? `<em>waarvan ${eur(open)} nog niet binnen</em>` : ""}</span><b>${eur(tk)}</b></div>` +
     (zonder.length ? `<div><span>Zonder verdeling<em>${zonder.length} ${zonder.length === 1 ? "bon" : "bonnen"} van vóór 25-09-2026</em></span><b>${eur(zt)}</b></div>` : "");
