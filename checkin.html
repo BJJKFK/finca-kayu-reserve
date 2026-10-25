@@ -1,0 +1,1933 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Check-in Finca KaYu</title>
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* 20-10-2026 b (Bart): rustige kleuren zoals de app. --pine is de inkt; KaYu-roest (--accent) alleen op Versturen en het uitlegkader.
+       22-10-2026 b (Bart): Versturen en de knop na het versturen zoals alle knoppen in de app, geen volle roestknop meer. Het
+       logovakje wit. 22-10-2026 c (schets R2 "zoals Claude"): knoppen lichtgrijs #F0EEE6, rand 1px #8F8B80, letters #141413; inkt
+       bijna zwart, accent (uitlegkader) de terra van het logo #9E543E. */
+    --pine:#141413; --accent:#9E543E; --moss:#4F7A5A; --bone:#FAF9F5; --card:#FFFFFF; --line:#E8E6DC; /* 22-10-2026 c: zoals de app */
+    --rood:#B4462F; --muted:#5F5B54; /* 10-10-2026 b: donkerder, beter leesbaar voor ouderen; 20-10-2026 b neutraal grijs, contrast 6,4 */ --invul:#FFFBE6; --tekst:#141413; --r:10px;
+    color-scheme: light;
+  }
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;}
+  img{max-width:100%;}
+  [hidden]{display:none !important;}
+  body{
+    background:var(--bone); color:var(--tekst);
+    font-family:Inter, system-ui, -apple-system, sans-serif;
+    font-size:16px; line-height:1.5; -webkit-text-size-adjust:100%;
+    overflow-x:hidden;
+  }
+  .wrap{
+    max-width:560px; margin:0 auto;
+    padding:calc(18px + env(safe-area-inset-top,0px)) 16px calc(48px + env(safe-area-inset-bottom,0px));
+    display:flex; flex-direction:column; gap:18px;
+  }
+  .kopbalk{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .kopbalk img{width:78px; height:auto; display:block;}
+  /* 21-10-2026 b (Bart): logo klein in een vakje met ronde hoeken, net als in de app en op de gastenpagina */
+  .kopbalk .logovak{width:48px; height:48px; flex:0 0 48px; border-radius:14px; background:#FFFFFF; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; overflow:hidden;}
+  .kopbalk .logovak img{width:38px;}
+  .taal{display:flex; align-items:center; gap:6px; background:var(--card); border:1px solid var(--line); border-radius:999px; padding:4px 10px 4px 12px;}
+  .taal svg{flex:none; color:var(--pine);}
+  .taal select{border:0; background:transparent; padding:6px 2px; font-size:15px; width:auto; max-width:140px; min-height:0; color:var(--tekst);} /* 30-09-2026 d: de langste optie ("Português (Portugees)") mag de kiezer niet buiten beeld duwen */
+  .taal select:focus{outline:none;}
+  .taal:focus-within{outline:2px solid var(--pine); outline-offset:1px;}
+  header{display:flex; flex-direction:column; gap:10px;}
+  h1{
+    font-family:'Bricolage Grotesque', Inter, system-ui, sans-serif; font-weight:700;
+    font-size:clamp(26px,7vw,34px); line-height:1.12; letter-spacing:-0.02em;
+    margin:0; color:var(--pine); text-wrap:balance;
+  }
+  h2{font-family:'Bricolage Grotesque', Inter, system-ui, sans-serif; font-weight:700; font-size:18px; margin:0; color:var(--pine); letter-spacing:-0.01em;}
+  h3{font-family:'Bricolage Grotesque', Inter, system-ui, sans-serif; font-weight:700; font-size:16px; margin:0; color:var(--pine);}
+  p{margin:0;}
+  .eyebrow{font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); font-weight:600;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:16px 14px; display:flex; flex-direction:column; gap:14px; min-width:0;}
+  .hint{font-size:15px; color:var(--muted);}
+  .legenda{font-size:14px; color:var(--muted);}
+  .req{color:var(--rood); font-weight:700; margin-left:2px;}
+  .uitleg{background:var(--card); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:var(--r); padding:14px; display:flex; flex-direction:column; gap:8px;}
+  .uitleg b{color:var(--pine);}
+  .uitleg ol{margin:2px 0 0; padding-left:20px; display:flex; flex-direction:column; gap:6px; font-size:15px;}
+  form{display:flex; flex-direction:column; gap:18px;}
+  #personen{display:flex; flex-direction:column; gap:18px;}
+  .grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px;}
+  @media (max-width:480px){ .grid{grid-template-columns:minmax(0,1fr);} }
+  .field{display:flex; flex-direction:column; gap:5px; min-width:0;}
+  .field.wide{grid-column:1 / -1;}
+  .field .sub{font-size:14px; color:var(--muted); font-weight:400;}
+  label{font-size:16px; font-weight:600; color:var(--tekst);}
+  input, select{
+    font:inherit; font-size:16px; color:var(--tekst); background:var(--invul);
+    border:1.5px solid #75716A; border-radius:8px; padding:11px 12px; /* 10-10-2026 b: duidelijke rand (was bijna onzichtbaar) */
+    width:100%; max-width:100%; min-height:48px; display:block;
+  }
+  input[type=date]{-webkit-appearance:none; appearance:none;}
+  input[type=date]::-webkit-date-and-time-value{text-align:left;}
+  select{appearance:auto;}
+  input:focus, select:focus{outline:2px solid var(--pine); outline-offset:1px; border-color:var(--moss);}
+  input.filled, select.filled{border-color:var(--pine); background:var(--bone);}
+  .fout-veld{border-color:var(--rood) !important; border-width:2px !important; background:#FFF1EC !important;}
+  /* 10-10-2026 b: foutmelding direct boven het vakje waar het om gaat (stond alleen bovenaan de pagina, vaak buiten beeld) */
+  .veldfout{color:var(--rood); background:#FFF1EC; border-left:4px solid var(--rood); border-radius:6px; padding:8px 10px; font-size:15px; font-weight:700; line-height:1.35;}
+  /* 21-10-2026 d: camper langer dan de grens: meteen onder het vakje, met de WhatsApp-knop */
+  .lengtemelding{display:flex; flex-direction:column; gap:10px; color:var(--rood); background:#FFF1EC; border-left:4px solid var(--rood); border-radius:6px; padding:10px 12px; font-size:15px; font-weight:700; line-height:1.35;}
+  .lengtemelding[hidden]{display:none;}
+  .lengtemelding a.appknop{display:block; text-align:center; background:#25D366; color:#073B1E; text-decoration:none; font-size:17px; font-weight:600; padding:15px 14px; border-radius:var(--r);}
+  .zelfde1{display:flex; gap:10px; align-items:center; font-size:16px; font-weight:600; padding:10px 12px; border:1.5px solid #75716A; border-radius:8px; background:var(--bone);}
+  .zelfde1 input{width:24px; height:24px; min-height:0; flex:none; margin:0; accent-color:var(--moss);}
+  .mono{font-variant-numeric:tabular-nums; letter-spacing:0.03em;}
+  /* 10-10-2026 a (Bart): geboortedatum als drie vakjes met cijfers, geen kalender meer waarin je tientallen jaren terug moet klikken */
+  .gebrij{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.5fr); gap:8px;}
+  .gebrij label{display:flex; flex-direction:column; gap:3px; font-size:14px; font-weight:500; color:var(--muted);}
+  .gebrij input{text-align:center; font-size:18px; font-variant-numeric:tabular-nums; padding:11px 6px;}
+  .persoon{border-left:4px solid var(--pine);}
+  .persoon h2{display:flex; align-items:center; gap:9px;}
+  .persoon h2 .pklaar{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#4F7A5A;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+  .persoon h2 .pklaar[hidden]{display:none}
+  .badge{display:inline-flex; align-items:center; justify-content:center; flex:none; width:26px; height:26px; border-radius:50%; background:var(--pine); color:#fff; font-size:13px; font-weight:700; font-family:Inter,sans-serif;}
+  .knop2{align-self:stretch; text-align:center; border:1px solid var(--pine); color:var(--pine); background:var(--bone); border-radius:8px; padding:11px 12px; font:inherit; font-size:15px; font-weight:600; cursor:pointer;}
+  .knop2:focus-visible{outline:2px solid var(--pine); outline-offset:2px;}
+  .sigwrap{display:flex; flex-direction:column; gap:8px;}
+  .sigpad{position:relative; border:1px solid var(--line); border-radius:8px; background:var(--invul); touch-action:none; overflow:hidden; -webkit-user-select:none; user-select:none;}
+  .sigpad canvas{display:block; width:100%; height:170px; touch-action:none;}
+  .sigpad .ph{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:15px; pointer-events:none; text-align:center; padding:0 12px;}
+  .sigpad.signed .ph{display:none;}
+  .sigrow{display:flex; justify-content:space-between; align-items:center; gap:12px;}
+  .clearbtn{background:none; border:1px solid var(--line); border-radius:8px; padding:8px 14px; font:inherit; font-size:14px; color:var(--muted); cursor:pointer; min-height:40px;}
+  .verdict{display:flex; flex-direction:column; gap:10px; font-size:15px; padding:12px 14px; border-radius:8px; border:1px solid var(--line); background:var(--card);}
+  .verdict.good{color:var(--tekst); border-color:var(--moss); border-left:4px solid var(--moss);}
+  .verdict.bad{color:var(--rood); border-color:var(--rood); border-left:4px solid var(--rood);}
+  .verdict b{font-weight:600;}
+  .verdict a{align-self:flex-start; color:#141413; background:#F0EEE6; text-decoration:none; border-radius:8px; padding:10px 14px; font-weight:600;}
+  /* na het versturen van de camperaanvraag (30-09-2026 a): grote groene WhatsApp-knop, daaronder rustig de link naar de eigen pagina */
+  .verdict.klaarblok{font-size:17px; gap:14px;}
+  .verdict a:not(.appknop):not(.naargast){border:1px solid #8F8B80;}
+  .verdict a.appknop{align-self:stretch; text-align:center; background:#25D366; color:#073B1E; font-size:17px; padding:15px 14px; border-radius:var(--r);}
+  /* 13-10-2026 a: na de check-in een duidelijke volgende stap (huisregels) met een grote knop */
+  .verdict a.verderknop{align-self:stretch; text-align:center; font-size:17px; padding:15px 14px; border-radius:var(--r);}
+  .verdict .stapkop{font-size:20px; font-weight:700; color:var(--moss);}
+  .verdict a.naargast{align-self:center; background:none; color:var(--pine); text-decoration:underline; padding:4px;}
+  .submit{background:#F0EEE6; color:#141413; border:1px solid #8F8B80; border-radius:var(--r); padding:16px; min-height:54px; width:100%; font-family:'Bricolage Grotesque', Inter, system-ui, sans-serif; font-size:17px; font-weight:700; cursor:pointer;}
+  .submit:disabled{opacity:.6; cursor:default;}
+  .submit:focus-visible{outline:3px solid var(--accent); outline-offset:3px;}
+  details.privacy{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:0 14px;}
+  details.privacy summary{cursor:pointer; padding:14px 0; font-weight:600; color:var(--pine); list-style:none; display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  details.privacy summary::-webkit-details-marker{display:none;}
+  details.privacy summary::after{content:"+"; font-size:20px; line-height:1; color:var(--muted);}
+  details.privacy[open] summary::after{content:"\2212";}
+  details.privacy .inh{display:flex; flex-direction:column; gap:9px; padding-bottom:14px; font-size:14px;}
+  .privregel{font-size:13.5px; color:var(--muted); text-align:center;}
+  .privregel a{color:var(--pine);}
+  .foot{font-size:12.5px; color:var(--muted); text-align:center;}
+  /* aanvraagformulier voor campers (versie h) */
+  .groot{font-size:17px; font-weight:600; color:var(--pine); background:var(--card); border:2px solid var(--pine); border-radius:var(--r); padding:14px;}
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important; scroll-behavior:auto !important;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kopbalk">
+    <span class="logovak"><img src="logo.png" alt="Finca KaYu" width="370" height="197"></span>
+    <label class="taal" for="taalKeuze">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+      <select id="taalKeuze" aria-label="Taal / Language">
+        <option value="nl">Nederlands</option><option value="en">English</option><option value="de">Deutsch</option>
+        <option value="es">Español</option><option value="it">Italiano</option><option value="fr">Français</option><option value="pt">Português</option><option value="cs">Čeština</option><option value="fi">Suomi</option><option value="no">Norsk</option><option value="sv">Svenska</option>
+      </select>
+    </label>
+  </div>
+
+  <header>
+    <span class="eyebrow">Finca KaYu &middot; Coín</span>
+    <h1 data-t="titel"></h1>
+    <p><b data-t="na"></b> <span data-t="na2"></span></p>
+  </header>
+
+  <div class="uitleg">
+    <b data-t="gevraagd"></b>
+    <ol><li data-t="stap1"></li><li data-t="stap2"></li><li data-t="stap3"></li></ol>
+    <p class="hint" data-t="daarna" id="daarna"></p>
+  </div>
+
+  <div id="boeking" hidden></div>
+  <div id="verdict" hidden role="alert"></div>
+
+  <section class="card" id="verblijfKaart" hidden>
+    <h2 data-t="aVerblijfKop"></h2>
+    <div class="grid">
+      <div class="field"><label for="aAankomst"><span data-t="aAankomst"></span><span class="req">*</span></label><input id="aAankomst" type="date"></div>
+      <div class="field"><label for="aVertrek"><span data-t="aVertrek"></span><span class="req">*</span></label><input id="aVertrek" type="date"></div>
+      <div class="field"><label for="aTijd"><span data-t="aTijd"></span><span class="req">*</span></label><select id="aTijd" data-kies><option value=""></option><option value="13:00">13:00</option><option value="14:00">14:00</option><option value="15:00">15:00</option><option value="16:00">16:00</option><option value="17:00">17:00</option><option value="18:00">18:00</option><option value="19:00">19:00</option><option value="20:00">20:00</option><option value="21:00">21:00</option><option value="22:00">22:00</option></select></div>
+      <div class="field"><label for="aStroom"><span data-t="aStroom"></span><span class="req">*</span></label>
+        <select id="aStroom" data-kies><option value=""></option><option value="ja" data-t="aJa"></option><option value="nee" data-t="aNee"></option></select></div>
+      <div class="field"><label for="aDier"><span data-t="aDier"></span></label>
+        <select id="aDier"><option value="" data-t="aDierGeen"></option><option value="Hond" data-t="aDierHond"></option><option value="Kat" data-t="aDierKat"></option><option value="Anders" data-t="aDierAnders"></option></select></div>
+      <div class="field" id="aDierAantal_veld" hidden><label for="aDierAantal"><span data-t="aDierAantal"></span></label><input id="aDierAantal" type="number" min="1" max="9" value="1" inputmode="numeric"></div>
+      <div class="field"><label for="aKenteken"><span data-t="aKenteken"></span><span class="req">*</span></label><input id="aKenteken" class="mono" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="200"></div>
+      <div class="field"><label for="aMerk"><span data-t="aMerk"></span></label><input id="aMerk" autocomplete="off" maxlength="200"></div>
+      <div class="field"><label for="aLengte"><span data-t="aLengte"></span><span class="req">*</span></label><input id="aLengte" inputmode="decimal" autocomplete="off" maxlength="200" data-ph="aLengtePh"><div id="aLengteMelding" class="lengtemelding" role="status" aria-live="polite" hidden></div></div>
+    </div>
+  </section>
+
+  <section class="card" id="aantalKaart">
+    <h2 id="aantalKop" data-t="aantalKop"></h2>
+    <p class="hint" id="aantalHint" style="margin-top:-8px" data-t="aantalHint"></p>
+    <div class="field">
+      <label for="aantal" id="aantalLabel" data-t="aantalLabel"></label>
+      <select id="aantal"></select>
+    </div>
+  </section>
+
+  <p class="legenda" data-t="legenda"></p>
+
+  <form id="form" novalidate>
+    <h2 id="personenKop" data-t="aPersonenKop" hidden></h2>
+    <p class="groot" id="allen" data-t="aAllen" hidden></p>
+    <div id="personen"></div>
+    <section class="card" id="hbKaart" hidden>
+      <h2 data-t="aTekenKop"></h2>
+      <p class="hint" style="margin-top:-6px" data-t="aTekenHint"></p>
+      <div class="sigpad" id="hb_pad"><canvas id="hb_canvas"></canvas><div class="ph" data-t="tekenHier"></div></div>
+      <div class="sigrow"><span class="hint" id="hb_state"></span><button type="button" class="clearbtn" id="hb_clear" data-t="wissen"></button></div>
+    </section>
+    <p class="privregel"><a href="#privacy" id="naarPrivacy" data-t="privKort"></a></p>
+    <button class="submit" type="submit" data-t="versturen"></button>
+  </form>
+
+  <details class="privacy" id="privacy">
+    <summary data-t="pKop"></summary>
+    <div class="inh">
+      <p data-t="pa"></p><p data-t="pb"></p><p data-t="pc"></p><p data-t="pd"></p><p data-t="pe"></p><p data-t="pf"></p><p data-t="pg"></p>
+    </div>
+  </details>
+
+  <datalist id="dl_direccion"></datalist>
+  <datalist id="dl_municipio"></datalist>
+  <datalist id="dl_codigoPostal"></datalist>
+
+  <p class="foot">Finca KaYu &middot; Coín, Málaga</p>
+</div>
+
+<script>
+var T = {
+nl: {
+  alIn:"Al ingecheckt:", toevoegUitleg:"Moet er nog iemand bij? Vul hieronder alleen de nieuwe personen in. De gegevens die al binnen zijn, blijven bewaard.", allesOpnieuw:"Liever alles opnieuw invullen", aantalKopExtra:"Hoeveel personen wil je toevoegen?", aantalHintExtra:"Alleen wie er nog niet bij staat.", aantalLabelExtra:"Aantal extra personen", zelfdeAdres:"Zelfde adres en contactgegevens als {naam}", alSamen:"Jullie zijn al ingecheckt via dezelfde boeking ({kamer}). Moet er nog iemand bij? Stuur ons een WhatsApp: +34 722 162 962", fAlGemeld:"Jullie check-in is al doorgegeven aan de Spaanse overheid. Moet er nog iemand bij? Stuur ons een WhatsApp: +34 722 162 962", klaarExtra:"Toegevoegd. Nu zijn er {n} {p} ingecheckt. Je gastenpagina opent…",
+  fHoofd18:"Persoon 1 (hoofdboeker) moet 18 jaar of ouder zijn. Controleer de geboortedatum.", kamer:"Kamer", titel:"Even inchecken",
+  na:"In Spanje registreren we iedereen die bij ons verblijft, ook de kinderen.",
+  na2:"Daarom vragen we van iedereen de gegevens uit het paspoort of de ID-kaart. Het duurt maar een paar minuten.",
+  gevraagd:"Zo werkt het",
+  stap1:"Kies met hoeveel personen jullie komen. Iedereen telt mee, ook kinderen en baby's.",
+  stap2:"Vul per persoon de gegevens in. De hoofdboeker zet een handtekening met de vinger.",
+  stap3:"Verstuur alles in één keer. Tussendoor opslaan kan niet, dus pak de paspoorten er even bij.", daarna:"Daarna lezen jullie onze huisregels en tikken jullie onderaan op akkoord. Dan opent meteen jullie eigen gastenpagina met de route, de poortcode, de wifi en onze tips.",
+  aantalKop:"Met hoeveel personen komen jullie?", aantalHint:"Hetzelfde aantal als op jullie boeking.", aantalLabel:"Aantal personen",
+  p1:"persoon", pN:"personen", legenda:"Velden met een * zijn verplicht.",
+  hoofdboeker:"Persoon 1 (hoofdboeker)", persoon:"Persoon", kies:"Kies…", vaak:"Veel gekozen", alle:"Alle landen",
+  voornaam:"Voornaam", achternaam:"Achternaam", achternaam2:"Tweede achternaam", achternaam2Hint:"alleen als je die hebt, verplicht bij een Spaanse DNI",
+  geboortedatum:"Geboortedatum", gebDag:"Dag", gebMaand:"Maand", gebJaar:"Jaar", klaarKop:"✓ Check-in gelukt!", klaarStap:"Nog één stap: lees onze huisregels en tik onderaan op de knop. Daarna opent je eigen gastenpagina, met de poortcode en de wifi.", klaarKnop:"Verder naar de huisregels", fNogInP:"Persoon {n}, nog invullen: {veld}", fNogIn:"Nog invullen: {veld}", zelfdeAls1:"Zelfde adres en contactgegevens als persoon 1", conceptTerug:"Wat je eerder had ingevuld, staat er nog. Je kunt verder waar je was.", fAantal:"Kies eerst met hoeveel personen jullie komen.", docHintPAS:"Het paspoortnummer staat op de pagina met je foto. Let op: niet je BSN of persoonsnummer.", docHintOTRO:"Het kaartnummer staat op de identiteitskaart zelf. Let op: niet je BSN of persoonsnummer.", docHintNIF:"Je DNI-nummer: 8 cijfers en een letter, bijvoorbeeld 12345678Z.", docHintNIE:"Je NIE-nummer begint met X, Y of Z, bijvoorbeeld X1234567L.", docSoort:"Soort document", docPAS:"Paspoort", docOTRO:"Identiteitskaart (niet Spaans)",
+  docNIF:"DNI (Spaanse identiteitskaart)", docNIE:"NIE / TIE (Spaanse verblijfskaart)", docGEEN:"Geen document (kind jonger dan 14)",
+  docNummer:"Documentnummer", soporte:"Supportnummer van de kaart", soporteHint:"9 tekens, staat op je DNI of TIE (bijvoorbeeld ABC123456)",
+  nationaliteit:"Nationaliteit", geslacht:"Geslacht", man:"Man", vrouw:"Vrouw", anders:"Anders",
+  overnemen:"Adres en contactgegevens overnemen van persoon 1",
+  adres:"Straat en huisnummer", woonplaats:"Woonplaats", postcode:"Postcode", land:"Land van je woonadres", gemeente:"Gemeente", gemeenteUitleg:"Jullie adres is in Spanje. Kies hier de gemeente.",
+  telefoon:"Telefoon", email:"E-mailadres", contactHint:"Telefoon of e-mail is verplicht. Hetzelfde als persoon 1 mag.",
+  relatie:"Relatie tot de begeleidende volwassene", relatieHint:"Verplicht voor iedereen jonger dan 18.",
+  relHJ:"Zoon of dochter", relANDER:"Andere relatie (bijvoorbeeld kleinkind of neef/nicht)",
+  handtekening:"Handtekening", handtekeningHint:"Alleen de hoofdboeker tekent, met de vinger.", tekenHier:"Teken hier met je vinger",
+  nietGetekend:"Nog niet getekend", getekend:"Getekend", wissen:"Wissen", versturen:"Check-in versturen", bezig:"Bezig met opslaan…", openen:"Je gastenpagina wordt geopend…",
+  privKort:"Wat we met je gegevens doen",
+  fOnvolledig:"Persoon {n} is niet compleet. Alle velden met een * zijn verplicht.",
+  fDoc14:"Persoon {n} is 14 jaar of ouder en heeft een eigen document nodig.",
+  fAchternaam2:"Persoon {n}: bij een Spaanse DNI is de tweede achternaam verplicht.",
+  fContact:"Persoon {n}: vul een telefoonnummer of e-mailadres in.", fMail:"Persoon {n}: controleer het e-mailadres (bijvoorbeeld naam@gmail.com).", fAppKnop:"Stuur Bart en Loes een appje", fAppTekst:"Hoi Bart en Loes! Het versturen van ons formulier lukt niet.",
+  fRelatie:"Persoon {n} is jonger dan 18. Kies de relatie tot de begeleidende volwassene.",
+  fDatum:"Persoon {n}: de geboortedatum klopt niet.",
+  fP1Adres:"Persoon 1 heeft nog geen adres ingevuld. Vul dat eerst in.",
+  fCode:"Er staat geen gastcode in de link. Er is niets opgeslagen.",
+  fLink:"Deze link is niet geldig. Neem contact op met Finca KaYu.",
+  fOphalen:"De boeking kan nu niet worden opgehaald. Probeer het later opnieuw.",
+  fOpslaan:"Opslaan is niet gelukt. Probeer het opnieuw of neem contact met ons op.",
+  klaar:"Check-in compleet ({n} {p}). Je gastenpagina wordt geopend…",
+  alGeregistreerd:"Voor deze boeking is al ingecheckt ({n} {p}). Opnieuw versturen vervangt die gegevens.",
+  naarGast:"Naar je gastenpagina",
+  testmodus:"Testmodus zonder boeking. Er staat geen gastcode in de link, dus er wordt niets opgeslagen.",
+  pKop:"Privacy",
+  pa:"Verantwoordelijke: Bart Jacobus Johannus Kessler, handelend onder de naam Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spanje. Contact: info@fincakayu.com of WhatsApp +34 722 162 962.",
+  pb:"Waarom: de Spaanse wet (Real Decreto 933/2021) verplicht ons iedere gast te registreren en te melden bij het Spaanse Ministerie van Binnenlandse Zaken. De grondslag is een wettelijke verplichting (art. 6 lid 1 sub c AVG). Toestemming is daarom niet nodig.",
+  pc:"Welke gegevens: naam, soort en nummer van je identiteitsdocument, geboortedatum, nationaliteit, geslacht, adres, telefoon of e-mail, bij minderjarigen de relatie tot de begeleider, en je handtekening. We maken en bewaren geen kopie of foto van je document.",
+  pd:"Ontvanger: het Spaanse Ministerie van Binnenlandse Zaken (SES Hospedajes). Je handtekening wordt niet doorgestuurd; die bewaren wij zelf, zoals de wet voorschrijft.",
+  pe:"Bewaartermijn: 3 jaar na afloop van je verblijf. Daarna worden de gegevens automatisch verwijderd.",
+  pf:"De gegevens staan in een beveiligde database in de EU (Ierland). Alleen Bart en Loes van Finca KaYu hebben toegang. Je hebt recht op inzage en correctie. Verwijderen kan pas na afloop van de wettelijke termijn. Een klacht kun je indienen bij de Spaanse privacytoezichthouder (AEPD, aepd.es).",
+  pg:"Wat je invult, onthoudt alleen je eigen telefoon, hooguit 3 dagen, zodat je verder kunt waar je was. Na het versturen wordt het gewist.",
+  /* versie h: aanvraagformulier voor campers (a...) en check-in voor campers zonder SES (c...). Nederlands goedgekeurd door Bart (29-09-2026), vertaald in alle 8 talen.
+     30-09-2026 a (Bart): geen huisregels meer in het formulier (die staan op de gastenpagina), alleen de hoofdboeker tekent, vriendelijkere kamertekst, knop om Bart en Loes een appje te sturen. */
+  aTitel:"Jullie plek op Finca KaYu", aNa:"Om de boeking definitief te maken hebben we van iedereen die erbij is de gegevens nodig.", aGevraagd:"Zo werkt het",
+  aStap1:"Jullie verblijf: datums, camper en wensen.", aStap2:"Iedereen die komt: per persoon de gegevens uit het paspoort of de ID-kaart, ook van kinderen.",
+  aStap3:"Eén handtekening van de hoofdboeker, en versturen.", aVerblijfKop:"1. Jullie verblijf", aAankomst:"Aankomstdatum", aVertrek:"Vertrekdatum", aTijd:"Verwachte aankomsttijd", aTijdPh:"Bijvoorbeeld 16:00",
+  aStroom:"Stroom", aJa:"Ja, graag", aNee:"Nee", aDier:"Huisdier", aDierGeen:"Geen", aDierHond:"Hond", aDierKat:"Kat", aDierAnders:"Anders", aDierAantal:"Hoeveel huisdieren",
+  aKenteken:"Kenteken", aMerk:"Merk camper", aLengte:"Lengte camper in meter", aLengtePh:"Bijvoorbeeld 7,5",
+  aAantalHint:"Iedereen telt mee, ook kinderen en baby's.",
+  aPersonenKop:"2. Iedereen die komt", aAllen:"Om de boeking definitief te maken hebben we van iedereen die erbij is de gegevens nodig. Kies hieronder met hoeveel personen jullie komen en vul daarna iedereen in, ook de kinderen. Versturen kan pas als iedereen compleet is.",
+  aTekenKop:"3. Handtekening", aTekenHint:"Alleen de hoofdboeker tekent, met de vinger.",
+  aVersturen:"Boeking versturen",
+  fADatums:"Kies een aankomst- en vertrekdatum. Vertrek moet na aankomst liggen, aankomst kan niet in het verleden en niet verder dan een jaar vooruit, en een verblijf is hooguit 60 nachten.",
+  fAVerblijf:"Stap 1 is nog niet compleet. Alle velden met een * zijn verplicht.",
+  fAHb:"De hoofdboeker heeft nog niet getekend.",
+  fAIngevuld:"Deze aanvraag is al ingevuld. Jullie boeking staat vast.",
+  fATijd:"Vul de verwachte aankomsttijd in als uur en minuten, bijvoorbeeld 16:00.", fATekens:"Er staan tekens als < of > in het formulier. Haal die weg en probeer het opnieuw.", fALang:"Wij kunnen campers tot {m} meter ontvangen. Is je camper langer? Neem dan eerst even contact met ons op, dan kijken we samen wat er kan.", fALangKnop:"WhatsApp ons", fALangApp:"Hoi Bart en Loes! Onze camper is {lengte} meter. Kunnen we toch komen?", fALengteFout:"Vul de lengte in meter in, bijvoorbeeld 7,5.",
+  aKlaar:"Dank je wel! Jullie boeking is binnen en staat vast.", aAppTekst:"Hoi Bart en Loes! Onze gegevens zijn verstuurd. {naam}, {data}.", aAppKnop:"Laat Bart en Loes weten dat het klaar is",
+  cNa:"Na het invullen is de check-in geregeld. Een dag voor aankomst opent op dezelfde link jullie eigen gastenpagina met de poortcode, de wifi en onze tips.",
+  cKlaar:"Check-in compleet ({n} {p}). Dank je wel!", cOpenen:"Een moment…", cPb:"Waarom: om jullie boeking vast te leggen en jullie bij aankomst te herkennen. De grondslag is de uitvoering van de overeenkomst (art. 6 lid 1 sub b AVG).",
+  cPd:"Ontvanger: niemand. We geven jullie gegevens niet door aan anderen."
+},
+en: {
+  alIn:"Already checked in:", toevoegUitleg:"Someone missing? Fill in only the new people below. The details we already have are kept.", allesOpnieuw:"Rather fill everything in again", aantalKopExtra:"How many people do you want to add?", aantalHintExtra:"Only people who are not listed yet.", aantalLabelExtra:"Number of extra people", zelfdeAdres:"Same address and contact details as {naam}", alSamen:"You're already checked in through the same booking ({kamer}). Someone missing? Send us a WhatsApp: +34 722 162 962", fAlGemeld:"Your check-in has already been passed on to the Spanish authorities. Someone missing? Send us a WhatsApp: +34 722 162 962", klaarExtra:"Added. {n} {p} are now checked in. Opening your guest page…",
+  fHoofd18:"Person 1 (lead guest) must be 18 or older. Please check the date of birth.", kamer:"Room", titel:"Quick check-in",
+  na:"In Spain we register everyone who stays with us, children included.",
+  na2:"That's why we ask for everyone's passport or ID card details. It only takes a few minutes.",
+  gevraagd:"How it works",
+  stap1:"Choose how many people are coming. Everyone counts, including children and babies.",
+  stap2:"Fill in the details for each person. The lead guest signs with their finger.",
+  stap3:"Send everything in one go. You can't save halfway, so have the passports at hand.", daarna:"After that, read our house rules and tap the button at the bottom to agree. Your own guest page then opens straight away with directions, the gate code, the wifi and our tips.",
+  aantalKop:"How many people are coming?", aantalHint:"The same number as on your booking.", aantalLabel:"Number of people",
+  p1:"person", pN:"people", legenda:"Fields marked * are required.",
+  hoofdboeker:"Person 1 (lead guest)", persoon:"Person", kies:"Choose…", vaak:"Most chosen", alle:"All countries",
+  voornaam:"First name", achternaam:"Surname", achternaam2:"Second surname", achternaam2Hint:"only if you have one, required with a Spanish DNI",
+  geboortedatum:"Date of birth", gebDag:"Day", gebMaand:"Month", gebJaar:"Year", klaarKop:"✓ Check-in done!", klaarStap:"One more step: read our house rules and tap the button at the bottom. Your own guest page then opens, with the gate code and the wifi.", klaarKnop:"Continue to the house rules", fNogInP:"Person {n}, still to fill in: {veld}", fNogIn:"Still to fill in: {veld}", zelfdeAls1:"Same address and contact details as person 1", conceptTerug:"What you filled in earlier is still here. You can carry on where you left off.", fAantal:"First choose how many people are coming.", docHintPAS:"The passport number is on the page with your photo. Not your personal (national) identification number.", docHintOTRO:"The card number is on the ID card itself. Not your personal (national) identification number.", docHintNIF:"Your DNI number: 8 digits and a letter, for example 12345678Z.", docHintNIE:"Your NIE number starts with X, Y or Z, for example X1234567L.", docSoort:"Document type", docPAS:"Passport", docOTRO:"ID card (non-Spanish)",
+  docNIF:"DNI (Spanish ID card)", docNIE:"NIE / TIE (Spanish residence card)", docGEEN:"No document (child under 14)",
+  docNummer:"Document number", soporte:"Card support number", soporteHint:"9 characters, printed on your DNI or TIE (for example ABC123456)",
+  nationaliteit:"Nationality", geslacht:"Sex", man:"Male", vrouw:"Female", anders:"Other",
+  overnemen:"Copy address and contact details from person 1",
+  adres:"Street and house number", woonplaats:"Town or city", postcode:"Postcode", land:"Country of residence", gemeente:"Municipality", gemeenteUitleg:"Your address is in Spain. Choose the municipality here.",
+  telefoon:"Phone", email:"Email address", contactHint:"Phone or email is required. The same as person 1 is fine.",
+  relatie:"Relationship to the accompanying adult", relatieHint:"Required for everyone under 18.",
+  relHJ:"Son or daughter", relANDER:"Other relationship (for example grandchild, niece or nephew)",
+  handtekening:"Signature", handtekeningHint:"Only the lead guest signs, with their finger.", tekenHier:"Sign here with your finger",
+  nietGetekend:"Not signed yet", getekend:"Signed", wissen:"Clear", versturen:"Send check-in", bezig:"Saving…", openen:"Opening your guest page…",
+  privKort:"What we do with your data",
+  fOnvolledig:"Person {n} is not complete. All fields marked * are required.",
+  fDoc14:"Person {n} is 14 or older and needs their own document.",
+  fAchternaam2:"Person {n}: a second surname is required with a Spanish DNI.",
+  fContact:"Person {n}: enter a phone number or email address.", fMail:"Person {n}: please check the email address (for example name@gmail.com).", fAppKnop:"Send Bart and Loes a WhatsApp", fAppTekst:"Hi Bart and Loes! Sending our form isn't working.",
+  fRelatie:"Person {n} is under 18. Choose the relationship to the accompanying adult.",
+  fDatum:"Person {n}: the date of birth is not valid.",
+  fP1Adres:"Person 1 has not entered an address yet. Please do that first.",
+  fCode:"There is no guest code in the link. Nothing has been saved.",
+  fLink:"This link is not valid. Please contact Finca KaYu.",
+  fOphalen:"The booking can't be loaded right now. Please try again later.",
+  fOpslaan:"Saving didn't work. Please try again or contact us.",
+  klaar:"Check-in complete ({n} {p}). Opening your guest page…",
+  alGeregistreerd:"This booking has already been checked in ({n} {p}). Sending again replaces those details.",
+  naarGast:"Go to your guest page",
+  testmodus:"Test mode without a booking. There is no guest code in the link, so nothing will be saved.",
+  pKop:"Privacy",
+  pa:"Controller: Bart Jacobus Johannus Kessler, trading as Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spain. Contact: info@fincakayu.com or WhatsApp +34 722 162 962.",
+  pb:"Why: Spanish law (Real Decreto 933/2021) requires us to register every guest and report them to the Spanish Ministry of the Interior. The legal basis is a legal obligation (GDPR Art. 6(1)(c)), so consent is not required.",
+  pc:"Which data: name, type and number of your ID document, date of birth, nationality, sex, address, phone or email, for minors the relationship to the accompanying adult, and your signature. We do not make or keep a copy or photo of your document.",
+  pd:"Recipient: the Spanish Ministry of the Interior (SES Hospedajes). Your signature is not passed on; we keep it ourselves, as the law requires.",
+  pe:"Retention: 3 years after the end of your stay. After that the data is deleted automatically.",
+  pf:"The data is stored in a secure database in the EU (Ireland). Only Bart and Loes of Finca KaYu have access. You have the right to access and correct your data. Deletion is only possible after the legal retention period. You can lodge a complaint with the Spanish data protection authority (AEPD, aepd.es).",
+  pg:"What you fill in is remembered only on your own phone, for at most 3 days, so you can carry on where you left off. It is deleted once you send the form.",
+  /* versie h: aanvraagformulier en check-in voor campers (vertaald na akkoord Bart) */
+  aTitel:"Your pitch at Finca KaYu", aNa:"To confirm the booking, we need the details of everyone who is coming.", aGevraagd:"How it works", aStap1:"Your stay: dates, camper and wishes.", aStap2:"Everyone who is coming: for each person the details from their passport or ID card, children too.", aStap3:"One signature from the lead guest, then send.",aVerblijfKop:"1. Your stay", aAankomst:"Arrival date", aVertrek:"Departure date", aTijd:"Expected arrival time", aTijdPh:"For example 16:00", aStroom:"Electricity", aJa:"Yes, please", aNee:"No", aDier:"Pet", aDierGeen:"None", aDierHond:"Dog", aDierKat:"Cat", aDierAnders:"Other", aDierAantal:"How many pets", aKenteken:"Number plate", aMerk:"Camper make", aLengte:"Camper length in metres", aLengtePh:"For example 7.5", aAantalHint:"Everyone counts, including children and babies.", aPersonenKop:"2. Everyone who is coming", aAllen:"To confirm the booking, we need the details of everyone who is coming. Choose below how many people you are and then fill in everyone, children too. You can only send once everyone's details are complete.",aTekenKop:"3. Signature", aTekenHint:"Only the lead guest signs, with their finger.", aVersturen:"Send booking", fADatums:"Choose an arrival and departure date. Departure must be after arrival, arrival cannot be in the past or more than a year ahead, and a stay is at most 60 nights.", fAVerblijf:"Step 1 is not complete yet. All fields marked * are required.",fAHb:"The lead guest has not signed yet.", fAIngevuld:"This request has already been filled in. Your booking is confirmed.", fATijd:"Enter the expected arrival time as hours and minutes, for example 16:00.", fATekens:"The form contains characters such as < or >. Please remove them and try again.", fALang:"We can welcome campers up to {m} metres. Is your camper longer? Please contact us first and we'll see together what's possible.", fALangKnop:"WhatsApp us", fALangApp:"Hi Bart and Loes! Our camper is {lengte} metres long. Could we still come?", fALengteFout:"Enter the length in metres, for example 7.5.", aKlaar:"Thank you! Your booking has arrived and is confirmed.", aAppTekst:"Hi Bart and Loes! We've sent our details. {naam}, {data}.", aAppKnop:"Let Bart and Loes know you're done", cNa:"Once you've filled this in, your check-in is done. The day before arrival, the same link opens your own guest page with the gate code, the wifi and our tips.", cKlaar:"Check-in complete ({n} {p}). Thank you!", cOpenen:"One moment…",cPb:"Why: to record your booking and to recognise you on arrival. The legal basis is the performance of a contract (GDPR Art. 6(1)(b)).", cPd:"Recipient: nobody. We do not pass your details on to anyone."
+},
+de: {
+  alIn:"Bereits eingecheckt:", toevoegUitleg:"Fehlt noch jemand? Füllt unten nur die neuen Personen aus. Die Daten, die wir schon haben, bleiben gespeichert.", allesOpnieuw:"Lieber alles neu ausfüllen", aantalKopExtra:"Wie viele Personen möchtet ihr hinzufügen?", aantalHintExtra:"Nur wer noch nicht dabei ist.", aantalLabelExtra:"Anzahl weiterer Personen", zelfdeAdres:"Gleiche Adresse und Kontaktdaten wie {naam}", alSamen:"Ihr seid schon über dieselbe Buchung eingecheckt ({kamer}). Fehlt noch jemand? Schickt uns eine WhatsApp: +34 722 162 962", fAlGemeld:"Euer Check-in wurde bereits an die spanischen Behörden weitergegeben. Fehlt noch jemand? Schickt uns eine WhatsApp: +34 722 162 962", klaarExtra:"Hinzugefügt. Jetzt sind {n} {p} eingecheckt. Eure Gästeseite öffnet sich…",
+  fHoofd18:"Person 1 (Hauptbucher) muss mindestens 18 Jahre alt sein. Bitte prüft das Geburtsdatum.", kamer:"Zimmer", titel:"Kurz einchecken",
+  na:"In Spanien registrieren wir alle, die bei uns übernachten, auch die Kinder.",
+  na2:"Deshalb brauchen wir von allen die Angaben aus dem Reisepass oder Personalausweis. Es dauert nur ein paar Minuten.",
+  gevraagd:"So funktioniert es",
+  stap1:"Wählt, mit wie vielen Personen ihr kommt. Alle zählen mit, auch Kinder und Babys.",
+  stap2:"Tragt für jede Person die Angaben ein. Der Hauptbucher unterschreibt mit dem Finger.",
+  stap3:"Schickt alles auf einmal ab. Zwischenspeichern geht nicht, also legt die Pässe schon mal bereit.", daarna:"Danach lest ihr unsere Hausregeln und tippt unten auf den Knopf zum Bestätigen. Dann öffnet sich sofort eure eigene Gästeseite mit der Anfahrt, dem Torcode, dem WLAN und unseren Tipps.",
+  aantalKop:"Mit wie vielen Personen kommt ihr?", aantalHint:"Dieselbe Anzahl wie in eurer Buchung.", aantalLabel:"Anzahl Personen",
+  p1:"Person", pN:"Personen", legenda:"Felder mit * sind Pflichtfelder.",
+  hoofdboeker:"Person 1 (Hauptbucher)", persoon:"Person", kies:"Auswählen…", vaak:"Häufig gewählt", alle:"Alle Länder",
+  voornaam:"Vorname", achternaam:"Nachname", achternaam2:"Zweiter Nachname", achternaam2Hint:"nur falls vorhanden, Pflicht bei spanischem DNI",
+  geboortedatum:"Geburtsdatum", gebDag:"Tag", gebMaand:"Monat", gebJaar:"Jahr", klaarKop:"✓ Check-in geschafft!", klaarStap:"Noch ein Schritt: Lest unsere Hausregeln und tippt unten auf den Knopf. Danach öffnet sich eure eigene Gästeseite mit dem Torcode und dem WLAN.", klaarKnop:"Weiter zu den Hausregeln", fNogInP:"Person {n}, noch auszufüllen: {veld}", fNogIn:"Noch auszufüllen: {veld}", zelfdeAls1:"Gleiche Adresse und Kontaktdaten wie Person 1", conceptTerug:"Was ihr vorhin ausgefüllt habt, ist noch da. Ihr könnt dort weitermachen, wo ihr aufgehört habt.", fAantal:"Wählt zuerst, mit wie vielen Personen ihr kommt.", docHintPAS:"Die Passnummer steht auf der Seite mit dem Foto. Nicht die persönliche Identifikationsnummer.", docHintOTRO:"Die Kartennummer steht auf dem Ausweis selbst. Nicht die persönliche Identifikationsnummer.", docHintNIF:"DNI-Nummer: 8 Ziffern und ein Buchstabe, zum Beispiel 12345678Z.", docHintNIE:"Die NIE-Nummer beginnt mit X, Y oder Z, zum Beispiel X1234567L.", docSoort:"Art des Dokuments", docPAS:"Reisepass", docOTRO:"Personalausweis (nicht spanisch)",
+  docNIF:"DNI (spanischer Ausweis)", docNIE:"NIE / TIE (spanische Aufenthaltskarte)", docGEEN:"Kein Dokument (Kind unter 14)",
+  docNummer:"Dokumentnummer", soporte:"Support-Nummer der Karte", soporteHint:"9 Zeichen, steht auf eurem DNI oder TIE (zum Beispiel ABC123456)",
+  nationaliteit:"Staatsangehörigkeit", geslacht:"Geschlecht", man:"Männlich", vrouw:"Weiblich", anders:"Divers",
+  overnemen:"Adresse und Kontaktdaten von Person 1 übernehmen",
+  adres:"Straße und Hausnummer", woonplaats:"Wohnort", postcode:"Postleitzahl", land:"Land des Wohnsitzes", gemeente:"Gemeinde", gemeenteUitleg:"Eure Adresse liegt in Spanien. Wählt hier die Gemeinde.",
+  telefoon:"Telefon", email:"E-Mail-Adresse", contactHint:"Telefon oder E-Mail ist Pflicht. Dieselben Angaben wie bei Person 1 sind in Ordnung.",
+  relatie:"Beziehung zur begleitenden erwachsenen Person", relatieHint:"Pflicht für alle unter 18.",
+  relHJ:"Sohn oder Tochter", relANDER:"Andere Beziehung (zum Beispiel Enkelkind, Nichte oder Neffe)",
+  handtekening:"Unterschrift", handtekeningHint:"Nur der Hauptbucher unterschreibt, mit dem Finger.", tekenHier:"Hier mit dem Finger unterschreiben",
+  nietGetekend:"Noch nicht unterschrieben", getekend:"Unterschrieben", wissen:"Löschen", versturen:"Check-in absenden", bezig:"Wird gespeichert…", openen:"Eure Gästeseite wird geöffnet…",
+  privKort:"Was wir mit euren Daten machen",
+  fOnvolledig:"Person {n} ist nicht vollständig. Alle Felder mit * sind Pflicht.",
+  fDoc14:"Person {n} ist 14 oder älter und braucht ein eigenes Dokument.",
+  fAchternaam2:"Person {n}: Bei einem spanischen DNI ist der zweite Nachname Pflicht.",
+  fContact:"Person {n}: Bitte gebt eine Telefonnummer oder E-Mail-Adresse an.", fMail:"Person {n}: Bitte prüft die E-Mail-Adresse (zum Beispiel name@gmail.com).", fAppKnop:"Schickt Bart und Loes eine WhatsApp", fAppTekst:"Hallo Bart und Loes! Das Senden unseres Formulars klappt nicht.",
+  fRelatie:"Person {n} ist unter 18. Bitte wählt die Beziehung zur begleitenden erwachsenen Person.",
+  fDatum:"Person {n}: Das Geburtsdatum ist nicht gültig.",
+  fP1Adres:"Person 1 hat noch keine Adresse eingegeben. Bitte zuerst ausfüllen.",
+  fCode:"Im Link fehlt der Gästecode. Es wurde nichts gespeichert.",
+  fLink:"Dieser Link ist nicht gültig. Bitte kontaktiert Finca KaYu.",
+  fOphalen:"Die Buchung kann gerade nicht geladen werden. Bitte versucht es später noch einmal.",
+  fOpslaan:"Das Speichern hat nicht geklappt. Bitte versucht es noch einmal oder kontaktiert uns.",
+  klaar:"Check-in vollständig ({n} {p}). Eure Gästeseite wird geöffnet…",
+  alGeregistreerd:"Für diese Buchung wurde bereits eingecheckt ({n} {p}). Erneutes Absenden ersetzt diese Daten.",
+  naarGast:"Zu eurer Gästeseite",
+  testmodus:"Testmodus ohne Buchung. Im Link fehlt der Gästecode, daher wird nichts gespeichert.",
+  pKop:"Datenschutz",
+  pa:"Verantwortlich: Bart Jacobus Johannus Kessler, tätig unter dem Namen Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spanien. Kontakt: info@fincakayu.com oder WhatsApp +34 722 162 962.",
+  pb:"Warum: Das spanische Gesetz (Real Decreto 933/2021) verpflichtet uns, jeden Gast zu erfassen und dem spanischen Innenministerium zu melden. Rechtsgrundlage ist eine rechtliche Verpflichtung (Art. 6 Abs. 1 lit. c DSGVO), eine Einwilligung ist daher nicht erforderlich.",
+  pc:"Welche Daten: Name, Art und Nummer des Ausweisdokuments, Geburtsdatum, Staatsangehörigkeit, Geschlecht, Adresse, Telefon oder E-Mail, bei Minderjährigen die Beziehung zur Begleitperson sowie die Unterschrift. Wir erstellen und speichern keine Kopie und kein Foto eurer Dokumente.",
+  pd:"Empfänger: das spanische Innenministerium (SES Hospedajes). Die Unterschrift wird nicht weitergegeben; wir bewahren sie selbst auf, wie es das Gesetz vorschreibt.",
+  pe:"Speicherdauer: 3 Jahre nach Ende eures Aufenthalts. Danach werden die Daten automatisch gelöscht.",
+  pf:"Die Daten liegen in einer gesicherten Datenbank in der EU (Irland). Nur Bart und Loes von der Finca KaYu haben Zugriff. Ihr habt das Recht auf Auskunft und Berichtigung. Eine Löschung ist erst nach Ablauf der gesetzlichen Frist möglich. Beschwerden könnt ihr bei der spanischen Datenschutzbehörde einreichen (AEPD, aepd.es).",
+  pg:"Was ihr eingebt, merkt sich nur euer eigenes Telefon, höchstens 3 Tage lang, damit ihr dort weitermachen könnt, wo ihr aufgehört habt. Nach dem Absenden wird es gelöscht.",
+  /* versie h: aanvraagformulier en check-in voor campers (vertaald na akkoord Bart) */
+  aTitel:"Euer Platz auf der Finca KaYu", aNa:"Damit die Buchung verbindlich wird, brauchen wir die Daten von allen, die dabei sind.", aGevraagd:"So funktioniert es", aStap1:"Euer Aufenthalt: Reisedaten, Camper und Wünsche.", aStap2:"Alle, die kommen: pro Person die Angaben aus dem Reisepass oder Ausweis, auch von Kindern.", aStap3:"Eine Unterschrift des Hauptbuchers, dann absenden.",aVerblijfKop:"1. Euer Aufenthalt", aAankomst:"Anreisedatum", aVertrek:"Abreisedatum", aTijd:"Voraussichtliche Ankunftszeit", aTijdPh:"Zum Beispiel 16:00", aStroom:"Strom", aJa:"Ja, gerne", aNee:"Nein", aDier:"Haustier", aDierGeen:"Keins", aDierHond:"Hund", aDierKat:"Katze", aDierAnders:"Anderes", aDierAantal:"Wie viele Haustiere", aKenteken:"Kennzeichen", aMerk:"Marke des Campers", aLengte:"Länge des Campers in Metern", aLengtePh:"Zum Beispiel 7,5", aAantalHint:"Alle zählen mit, auch Kinder und Babys.", aPersonenKop:"2. Alle, die kommen", aAllen:"Damit die Buchung verbindlich wird, brauchen wir die Daten von allen, die dabei sind. Wählt unten, mit wie vielen Personen ihr kommt, und füllt dann alle aus, auch die Kinder. Absenden geht erst, wenn die Angaben von allen vollständig sind.",aTekenKop:"3. Unterschrift", aTekenHint:"Nur der Hauptbucher unterschreibt, mit dem Finger.", aVersturen:"Buchung absenden", fADatums:"Wählt ein Anreise- und Abreisedatum. Die Abreise muss nach der Anreise liegen, die Anreise darf nicht in der Vergangenheit und höchstens ein Jahr im Voraus liegen und ein Aufenthalt dauert höchstens 60 Nächte.", fAVerblijf:"Schritt 1 ist noch nicht vollständig. Alle Felder mit * sind Pflicht.",fAHb:"Der Hauptbucher hat noch nicht unterschrieben.", fAIngevuld:"Diese Anfrage ist schon ausgefüllt. Eure Buchung steht fest.", fATijd:"Tragt die voraussichtliche Ankunftszeit als Stunden und Minuten ein, zum Beispiel 16:00.", fATekens:"Im Formular stehen Zeichen wie < oder >. Entfernt sie bitte und versucht es noch einmal.", fALang:"Wir können Camper bis {m} Meter aufnehmen. Ist euer Camper länger? Dann meldet euch bitte zuerst kurz bei uns, dann schauen wir gemeinsam, was möglich ist.", fALangKnop:"Schreibt uns auf WhatsApp", fALangApp:"Hallo Bart und Loes! Unser Camper ist {lengte} Meter lang. Können wir trotzdem kommen?", fALengteFout:"Gebt die Länge in Metern an, zum Beispiel 7,5.", aKlaar:"Vielen Dank! Eure Buchung ist eingegangen und steht fest.", aAppTekst:"Hallo Bart und Loes! Unsere Angaben sind verschickt. {naam}, {data}.", aAppKnop:"Sagt Bart und Loes Bescheid, dass alles fertig ist", cNa:"Nach dem Ausfüllen ist der Check-in erledigt. Einen Tag vor der Ankunft öffnet derselbe Link eure eigene Gästeseite mit dem Torcode, dem WLAN und unseren Tipps.", cKlaar:"Check-in vollständig ({n} {p}). Vielen Dank!", cOpenen:"Einen Moment…",cPb:"Warum: um eure Buchung festzuhalten und euch bei der Ankunft zu erkennen. Rechtsgrundlage ist die Erfüllung eines Vertrags (Art. 6 Abs. 1 lit. b DSGVO).", cPd:"Empfänger: niemand. Wir geben eure Daten nicht an andere weiter."
+},
+es: {
+  alIn:"Ya registrados:", toevoegUitleg:"¿Falta alguien? Rellenad abajo solo a las personas nuevas. Los datos que ya tenemos se conservan.", allesOpnieuw:"Prefiero rellenarlo todo de nuevo", aantalKopExtra:"¿Cuántas personas queréis añadir?", aantalHintExtra:"Solo quienes aún no aparecen.", aantalLabelExtra:"Número de personas adicionales", zelfdeAdres:"Misma dirección y datos de contacto que {naam}", alSamen:"Ya estáis registrados con la misma reserva ({kamer}). ¿Falta alguien? Enviadnos un WhatsApp: +34 722 162 962", fAlGemeld:"Vuestro check-in ya se ha enviado a las autoridades españolas. ¿Falta alguien? Escribidnos por WhatsApp: +34 722 162 962", klaarExtra:"Añadido. Ahora hay {n} {p} registradas. Se abre vuestra página de huéspedes…",
+  fHoofd18:"La persona 1 (titular de la reserva) debe tener 18 años o más. Comprobad la fecha de nacimiento.", kamer:"Habitación", titel:"Check-in rápido",
+  na:"En España registramos a todas las personas que se alojan con nosotros, también a los niños.",
+  na2:"Por eso os pedimos los datos del pasaporte o documento de identidad de todos. Solo son unos minutos.",
+  gevraagd:"Cómo funciona",
+  stap1:"Elegid cuántas personas venís. Todos cuentan, también niños y bebés.",
+  stap2:"Rellenad los datos de cada persona. El titular de la reserva firma con el dedo.",
+  stap3:"Enviadlo todo de una vez. No se puede guardar a medias, así que tened los pasaportes a mano.", daarna:"Después leed nuestras normas de la casa y pulsad abajo el botón para aceptarlas. Entonces se abre enseguida vuestra propia página de huéspedes con la ruta, el código de la puerta, el wifi y nuestros consejos.",
+  aantalKop:"¿Cuántas personas venís?", aantalHint:"El mismo número que en vuestra reserva.", aantalLabel:"Número de personas",
+  p1:"persona", pN:"personas", legenda:"Los campos con * son obligatorios.",
+  hoofdboeker:"Persona 1 (titular de la reserva)", persoon:"Persona", kies:"Seleccionar…", vaak:"Más elegidos", alle:"Todos los países",
+  voornaam:"Nombre", achternaam:"Primer apellido", achternaam2:"Segundo apellido", achternaam2Hint:"solo si existe, obligatorio con DNI español",
+  geboortedatum:"Fecha de nacimiento", gebDag:"Día", gebMaand:"Mes", gebJaar:"Año", klaarKop:"✓ ¡Check-in hecho!", klaarStap:"Un paso más: leed nuestras normas de la casa y pulsad el botón de abajo. Después se abre vuestra propia página de huéspedes, con el código de la puerta y el wifi.", klaarKnop:"Continuar a las normas de la casa", fNogInP:"Persona {n}, falta rellenar: {veld}", fNogIn:"Falta rellenar: {veld}", zelfdeAls1:"Misma dirección y datos de contacto que la persona 1", conceptTerug:"Lo que rellenasteis antes sigue aquí. Podéis seguir donde lo dejasteis.", fAantal:"Elegid primero cuántas personas venís.", docHintPAS:"El número de pasaporte está en la página de la foto. No es el número de identificación personal.", docHintOTRO:"El número de la tarjeta está en el propio documento. No es el número de identificación personal.", docHintNIF:"Número de DNI: 8 cifras y una letra, por ejemplo 12345678Z.", docHintNIE:"El número de NIE empieza por X, Y o Z, por ejemplo X1234567L.", docSoort:"Tipo de documento", docPAS:"Pasaporte", docOTRO:"Documento de identidad (no español)",
+  docNIF:"DNI (documento español)", docNIE:"NIE / TIE (tarjeta de residencia)", docGEEN:"Sin documento (menor de 14 años)",
+  docNummer:"Número de documento", soporte:"Número de soporte", soporteHint:"9 caracteres, aparece en el DNI o TIE (por ejemplo ABC123456)",
+  nationaliteit:"Nacionalidad", geslacht:"Sexo", man:"Hombre", vrouw:"Mujer", anders:"Otro",
+  overnemen:"Copiar dirección y contacto de la persona 1",
+  adres:"Calle y número", woonplaats:"Localidad", postcode:"Código postal", land:"País de residencia", gemeente:"Municipio", gemeenteUitleg:"Vuestra dirección está en España. Elegid aquí el municipio.",
+  telefoon:"Teléfono", email:"Correo electrónico", contactHint:"El teléfono o el correo es obligatorio. Puede ser el mismo que el de la persona 1.",
+  relatie:"Parentesco con el adulto acompañante", relatieHint:"Obligatorio para menores de 18 años.",
+  relHJ:"Hijo o hija", relANDER:"Otro parentesco (por ejemplo nieto o sobrino)",
+  handtekening:"Firma", handtekeningHint:"Solo firma el titular de la reserva, con el dedo.", tekenHier:"Firma aquí con el dedo",
+  nietGetekend:"Sin firmar", getekend:"Firmado", wissen:"Borrar", versturen:"Enviar check-in", bezig:"Guardando…", openen:"Abriendo vuestra página de huéspedes…",
+  privKort:"Qué hacemos con vuestros datos",
+  fOnvolledig:"La persona {n} no está completa. Todos los campos con * son obligatorios.",
+  fDoc14:"La persona {n} tiene 14 años o más y necesita su propio documento.",
+  fAchternaam2:"Persona {n}: con DNI español el segundo apellido es obligatorio.",
+  fContact:"Persona {n}: indicad un teléfono o un correo electrónico.", fMail:"Persona {n}: revisad el correo electrónico (por ejemplo nombre@gmail.com).", fAppKnop:"Enviad un WhatsApp a Bart y Loes", fAppTekst:"¡Hola Bart y Loes! No conseguimos enviar nuestro formulario.",
+  fRelatie:"La persona {n} es menor de 18 años. Elegid el parentesco con el adulto acompañante.",
+  fDatum:"Persona {n}: la fecha de nacimiento no es válida.",
+  fP1Adres:"La persona 1 aún no ha indicado una dirección. Rellenadla primero.",
+  fCode:"Falta el código de huésped en el enlace. No se ha guardado nada.",
+  fLink:"Este enlace no es válido. Poneos en contacto con Finca KaYu.",
+  fOphalen:"Ahora mismo no se puede cargar la reserva. Intentadlo más tarde.",
+  fOpslaan:"No se ha podido guardar. Intentadlo de nuevo o contactad con nosotros.",
+  klaar:"Check-in completo ({n} {p}). Abriendo vuestra página de huéspedes…",
+  alGeregistreerd:"Esta reserva ya tiene el check-in hecho ({n} {p}). Si lo enviáis de nuevo, se sustituirán esos datos.",
+  naarGast:"Ir a vuestra página de huéspedes",
+  testmodus:"Modo de prueba sin reserva. Falta el código de huésped en el enlace, así que no se guardará nada.",
+  pKop:"Privacidad",
+  pa:"Responsable: Bart Jacobus Johannus Kessler, que opera con el nombre comercial Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga). Contacto: info@fincakayu.com o WhatsApp +34 722 162 962.",
+  pb:"Por qué: la ley española (Real Decreto 933/2021) nos obliga a registrar a cada huésped y comunicarlo al Ministerio del Interior. La base jurídica es una obligación legal (art. 6.1.c RGPD), por lo que no se necesita consentimiento.",
+  pc:"Qué datos: nombre, tipo y número del documento de identidad, fecha de nacimiento, nacionalidad, sexo, dirección, teléfono o correo, en el caso de menores el parentesco con el acompañante, y la firma. No hacemos ni guardamos ninguna copia ni foto de vuestros documentos.",
+  pd:"Destinatario: el Ministerio del Interior (SES Hospedajes). La firma no se envía; la conservamos nosotros, como exige la ley.",
+  pe:"Plazo de conservación: 3 años desde el final de vuestra estancia. Después los datos se eliminan automáticamente.",
+  pf:"Los datos se guardan en una base de datos segura en la UE (Irlanda). Solo Bart y Loes, de Finca KaYu, tienen acceso. Tenéis derecho de acceso y rectificación. La supresión solo es posible cuando termine el plazo legal. Podéis presentar una reclamación ante la Agencia Española de Protección de Datos (AEPD, aepd.es).",
+  pg:"Lo que rellenáis solo lo recuerda vuestro propio teléfono, como máximo 3 días, para que podáis seguir donde lo dejasteis. Al enviarlo, se borra.",
+  /* versie h: aanvraagformulier en check-in voor campers (vertaald na akkoord Bart) */
+  aTitel:"Vuestra parcela en Finca KaYu", aNa:"Para confirmar la reserva necesitamos los datos de todas las personas que vienen.", aGevraagd:"Cómo funciona", aStap1:"Vuestra estancia: fechas, autocaravana y preferencias.", aStap2:"Todos los que venís: de cada persona los datos del pasaporte o documento de identidad, también de los niños.", aStap3:"Una firma del titular de la reserva, y enviar.",aVerblijfKop:"1. Vuestra estancia", aAankomst:"Fecha de llegada", aVertrek:"Fecha de salida", aTijd:"Hora prevista de llegada", aTijdPh:"Por ejemplo 16:00", aStroom:"Electricidad", aJa:"Sí, por favor", aNee:"No", aDier:"Mascota", aDierGeen:"Ninguna", aDierHond:"Perro", aDierKat:"Gato", aDierAnders:"Otra", aDierAantal:"Cuántas mascotas", aKenteken:"Matrícula", aMerk:"Marca de la autocaravana", aLengte:"Longitud de la autocaravana en metros", aLengtePh:"Por ejemplo 7,5", aAantalHint:"Todos cuentan, también los niños y los bebés.", aPersonenKop:"2. Todos los que venís", aAllen:"Para confirmar la reserva necesitamos los datos de todas las personas que vienen. Elegid abajo cuántos sois y rellenad después los datos de todos, también de los niños. Solo se puede enviar cuando todos estén completos.",aTekenKop:"3. Firma", aTekenHint:"Solo firma el titular de la reserva, con el dedo.", aVersturen:"Enviar reserva", fADatums:"Elegid una fecha de llegada y de salida. La salida debe ser posterior a la llegada, la llegada no puede ser en el pasado ni a más de un año vista, y una estancia es de 60 noches como máximo.", fAVerblijf:"El paso 1 aún no está completo. Todos los campos con * son obligatorios.",fAHb:"El titular de la reserva aún no ha firmado.", fAIngevuld:"Esta solicitud ya se ha rellenado. Vuestra reserva está confirmada.", fATijd:"Indicad la hora prevista de llegada en horas y minutos, por ejemplo 16:00.", fATekens:"En el formulario hay caracteres como < o >. Quitadlos y volved a intentarlo.", fALang:"Podemos recibir autocaravanas de hasta {m} metros. ¿Vuestra autocaravana es más larga? Escribidnos primero y vemos juntos qué se puede hacer.", fALangKnop:"Escribidnos por WhatsApp", fALangApp:"¡Hola Bart y Loes! Nuestra autocaravana mide {lengte} metros. ¿Podemos ir de todos modos?", fALengteFout:"Indicad la longitud en metros, por ejemplo 7,5.", aKlaar:"¡Gracias! Hemos recibido vuestra reserva y está confirmada.", aAppTekst:"¡Hola Bart y Loes! Ya hemos enviado nuestros datos. {naam}, {data}.", aAppKnop:"Avisad a Bart y Loes de que ya está", cNa:"Después de rellenarlo, el check-in está hecho. El día antes de la llegada, el mismo enlace abre vuestra página de huéspedes con el código de la puerta, el wifi y nuestros consejos.", cKlaar:"Check-in completo ({n} {p}). ¡Gracias!", cOpenen:"Un momento…",cPb:"Por qué: para registrar vuestra reserva y reconoceros a la llegada. La base jurídica es la ejecución de un contrato (art. 6.1.b RGPD).", cPd:"Destinatario: nadie. No pasamos vuestros datos a nadie."
+},
+it: {
+  alIn:"Già registrati:", toevoegUitleg:"Manca qualcuno? Compilate qui sotto solo le nuove persone. I dati che abbiamo già restano salvati.", allesOpnieuw:"Preferisco compilare tutto di nuovo", aantalKopExtra:"Quante persone volete aggiungere?", aantalHintExtra:"Solo chi non è ancora registrato.", aantalLabelExtra:"Numero di persone in più", zelfdeAdres:"Stesso indirizzo e contatti di {naam}", alSamen:"Siete già registrati con la stessa prenotazione ({kamer}). Manca qualcuno? Mandateci un WhatsApp: +34 722 162 962", fAlGemeld:"Il vostro check-in è già stato trasmesso alle autorità spagnole. Manca qualcuno? Scriveteci su WhatsApp: +34 722 162 962", klaarExtra:"Aggiunto. Ora sono registrate {n} {p}. Si apre la vostra pagina ospiti…",
+  fHoofd18:"La persona 1 (intestatario) deve avere almeno 18 anni. Controllate la data di nascita.", kamer:"Camera", titel:"Check-in veloce",
+  na:"In Spagna registriamo tutte le persone che soggiornano da noi, anche i bambini.",
+  na2:"Per questo vi chiediamo i dati del passaporto o della carta d'identità di tutti. Ci vogliono solo pochi minuti.",
+  gevraagd:"Come funziona",
+  stap1:"Scegliete in quanti venite. Contano tutti, anche bambini e neonati.",
+  stap2:"Inserite i dati di ogni persona. L'intestatario della prenotazione firma con il dito.",
+  stap3:"Inviate tutto in una volta. Non si può salvare a metà, quindi tenete a portata di mano i passaporti.", daarna:"Poi leggete le regole della casa e toccate in fondo il pulsante per accettarle. Subito dopo si apre la vostra pagina ospiti con il percorso, il codice del cancello, il wifi e i nostri consigli.",
+  aantalKop:"In quanti venite?", aantalHint:"Lo stesso numero della vostra prenotazione.", aantalLabel:"Numero di persone",
+  p1:"persona", pN:"persone", legenda:"I campi con * sono obbligatori.",
+  hoofdboeker:"Persona 1 (intestatario della prenotazione)", persoon:"Persona", kies:"Selezionare…", vaak:"I più scelti", alle:"Tutti i paesi",
+  voornaam:"Nome", achternaam:"Cognome", achternaam2:"Secondo cognome", achternaam2Hint:"solo se presente, obbligatorio con DNI spagnolo",
+  geboortedatum:"Data di nascita", gebDag:"Giorno", gebMaand:"Mese", gebJaar:"Anno", klaarKop:"✓ Check-in fatto!", klaarStap:"Ancora un passo: leggete le regole della casa e toccate il pulsante in fondo. Poi si apre la vostra pagina ospiti, con il codice del cancello e il wifi.", klaarKnop:"Avanti alle regole della casa", fNogInP:"Persona {n}, da compilare: {veld}", fNogIn:"Da compilare: {veld}", zelfdeAls1:"Stesso indirizzo e contatti della persona 1", conceptTerug:"Quello che avete compilato prima è ancora qui. Potete continuare da dove eravate rimasti.", fAantal:"Scegliete prima in quanti venite.", docHintPAS:"Il numero del passaporto è sulla pagina con la foto. Non il codice fiscale o un altro numero personale.", docHintOTRO:"Il numero della carta è sul documento stesso. Non il codice fiscale o un altro numero personale.", docHintNIF:"Numero DNI: 8 cifre e una lettera, per esempio 12345678Z.", docHintNIE:"Il numero NIE inizia con X, Y o Z, per esempio X1234567L.", docSoort:"Tipo di documento", docPAS:"Passaporto", docOTRO:"Carta d'identità (non spagnola)",
+  docNIF:"DNI (documento spagnolo)", docNIE:"NIE / TIE (permesso di soggiorno spagnolo)", docGEEN:"Nessun documento (bambino sotto i 14 anni)",
+  docNummer:"Numero del documento", soporte:"Numero di supporto della carta", soporteHint:"9 caratteri, riportato sul DNI o sul TIE (per esempio ABC123456)",
+  nationaliteit:"Nazionalità", geslacht:"Sesso", man:"Uomo", vrouw:"Donna", anders:"Altro",
+  overnemen:"Copia indirizzo e contatti dalla persona 1",
+  adres:"Via e numero civico", woonplaats:"Città", postcode:"CAP", land:"Paese di residenza", gemeente:"Comune", gemeenteUitleg:"Il vostro indirizzo è in Spagna. Scegliete qui il comune.",
+  telefoon:"Telefono", email:"Indirizzo e-mail", contactHint:"Il telefono o l'e-mail è obbligatorio. Va bene anche lo stesso della persona 1.",
+  relatie:"Rapporto con l'adulto accompagnatore", relatieHint:"Obbligatorio per chi ha meno di 18 anni.",
+  relHJ:"Figlio o figlia", relANDER:"Altro rapporto (per esempio nipote)",
+  handtekening:"Firma", handtekeningHint:"Firma solo l'intestatario della prenotazione, con il dito.", tekenHier:"Firma qui con il dito",
+  nietGetekend:"Non ancora firmato", getekend:"Firmato", wissen:"Cancella", versturen:"Invia il check-in", bezig:"Salvataggio in corso…", openen:"Apertura della vostra pagina ospiti…",
+  privKort:"Cosa facciamo con i vostri dati",
+  fOnvolledig:"La persona {n} non è completa. Tutti i campi con * sono obbligatori.",
+  fDoc14:"La persona {n} ha almeno 14 anni e ha bisogno di un proprio documento.",
+  fAchternaam2:"Persona {n}: con un DNI spagnolo il secondo cognome è obbligatorio.",
+  fContact:"Persona {n}: inserite un numero di telefono o un indirizzo e-mail.", fMail:"Persona {n}: controllate l'indirizzo e-mail (per esempio nome@gmail.com).", fAppKnop:"Mandate un WhatsApp a Bart e Loes", fAppTekst:"Ciao Bart e Loes! Non riusciamo a inviare il nostro modulo.",
+  fRelatie:"La persona {n} ha meno di 18 anni. Scegliete il rapporto con l'adulto accompagnatore.",
+  fDatum:"Persona {n}: la data di nascita non è valida.",
+  fP1Adres:"La persona 1 non ha ancora inserito un indirizzo. Compilatelo prima.",
+  fCode:"Nel link manca il codice ospite. Non è stato salvato nulla.",
+  fLink:"Questo link non è valido. Contattate Finca KaYu.",
+  fOphalen:"Al momento non è possibile caricare la prenotazione. Riprovate più tardi.",
+  fOpslaan:"Il salvataggio non è riuscito. Riprovate o contattateci.",
+  klaar:"Check-in completo ({n} {p}). Apertura della vostra pagina ospiti…",
+  alGeregistreerd:"Il check-in per questa prenotazione è già stato fatto ({n} {p}). Un nuovo invio sostituisce quei dati.",
+  naarGast:"Alla vostra pagina ospiti",
+  testmodus:"Modalità di prova senza prenotazione. Nel link manca il codice ospite, quindi non verrà salvato nulla.",
+  pKop:"Privacy",
+  pa:"Titolare: Bart Jacobus Johannus Kessler, che opera con il nome Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spagna. Contatto: info@fincakayu.com o WhatsApp +34 722 162 962.",
+  pb:"Perché: la legge spagnola (Real Decreto 933/2021) ci obbliga a registrare ogni ospite e a comunicarlo al Ministero dell'Interno spagnolo. La base giuridica è un obbligo di legge (art. 6, par. 1, lett. c GDPR), quindi il consenso non è necessario.",
+  pc:"Quali dati: nome, tipo e numero del documento d'identità, data di nascita, nazionalità, sesso, indirizzo, telefono o e-mail, per i minori il rapporto con l'accompagnatore, e la firma. Non facciamo né conserviamo copie o foto dei vostri documenti.",
+  pd:"Destinatario: il Ministero dell'Interno spagnolo (SES Hospedajes). La firma non viene trasmessa; la conserviamo noi, come previsto dalla legge.",
+  pe:"Conservazione: 3 anni dalla fine del soggiorno. Poi i dati vengono cancellati automaticamente.",
+  pf:"I dati sono conservati in un database protetto nell'UE (Irlanda). Solo Bart e Loes di Finca KaYu hanno accesso. Avete diritto di accesso e di rettifica. La cancellazione è possibile solo dopo il periodo previsto dalla legge. Potete presentare reclamo all'autorità spagnola per la protezione dei dati (AEPD, aepd.es).",
+  pg:"Quello che compilate viene ricordato solo dal vostro telefono, per al massimo 3 giorni, così potete continuare da dove eravate rimasti. Dopo l'invio viene cancellato.",
+  /* versie h: aanvraagformulier en check-in voor campers (vertaald na akkoord Bart) */
+  aTitel:"La vostra piazzola a Finca KaYu", aNa:"Per confermare la prenotazione ci servono i dati di tutte le persone che vengono.", aGevraagd:"Come funziona", aStap1:"Il vostro soggiorno: date, camper e desideri.", aStap2:"Tutti quelli che vengono: per ogni persona i dati del passaporto o della carta d'identità, anche dei bambini.", aStap3:"Una firma dell'intestatario della prenotazione, e inviare.",aVerblijfKop:"1. Il vostro soggiorno", aAankomst:"Data di arrivo", aVertrek:"Data di partenza", aTijd:"Orario di arrivo previsto", aTijdPh:"Per esempio 16:00", aStroom:"Corrente", aJa:"Sì, grazie", aNee:"No", aDier:"Animale", aDierGeen:"Nessuno", aDierHond:"Cane", aDierKat:"Gatto", aDierAnders:"Altro", aDierAantal:"Quanti animali", aKenteken:"Targa", aMerk:"Marca del camper", aLengte:"Lunghezza del camper in metri", aLengtePh:"Per esempio 7,5", aAantalHint:"Contano tutti, anche bambini e neonati.", aPersonenKop:"2. Tutti quelli che vengono", aAllen:"Per confermare la prenotazione ci servono i dati di tutte le persone che vengono. Scegliete qui sotto in quanti siete e poi compilate i dati di tutti, anche dei bambini. Potete inviare solo quando tutti sono completi.",aTekenKop:"3. Firma", aTekenHint:"Firma solo l'intestatario della prenotazione, con il dito.", aVersturen:"Invia prenotazione", fADatums:"Scegliete una data di arrivo e di partenza. La partenza deve essere dopo l'arrivo, l'arrivo non può essere nel passato né oltre un anno da oggi e un soggiorno dura al massimo 60 notti.", fAVerblijf:"Il passo 1 non è ancora completo. Tutti i campi con * sono obbligatori.",fAHb:"L'intestatario della prenotazione non ha ancora firmato.", fAIngevuld:"Questa richiesta è già stata compilata. La vostra prenotazione è confermata.", fATijd:"Inserite l'orario di arrivo previsto in ore e minuti, per esempio 16:00.", fATekens:"Nel modulo ci sono caratteri come < o >. Toglieteli e riprovate.", fALang:"Possiamo accogliere camper fino a {m} metri. Il vostro camper è più lungo? Contattateci prima, così vediamo insieme cosa si può fare.", fALangKnop:"Scriveteci su WhatsApp", fALangApp:"Ciao Bart e Loes! Il nostro camper è lungo {lengte} metri. Possiamo venire lo stesso?", fALengteFout:"Inserite la lunghezza in metri, per esempio 7,5.", aKlaar:"Grazie! La vostra prenotazione è arrivata ed è confermata.", aAppTekst:"Ciao Bart e Loes! Abbiamo inviato i nostri dati. {naam}, {data}.", aAppKnop:"Fate sapere a Bart e Loes che è tutto pronto", cNa:"Dopo la compilazione il check-in è fatto. Il giorno prima dell'arrivo, lo stesso link apre la vostra pagina ospiti con il codice del cancello, il wifi e i nostri consigli.", cKlaar:"Check-in completato ({n} {p}). Grazie!", cOpenen:"Un momento…",cPb:"Perché: per registrare la vostra prenotazione e riconoscervi all'arrivo. La base giuridica è l'esecuzione di un contratto (art. 6, par. 1, lett. b GDPR).", cPd:"Destinatari: nessuno. Non trasmettiamo i vostri dati ad altri."
+},
+fr: {
+  alIn:"Déjà enregistrés :", toevoegUitleg:"Il manque quelqu'un ? Remplissez ci-dessous uniquement les nouvelles personnes. Les données déjà reçues sont conservées.", allesOpnieuw:"Je préfère tout remplir à nouveau", aantalKopExtra:"Combien de personnes voulez-vous ajouter ?", aantalHintExtra:"Uniquement les personnes qui ne sont pas encore inscrites.", aantalLabelExtra:"Nombre de personnes en plus", zelfdeAdres:"Même adresse et coordonnées que {naam}", alSamen:"Vous êtes déjà enregistrés avec la même réservation ({kamer}). Il manque quelqu'un ? Envoyez-nous un WhatsApp : +34 722 162 962", fAlGemeld:"Votre enregistrement a déjà été transmis aux autorités espagnoles. Il manque quelqu'un ? Envoyez-nous un WhatsApp : +34 722 162 962", klaarExtra:"Ajouté. {n} {p} sont maintenant enregistrées. Ouverture de votre page invité…",
+  fHoofd18:"La personne 1 (titulaire) doit avoir 18 ans ou plus. Vérifiez la date de naissance.", kamer:"Chambre", titel:"Check-in rapide",
+  na:"En Espagne, nous enregistrons toutes les personnes qui séjournent chez nous, enfants compris.",
+  na2:"C'est pourquoi nous vous demandons les informations du passeport ou de la carte d'identité de chacun. Cela ne prend que quelques minutes.",
+  gevraagd:"Comment ça marche",
+  stap1:"Choisissez combien de personnes viennent. Tout le monde compte, y compris les enfants et les bébés.",
+  stap2:"Remplissez les informations de chaque personne. Le titulaire de la réservation signe avec le doigt.",
+  stap3:"Envoyez tout en une fois. Il n'est pas possible d'enregistrer en cours de route, gardez donc les passeports à portée de main.", daarna:"Ensuite, lisez nos règles de la maison et appuyez en bas sur le bouton pour les accepter. Votre page invités personnelle s'ouvre alors tout de suite avec l'itinéraire, le code du portail, le wifi et nos conseils.",
+  aantalKop:"Combien de personnes viennent ?", aantalHint:"Le même nombre que sur votre réservation.", aantalLabel:"Nombre de personnes",
+  p1:"personne", pN:"personnes", legenda:"Les champs marqués d'un * sont obligatoires.",
+  hoofdboeker:"Personne 1 (titulaire de la réservation)", persoon:"Personne", kies:"Choisir…", vaak:"Les plus choisis", alle:"Tous les pays",
+  voornaam:"Prénom", achternaam:"Nom", achternaam2:"Deuxième nom de famille", achternaam2Hint:"seulement si vous en avez un, obligatoire avec un DNI espagnol",
+  geboortedatum:"Date de naissance", gebDag:"Jour", gebMaand:"Mois", gebJaar:"Année", klaarKop:"✓ Enregistrement réussi !", klaarStap:"Encore une étape : lisez nos règles de la maison et appuyez sur le bouton en bas. Votre page invités s'ouvre ensuite, avec le code du portail et le wifi.", klaarKnop:"Continuer vers les règles de la maison", fNogInP:"Personne {n}, à remplir : {veld}", fNogIn:"À remplir : {veld}", zelfdeAls1:"Même adresse et mêmes coordonnées que la personne 1", conceptTerug:"Ce que vous aviez déjà rempli est toujours là. Vous pouvez reprendre là où vous en étiez.", fAantal:"Choisissez d'abord combien de personnes viennent.", docHintPAS:"Le numéro du passeport figure sur la page avec la photo. Ce n'est pas le numéro d'identification personnel.", docHintOTRO:"Le numéro de la carte figure sur la carte elle-même. Ce n'est pas le numéro d'identification personnel.", docHintNIF:"Numéro de DNI : 8 chiffres et une lettre, par exemple 12345678Z.", docHintNIE:"Le numéro de NIE commence par X, Y ou Z, par exemple X1234567L.", docSoort:"Type de document", docPAS:"Passeport", docOTRO:"Carte d'identité (non espagnole)",
+  docNIF:"DNI (carte d'identité espagnole)", docNIE:"NIE / TIE (carte de séjour espagnole)", docGEEN:"Aucun document (enfant de moins de 14 ans)",
+  docNummer:"Numéro du document", soporte:"Numéro de support de la carte", soporteHint:"9 caractères, figure sur votre DNI ou TIE (par exemple ABC123456)",
+  nationaliteit:"Nationalité", geslacht:"Sexe", man:"Homme", vrouw:"Femme", anders:"Autre",
+  overnemen:"Reprendre l'adresse et les coordonnées de la personne 1",
+  adres:"Rue et numéro", woonplaats:"Ville", postcode:"Code postal", land:"Pays de résidence", gemeente:"Commune", gemeenteUitleg:"Votre adresse est en Espagne. Choisissez ici la commune.",
+  telefoon:"Téléphone", email:"Adresse e-mail", contactHint:"Le téléphone ou l'e-mail est obligatoire. Les mêmes que pour la personne 1 conviennent.",
+  relatie:"Lien avec l'adulte accompagnant", relatieHint:"Obligatoire pour les moins de 18 ans.",
+  relHJ:"Fils ou fille", relANDER:"Autre lien (par exemple petit-enfant, neveu ou nièce)",
+  handtekening:"Signature", handtekeningHint:"Seul le titulaire de la réservation signe, avec le doigt.", tekenHier:"Signez ici avec le doigt",
+  nietGetekend:"Pas encore signé", getekend:"Signé", wissen:"Effacer", versturen:"Envoyer l'enregistrement", bezig:"Enregistrement en cours…", openen:"Ouverture de votre page…",
+  privKort:"Ce que nous faisons de vos données",
+  fOnvolledig:"La personne {n} n'est pas complète. Tous les champs marqués d'un * sont obligatoires.",
+  fDoc14:"La personne {n} a 14 ans ou plus et doit avoir son propre document.",
+  fAchternaam2:"Personne {n} : avec un DNI espagnol, le deuxième nom de famille est obligatoire.",
+  fContact:"Personne {n} : indiquez un numéro de téléphone ou une adresse e-mail.", fMail:"Personne {n} : vérifiez l'adresse e-mail (par exemple nom@gmail.com).", fAppKnop:"Envoyez un WhatsApp à Bart et Loes", fAppTekst:"Bonjour Bart et Loes ! L'envoi de notre formulaire ne fonctionne pas.",
+  fRelatie:"La personne {n} a moins de 18 ans. Choisissez le lien avec l'adulte accompagnant.",
+  fDatum:"Personne {n} : la date de naissance n'est pas valide.",
+  fP1Adres:"La personne 1 n'a pas encore saisi d'adresse. Remplissez-la d'abord.",
+  fCode:"Le code client manque dans le lien. Rien n'a été enregistré.",
+  fLink:"Ce lien n'est pas valide. Veuillez contacter Finca KaYu.",
+  fOphalen:"Impossible de charger la réservation pour le moment. Réessayez plus tard.",
+  fOpslaan:"L'enregistrement a échoué. Réessayez ou contactez-nous.",
+  klaar:"Enregistrement complet ({n} {p}). Ouverture de votre page…",
+  alGeregistreerd:"L'enregistrement de cette réservation est déjà fait ({n} {p}). Un nouvel envoi remplace ces données.",
+  naarGast:"Aller à votre page",
+  testmodus:"Mode test sans réservation. Le code client manque dans le lien, rien ne sera donc enregistré.",
+  pKop:"Confidentialité",
+  pa:"Responsable : Bart Jacobus Johannus Kessler, exerçant sous le nom Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Espagne. Contact : info@fincakayu.com ou WhatsApp +34 722 162 962.",
+  pb:"Pourquoi : la loi espagnole (Real Decreto 933/2021) nous oblige à enregistrer chaque client et à le déclarer au ministère de l'Intérieur espagnol. La base juridique est une obligation légale (art. 6, par. 1, point c du RGPD) ; le consentement n'est donc pas nécessaire.",
+  pc:"Quelles données : nom, type et numéro de votre pièce d'identité, date de naissance, nationalité, sexe, adresse, téléphone ou e-mail, pour les mineurs le lien avec l'accompagnant, et votre signature. Nous ne faisons ni ne conservons aucune copie ou photo de votre document.",
+  pd:"Destinataire : le ministère de l'Intérieur espagnol (SES Hospedajes). Votre signature n'est pas transmise ; nous la conservons nous-mêmes, comme l'exige la loi.",
+  pe:"Durée de conservation : 3 ans après la fin de votre séjour. Ensuite, les données sont supprimées automatiquement.",
+  pf:"Les données sont conservées dans une base de données sécurisée dans l'UE (Irlande). Seuls Bart et Loes, de Finca KaYu, y ont accès. Vous disposez d'un droit d'accès et de rectification. La suppression n'est possible qu'à l'issue du délai légal. Vous pouvez introduire une réclamation auprès de l'autorité espagnole de protection des données (AEPD, aepd.es).",
+  pg:"Ce que vous remplissez est mémorisé uniquement sur votre propre téléphone, pendant 3 jours au maximum, pour que vous puissiez reprendre là où vous en étiez. Après l'envoi, il est effacé de votre téléphone.",
+  /* versie h: aanvraagformulier en check-in voor campers (vertaald na akkoord Bart) */
+  aTitel:"Votre emplacement à la Finca KaYu", aNa:"Pour confirmer la réservation, nous avons besoin des informations de toutes les personnes présentes.", aGevraagd:"Comment ça marche", aStap1:"Votre séjour : dates, camping-car et souhaits.", aStap2:"Toutes les personnes qui viennent : pour chacune les informations du passeport ou de la carte d'identité, enfants compris.", aStap3:"Une signature du titulaire de la réservation, puis envoyer.",aVerblijfKop:"1. Votre séjour", aAankomst:"Date d'arrivée", aVertrek:"Date de départ", aTijd:"Heure d'arrivée prévue", aTijdPh:"Par exemple 16:00", aStroom:"Électricité", aJa:"Oui, volontiers", aNee:"Non", aDier:"Animal", aDierGeen:"Aucun", aDierHond:"Chien", aDierKat:"Chat", aDierAnders:"Autre", aDierAantal:"Combien d'animaux", aKenteken:"Plaque d'immatriculation", aMerk:"Marque du camping-car", aLengte:"Longueur du camping-car en mètres", aLengtePh:"Par exemple 7,5", aAantalHint:"Tout le monde compte, y compris les enfants et les bébés.", aPersonenKop:"2. Toutes les personnes qui viennent", aAllen:"Pour confirmer la réservation, nous avons besoin des informations de toutes les personnes présentes. Choisissez ci-dessous combien vous êtes, puis remplissez les informations de chacun, enfants compris. L'envoi n'est possible que lorsque les informations de chacun sont complètes.",aTekenKop:"3. Signature", aTekenHint:"Seul le titulaire de la réservation signe, avec le doigt.", aVersturen:"Envoyer la réservation", fADatums:"Choisissez une date d'arrivée et de départ. Le départ doit être après l'arrivée, l'arrivée ne peut pas être dans le passé ni dans plus d'un an, et un séjour dure au maximum 60 nuits.", fAVerblijf:"L'étape 1 n'est pas encore complète. Tous les champs marqués * sont obligatoires.",fAHb:"Le titulaire de la réservation n'a pas encore signé.", fAIngevuld:"Cette demande a déjà été remplie. Votre réservation est confirmée.", fATijd:"Indiquez l'heure d'arrivée prévue en heures et minutes, par exemple 16:00.", fATekens:"Le formulaire contient des caractères comme < ou >. Supprimez-les et réessayez.", fALang:"Nous pouvons accueillir des camping-cars jusqu'à {m} mètres. Votre camping-car est plus long ? Contactez-nous d'abord et nous verrons ensemble ce qui est possible.", fALangKnop:"Écrivez-nous sur WhatsApp", fALangApp:"Bonjour Bart et Loes ! Notre camping-car mesure {lengte} mètres. Pouvons-nous venir quand même ?", fALengteFout:"Indiquez la longueur en mètres, par exemple 7,5.", aKlaar:"Merci ! Nous avons bien reçu votre réservation, elle est confirmée.", aAppTekst:"Bonjour Bart et Loes ! Nous avons envoyé nos informations. {naam}, {data}.", aAppKnop:"Prévenez Bart et Loes que c'est fait", cNa:"Une fois le formulaire rempli, votre enregistrement est fait. La veille de votre arrivée, le même lien ouvre votre page invité avec le code du portail, le wifi et nos conseils.", cKlaar:"Enregistrement terminé ({n} {p}). Merci !", cOpenen:"Un instant…",cPb:"Pourquoi : pour enregistrer votre réservation et vous reconnaître à l'arrivée. La base juridique est l'exécution d'un contrat (art. 6, par. 1, point b du RGPD).", cPd:"Destinataire : personne. Nous ne transmettons vos données à personne."
+},
+pt: {
+  alIn:"Já registados:", toevoegUitleg:"Falta alguém? Preencham abaixo só as pessoas novas. Os dados que já temos ficam guardados.", allesOpnieuw:"Prefiro preencher tudo de novo", aantalKopExtra:"Quantas pessoas querem acrescentar?", aantalHintExtra:"Só quem ainda não está registado.", aantalLabelExtra:"Número de pessoas adicionais", zelfdeAdres:"Mesma morada e contactos que {naam}", alSamen:"Já fizeram o check-in com a mesma reserva ({kamer}). Falta alguém? Enviem-nos um WhatsApp: +34 722 162 962", fAlGemeld:"O vosso check-in já foi enviado às autoridades espanholas. Falta alguém? Enviem-nos uma mensagem por WhatsApp: +34 722 162 962", klaarExtra:"Acrescentado. Agora estão registadas {n} {p}. A abrir a vossa página de hóspedes…",
+  fHoofd18:"A pessoa 1 (titular da reserva) tem de ter 18 anos ou mais. Verifiquem a data de nascimento.", kamer:"Quarto", titel:"Check-in rápido",
+  na:"Em Espanha registamos todas as pessoas que ficam connosco, também as crianças.",
+  na2:"Por isso pedimos os dados do passaporte ou cartão de identificação de todos. Demora só uns minutos.",
+  gevraagd:"Como funciona",
+  stap1:"Escolham quantas pessoas vêm. Todos contam, também crianças e bebés.",
+  stap2:"Preencham os dados de cada pessoa. O titular da reserva assina com o dedo.",
+  stap3:"Enviem tudo de uma vez. Não é possível guardar a meio, por isso tenham os passaportes à mão.", daarna:"Depois leiam as nossas regras da casa e toquem no botão em baixo para as aceitar. Abre-se logo a vossa página de hóspedes com a rota, o código do portão, o wifi e as nossas dicas.",
+  aantalKop:"Quantas pessoas vêm?", aantalHint:"O mesmo número que na vossa reserva.", aantalLabel:"Número de pessoas",
+  p1:"pessoa", pN:"pessoas", legenda:"Os campos com * são obrigatórios.",
+  hoofdboeker:"Pessoa 1 (titular da reserva)", persoon:"Pessoa", kies:"Escolher…", vaak:"Mais escolhidos", alle:"Todos os países",
+  voornaam:"Nome próprio", achternaam:"Apelido", achternaam2:"Segundo apelido", achternaam2Hint:"só se existir, obrigatório com DNI espanhol",
+  geboortedatum:"Data de nascimento", gebDag:"Dia", gebMaand:"Mês", gebJaar:"Ano", klaarKop:"✓ Check-in feito!", klaarStap:"Só mais um passo: leiam as nossas regras da casa e toquem no botão em baixo. Depois abre-se a vossa página de hóspedes, com o código do portão e o wifi.", klaarKnop:"Continuar para as regras da casa", fNogInP:"Pessoa {n}, falta preencher: {veld}", fNogIn:"Falta preencher: {veld}", zelfdeAls1:"Mesma morada e contactos que a pessoa 1", conceptTerug:"O que preencheram antes continua aqui. Podem continuar onde ficaram.", fAantal:"Escolham primeiro quantas pessoas vêm.", docHintPAS:"O número do passaporte está na página com a fotografia. Não é o número de identificação pessoal.", docHintOTRO:"O número do cartão está no próprio cartão. Não é o número de identificação pessoal.", docHintNIF:"Número do DNI: 8 algarismos e uma letra, por exemplo 12345678Z.", docHintNIE:"O número do NIE começa por X, Y ou Z, por exemplo X1234567L.", docSoort:"Tipo de documento", docPAS:"Passaporte", docOTRO:"Cartão de identificação (não espanhol)",
+  docNIF:"DNI (documento espanhol)", docNIE:"NIE / TIE (autorização de residência espanhola)", docGEEN:"Sem documento (criança com menos de 14 anos)",
+  docNummer:"Número do documento", soporte:"Número de suporte do cartão", soporteHint:"9 caracteres, consta do DNI ou do TIE (por exemplo ABC123456)",
+  nationaliteit:"Nacionalidade", geslacht:"Sexo", man:"Masculino", vrouw:"Feminino", anders:"Outro",
+  overnemen:"Copiar morada e contactos da pessoa 1",
+  adres:"Rua e número", woonplaats:"Localidade", postcode:"Código postal", land:"País de residência", gemeente:"Município", gemeenteUitleg:"A vossa morada fica em Espanha. Escolham aqui o município.",
+  telefoon:"Telefone", email:"Endereço de e-mail", contactHint:"O telefone ou o e-mail é obrigatório. Pode ser o mesmo da pessoa 1.",
+  relatie:"Parentesco com o adulto acompanhante", relatieHint:"Obrigatório para menores de 18 anos.",
+  relHJ:"Filho ou filha", relANDER:"Outro parentesco (por exemplo neto ou sobrinho)",
+  handtekening:"Assinatura", handtekeningHint:"Só o titular da reserva assina, com o dedo.", tekenHier:"Assinar aqui com o dedo",
+  nietGetekend:"Ainda não assinado", getekend:"Assinado", wissen:"Apagar", versturen:"Enviar check-in", bezig:"A guardar…", openen:"A abrir a vossa página de hóspedes…",
+  privKort:"O que fazemos com os vossos dados",
+  fOnvolledig:"A pessoa {n} não está completa. Todos os campos com * são obrigatórios.",
+  fDoc14:"A pessoa {n} tem 14 anos ou mais e precisa de documento próprio.",
+  fAchternaam2:"Pessoa {n}: com DNI espanhol o segundo apelido é obrigatório.",
+  fContact:"Pessoa {n}: indiquem um telefone ou um endereço de e-mail.", fMail:"Pessoa {n}: verifiquem o endereço de e-mail (por exemplo nome@gmail.com).", fAppKnop:"Enviem um WhatsApp ao Bart e à Loes", fAppTekst:"Olá Bart e Loes! Não conseguimos enviar o nosso formulário.",
+  fRelatie:"A pessoa {n} tem menos de 18 anos. Escolham o parentesco com o adulto acompanhante.",
+  fDatum:"Pessoa {n}: a data de nascimento não é válida.",
+  fP1Adres:"A pessoa 1 ainda não indicou uma morada. Preencham-na primeiro.",
+  fCode:"Falta o código de hóspede no link. Nada foi guardado.",
+  fLink:"Este link não é válido. Contactem a Finca KaYu.",
+  fOphalen:"Neste momento não é possível carregar a reserva. Tentem mais tarde.",
+  fOpslaan:"Não foi possível guardar. Tentem de novo ou contactem-nos.",
+  klaar:"Check-in completo ({n} {p}). A abrir a vossa página de hóspedes…",
+  alGeregistreerd:"O check-in desta reserva já foi feito ({n} {p}). Um novo envio substitui esses dados.",
+  naarGast:"Ir para a vossa página de hóspedes",
+  testmodus:"Modo de teste sem reserva. Falta o código de hóspede no link, por isso nada será guardado.",
+  pKop:"Privacidade",
+  pa:"Responsável: Bart Jacobus Johannus Kessler, que opera com o nome Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Espanha. Contacto: info@fincakayu.com ou WhatsApp +34 722 162 962.",
+  pb:"Porquê: a lei espanhola (Real Decreto 933/2021) obriga-nos a registar cada hóspede e a comunicá-lo ao Ministério do Interior espanhol. A base jurídica é uma obrigação legal (art. 6.º, n.º 1, alínea c), do RGPD), pelo que não é necessário consentimento.",
+  pc:"Que dados: nome, tipo e número do documento de identificação, data de nascimento, nacionalidade, sexo, morada, telefone ou e-mail, no caso de menores o parentesco com o acompanhante, e a assinatura. Não fazemos nem guardamos cópias ou fotografias dos vossos documentos.",
+  pd:"Destinatário: o Ministério do Interior espanhol (SES Hospedajes). A assinatura não é enviada; guardamo-la nós, como a lei exige.",
+  pe:"Conservação: 3 anos após o fim da estadia. Depois os dados são apagados automaticamente.",
+  pf:"Os dados são guardados numa base de dados segura na UE (Irlanda). Só o Bart e a Loes, da Finca KaYu, têm acesso. Vocês têm direito de acesso e de retificação. O apagamento só é possível após o prazo legal. Vocês podem apresentar reclamação à autoridade espanhola de proteção de dados (AEPD, aepd.es).",
+  pg:"O que preenchem fica guardado apenas no vosso próprio telemóvel, no máximo 3 dias, para poderem continuar onde ficaram. Depois de enviarem, é apagado.",
+  /* versie h: aanvraagformulier en check-in voor campers (vertaald na akkoord Bart) */
+  aTitel:"O vosso lugar na Finca KaYu", aNa:"Para confirmar a reserva, precisamos dos dados de todas as pessoas que vêm.", aGevraagd:"Como funciona", aStap1:"A vossa estadia: datas, autocaravana e preferências.", aStap2:"Todos os que vêm: de cada pessoa os dados do passaporte ou do cartão de identificação, também das crianças.", aStap3:"Uma assinatura do titular da reserva, e enviar.",aVerblijfKop:"1. A vossa estadia", aAankomst:"Data de chegada", aVertrek:"Data de partida", aTijd:"Hora prevista de chegada", aTijdPh:"Por exemplo 16:00", aStroom:"Eletricidade", aJa:"Sim, por favor", aNee:"Não", aDier:"Animal de estimação", aDierGeen:"Nenhum", aDierHond:"Cão", aDierKat:"Gato", aDierAnders:"Outro", aDierAantal:"Quantos animais", aKenteken:"Matrícula", aMerk:"Marca da autocaravana", aLengte:"Comprimento da autocaravana em metros", aLengtePh:"Por exemplo 7,5", aAantalHint:"Todos contam, também crianças e bebés.", aPersonenKop:"2. Todos os que vêm", aAllen:"Para confirmar a reserva, precisamos dos dados de todas as pessoas que vêm. Escolham abaixo quantas pessoas são e depois preencham os dados de todos, também das crianças. Só é possível enviar quando todos estiverem completos.",aTekenKop:"3. Assinatura", aTekenHint:"Só o titular da reserva assina, com o dedo.", aVersturen:"Enviar reserva", fADatums:"Escolham uma data de chegada e de partida. A partida tem de ser depois da chegada, a chegada não pode ser no passado nem daqui a mais de um ano, e uma estadia tem no máximo 60 noites.", fAVerblijf:"O passo 1 ainda não está completo. Todos os campos com * são obrigatórios.",fAHb:"O titular da reserva ainda não assinou.", fAIngevuld:"Este pedido já foi preenchido. A vossa reserva está confirmada.", fATijd:"Indiquem a hora prevista de chegada em horas e minutos, por exemplo 16:00.", fATekens:"O formulário tem caracteres como < ou >. Retirem-nos e tentem de novo.", fALang:"Podemos receber autocaravanas até {m} metros. A vossa autocaravana é mais comprida? Contactem-nos primeiro e vemos juntos o que é possível.", fALangKnop:"Escrevam-nos no WhatsApp", fALangApp:"Olá Bart e Loes! A nossa autocaravana tem {lengte} metros. Podemos ir na mesma?", fALengteFout:"Indiquem o comprimento em metros, por exemplo 7,5.", aKlaar:"Obrigado! A vossa reserva chegou e está confirmada.", aAppTekst:"Olá Bart e Loes! Já enviámos os nossos dados. {naam}, {data}.", aAppKnop:"Avisem o Bart e a Loes que está feito", cNa:"Depois de preencherem, o check-in fica feito. No dia antes da chegada, o mesmo link abre a vossa página de hóspedes com o código do portão, o wifi e as nossas dicas.", cKlaar:"Check-in completo ({n} {p}). Obrigado!", cOpenen:"Um momento…",cPb:"Porquê: para registar a vossa reserva e reconhecer-vos à chegada. A base jurídica é a execução de um contrato (art. 6.º, n.º 1, alínea b), do RGPD).", cPd:"Destinatário: ninguém. Não partilhamos os vossos dados com ninguém."
+},
+cs: {
+  alIn:"Již zaregistrováni:", toevoegUitleg:"Někdo chybí? Níže vyplňte jen nové osoby. Údaje, které už máme, zůstávají uložené.", allesOpnieuw:"Raději vyplnit vše znovu", aantalKopExtra:"Kolik osob chcete přidat?", aantalHintExtra:"Jen ty, kdo ještě nejsou zapsaní.", aantalLabelExtra:"Počet dalších osob", zelfdeAdres:"Stejná adresa a kontakt jako {naam}", alSamen:"Už jste zaregistrovaní v rámci stejné rezervace ({kamer}). Chybí ještě někdo? Pošlete nám zprávu na WhatsApp: +34 722 162 962", fAlGemeld:"Vaše registrace už byla předána španělským úřadům. Někdo chybí? Napište nám na WhatsApp: +34 722 162 962", klaarExtra:"Přidáno. Nyní je zaregistrováno {n} {p}. Otevírá se vaše stránka pro hosty…",
+  fHoofd18:"Osoba 1 (hlavní host) musí mít 18 let nebo více. Zkontrolujte prosím datum narození.", kamer:"Pokoj", titel:"Rychlý check-in",
+  na:"Ve Španělsku registrujeme každého, kdo u nás bydlí, i děti.",
+  na2:"Proto od všech potřebujeme údaje z pasu nebo občanského průkazu. Zabere to jen pár minut.",
+  gevraagd:"Jak to funguje",
+  stap1:"Vyberte, kolik vás přijede. Počítá se každý, i děti a miminka.",
+  stap2:"Vyplňte údaje každé osoby. Hlavní host se podepíše prstem.",
+  stap3:"Odešlete vše najednou. Průběžně ukládat nejde, tak si pasy připravte.", daarna:"Potom si přečtěte náš domovní řád a dole klepněte na tlačítko pro souhlas. Hned se otevře vaše vlastní stránka pro hosty s trasou, kódem od brány, wifi a našimi tipy.",
+  aantalKop:"Kolik osob přijede?", aantalHint:"Stejný počet jako ve vaší rezervaci.", aantalLabel:"Počet osob",
+  p1:"osoba", p24:"osoby", pN:"osob", legenda:"Pole označená * jsou povinná.",
+  hoofdboeker:"Osoba 1 (hlavní host)", persoon:"Osoba", kies:"Vyberte…", vaak:"Nejčastější", alle:"Všechny země",
+  voornaam:"Křestní jméno", achternaam:"Příjmení", achternaam2:"Druhé příjmení", achternaam2Hint:"jen pokud ho máte, povinné u španělského DNI",
+  geboortedatum:"Datum narození", gebDag:"Den", gebMaand:"Měsíc", gebJaar:"Rok", klaarKop:"✓ Check-in hotový!", klaarStap:"Ještě jeden krok: přečtěte si náš domovní řád a dole klepněte na tlačítko. Potom se otevře vaše vlastní stránka pro hosty s kódem od brány a wifi.", klaarKnop:"Pokračovat na domovní řád", fNogInP:"Osoba {n}, ještě vyplňte: {veld}", fNogIn:"Ještě vyplňte: {veld}", zelfdeAls1:"Stejná adresa a kontaktní údaje jako u osoby 1", conceptTerug:"To, co jste vyplnili dříve, tu stále je. Můžete pokračovat tam, kde jste skončili.", fAantal:"Nejdřív vyberte, kolik vás přijede.", docHintPAS:"Číslo pasu najdete na stránce s fotografií. Ne rodné číslo.", docHintOTRO:"Číslo průkazu najdete přímo na průkazu. Ne rodné číslo.", docHintNIF:"Číslo DNI: 8 číslic a písmeno, například 12345678Z.", docHintNIE:"Číslo NIE začíná písmenem X, Y nebo Z, například X1234567L.", docSoort:"Typ dokladu", docPAS:"Cestovní pas", docOTRO:"Občanský průkaz (nešpanělský)",
+  docNIF:"DNI (španělský občanský průkaz)", docNIE:"NIE / TIE (španělská karta pobytu)", docGEEN:"Bez dokladu (dítě do 14 let)",
+  docNummer:"Číslo dokladu", soporte:"Číslo nosiče karty (soporte)", soporteHint:"9 znaků, vytištěno na vašem DNI nebo TIE (například ABC123456)",
+  nationaliteit:"Státní příslušnost", geslacht:"Pohlaví", man:"Muž", vrouw:"Žena", anders:"Jiné",
+  overnemen:"Převzít adresu a kontaktní údaje od osoby 1",
+  adres:"Ulice a číslo domu", woonplaats:"Obec nebo město", postcode:"PSČ", land:"Země bydliště", gemeente:"Obec", gemeenteUitleg:"Vaše adresa je ve Španělsku. Vyberte zde obec.",
+  telefoon:"Telefon", email:"E-mailová adresa", contactHint:"Telefon nebo e-mail je povinný. Může být stejný jako u osoby 1.",
+  relatie:"Vztah k doprovázející dospělé osobě", relatieHint:"Povinné pro všechny mladší 18 let.",
+  relHJ:"Syn nebo dcera", relANDER:"Jiný vztah (například vnuk nebo vnučka, synovec nebo neteř)",
+  handtekening:"Podpis", handtekeningHint:"Podepisuje jen hlavní host, prstem.", tekenHier:"Podepište se sem prstem",
+  nietGetekend:"Zatím nepodepsáno", getekend:"Podepsáno", wissen:"Smazat", versturen:"Odeslat registraci", bezig:"Ukládání…", openen:"Otevírá se vaše stránka pro hosty…",
+  privKort:"Co děláme s vašimi údaji",
+  fOnvolledig:"Osoba {n} není kompletní. Všechna pole označená * jsou povinná.",
+  fDoc14:"Osoba {n} má 14 let nebo více a potřebuje vlastní doklad.",
+  fAchternaam2:"Osoba {n}: u španělského DNI je druhé příjmení povinné.",
+  fContact:"Osoba {n}: zadejte telefonní číslo nebo e-mailovou adresu.", fMail:"Osoba {n}: zkontrolujte e-mailovou adresu (například jmeno@gmail.com).", fAppKnop:"Pošlete Bartovi a Loes zprávu na WhatsApp", fAppTekst:"Ahoj Barte a Loes! Nedaří se nám odeslat formulář.",
+  fRelatie:"Osoba {n} je mladší 18 let. Vyberte vztah k doprovázející dospělé osobě.",
+  fDatum:"Osoba {n}: datum narození není platné.",
+  fP1Adres:"Osoba 1 zatím nezadala adresu. Udělejte to prosím nejdříve.",
+  fCode:"V odkazu chybí kód hosta. Nic nebylo uloženo.",
+  fLink:"Tento odkaz není platný. Kontaktujte prosím Finca KaYu.",
+  fOphalen:"Rezervaci se teď nepodařilo načíst. Zkuste to prosím později.",
+  fOpslaan:"Uložení se nezdařilo. Zkuste to prosím znovu nebo nás kontaktujte.",
+  klaar:"Registrace dokončena ({n} {p}). Otevírá se vaše stránka pro hosty…",
+  alGeregistreerd:"Tato rezervace už byla zaregistrována ({n} {p}). Nové odeslání tyto údaje nahradí.",
+  naarGast:"Na vaši stránku pro hosty",
+  testmodus:"Testovací režim bez rezervace. V odkazu chybí kód hosta, takže se nic neuloží.",
+  pKop:"Ochrana osobních údajů",
+  pa:"Správce: Bart Jacobus Johannus Kessler, podnikající pod názvem Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Španělsko. Kontakt: info@fincakayu.com nebo WhatsApp +34 722 162 962.",
+  pb:"Proč: španělský zákon (Real Decreto 933/2021) nám ukládá registrovat každého hosta a hlásit ho španělskému ministerstvu vnitra. Právním základem je právní povinnost (čl. 6 odst. 1 písm. c) GDPR), souhlas proto není potřeba.",
+  pc:"Jaké údaje: jméno, typ a číslo vašeho dokladu totožnosti, datum narození, státní příslušnost, pohlaví, adresa, telefon nebo e-mail, u nezletilých vztah k doprovázející dospělé osobě a váš podpis. Kopii ani fotografii vašeho dokladu neděláme ani neuchováváme.",
+  pd:"Příjemce: španělské ministerstvo vnitra (SES Hospedajes). Váš podpis se nepředává; uchováváme ho sami, jak vyžaduje zákon.",
+  pe:"Doba uchování: 3 roky po skončení vašeho pobytu. Poté se údaje automaticky smažou.",
+  pf:"Údaje jsou uloženy v zabezpečené databázi v EU (Irsko). Přístup k nim mají pouze Bart a Loes z Finca KaYu. Máte právo na přístup ke svým údajům a na jejich opravu. Výmaz je možný až po uplynutí zákonné doby uchování. Stížnost můžete podat u španělského úřadu pro ochranu osobních údajů (AEPD, aepd.es).",
+  pg:"To, co vyplníte, si pamatuje jen váš vlastní telefon, nejvýše 3 dny, abyste mohli pokračovat tam, kde jste skončili. Po odeslání se to smaže.",
+  /* versie h: aanvraagformulier en check-in voor campers (vertaald na akkoord Bart) */
+  aTitel:"Vaše místo na Finca KaYu", aNa:"K potvrzení rezervace potřebujeme údaje všech, kdo přijedou.", aGevraagd:"Jak to funguje", aStap1:"Váš pobyt: termín, obytný vůz a přání.", aStap2:"Všichni, kdo přijedou: u každé osoby údaje z pasu nebo občanského průkazu, i u dětí.", aStap3:"Jeden podpis hlavního hosta a odeslat.",aVerblijfKop:"1. Váš pobyt", aAankomst:"Datum příjezdu", aVertrek:"Datum odjezdu", aTijd:"Předpokládaný čas příjezdu", aTijdPh:"Například 16:00", aStroom:"Elektřina", aJa:"Ano, prosím", aNee:"Ne", aDier:"Domácí mazlíček", aDierGeen:"Žádný", aDierHond:"Pes", aDierKat:"Kočka", aDierAnders:"Jiné", aDierAantal:"Kolik mazlíčků", aKenteken:"SPZ", aMerk:"Značka obytného vozu", aLengte:"Délka obytného vozu v metrech", aLengtePh:"Například 7,5", aAantalHint:"Počítá se každý, i děti a miminka.", aPersonenKop:"2. Všichni, kdo přijedou", aAllen:"K potvrzení rezervace potřebujeme údaje všech, kdo přijedou. Níže vyberte, kolik vás bude, a pak vyplňte údaje všech, i dětí. Odeslat můžete, až budou vyplněné údaje všech.",aTekenKop:"3. Podpis", aTekenHint:"Podepisuje jen hlavní host, prstem.", aVersturen:"Odeslat rezervaci", fADatums:"Vyberte datum příjezdu a odjezdu. Odjezd musí být po příjezdu, příjezd nemůže být v minulosti ani víc než rok dopředu a pobyt trvá nejvýše 60 nocí.", fAVerblijf:"Krok 1 ještě není kompletní. Všechna pole s * jsou povinná.",fAHb:"Hlavní host se ještě nepodepsal.", fAIngevuld:"Tato žádost už byla vyplněna. Vaše rezervace je potvrzená.", fATijd:"Zadejte předpokládaný čas příjezdu v hodinách a minutách, například 16:00.", fATekens:"Ve formuláři jsou znaky jako < nebo >. Odstraňte je a zkuste to znovu.", fALang:"Můžeme přijmout obytné vozy do délky {m} m. Je váš vůz delší? Napište nám prosím nejdřív a společně se podíváme, co se dá dělat.", fALangKnop:"Napište nám na WhatsApp", fALangApp:"Ahoj Barte a Loes! Náš obytný vůz měří {lengte} m. Můžeme i tak přijet?", fALengteFout:"Zadejte délku v metrech, například 7,5.", aKlaar:"Děkujeme! Vaši rezervaci jsme přijali a je potvrzená.", aAppTekst:"Ahoj Barte a Loes! Naše údaje jsou odeslané. {naam}, {data}.", aAppKnop:"Dejte Bartovi a Loes vědět, že je hotovo", cNa:"Po vyplnění je check-in hotový. Den před příjezdem otevře stejný odkaz vaši stránku pro hosty s kódem od brány, wifi a našimi tipy.", cKlaar:"Check-in dokončen ({n} {p}). Děkujeme!", cOpenen:"Okamžik…",cPb:"Proč: abychom zaznamenali vaši rezervaci a poznali vás při příjezdu. Právním základem je plnění smlouvy (čl. 6 odst. 1 písm. b) GDPR).", cPd:"Příjemce: nikdo. Vaše údaje nikomu nepředáváme."
+},
+/* ===== Suomi (30-09-2026 b, verzoek Bart: gasten uit Finland) ===== */
+fi: {
+  alIn:"Jo ilmoittautuneet:",
+  toevoegUitleg:"Puuttuuko joku? Täyttäkää alle vain uudet henkilöt. Jo saamamme tiedot säilyvät.",
+  allesOpnieuw:"Kaikki uudelleen alusta",
+  aantalKopExtra:"Montako henkilöä haluatte lisätä?",
+  aantalHintExtra:"Vain ne, jotka eivät vielä ole listalla.",
+  aantalLabelExtra:"Lisättävien henkilöiden määrä",
+  zelfdeAdres:"Samat osoite- ja yhteystiedot kuin henkilöllä {naam}",
+  alSamen:"Check-in on jo tehty samalla varauksella ({kamer}). Puuttuuko joku? Lähettäkää meille WhatsApp-viesti: +34 722 162 962", fAlGemeld:"Ilmoittautumisenne on jo välitetty Espanjan viranomaisille. Puuttuuko joku? Lähettäkää meille WhatsApp-viesti: +34 722 162 962",
+  klaarExtra:"Lisätty. Ilmoittautuneita nyt yhteensä: {n} {p}. Vierassivunne avautuu…",
+  fHoofd18:"Henkilön 1 (varauksen tekijä) on oltava vähintään 18-vuotias. Tarkistakaa syntymäaika.",
+  kamer:"Huone",
+  titel:"Nopea check-in",
+  na:"Espanjassa rekisteröimme kaikki meillä yöpyvät, myös lapset.",
+  na2:"Siksi pyydämme kaikilta passin tai henkilökortin tiedot. Se vie vain muutaman minuutin.",
+  gevraagd:"Näin se toimii",
+  stap1:"Valitkaa, montako teitä tulee. Kaikki lasketaan, myös lapset ja vauvat.",
+  stap2:"Täyttäkää tiedot jokaisesta henkilöstä. Varauksen tekijä allekirjoittaa sormella.",
+  stap3:"Lähettäkää kaikki kerralla. Välitallennus ei ole mahdollista, joten pitäkää passit käden ulottuvilla.",
+  daarna:"Sen jälkeen lukekaa talon säännöt ja napauttakaa alhaalla olevaa painiketta hyväksyäksenne ne. Sitten oma vierassivunne avautuu heti. Sieltä löydätte reittiohjeet, portin koodin, wifin ja vinkkimme.",
+  aantalKop:"Montako teitä tulee?",
+  aantalHint:"Sama määrä kuin varauksessanne.",
+  aantalLabel:"Henkilömäärä",
+  p1:"henkilö",
+  pN:"henkilöä",
+  legenda:"Tähdellä (*) merkityt kentät ovat pakollisia.",
+  hoofdboeker:"Henkilö 1 (varauksen tekijä)",
+  persoon:"Henkilö",
+  kies:"Valitse…",
+  vaak:"Usein valitut",
+  alle:"Kaikki maat",
+  voornaam:"Etunimi",
+  achternaam:"Sukunimi",
+  achternaam2:"Toinen sukunimi",
+  achternaam2Hint:"vain jos sellainen on, pakollinen espanjalaisella DNI:llä",
+  geboortedatum:"Syntymäaika", gebDag:"Päivä", gebMaand:"Kuukausi", gebJaar:"Vuosi", klaarKop:"✓ Check-in valmis!", klaarStap:"Vielä yksi vaihe: lukekaa talon säännöt ja napauttakaa alhaalla olevaa painiketta. Sen jälkeen oma vierassivunne aukeaa, ja siellä on portin koodi ja wifi.", klaarKnop:"Jatka talon sääntöihin", fNogInP:"Henkilö {n}, täyttäkää vielä: {veld}", fNogIn:"Täyttäkää vielä: {veld}", zelfdeAls1:"Sama osoite ja yhteystiedot kuin henkilöllä 1", conceptTerug:"Aiemmin täyttämänne tiedot ovat yhä tallessa. Voitte jatkaa siitä, mihin jäitte.", fAantal:"Valitkaa ensin, montako teitä tulee.", docHintPAS:"Passin numero on kuvasivulla. Ei henkilötunnusta.", docHintOTRO:"Kortin numero on itse henkilökortissa. Ei henkilötunnusta.", docHintNIF:"DNI-numero: 8 numeroa ja kirjain, esimerkiksi 12345678Z.", docHintNIE:"NIE-numero alkaa kirjaimella X, Y tai Z, esimerkiksi X1234567L.",
+  docSoort:"Asiakirjan tyyppi",
+  docPAS:"Passi",
+  docOTRO:"Henkilökortti (ei espanjalainen)",
+  docNIF:"DNI (espanjalainen henkilökortti)",
+  docNIE:"NIE / TIE (espanjalainen oleskelukortti)",
+  docGEEN:"Ei asiakirjaa (alle 14-vuotias lapsi)",
+  docNummer:"Asiakirjan numero",
+  soporte:"Kortin tukinumero (número de soporte)",
+  soporteHint:"9 merkkiä, löytyy DNI- tai TIE-kortista (esimerkiksi ABC123456)",
+  nationaliteit:"Kansalaisuus",
+  geslacht:"Sukupuoli",
+  man:"Mies",
+  vrouw:"Nainen",
+  anders:"Muu",
+  overnemen:"Kopioi osoite ja yhteystiedot henkilöltä 1",
+  adres:"Katuosoite",
+  woonplaats:"Paikkakunta",
+  postcode:"Postinumero",
+  land:"Asuinmaa", gemeente:"Kunta", gemeenteUitleg:"Osoitteenne on Espanjassa. Valitkaa tästä kunta.",
+  telefoon:"Puhelin",
+  email:"Sähköposti",
+  contactHint:"Puhelin tai sähköposti on pakollinen. Sama kuin henkilöllä 1 käy hyvin.",
+  relatie:"Suhde mukana olevaan aikuiseen",
+  relatieHint:"Pakollinen kaikille alle 18-vuotiaille.",
+  relHJ:"Poika tai tytär",
+  relANDER:"Muu suhde (esimerkiksi lapsenlapsi tai sisarenlapsi)",
+  handtekening:"Allekirjoitus",
+  handtekeningHint:"Vain varauksen tekijä allekirjoittaa sormella.",
+  tekenHier:"Allekirjoita tähän sormella",
+  nietGetekend:"Ei vielä allekirjoitettu",
+  getekend:"Allekirjoitettu",
+  wissen:"Tyhjennä",
+  versturen:"Lähetä ilmoittautuminen",
+  bezig:"Tallennetaan…",
+  openen:"Vierassivunne avautuu…",
+  privKort:"Mitä teemme tiedoillanne",
+  fOnvolledig:"Henkilön {n} tiedot ovat puutteelliset. Kaikki tähdellä (*) merkityt kentät ovat pakollisia.",
+  fDoc14:"Henkilö {n} on vähintään 14-vuotias ja tarvitsee oman asiakirjan.",
+  fAchternaam2:"Henkilö {n}: espanjalaisella DNI:llä toinen sukunimi on pakollinen.",
+  fContact:"Henkilö {n}: antakaa puhelinnumero tai sähköpostiosoite.", fMail:"Henkilö {n}: tarkistakaa sähköpostiosoite (esimerkiksi nimi@gmail.com).", fAppKnop:"Lähettäkää Bartille ja Loesille WhatsApp-viesti", fAppTekst:"Hei Bart ja Loes! Lomakkeemme lähettäminen ei onnistu.",
+  fRelatie:"Henkilö {n} on alle 18-vuotias. Valitkaa suhde mukana olevaan aikuiseen.",
+  fDatum:"Henkilö {n}: syntymäaika ei ole kelvollinen.",
+  fP1Adres:"Henkilö 1 ei ole vielä antanut osoitetta. Täyttäkää se ensin.",
+  fCode:"Linkistä puuttuu vieraskoodi. Mitään ei tallennettu.",
+  fLink:"Tämä linkki ei ole voimassa. Ottakaa yhteyttä Finca KaYuun.",
+  fOphalen:"Varausta ei juuri nyt voi ladata. Yrittäkää myöhemmin uudelleen.",
+  fOpslaan:"Tallennus ei onnistunut. Yrittäkää uudelleen tai ottakaa meihin yhteyttä.",
+  klaar:"Check-in valmis ({n} {p}). Vierassivunne avautuu…",
+  alGeregistreerd:"Tälle varaukselle on jo tehty check-in ({n} {p}). Uusi lähetys korvaa aiemmat tiedot.",
+  naarGast:"Avaa vierassivunne",
+  testmodus:"Testitila ilman varausta. Linkistä puuttuu vieraskoodi, joten mitään ei tallenneta.",
+  pKop:"Tietosuoja",
+  pa:"Rekisterinpitäjä: Bart Jacobus Johannus Kessler, toiminimellä Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Espanja. Yhteystiedot: info@fincakayu.com tai WhatsApp +34 722 162 962.",
+  pb:"Miksi: Espanjan laki (Real Decreto 933/2021) velvoittaa meidät rekisteröimään jokaisen vieraan ja ilmoittamaan hänet Espanjan sisäministeriölle. Käsittelyn peruste on lakisääteinen velvoite (EU:n yleisen tietosuoja-asetuksen 6 artiklan 1 kohdan c alakohta), joten suostumusta ei tarvita.",
+  pc:"Mitkä tiedot: nimi, henkilöllisyysasiakirjan tyyppi ja numero, syntymäaika, kansalaisuus, sukupuoli, osoite, puhelin tai sähköposti, alaikäisten osalta suhde mukana olevaan aikuiseen sekä allekirjoitus. Emme ota emmekä säilytä kopiota tai valokuvaa asiakirjoistanne.",
+  pd:"Vastaanottaja: Espanjan sisäministeriö (SES Hospedajes). Allekirjoitusta ei välitetä eteenpäin; säilytämme sen itse, kuten laki edellyttää.",
+  pe:"Säilytysaika: 3 vuotta oleskelunne päättymisestä. Sen jälkeen tiedot poistetaan automaattisesti.",
+  pf:"Tiedot säilytetään suojatussa tietokannassa EU:ssa (Irlannissa). Vain Bartilla ja Loesilla (Finca KaYu) on pääsy niihin. Teillä on oikeus tarkastaa ja oikaista tietonne. Poistaminen on mahdollista vasta lakisääteisen säilytysajan päätyttyä. Voitte tehdä valituksen Espanjan tietosuojaviranomaiselle (AEPD, aepd.es).",
+  pg:"Täyttämänne tiedot muistaa vain oma puhelimenne, enintään 3 päivää, jotta voitte jatkaa siitä, mihin jäitte. Lähettämisen jälkeen ne poistetaan.",
+  aTitel:"Paikkanne Finca KaYulla",
+  aNa:"Varauksen vahvistamiseksi tarvitsemme tiedot kaikilta, jotka tulevat mukaan.",
+  aGevraagd:"Näin se toimii",
+  aStap1:"Oleskelunne: päivämäärät, matkailuauto ja toiveet.",
+  aStap2:"Kaikki tulijat: jokaisesta henkilöstä passin tai henkilökortin tiedot, myös lapsista.",
+  aStap3:"Varauksen tekijän allekirjoitus ja lähetys.",
+  aVerblijfKop:"1. Oleskelunne",
+  aAankomst:"Saapumispäivä",
+  aVertrek:"Lähtöpäivä",
+  aTijd:"Arvioitu saapumisaika",
+  aTijdPh:"Esimerkiksi 16:00",
+  aStroom:"Sähkö",
+  aJa:"Kyllä, kiitos",
+  aNee:"Ei",
+  aDier:"Lemmikki",
+  aDierGeen:"Ei lemmikkiä",
+  aDierHond:"Koira",
+  aDierKat:"Kissa",
+  aDierAnders:"Muu",
+  aDierAantal:"Montako lemmikkiä",
+  aKenteken:"Rekisterinumero",
+  aMerk:"Matkailuauton merkki",
+  aLengte:"Matkailuauton pituus metreinä",
+  aLengtePh:"Esimerkiksi 7,5",
+  aAantalHint:"Kaikki lasketaan, myös lapset ja vauvat.",
+  aPersonenKop:"2. Kaikki tulijat",
+  aAllen:"Varauksen vahvistamiseksi tarvitsemme tiedot kaikilta, jotka tulevat mukaan. Valitkaa alta, montako teitä on, ja täyttäkää sitten kaikkien tiedot, myös lasten. Lähettää voi vasta, kun kaikkien tiedot ovat valmiit.",
+  aTekenKop:"3. Allekirjoitus",
+  aTekenHint:"Vain varauksen tekijä allekirjoittaa sormella.",
+  aVersturen:"Lähetä varaus",
+  fADatums:"Valitkaa saapumis- ja lähtöpäivä. Lähdön on oltava saapumisen jälkeen, saapuminen ei voi olla menneisyydessä eikä yli vuoden päästä, ja oleskelu on enintään 60 yötä.",
+  fAVerblijf:"Vaihe 1 ei ole vielä valmis. Kaikki tähdellä (*) merkityt kentät ovat pakollisia.",
+  fAHb:"Varauksen tekijä ei ole vielä allekirjoittanut.",
+  fAIngevuld:"Tämä lomake on jo täytetty. Varauksenne on vahvistettu.",
+  fATijd:"Antakaa arvioitu saapumisaika tunteina ja minuutteina, esimerkiksi 16:00.",
+  fATekens:"Lomakkeessa on merkkejä kuten < tai >. Poistakaa ne ja yrittäkää uudelleen.",
+  fALang:"Voimme ottaa vastaan enintään {m} metrin pituisia matkailuautoja. Onko teidän autonne pidempi? Ottakaa ensin yhteyttä meihin, niin katsotaan yhdessä, mitä voidaan tehdä.",
+  fALangKnop:"Kirjoittakaa meille WhatsAppissa",
+  fALangApp:"Hei Bart ja Loes! Matkailuautomme on {lengte} metriä pitkä. Voimmeko silti tulla?",
+  fALengteFout:"Antakaa pituus metreinä, esimerkiksi 7,5.",
+  aKlaar:"Kiitos! Varauksenne on vastaanotettu ja vahvistettu.",
+  aAppTekst:"Hei Bart ja Loes! Lähetimme tietomme. {naam}, {data}.",
+  aAppKnop:"Kertokaa Bartille ja Loesille, että kaikki on valmis",
+  cNa:"Kun olette täyttäneet tämän, check-in on tehty. Päivää ennen saapumista sama linkki avaa oman vierassivunne, josta löydätte portin koodin, wifin ja vinkkimme.",
+  cKlaar:"Check-in valmis ({n} {p}). Kiitos!",
+  cOpenen:"Hetki…",
+  cPb:"Miksi: jotta voimme kirjata varauksenne ja tunnistaa teidät saapuessanne. Käsittelyn peruste on sopimuksen täytäntöönpano (EU:n yleisen tietosuoja-asetuksen 6 artiklan 1 kohdan b alakohta).",
+  cPd:"Vastaanottaja: ei kukaan. Emme luovuta tietojanne kenellekään."
+},
+/* ===== Norsk bokmål (23-10-2026) ===== */
+no: {
+  alIn:"Allerede sjekket inn:",
+  toevoegUitleg:"Mangler det noen? Fyll ut bare de nye personene nedenfor. Opplysningene vi allerede har, blir tatt vare på.",
+  allesOpnieuw:"Heller fylle ut alt på nytt",
+  aantalKopExtra:"Hvor mange personer vil dere legge til?",
+  aantalHintExtra:"Bare de som ikke står på listen ennå.",
+  aantalLabelExtra:"Antall ekstra personer",
+  zelfdeAdres:"Samme adresse og kontaktopplysninger som {naam}",
+  alSamen:"Dere er allerede sjekket inn via samme bestilling ({kamer}). Mangler det noen? Send oss en WhatsApp-melding: +34 722 162 962", fAlGemeld:"Innsjekkingen deres er allerede sendt videre til spanske myndigheter. Mangler det noen? Send oss en WhatsApp-melding: +34 722 162 962",
+  klaarExtra:"Lagt til. Nå er {n} {p} sjekket inn. Gjestesiden deres åpnes…",
+  fHoofd18:"Person 1 (hovedgjest) må være 18 år eller eldre. Kontroller fødselsdatoen.",
+  kamer:"Rom",
+  titel:"Rask innsjekking",
+  na:"I Spania registrerer vi alle som bor hos oss, også barna.",
+  na2:"Derfor ber vi om opplysningene fra pass eller ID-kort for alle. Det tar bare noen få minutter.",
+  gevraagd:"Slik fungerer det",
+  stap1:"Velg hvor mange dere kommer. Alle teller med, også barn og babyer.",
+  stap2:"Fyll ut opplysningene for hver person. Hovedgjesten signerer med fingeren.",
+  stap3:"Send alt på én gang. Det går ikke an å lagre underveis, så ha passene klare.",
+  daarna:"Deretter leser dere husreglene våre og trykker på knappen nederst for å godta dem. Da åpnes deres egen gjesteside med en gang, med veibeskrivelse, portkoden, wifi og tipsene våre.",
+  aantalKop:"Hvor mange personer er dere?",
+  aantalHint:"Samme antall som i bestillingen deres.",
+  aantalLabel:"Antall personer",
+  p1:"person",
+  pN:"personer",
+  legenda:"Felt merket med * er obligatoriske.",
+  hoofdboeker:"Person 1 (hovedgjest)",
+  persoon:"Person",
+  kies:"Velg…",
+  vaak:"Ofte valgt",
+  alle:"Alle land",
+  voornaam:"Fornavn",
+  achternaam:"Etternavn",
+  achternaam2:"Andre etternavn",
+  achternaam2Hint:"bare om det finnes, obligatorisk ved spansk DNI",
+  geboortedatum:"Fødselsdato", gebDag:"Dag", gebMaand:"Måned", gebJaar:"År", klaarKop:"✓ Innsjekkingen er fullført!", klaarStap:"Ett steg til: les husreglene våre og trykk på knappen nederst. Deretter åpnes deres egen gjesteside, med portkoden og wifi.", klaarKnop:"Videre til husreglene", fNogInP:"Person {n}, gjenstår å fylle ut: {veld}", fNogIn:"Gjenstår å fylle ut: {veld}", zelfdeAls1:"Samme adresse og kontaktopplysninger som person 1", conceptTerug:"Det dere fylte ut tidligere, er der fortsatt. Dere kan fortsette der dere slapp.", fAantal:"Velg først hvor mange dere kommer.", docHintPAS:"Passnummeret står på siden med bildet. Merk: ikke fødselsnummeret.", docHintOTRO:"Kortnummeret står på selve ID-kortet. Merk: ikke fødselsnummeret.", docHintNIF:"DNI-nummeret: 8 sifre og en bokstav, for eksempel 12345678Z.", docHintNIE:"NIE-nummeret begynner med X, Y eller Z, for eksempel X1234567L.",
+  docSoort:"Dokumenttype",
+  docPAS:"Pass",
+  docOTRO:"ID-kort (ikke spansk)",
+  docNIF:"DNI (spansk ID-kort)",
+  docNIE:"NIE / TIE (spansk oppholdskort)",
+  docGEEN:"Ikke noe dokument (barn under 14 år)",
+  docNummer:"Dokumentnummer",
+  soporte:"Kortets supportnummer (número de soporte)",
+  soporteHint:"9 tegn, står på DNI- eller TIE-kortet (for eksempel ABC123456)",
+  nationaliteit:"Nasjonalitet",
+  geslacht:"Kjønn",
+  man:"Mann",
+  vrouw:"Kvinne",
+  anders:"Annet",
+  overnemen:"Kopier adresse og kontaktopplysninger fra person 1",
+  adres:"Gatenavn og husnummer",
+  woonplaats:"Bosted",
+  postcode:"Postnummer",
+  land:"Bostedsland", gemeente:"Kommune", gemeenteUitleg:"Adressen deres er i Spania. Velg kommunen her.",
+  telefoon:"Telefon",
+  email:"E-postadresse",
+  contactHint:"Telefon eller e-post er obligatorisk. Det kan gjerne være det samme som for person 1.",
+  relatie:"Relasjon til medfølgende voksen",
+  relatieHint:"Obligatorisk for alle under 18 år.",
+  relHJ:"Sønn eller datter",
+  relANDER:"Annen relasjon (for eksempel barnebarn, nevø eller niese)",
+  handtekening:"Underskrift",
+  handtekeningHint:"Bare hovedgjesten signerer, med fingeren.",
+  tekenHier:"Signer her med fingeren",
+  nietGetekend:"Ikke signert ennå",
+  getekend:"Signert",
+  wissen:"Slett",
+  versturen:"Send innsjekking",
+  bezig:"Lagrer…",
+  openen:"Gjestesiden deres åpnes…",
+  privKort:"Hva vi gjør med opplysningene deres",
+  fOnvolledig:"Person {n} er ikke fullstendig utfylt. Alle felt merket med * er obligatoriske.",
+  fDoc14:"Person {n} er 14 år eller eldre og trenger et eget dokument.",
+  fAchternaam2:"Person {n}: ved spansk DNI er andre etternavn obligatorisk.",
+  fContact:"Person {n}: fyll ut telefonnummer eller e-postadresse.", fMail:"Person {n}: kontroller e-postadressen (for eksempel navn@gmail.com).", fAppKnop:"Send Bart og Loes en WhatsApp-melding", fAppTekst:"Hei Bart og Loes! Vi får ikke sendt skjemaet vårt.",
+  fRelatie:"Person {n} er under 18 år. Velg relasjon til medfølgende voksen.",
+  fDatum:"Person {n}: fødselsdatoen er ikke gyldig.",
+  fP1Adres:"Person 1 har ikke fylt ut adresse ennå. Fyll ut den først.",
+  fCode:"Lenken mangler gjestekode. Ingenting er lagret.",
+  fLink:"Denne lenken er ikke gyldig. Ta kontakt med Finca KaYu.",
+  fOphalen:"Bestillingen kan ikke hentes akkurat nå. Prøv igjen senere.",
+  fOpslaan:"Lagringen mislyktes. Prøv igjen eller ta kontakt med oss.",
+  klaar:"Innsjekkingen er fullført ({n} {p}). Gjestesiden deres åpnes…",
+  alGeregistreerd:"Innsjekking er allerede gjort for denne bestillingen ({n} {p}). Sender dere på nytt, erstattes disse opplysningene.",
+  naarGast:"Til gjestesiden deres",
+  testmodus:"Testmodus uten bestilling. Lenken mangler gjestekode, så ingenting blir lagret.",
+  pKop:"Personvern",
+  pa:"Behandlingsansvarlig: Bart Jacobus Johannus Kessler, som driver under navnet Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spania. Kontakt: info@fincakayu.com eller WhatsApp +34 722 162 962.",
+  pb:"Hvorfor: spansk lov (Real Decreto 933/2021) pålegger oss å registrere alle gjester og melde dem til det spanske innenriksdepartementet. Behandlingsgrunnlaget er en rettslig forpliktelse (GDPR art. 6 nr. 1 bokstav c). Samtykke er derfor ikke nødvendig.",
+  pc:"Hvilke opplysninger: navn, type og nummer på identitetsdokumentet, fødselsdato, nasjonalitet, kjønn, adresse, telefon eller e-post, for mindreårige relasjonen til den medfølgende voksne, og underskriften. Vi verken tar eller oppbevarer kopi eller bilde av dokumentet deres.",
+  pd:"Mottaker: det spanske innenriksdepartementet (SES Hospedajes). Underskriften sendes ikke videre; den oppbevarer vi selv, slik loven krever.",
+  pe:"Lagringstid: 3 år etter at oppholdet deres er avsluttet. Deretter slettes opplysningene automatisk.",
+  pf:"Opplysningene lagres i en sikret database i EU (Irland). Bare Bart og Loes i Finca KaYu har tilgang. Dere har rett til innsyn og retting. Sletting er først mulig etter at den lovpålagte lagringstiden er ute. Dere kan klage til det spanske datatilsynet (AEPD, aepd.es).",
+  pg:"Det dere fyller ut, huskes bare på deres egen telefon, i høyst 3 dager, slik at dere kan fortsette der dere slapp. Etter innsending slettes det.",
+  aTitel:"Plassen deres på Finca KaYu",
+  aNa:"For å bekrefte bestillingen trenger vi opplysninger om alle som kommer.",
+  aGevraagd:"Slik fungerer det",
+  aStap1:"Oppholdet deres: datoer, bobil og ønsker.",
+  aStap2:"Alle som kommer: opplysningene fra pass eller ID-kort for hver person, også for barn.",
+  aStap3:"Én underskrift fra hovedgjesten, så sender dere.",
+  aVerblijfKop:"1. Oppholdet deres",
+  aAankomst:"Ankomstdato",
+  aVertrek:"Avreisedato",
+  aTijd:"Forventet ankomsttid",
+  aTijdPh:"For eksempel 16:00",
+  aStroom:"Strøm",
+  aJa:"Ja takk",
+  aNee:"Nei",
+  aDier:"Kjæledyr",
+  aDierGeen:"Ingen",
+  aDierHond:"Hund",
+  aDierKat:"Katt",
+  aDierAnders:"Annet",
+  aDierAantal:"Hvor mange kjæledyr",
+  aKenteken:"Registreringsnummer",
+  aMerk:"Bobilens merke",
+  aLengte:"Bobilens lengde i meter",
+  aLengtePh:"For eksempel 7,5",
+  aAantalHint:"Alle teller med, også barn og babyer.",
+  aPersonenKop:"2. Alle som kommer",
+  aAllen:"For å bekrefte bestillingen trenger vi opplysninger om alle som kommer. Velg nedenfor hvor mange dere kommer, og fyll deretter ut for alle, også barna. Dere kan først sende når opplysningene for alle er fullstendige.",
+  aTekenKop:"3. Underskrift",
+  aTekenHint:"Bare hovedgjesten signerer, med fingeren.",
+  aVersturen:"Send bestilling",
+  fADatums:"Velg ankomst- og avreisedato. Avreise må være etter ankomst, ankomst kan ikke være tilbake i tid eller mer enn ett år fram i tid, og et opphold er på høyst 60 netter.",
+  fAVerblijf:"Steg 1 er ikke fullstendig ennå. Alle felt merket med * er obligatoriske.",
+  fAHb:"Hovedgjesten har ikke signert ennå.",
+  fAIngevuld:"Denne forespørselen er allerede fylt ut. Bestillingen deres er bekreftet.",
+  fATijd:"Fyll ut forventet ankomsttid som timer og minutter, for eksempel 16:00.",
+  fATekens:"Skjemaet inneholder tegn som < eller >. Fjern dem og prøv igjen.",
+  fALang:"Vi kan ta imot bobiler på opptil {m} meter. Er bobilen deres lengre? Ta kontakt med oss først, så finner vi ut sammen hva som er mulig.",
+  fALangKnop:"Skriv til oss på WhatsApp",
+  fALangApp:"Hei Bart og Loes! Bobilen vår er {lengte} meter. Kan vi likevel komme?",
+  fALengteFout:"Fyll ut lengden i meter, for eksempel 7,5.",
+  aKlaar:"Tusen takk! Vi har mottatt bestillingen deres, og den er bekreftet.",
+  aAppTekst:"Hei Bart og Loes! Vi har sendt opplysningene våre. {naam}, {data}.",
+  aAppKnop:"Si fra til Bart og Loes at det er gjort",
+  cNa:"Når dette er fylt ut, er innsjekkingen ordnet. Dagen før ankomst åpner den samme lenken deres egen gjesteside med portkoden, wifi og tipsene våre.",
+  cKlaar:"Innsjekkingen er fullført ({n} {p}). Tusen takk!",
+  cOpenen:"Et øyeblikk…",
+  cPb:"Hvorfor: for å registrere bestillingen deres og kjenne dere igjen ved ankomst. Behandlingsgrunnlaget er oppfyllelse av en avtale (GDPR art. 6 nr. 1 bokstav b).",
+  cPd:"Mottaker: ingen. Vi gir ikke opplysningene deres videre til andre."
+},
+/* ===== Svenska (23-10-2026) ===== */
+sv: {
+  alIn:"Redan incheckade:",
+  toevoegUitleg:"Saknas någon? Fyll bara i de nya personerna nedan. Uppgifterna vi redan har sparas.",
+  allesOpnieuw:"Hellre fylla i allt på nytt",
+  aantalKopExtra:"Hur många personer vill ni lägga till?",
+  aantalHintExtra:"Bara de som inte redan finns med.",
+  aantalLabelExtra:"Antal extra personer",
+  zelfdeAdres:"Samma adress och kontaktuppgifter som {naam}",
+  alSamen:"Ni är redan incheckade via samma bokning ({kamer}). Saknas någon? Skicka ett WhatsApp-meddelande till oss: +34 722 162 962", fAlGemeld:"Er incheckning har redan skickats vidare till spanska myndigheter. Saknas någon? Skicka ett WhatsApp-meddelande till oss: +34 722 162 962",
+  klaarExtra:"Tillagt. Nu är {n} {p} incheckade. Er gästsida öppnas…",
+  fHoofd18:"Person 1 (huvudgäst) måste vara 18 år eller äldre. Kontrollera födelsedatumet.",
+  kamer:"Rum",
+  titel:"Snabb incheckning",
+  na:"I Spanien registrerar vi alla som bor hos oss, även barnen.",
+  na2:"Därför ber vi om uppgifterna från pass eller id-kort för alla. Det tar bara några minuter.",
+  gevraagd:"Så fungerar det",
+  stap1:"Välj hur många ni kommer. Alla räknas, även barn och bebisar.",
+  stap2:"Fyll i uppgifterna för varje person. Huvudgästen skriver under med fingret.",
+  stap3:"Skicka allt på en gång. Det går inte att spara halvvägs, så ha passen till hands.",
+  daarna:"Därefter läser ni våra husregler och trycker på knappen längst ner för att godkänna dem. Då öppnas er egen gästsida direkt, med vägbeskrivning, grindkoden, wifi och våra tips.",
+  aantalKop:"Hur många personer är ni?",
+  aantalHint:"Samma antal som i er bokning.",
+  aantalLabel:"Antal personer",
+  p1:"person",
+  pN:"personer",
+  legenda:"Fält markerade med * är obligatoriska.",
+  hoofdboeker:"Person 1 (huvudgäst)",
+  persoon:"Person",
+  kies:"Välj…",
+  vaak:"Ofta valda",
+  alle:"Alla länder",
+  voornaam:"Förnamn",
+  achternaam:"Efternamn",
+  achternaam2:"Andra efternamn",
+  achternaam2Hint:"bara om det finns, obligatoriskt vid spanskt DNI-kort",
+  geboortedatum:"Födelsedatum", gebDag:"Dag", gebMaand:"Månad", gebJaar:"År", klaarKop:"✓ Incheckningen är klar!", klaarStap:"Ett steg kvar: läs våra husregler och tryck på knappen längst ner. Sedan öppnas er egen gästsida, med grindkoden och wifi.", klaarKnop:"Vidare till husreglerna", fNogInP:"Person {n}, återstår att fylla i: {veld}", fNogIn:"Återstår att fylla i: {veld}", zelfdeAls1:"Samma adress och kontaktuppgifter som person 1", conceptTerug:"Det ni fyllde i tidigare finns kvar. Ni kan fortsätta där ni slutade.", fAantal:"Välj först hur många ni kommer.", docHintPAS:"Passnumret står på sidan med fotot. Obs: inte personnumret.", docHintOTRO:"Kortnumret står på själva id-kortet. Obs: inte personnumret.", docHintNIF:"DNI-numret: 8 siffror och en bokstav, till exempel 12345678Z.", docHintNIE:"NIE-numret börjar med X, Y eller Z, till exempel X1234567L.",
+  docSoort:"Typ av id-handling",
+  docPAS:"Pass",
+  docOTRO:"Identitetskort (inte spanskt)",
+  docNIF:"DNI (spanskt id-kort)",
+  docNIE:"NIE / TIE (spanskt uppehållskort)",
+  docGEEN:"Ingen id-handling (barn under 14 år)",
+  docNummer:"Dokumentnummer",
+  soporte:"Kortets supportnummer (número de soporte)",
+  soporteHint:"9 tecken, står på DNI- eller TIE-kortet (till exempel ABC123456)",
+  nationaliteit:"Nationalitet",
+  geslacht:"Kön",
+  man:"Man",
+  vrouw:"Kvinna",
+  anders:"Annat",
+  overnemen:"Kopiera adress och kontaktuppgifter från person 1",
+  adres:"Gata och husnummer",
+  woonplaats:"Ort",
+  postcode:"Postnummer",
+  land:"Bosättningsland", gemeente:"Kommun", gemeenteUitleg:"Er adress är i Spanien. Välj kommun här.",
+  telefoon:"Telefon",
+  email:"E-postadress",
+  contactHint:"Telefon eller e-post är obligatoriskt. Samma som för person 1 går bra.",
+  relatie:"Relation till medföljande vuxen",
+  relatieHint:"Obligatoriskt för alla under 18 år.",
+  relHJ:"Son eller dotter",
+  relANDER:"Annan relation (till exempel barnbarn eller syskonbarn)",
+  handtekening:"Underskrift",
+  handtekeningHint:"Bara huvudgästen skriver under, med fingret.",
+  tekenHier:"Skriv under här med fingret",
+  nietGetekend:"Inte underskrivet ännu",
+  getekend:"Underskrivet",
+  wissen:"Rensa",
+  versturen:"Skicka incheckning",
+  bezig:"Sparar…",
+  openen:"Er gästsida öppnas…",
+  privKort:"Vad vi gör med era uppgifter",
+  fOnvolledig:"Person {n} är inte fullständigt ifylld. Alla fält markerade med * är obligatoriska.",
+  fDoc14:"Person {n} är 14 år eller äldre och behöver en egen id-handling.",
+  fAchternaam2:"Person {n}: vid spanskt DNI-kort är andra efternamnet obligatoriskt.",
+  fContact:"Person {n}: fyll i telefonnummer eller e-postadress.", fMail:"Person {n}: kontrollera e-postadressen (till exempel namn@gmail.com).", fAppKnop:"Skicka ett WhatsApp-meddelande till Bart och Loes", fAppTekst:"Hej Bart och Loes! Vi lyckas inte skicka vårt formulär.",
+  fRelatie:"Person {n} är under 18 år. Välj relation till medföljande vuxen.",
+  fDatum:"Person {n}: födelsedatumet är inte giltigt.",
+  fP1Adres:"Person 1 har inte fyllt i någon adress ännu. Fyll i den först.",
+  fCode:"Länken saknar gästkod. Ingenting har sparats.",
+  fLink:"Den här länken är inte giltig. Kontakta Finca KaYu.",
+  fOphalen:"Bokningen kan inte hämtas just nu. Försök igen senare.",
+  fOpslaan:"Det gick inte att spara. Försök igen eller kontakta oss.",
+  klaar:"Incheckningen är klar ({n} {p}). Er gästsida öppnas…",
+  alGeregistreerd:"Incheckning har redan gjorts för den här bokningen ({n} {p}). Skickar ni igen ersätts de uppgifterna.",
+  naarGast:"Till er gästsida",
+  testmodus:"Testläge utan bokning. Länken saknar gästkod, så ingenting sparas.",
+  pKop:"Integritet",
+  pa:"Personuppgiftsansvarig: Bart Jacobus Johannus Kessler, verksam under namnet Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spanien. Kontakt: info@fincakayu.com eller WhatsApp +34 722 162 962.",
+  pb:"Varför: spansk lag (Real Decreto 933/2021) ålägger oss att registrera varje gäst och lämna uppgifterna till det spanska inrikesministeriet. Den rättsliga grunden är en rättslig förpliktelse (artikel 6.1 c i dataskyddsförordningen, GDPR). Samtycke behövs därför inte.",
+  pc:"Vilka uppgifter: namn, typ och nummer på er id-handling, födelsedatum, nationalitet, kön, adress, telefon eller e-post, för minderåriga relationen till den medföljande vuxna, samt underskriften. Vi varken tar eller sparar någon kopia eller bild av er id-handling.",
+  pd:"Mottagare: det spanska inrikesministeriet (SES Hospedajes). Underskriften skickas inte vidare; den sparar vi själva, enligt lagens krav.",
+  pe:"Lagringstid: 3 år efter att er vistelse har avslutats. Därefter raderas uppgifterna automatiskt.",
+  pf:"Uppgifterna lagras i en skyddad databas inom EU (Irland). Endast Bart och Loes på Finca KaYu har åtkomst. Ni har rätt till tillgång och rättelse. Radering är möjlig först när den lagstadgade lagringstiden har löpt ut. Ni kan lämna klagomål till den spanska dataskyddsmyndigheten (AEPD, aepd.es).",
+  pg:"Det ni fyller i sparas bara i er egen telefon, i högst 3 dagar, så att ni kan fortsätta där ni slutade. När formuläret har skickats raderas det.",
+  aTitel:"Er plats på Finca KaYu",
+  aNa:"För att bekräfta bokningen behöver vi uppgifter om alla som kommer.",
+  aGevraagd:"Så fungerar det",
+  aStap1:"Er vistelse: datum, husbil och önskemål.",
+  aStap2:"Alla som kommer: uppgifterna från pass eller id-kort för varje person, även för barn.",
+  aStap3:"En underskrift av huvudgästen, sedan skickar ni.",
+  aVerblijfKop:"1. Er vistelse",
+  aAankomst:"Ankomstdatum",
+  aVertrek:"Avresedatum",
+  aTijd:"Beräknad ankomsttid",
+  aTijdPh:"Till exempel 16:00",
+  aStroom:"El",
+  aJa:"Ja tack",
+  aNee:"Nej",
+  aDier:"Husdjur",
+  aDierGeen:"Inget",
+  aDierHond:"Hund",
+  aDierKat:"Katt",
+  aDierAnders:"Annat",
+  aDierAantal:"Hur många husdjur",
+  aKenteken:"Registreringsnummer",
+  aMerk:"Husbilens märke",
+  aLengte:"Husbilens längd i meter",
+  aLengtePh:"Till exempel 7,5",
+  aAantalHint:"Alla räknas, även barn och bebisar.",
+  aPersonenKop:"2. Alla som kommer",
+  aAllen:"För att bekräfta bokningen behöver vi uppgifter om alla som kommer. Välj nedan hur många ni kommer och fyll sedan i för alla, även barnen. Ni kan skicka först när uppgifterna för alla är kompletta.",
+  aTekenKop:"3. Underskrift",
+  aTekenHint:"Bara huvudgästen skriver under, med fingret.",
+  aVersturen:"Skicka bokning",
+  fADatums:"Välj ankomst- och avresedatum. Avresan måste vara efter ankomsten, ankomsten kan inte ligga bakåt i tiden eller mer än ett år framåt, och en vistelse är högst 60 nätter.",
+  fAVerblijf:"Steg 1 är inte komplett ännu. Alla fält markerade med * är obligatoriska.",
+  fAHb:"Huvudgästen har inte skrivit under ännu.",
+  fAIngevuld:"Den här förfrågan är redan ifylld. Er bokning är bekräftad.",
+  fATijd:"Fyll i beräknad ankomsttid i timmar och minuter, till exempel 16:00.",
+  fATekens:"Formuläret innehåller tecken som < eller >. Ta bort dem och försök igen.",
+  fALang:"Vi kan ta emot husbilar på upp till {m} meter. Är er husbil längre? Kontakta oss först, så ser vi tillsammans vad som går att ordna.",
+  fALangKnop:"Skriv till oss på WhatsApp",
+  fALangApp:"Hej Bart och Loes! Vår husbil är {lengte} meter. Kan vi ändå komma?",
+  fALengteFout:"Fyll i längden i meter, till exempel 7,5.",
+  aKlaar:"Tack så mycket! Vi har tagit emot er bokning och den är bekräftad.",
+  aAppTekst:"Hej Bart och Loes! Vi har skickat våra uppgifter. {naam}, {data}.",
+  aAppKnop:"Meddela Bart och Loes att det är klart",
+  cNa:"När ni har fyllt i detta är incheckningen klar. Dagen före ankomst öppnar samma länk er egen gästsida med grindkoden, wifi och våra tips.",
+  cKlaar:"Incheckningen är klar ({n} {p}). Tack så mycket!",
+  cOpenen:"Ett ögonblick…",
+  cPb:"Varför: för att registrera er bokning och känna igen er vid ankomst. Den rättsliga grunden är fullgörande av ett avtal (artikel 6.1 b i dataskyddsförordningen, GDPR).",
+  cPd:"Mottagare: ingen. Vi lämnar inte ut era uppgifter till någon annan."
+}
+};
+
+(function(){
+  "use strict";
+  var SUPA_URL = 'https://igguxbkkxgwiocvmwfid.supabase.co';
+  var SUPA_KEY = 'sb_publishable_tpTmu6Kvbqv4u4h9xAI8Vg_8zNVoY4k';
+  var CODE = new URLSearchParams(location.search).get('c') || '';
+  var TALEN = ['nl','en','de','es','it','fr','pt','cs','fi','no','sv'];
+  /* 30-09-2026 d (wens Bart): staat de pagina in het Nederlands, dan de Nederlandse naam achter elke taal, zodat je ziet wat je kiest */
+  var TAAL_NL = { en:'Engels', de:'Duits', es:'Spaans', it:'Italiaans', fr:'Frans', pt:'Portugees', cs:'Tsjechisch', fi:'Fins', no:'Noors', sv:'Zweeds' };
+  /* 23-10-2026: Noors (bokmål) en Zweeds; datums, landnamen en sorteren in nb-NO en sv-SE. De andere talen blijven zoals ze waren. */
+  var INTL_TAAL = { no:'nb-NO', sv:'sv-SE' };
+  function intlTaal(){ return INTL_TAAL[taal] || taal; }
+  var VAAK = ['NLD','BEL','DEU','GBR','ESP','FRA'];
+  var LANDEN = 'ABWAW,AFGAF,AGOAO,AIAAI,ALAAX,ALBAL,ANDAD,AREAE,ARGAR,ARMAM,ASMAS,ATAAQ,ATFTF,ATGAG,AUSAU,AUTAT,AZEAZ,BDIBI,BELBE,BENBJ,BESBQ,BFABF,BGDBD,BGRBG,BHRBH,BHSBS,BIHBA,BLMBL,BLRBY,BLZBZ,BMUBM,BOLBO,BRABR,BRBBB,BRNBN,BTNBT,BVTBV,BWABW,CAFCF,CANCA,CCKCC,CHECH,CHLCL,CHNCN,CIVCI,CMRCM,CODCD,COGCG,COKCK,COLCO,COMKM,CPVCV,CRICR,CUBCU,CUWCW,CXRCX,CYMKY,CYPCY,CZECZ,DEUDE,DJIDJ,DMADM,DNKDK,DOMDO,DZADZ,ECUEC,EGYEG,ERIER,ESHEH,ESPES,ESTEE,ETHET,FINFI,FJIFJ,FLKFK,FRAFR,FROFO,FSMFM,GABGA,GBRGB,GEOGE,GGYGG,GHAGH,GIBGI,GINGN,GLPGP,GMBGM,GNBGW,GNQGQ,GRCGR,GRDGD,GRLGL,GTMGT,GUFGF,GUMGU,GUYGY,HKGHK,HMDHM,HNDHN,HRVHR,HTIHT,HUNHU,IDNID,IMNIM,INDIN,IOTIO,IRLIE,IRNIR,IRQIQ,ISLIS,ISRIL,ITAIT,JAMJM,JEYJE,JORJO,JPNJP,KAZKZ,KENKE,KGZKG,KHMKH,KIRKI,KNAKN,KORKR,KWTKW,LAOLA,LBNLB,LBRLR,LBYLY,LCALC,LIELI,LKALK,LSOLS,LTULT,LUXLU,LVALV,MACMO,MAFMF,MARMA,MCOMC,MDAMD,MDGMG,MDVMV,MEXMX,MHLMH,MKDMK,MLIML,MLTMT,MMRMM,MNEME,MNGMN,MNPMP,MOZMZ,MRTMR,MSRMS,MTQMQ,MUSMU,MWIMW,MYSMY,MYTYT,NAMNA,NCLNC,NERNE,NFKNF,NGANG,NICNI,NIUNU,NLDNL,NORNO,NPLNP,NRUNR,NZLNZ,OMNOM,PAKPK,PANPA,PCNPN,PERPE,PHLPH,PLWPW,PNGPG,POLPL,PRIPR,PRKKP,PRTPT,PRYPY,PSEPS,PYFPF,QATQA,REURE,ROURO,RUSRU,RWARW,SAUSA,SDNSD,SENSN,SGPSG,SGSGS,SHNSH,SJMSJ,SLBSB,SLESL,SLVSV,SMRSM,SOMSO,SPMPM,SRBRS,SSDSS,STPST,SURSR,SVKSK,SVNSI,SWESE,SWZSZ,SXMSX,SYCSC,SYRSY,TCATC,TCDTD,TGOTG,THATH,TJKTJ,TKLTK,TKMTM,TLSTL,TONTO,TTOTT,TUNTN,TURTR,TUVTV,TWNTW,TZATZ,UGAUG,UKRUA,UMIUM,URYUY,USAUS,UZBUZ,VATVA,VCTVC,VENVE,VGBVG,VIRVI,VNMVN,VUTVU,WLFWF,WSMWS,YEMYE,ZAFZA,ZMBZM,ZWEZW'.split(',').map(function(s){ return [s.slice(0,3), s.slice(3)]; });
+
+  var taal = 'en', boeking = null, pads = {};
+  /* modus 'alles' = iedereen invullen (vervangt), 'erbij' = alleen nieuwe personen toevoegen, 'dicht' = al gemeld bij SES */
+  var modus = 'alles', offset = 0;
+  /* versie h (plan camper-aanvraaglink): aanvraag = formulier zonder boeking (datums, personen, één handtekening; huisregels sinds 30-09-2026 a op de gastenpagina);
+     camper = geen tekst over SES of de Spaanse wet (campers gaan nooit naar SES) */
+  var aanvraag = new URLSearchParams(location.search).get('aanvraag') === '1', camper = aanvraag, hbPad = null;
+  var AANVRAAG_ALT = { titel:'aTitel', na:'aNa', gevraagd:'aGevraagd', stap1:'aStap1', stap2:'aStap2', stap3:'aStap3', aantalHint:'aAantalHint', versturen:'aVersturen', klaar:'aKlaar', openen:'cOpenen' };
+  var CAMPER_ALT = { na:'cNa', klaar:'cKlaar', openen:'cOpenen', pb:'cPb', pd:'cPd' };
+  /* 30-09-2026 a (Bart): alleen de hoofdboeker tekent, ook bij kamers. Bij 'erbij' (later iemand toevoegen) tekent niemand meer. */
+  function tekentZelf(p){ return !aanvraag && modus !== 'erbij' && p === 'p1_'; }
+  var GEMELD = ['verzenden','gemeld','bevestigd','onzeker','handmatig'];
+  function isHoofd(n){ return modus !== 'erbij' && n === 1; }
+  function nummer(n){ return modus === 'erbij' ? offset + n : n; }
+  function eersteNaam(){ return (boeking && boeking.namen && boeking.namen[0]) || (boeking && boeking.gast) || ''; }
+  var $ = function(id){ return document.getElementById(id); };
+  var aantalSel = $('aantal'), houder = $('personen'), form = $('form'), verdictBox = $('verdict'), boekingBox = $('boeking');
+
+  function t(k, vars){
+    if (aanvraag && AANVRAAG_ALT[k]) k = AANVRAAG_ALT[k]; else if (camper && CAMPER_ALT[k] && T[taal] && T[taal][CAMPER_ALT[k]]) k = CAMPER_ALT[k];
+    var s = (T[taal] && T[taal][k]) || T.en[k] || T.nl[k] || k;
+    if (vars) Object.keys(vars).forEach(function(v){ s = s.split('{' + v + '}').join(vars[v]); });
+    return s;
+  }
+  function esc(s){ return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function meervoud(n){ return n === 1 ? t('p1') : (taal === 'cs' && n >= 2 && n <= 4) ? t('p24') : t('pN'); }
+  function mensen(n){ return n + ' ' + meervoud(n); }
+
+  function rpc(naam, body){
+    return fetch(SUPA_URL + '/rest/v1/rpc/' + naam, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'apikey':SUPA_KEY, 'Authorization':'Bearer ' + SUPA_KEY },
+      body: JSON.stringify(body)
+    }).then(function(r){
+      return r.text().then(function(txt){
+        var j = null; try { j = JSON.parse(txt); } catch(e){}
+        if (!r.ok) throw new Error('server ' + r.status);
+        return j;
+      });
+    });
+  }
+
+  /* ---------- taal ---------- */
+  function startTaal(){
+    try { var b = localStorage.getItem('ontbijtTaal'); if (TALEN.indexOf(b) >= 0) return b; } catch(e){}
+    var n = (navigator.language || 'en').slice(0,2).toLowerCase();
+    if (n === 'nb' || n === 'nn') n = 'no'; /* 23-10-2026: Noorse telefoons melden nb, nn of no */
+    return TALEN.indexOf(n) >= 0 ? n : 'en';
+  }
+  function landNaam(a2){
+    try { return new Intl.DisplayNames([intlTaal()], {type:'region'}).of(a2) || a2; } catch(e){ return a2; }
+  }
+  function vulLandSelect(sel){
+    var waarde = sel.value;
+    var lijst = LANDEN.map(function(l){ return [l[0], landNaam(l[1])]; });
+    var coll; try { coll = new Intl.Collator(intlTaal()); } catch(e){ coll = { compare:function(a,b){ return a < b ? -1 : a > b ? 1 : 0; } }; }
+    lijst.sort(function(a,b){ return coll.compare(a[1], b[1]); });
+    var vaak = VAAK.map(function(c){ var l = LANDEN.filter(function(x){ return x[0] === c; })[0]; return [c, landNaam(l[1])]; });
+    sel.innerHTML = '<option value="">' + esc(t('kies')) + '</option>' +
+      '<optgroup label="' + esc(t('vaak')) + '">' + vaak.map(function(l){ return '<option value="' + l[0] + '">' + esc(l[1]) + '</option>'; }).join('') + '</optgroup>' +
+      '<optgroup label="' + esc(t('alle')) + '">' + lijst.map(function(l){ return '<option value="' + l[0] + '">' + esc(l[1]) + '</option>'; }).join('') + '</optgroup>';
+    sel.value = waarde;
+  }
+  function vulAantal(){
+    /* 10-10-2026 b: bij de aanvraag eerst zelf het aantal kiezen (stond op 1, dan kon een stel alleen de hoofdboeker invullen) */
+    var w = aanvraag ? aantalSel.value : (aantalSel.value || '1'), html = aanvraag ? '<option value="">' + esc(t('kies')) + '</option>' : '';
+    for (var i = 1; i <= 20; i++) html += '<option value="' + i + '">' + esc(mensen(i)) + '</option>';
+    aantalSel.innerHTML = html; aantalSel.value = w;
+  }
+  function vertaal(){
+    document.documentElement.lang = taal;
+    $('taalKeuze').value = taal;
+    [].forEach.call($('taalKeuze').options, function(o){ if (!o.getAttribute('data-eigen')) o.setAttribute('data-eigen', o.textContent); o.textContent = o.getAttribute('data-eigen') + (taal === 'nl' && TAAL_NL[o.value] ? ' (' + TAAL_NL[o.value] + ')' : ''); });
+    document.querySelectorAll('[data-t]').forEach(function(el){ el.textContent = t(el.getAttribute('data-t')); });
+    document.querySelectorAll('select[data-land]').forEach(vulLandSelect);
+    document.querySelectorAll('select[data-kies]').forEach(function(sel){ if (sel.options[0]) sel.options[0].textContent = t('kies'); });
+    vulAantal();
+    document.querySelectorAll('.sigpad').forEach(function(p){ var k = p.id.replace('pad',''), pd = pads[k] || (k === 'hb_' ? hbPad : null), st = $(k + 'state'); if (st) st.textContent = pd && pd.heeftInkt() ? t('getekend') : t('nietGetekend'); });
+    document.querySelectorAll('[data-ph]').forEach(function(el){ el.placeholder = t(el.getAttribute('data-ph')); });
+    zetCamperVelden();
+    toonBoeking();
+    toonLengteMelding();
+  }
+  $('taalKeuze').addEventListener('change', function(){
+    taal = this.value;
+    verdictBox.hidden = true; wisVeldFouten();
+    try { localStorage.setItem('ontbijtTaal', taal); } catch(e){}
+    vertaal();
+    if (aanvraagKlaar) toonAanvraagKlaar(); else if (aanvraagAlIngevuld) toonAlIngevuld(); else if (stapKlaar) toonStap();
+  });
+
+  /* ---------- blokken per persoon ---------- */
+  function veld(id, key, o){
+    o = o || {};
+    var ster = o.req ? '<span class="req">*</span>' : '';
+    var sub = o.sub ? ' <span class="sub" data-t="' + o.sub + '"></span>' : '';
+    return '<div class="field' + (o.wide ? ' wide' : '') + '" id="' + id + '_veld"' + (o.verborgen ? ' hidden' : '') + '>' +
+      '<label for="' + (o.labelFor || id) + '"><span data-t="' + key + '"></span>' + ster + sub + '</label>' +
+      (o.html || '<input id="' + id + '"' + (o.attr ? ' ' + o.attr : '') + (o.attr && /maxlength=/.test(o.attr) ? '' : ' maxlength="200"') + '>') + /* 03-10-2026 b: nooit langer dan de database toestaat */
+      '</div>';
+  }
+  function kiesSelect(id, opties){
+    return '<select id="' + id + '" data-kies>' + '<option value=""></option>' +
+      opties.map(function(o){ return '<option value="' + o[0] + '" data-t="' + o[1] + '"></option>'; }).join('') + '</select>';
+  }
+  /* 10-10-2026 a (Bart): geboortedatum als drie vakjes (dag, maand, jaar) met het cijfertoetsenbord; na twee cijfers springt het naar het volgende vakje.
+     Het verborgen veld fechaNacimiento houdt de datum als JJJJ-MM-DD, precies zoals voorheen (controles, leeftijd, SES). */
+  var GEB_VAK = ['D', 'M', 'J'];
+  function gebHtml(p, hoofd){
+    var vak = function(s, key, max, ac){ return '<label for="' + p + 'geb' + s + '"><span data-t="' + key + '"></span>' +
+      '<input id="' + p + 'geb' + s + '" data-geb="' + s + '" inputmode="numeric" pattern="[0-9]*" maxlength="' + max + '" autocomplete="' + (hoofd ? ac : 'off') + '"></label>'; };
+    return '<input type="hidden" id="' + p + 'fechaNacimiento">' +
+      '<div class="gebrij">' + vak('D', 'gebDag', 2, 'bday-day') + vak('M', 'gebMaand', 2, 'bday-month') + vak('J', 'gebJaar', 4, 'bday-year') + '</div>';
+  }
+  /* leeg = niets ingevuld; "?" = begonnen maar niet compleet (geeft de melding dat de geboortedatum niet klopt) */
+  function gebSync(p){
+    var d = $(p + 'gebD').value.replace(/\D/g, ''), m = $(p + 'gebM').value.replace(/\D/g, ''), j = $(p + 'gebJ').value.replace(/\D/g, '');
+    $(p + 'fechaNacimiento').value = (!d && !m && !j) ? '' : (/^\d{1,2}$/.test(d) && /^\d{1,2}$/.test(m) && /^\d{4}$/.test(j)) ? j + '-' + ('0' + m).slice(-2) + '-' + ('0' + d).slice(-2) : '?';
+  }
+  function gebKoppel(p){
+    GEB_VAK.forEach(function(s, i){
+      var el = $(p + 'geb' + s);
+      el.addEventListener('input', function(){
+        var schoon = el.value.replace(/\D/g, '');
+        if (schoon !== el.value) el.value = schoon;
+        gebSync(p); pasAan(p);
+        if (i < 2 && schoon.length === 2 && document.activeElement === el){ var volgend = $(p + 'geb' + GEB_VAK[i + 1]); volgend.focus(); try { volgend.select(); } catch(x){} }
+      });
+      el.addEventListener('change', function(){
+        /* jaar met twee cijfers (58) wordt 1958; 05 wordt 2005 */
+        if (s === 'J' && /^\d{2}$/.test(el.value)){ var nu = new Date().getFullYear() % 100; el.value = (+el.value > nu ? '19' : '20') + el.value; }
+        gebSync(p); pasAan(p);
+      });
+    });
+    gebSync(p);
+  }
+  /* bij een fout: het vakje dat aandacht nodig heeft */
+  function gebVeld(p){
+    var d = $(p + 'gebD'), m = $(p + 'gebM'), j = $(p + 'gebJ');
+    if (!d) return $(p + 'fechaNacimiento');
+    if (!d.value || +d.value < 1 || +d.value > 31) return d;
+    if (!m.value || +m.value < 1 || +m.value > 12) return m;
+    if (j.value.length !== 4) return j;
+    return d;
+  }
+  function echteDatum(geb){ if (!/^\d{4}-\d{2}-\d{2}$/.test(geb)) return false; var x = new Date(geb + 'T12:00:00Z'); return !isNaN(x) && x.toISOString().slice(0, 10) === geb; }
+  function blok(n){
+    var p = 'p' + n + '_';
+    var hoofd = isHoofd(n), nr = nummer(n);
+    var titel = hoofd ? '<span data-t="hoofdboeker"></span>' : '<span data-t="persoon"></span> ' + nr;
+    return '<section class="card persoon" id="' + p + 'card">' +
+      '<h2><span class="badge">' + nr + '</span>' + titel + '<span class="pklaar" id="' + p + 'klaar" hidden>✓</span></h2>' +
+      (modus === 'erbij' ? '<label class="zelfde" style="display:flex;gap:10px;align-items:center;margin:4px 0 12px;font-size:15px"><input type="checkbox" id="' + p + 'zelfde" style="width:22px;height:22px"> <span>' + esc(t('zelfdeAdres', { naam: eersteNaam() })) + '</span></label>'
+        : '') +
+      '<div class="grid">' +
+        veld(p+'nombre','voornaam',{req:true, attr:'autocomplete="off" autocapitalize="words"'}) +
+        veld(p+'apellido1','achternaam',{req:true, attr:'autocomplete="off" autocapitalize="words"'}) +
+        veld(p+'fechaNacimiento','geboortedatum',{req:true, labelFor:p+'gebD', html: gebHtml(p, hoofd)}) +
+        veld(p+'sexo','geslacht',{req:true, html: kiesSelect(p+'sexo', [['H','man'],['M','vrouw'],['O','anders']])}) +
+        veld(p+'nacionalidad','nationaliteit',{req:true, wide:true, html:'<select id="' + p + 'nacionalidad" data-land></select>'}) +
+        veld(p+'tipoDocumento','docSoort',{req:true, wide:true, html: kiesSelect(p+'tipoDocumento', [['PAS','docPAS'],['OTRO','docOTRO'],['NIF','docNIF'],['NIE','docNIE'],['GEEN','docGEEN']])}) +
+        /* 10-10-2026 b: tweede achternaam alleen bij een Spaans document (DNI of NIE/TIE); verplicht blijft hij bij een DNI */
+        veld(p+'apellido2','achternaam2',{wide:true, verborgen:true, sub:'achternaam2Hint', attr:'autocomplete="off" autocapitalize="words"'}) +
+        veld(p+'numeroDocumento','docNummer',{req:true, attr:'class="mono" autocapitalize="characters" autocomplete="off" spellcheck="false"'}) +
+        '<p class="hint field wide" id="' + p + 'docHint" hidden></p>' +
+        veld(p+'soporteDocumento','soporte',{req:true, verborgen:true, attr:'class="mono" maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false"'}) +
+        '<p class="hint field wide" id="' + p + 'soporteHint" hidden data-t="soporteHint"></p>' +
+        veld(p+'parentesco','relatie',{req:true, wide:true, verborgen:true, html: kiesSelect(p+'parentesco', [['HJ','relHJ'],['ANDER','relANDER']])}) +
+      '</div>' +
+      /* 10-10-2026 b: persoon 2 en verder: standaard hetzelfde adres en dezelfde contactgegevens als persoon 1 (vervangt de knop overnemen) */
+      (modus !== 'erbij' && n > 1 ? '<label class="zelfde1"><input type="checkbox" id="' + p + 'zelfde1" checked> <span data-t="zelfdeAls1"></span></label>' : '') +
+      '<div class="grid" id="' + p + 'adresgrid">' +
+        veld(p+'direccion','adres',{req:true, wide:true, attr:'list="dl_direccion" autocomplete="' + (hoofd ? 'street-address' : 'off') + '"'}) +
+        veld(p+'municipio','woonplaats',{req:true, attr:'list="dl_municipio" autocomplete="' + (hoofd ? 'address-level2' : 'off') + '"'}) +
+        veld(p+'codigoPostal','postcode',{req:true, attr:'list="dl_codigoPostal" autocomplete="' + (hoofd ? 'postal-code' : 'off') + '"'}) +
+        veld(p+'pais','land',{req:true, wide:true, html:'<select id="' + p + 'pais" data-land></select>'}) +
+        /* 21-10-2026 e: adres in Spanje (alleen kamers en hele finca): SES wil de gemeente als INE-code */
+        veld(p+'codigoMunicipio','gemeente',{req:true, wide:true, verborgen:true, html:'<p class="hint" style="margin:0 0 6px" data-t="gemeenteUitleg"></p><select id="' + p + 'codigoMunicipio" data-kies><option value=""></option></select>'}) +
+        veld(p+'telefono','telefoon',{req:hoofd, attr:'type="tel" inputmode="tel" autocomplete="' + (hoofd ? 'tel' : 'off') + '"'}) +
+        veld(p+'correo','email',{req:hoofd, attr:'type="email" inputmode="email" autocomplete="' + (hoofd ? 'email' : 'off') + '" autocapitalize="off"'}) +
+        (!hoofd ? '<p class="hint field wide" data-t="contactHint"></p>' : '') +
+      '</div>' +
+      '<div class="sigwrap" id="' + p + 'sig">' +
+        '<h3 data-t="handtekening"></h3>' +
+        '<p class="hint" style="margin-top:-6px" data-t="handtekeningHint"></p>' +
+        '<div class="sigpad" id="' + p + 'pad"><canvas id="' + p + 'canvas"></canvas><div class="ph" data-t="tekenHier"></div></div>' +
+        '<div class="sigrow"><span class="hint" id="' + p + 'state"></span><button type="button" class="clearbtn" id="' + p + 'clear" data-t="wissen"></button></div>' +
+      '</div>' +
+    '</section>';
+  }
+
+  function maakPad(p){
+    var pad = $(p + 'pad'), canvas = $(p + 'canvas'), state = $(p + 'state'), clear = $(p + 'clear');
+    var ctx = canvas.getContext('2d');
+    var drawing = false, ink = false, last = null, breedte = 0;
+    function size(){
+      var r = canvas.getBoundingClientRect();
+      if (!r.width) return;
+      if (Math.round(r.width) === breedte) return;  /* alleen bij echte breedteverandering, niet bij scrollen */
+      breedte = Math.round(r.width);
+      var dpr = window.devicePixelRatio || 1;
+      var data = ink ? canvas.toDataURL() : null;
+      canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#2B1A12';
+      if (data){ var img = new Image(); img.onload = function(){ ctx.drawImage(img,0,0,r.width,r.height); }; img.src = data; }
+    }
+    function pos(e){ var r = canvas.getBoundingClientRect(); return { x:e.clientX - r.left, y:e.clientY - r.top }; }
+    canvas.addEventListener('pointerdown', function(e){
+      size(); e.preventDefault();
+      try { canvas.setPointerCapture(e.pointerId); } catch(x){}
+      drawing = true; last = pos(e);
+      ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(last.x + 0.1, last.y); ctx.stroke();
+      if (!ink){ ink = true; pad.classList.add('signed'); state.textContent = t('getekend'); pad.classList.remove('fout-veld'); var vf = pad.parentNode && pad.parentNode.querySelector('.veldfout'); if (vf) vf.parentNode.removeChild(vf); }
+    });
+    canvas.addEventListener('pointermove', function(e){
+      if (!drawing) return; e.preventDefault();
+      var q = pos(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(q.x, q.y); ctx.stroke(); last = q;
+    });
+    function stop(){ drawing = false; }
+    canvas.addEventListener('pointerup', stop); canvas.addEventListener('pointercancel', stop);
+    clear.addEventListener('click', function(){
+      ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.restore();
+      ink = false; pad.classList.remove('signed'); state.textContent = t('nietGetekend');
+    });
+    window.addEventListener('resize', size);
+    function herstel(data){
+      if (!data) return; size();
+      var r = canvas.getBoundingClientRect(), img = new Image();
+      img.onload = function(){ ctx.drawImage(img,0,0,r.width,r.height); };
+      img.src = data; ink = true; pad.classList.add('signed'); state.textContent = t('getekend');
+    }
+    return { size:size, herstel:herstel, heeftInkt:function(){ return ink; }, pad:pad,
+             afbeelding:function(){ return ink ? canvas.toDataURL('image/png') : null; } };
+  }
+
+  /* leeftijd op de aankomstdag (of vandaag als die niet bekend is) */
+  function leeftijd(geb){
+    if (!geb || !/^\d{4}-\d{2}-\d{2}$/.test(geb)) return null;
+    var ref = (boeking && boeking.van) ? boeking.van : (aanvraag && /^\d{4}-\d{2}-\d{2}$/.test($('aAankomst').value) ? $('aAankomst').value : new Date().toISOString().slice(0,10));
+    var a = +ref.slice(0,4) - +geb.slice(0,4);
+    if (ref.slice(5) < geb.slice(5)) a--;
+    return a;
+  }
+  function pasAan(p){
+    if (!$(p + 'tipoDocumento')) return; /* 10-10-2026 b: bij de aanvraag bestaan er nog geen personen zolang het aantal niet gekozen is */
+    var tipo = $(p + 'tipoDocumento').value;
+    var jaren = leeftijd($(p + 'fechaNacimiento').value);
+    var metSoporte = tipo === 'NIF' || tipo === 'NIE';
+    $(p + 'soporteDocumento_veld').hidden = !metSoporte;
+    $(p + 'soporteHint').hidden = !metSoporte;
+    $(p + 'numeroDocumento_veld').hidden = tipo === 'GEEN';
+    $(p + 'apellido2_veld').hidden = !metSoporte;
+    var dh = $(p + 'docHint'), dk = { PAS:'docHintPAS', OTRO:'docHintOTRO', NIF:'docHintNIF', NIE:'docHintNIE' }[tipo];
+    if (dh){ dh.hidden = !dk; if (dk){ dh.setAttribute('data-t', dk); dh.textContent = t(dk); } else dh.removeAttribute('data-t'); }
+    $(p + 'parentesco_veld').hidden = (modus !== 'erbij' && p === 'p1_') || !(jaren !== null && jaren < 18);
+    $(p + 'sig').hidden = !tekentZelf(p);
+    if (tekentZelf(p) && pads[p]) pads[p].size();
+  }
+
+  function bouw(){
+    var n = aanvraag && !aantalSel.value ? 0 : (parseInt(aantalSel.value, 10) || 1);
+    var bewaard = {};
+    var vinkjes = {};
+    houder.querySelectorAll('input,select').forEach(function(el){ if (el.id){ if (el.type === 'checkbox') vinkjes[el.id] = el.checked; else bewaard[el.id] = el.getAttribute('data-auto') ? '' : (el.value || el.getAttribute('data-wil') || ''); } }); /* 21-10-2026 e: data-wil = gemeente die nog op de lijst wacht; een vanzelf gekozen gemeente wordt opnieuw bepaald */
+    var handtek = {}; Object.keys(pads).forEach(function(k){ if (pads[k].heeftInkt()) handtek[k] = pads[k].afbeelding(); });
+    var html = ''; for (var i = 1; i <= n; i++) html += blok(i);
+    houder.innerHTML = html;
+    pads = {};
+    vertaal();
+    Object.keys(bewaard).forEach(function(id){ var el = $(id); if (el) el.value = bewaard[id]; });
+    Object.keys(vinkjes).forEach(function(id){ var el = $(id); if (el) el.checked = vinkjes[id]; });
+    for (var j = 1; j <= n; j++){
+      var p = 'p' + j + '_';
+      pads[p] = maakPad(p);
+      $(p + 'state').textContent = t('nietGetekend');
+      if (modus !== 'erbij' && j > 1 && $(p + 'zelfde1') && !((p + 'zelfde1') in vinkjes) && bewaard[p + 'direccion']) $(p + 'zelfde1').checked = false; /* had al een eigen adres getypt */
+      if (modus === 'erbij') koppelZelfde(p); else if (j > 1) koppelZelfde1(p);
+      (function(p){
+        $(p + 'tipoDocumento').addEventListener('change', function(){ pasAan(p); });
+        gebKoppel(p);
+      })(p);
+      pasAan(p);
+      if (bewaard[p + 'codigoMunicipio']) $(p + 'codigoMunicipio').setAttribute('data-wil', bewaard[p + 'codigoMunicipio']); /* 21-10-2026 e */
+      vulGemeente(p);
+      if (handtek[p]) pads[p].herstel(handtek[p]);
+    }
+    verdictBox.hidden = true;
+    werkVinkjesBij();
+  }
+
+  function isZelfde(p){ var c = $(p + 'zelfde'); return !!(c && c.checked); }
+  function koppelZelfde(p){
+    var c = $(p + 'zelfde'); if (!c) return;
+    function zet(){ $(p + 'adresgrid').hidden = c.checked; }
+    c.addEventListener('change', zet); zet();
+  }
+  /* 10-10-2026 b: vinkje "zelfde adres en contactgegevens als persoon 1" (persoon 2 en verder). Aangevinkt: de adresvakjes verdwijnen
+     en bij het versturen gaan de gegevens van persoon 1 per persoon mee (zoals de oude knop overnemen deed, alleen zonder typen). */
+  function isZelfde1(p){ var c = $(p + 'zelfde1'); return !!(c && c.checked); }
+  function koppelZelfde1(p){
+    var c = $(p + 'zelfde1'); if (!c) return;
+    function zet(){ $(p + 'adresgrid').hidden = c.checked; }
+    c.addEventListener('change', zet); zet();
+  }
+
+  /* 21-10-2026 e (Bart: zo veel mogelijk automatisch): SES wil bij een adres in Spanje de gemeente als INE-code (5 cijfers).
+     De gast kiest die uit de officiële INE-lijst (gemeenten.txt, INE 1-1-2026, 8132 gemeenten, "code|naam"). Alleen de
+     gemeenten van de provincie van de postcode (de eerste twee cijfers van een Spaanse postcode zijn de INE-provinciecode);
+     is de postcode nog geen 5 cijfers, dan de hele lijst. Staat de getypte woonplaats er precies één keer in, dan staat die al
+     gekozen. Alleen voor kamers en de hele finca (campers gaan nooit naar SES). */
+  var GEMEENTEN = null, gemeentenBezig = false, gemeentenMislukt = false, gemeentenPogingen = 0;
+  var LIDWOORD = { 'La':1, 'El':1, 'Los':1, 'Las':1, 'la':1, 'el':1, 'A':1, 'O':1, "L'":1, "l'":1, 'Les':1, 'les':1, 'Els':1, 'els':1, 'Es':1, 'As':1, 'Os':1, 'Sa':1, 'Ses':1 };
+  /* INE zet het lidwoord achteraan ("Alfàs del Pi, l'"); in de lijst staat het vooraan ("l'Alfàs del Pi") */
+  function gemeenteWeergave(n){
+    return n.split('/').map(function(d){ var m = /^(.*), ([^,]+)$/.exec(d); return m && LIDWOORD[m[2]] ? m[2] + (/'$/.test(m[2]) ? '' : ' ') + m[1] : d; }).join('/');
+  }
+  function gemeenteSleutel(x){
+    return String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+      .replace(/^(la|el|los|las|l|les|els|es|as|os|sa|ses|a|o) /, '');
+  }
+  function laadGemeenten(){
+    if (GEMEENTEN || gemeentenBezig) return;
+    gemeentenBezig = true; gemeentenPogingen++;
+    fetch('/gemeenten.txt').then(function(r){ if (!r.ok) throw new Error('status ' + r.status); return r.text(); }).then(function(txt){
+      var lijst = [];
+      txt.split('\n').forEach(function(regel){
+        var m = /^(\d{5})\|(.+)$/.exec(regel.replace(/\r$/, '')); if (!m) return;
+        var w = gemeenteWeergave(m[2]);
+        lijst.push({ c: m[1], n: m[2], w: w, k: [gemeenteSleutel(w)].concat(w.split('/').map(gemeenteSleutel)) });
+      });
+      if (lijst.length < 8000) throw new Error('lijst onvolledig');
+      var coll = new Intl.Collator('es'); lijst.sort(function(a, b){ return coll.compare(a.w, b.w) || coll.compare(a.c, b.c); }); /* op de naam zoals de gast hem ziet (l'Alfàs onder de L) */
+      GEMEENTEN = lijst; gemeentenMislukt = false;
+    }).catch(function(){ gemeentenMislukt = true; }).then(function(){ gemeentenBezig = false; vulAlleGemeenten(); });
+  }
+  function gemeenteNodig(p){ var land = $(p + 'pais'); return !camper && !!land && land.value === 'ESP'; }
+  function vulGemeente(p){
+    var sel = $(p + 'codigoMunicipio'), vak = $(p + 'codigoMunicipio_veld'); if (!sel || !vak) return;
+    var nodig = gemeenteNodig(p);
+    if (nodig && !GEMEENTEN && !gemeentenMislukt) laadGemeenten(); /* mislukt: pas bij Versturen opnieuw proberen (geen eindeloze herhaling) */
+    vak.hidden = !nodig || (!GEMEENTEN && gemeentenMislukt);
+    if (!nodig || !GEMEENTEN) return;
+    var wil = sel.getAttribute('data-auto') ? '' : (sel.value || sel.getAttribute('data-wil') || ''); /* vanzelf gekozen: opnieuw bepalen bij elke wijziging */
+    var pc = (($(p + 'codigoPostal') || {}).value || '').replace(/\s+/g, '');
+    var prov = /^\d{5}$/.test(pc) ? pc.slice(0, 2) : '';
+    var lijst = prov ? GEMEENTEN.filter(function(g){ return g.c.slice(0, 2) === prov; }) : [];
+    if (!lijst.length){ lijst = GEMEENTEN; prov = 'alle'; }
+    if (sel.getAttribute('data-lijst') !== prov){
+      sel.innerHTML = '<option value="">' + esc(t('kies')) + '</option>' + lijst.map(function(g){ return '<option value="' + g.c + '">' + esc(g.w) + '</option>'; }).join('');
+      sel.setAttribute('data-lijst', prov);
+    }
+    if (wil && !lijst.some(function(g){ return g.c === wil; })) wil = '';
+    if (!wil){
+      var k = gemeenteSleutel(($(p + 'municipio') || {}).value);
+      var raak = k ? lijst.filter(function(g){ return g.k.indexOf(k) >= 0; }) : [];
+      if (raak.length === 1) wil = raak[0].c;
+      if (wil) sel.setAttribute('data-auto', '1'); else sel.removeAttribute('data-auto');
+    }
+    sel.value = wil; sel.removeAttribute('data-wil');
+  }
+  function vulAlleGemeenten(){ document.querySelectorAll('select[id$="_codigoMunicipio"]').forEach(function(sel){ vulGemeente(sel.id.replace(/codigoMunicipio$/, '')); }); }
+  houder.addEventListener('change', function(e){ var m = /^(p\d+_)(pais|municipio|codigoPostal)$/.exec((e.target && e.target.id) || ''); if (m) vulGemeente(m[1]);
+    if (e.target && /_codigoMunicipio$/.test(e.target.id || '')) e.target.removeAttribute('data-auto'); }); /* zelf gekozen (of een bewaarde keuze): blijft staan */
+  houder.addEventListener('input', function(e){ var m = /^(p\d+_)codigoPostal$/.exec((e.target && e.target.id) || ''); if (m) vulGemeente(m[1]); });
+
+  /* suggesties: alles wat al ergens is ingevuld komt in de keuzelijst */
+  function verversSuggesties(){
+    ['direccion','municipio','codigoPostal'].forEach(function(f){
+      var waarden = [];
+      document.querySelectorAll('[id$="_' + f + '"]').forEach(function(el){ var v = (el.value || '').trim(); if (v && waarden.indexOf(v) < 0) waarden.push(v); });
+      $('dl_' + f).innerHTML = waarden.map(function(v){ return '<option value="' + esc(v) + '">'; }).join('');
+    });
+  }
+  document.addEventListener('focusin', function(e){ if (e.target && /_(direccion|municipio|codigoPostal)$/.test(e.target.id || '')) verversSuggesties(); });
+  /* wie het vakje verbetert, ziet de rode rand en de melding erboven verdwijnen */
+  function weg(e){
+    if (!e.target || !e.target.classList) return;
+    e.target.classList.remove('fout-veld');
+    var f = e.target.closest ? e.target.closest('.field') : null;
+    if (f) f.querySelectorAll('.veldfout').forEach(function(x){ x.parentNode.removeChild(x); });
+  }
+  document.addEventListener('input', weg);
+  document.addEventListener('change', weg);
+  aantalSel.addEventListener('change', bouw);
+
+  /* naam van het vakje zoals het erboven staat (in de taal van de pagina) */
+  function veldNaam(el){
+    var f = el && el.closest ? el.closest('.field') : null, sp = f ? f.querySelector('label > span[data-t]') : null;
+    return sp ? sp.textContent.trim() : '';
+  }
+  function wisVeldFouten(){ document.querySelectorAll('.veldfout').forEach(function(x){ x.parentNode.removeChild(x); }); }
+  function toonFout(tekst, el){
+    verdictBox.hidden = false; verdictBox.className = 'verdict bad';
+    verdictBox.innerHTML = '<span><b>' + esc(tekst) + '</b></span>';
+    wisVeldFouten();
+    if (el){
+      el.classList.add('fout-veld');
+      /* 10-10-2026 b: dezelfde melding ook direct boven het vakje, zodat de gast hem ziet waar hij is */
+      var plek = el.closest ? (el.closest('.field') || el.closest('.sigwrap') || el.closest('.card')) : null, mld = null;
+      if (plek){
+        mld = document.createElement('div'); mld.className = 'veldfout'; mld.textContent = tekst;
+        var kop = null; for (var c = plek.firstElementChild; c; c = c.nextElementSibling){ if (/^(LABEL|H2|H3)$/.test(c.tagName)){ kop = c; break; } }
+        if (kop) kop.insertAdjacentElement('afterend', mld); else plek.insertBefore(mld, plek.firstChild);
+      }
+      (mld || el).scrollIntoView({ behavior:'smooth', block:'center' });
+      if (el.focus) try { el.focus({ preventScroll:true }); } catch(x){}
+    } else window.scrollTo({ top:0, behavior:'smooth' });
+  }
+
+  /* 03-10-2026 b (Bart): lukt het versturen niet (geen internet, storing), dan kan de gast met één tik Bart en Loes appen.
+     Zo weten Bart en Loes het altijd meteen. */
+  function voegAppKnopToe(){
+    var naam = '', href = 'https://wa.me/34722162962';
+    try {
+      var p1 = [waarde('p1_', 'nombre'), waarde('p1_', 'apellido1')].filter(Boolean).join(' ');
+      /* aanvraag: de naam die de gast invult; gewone check-in: de naam van de boeking (die kent Bart) */
+      naam = aanvraag ? (p1 || eersteNaam()) : ((boeking && boeking.gast) || eersteNaam() || p1);
+      href += '?text=' + encodeURIComponent(t('fAppTekst') + (naam ? ' ' + naam : ''));
+    } catch(e){}
+    verdictBox.insertAdjacentHTML('beforeend', '<a class="appknop" id="foutAppKnop" href="' + href + '" target="_blank" rel="noopener">' + esc(t('fAppKnop')) + '</a>');
+  }
+  /* weigert de database tijdens het versturen (behalve "al ingevuld"/"al gemeld"), dan altijd de melding plus de app-knop:
+     het formulier vangt de bekende fouten zelf al af, dus een weigering van de database is altijd iets onverwachts */
+  function toonFoutMetApp(tekst, el){ toonFout(tekst, el); voegAppKnopToe(); }
+  function toonOpslaanFout(){ toonFoutMetApp(t('fOpslaan')); }
+
+  /* ---------- boeking ophalen ---------- */
+  function datumBereik(){
+    if (!boeking || !boeking.van || !boeking.tot) return '';
+    try {
+      var f = new Intl.DateTimeFormat(intlTaal(), { day:'numeric', month:'short', year:'numeric' });
+      var a = new Date(boeking.van + 'T12:00:00'), b = new Date(boeking.tot + 'T12:00:00');
+      return f.formatRange ? f.formatRange(a, b) : f.format(a) + ' / ' + f.format(b);
+    } catch(e){ return boeking.van + ' / ' + boeking.tot; }
+  }
+  var boekingStatus = CODE ? 'laden' : 'geen';
+  function toonBoeking(){
+    if (boekingStatus === 'laden' || boekingStatus === 'aanvraag') { boekingBox.hidden = true; return; }
+    boekingBox.hidden = false;
+    if (boekingStatus === 'geen'){ boekingBox.className = 'verdict bad'; boekingBox.innerHTML = '<span>' + esc(t('testmodus')) + '</span>'; return; }
+    if (boekingStatus === 'ongeldig'){ boekingBox.className = 'verdict bad'; boekingBox.innerHTML = '<span><b>' + esc(t('fLink')) + '</b></span>'; return; }
+    if (boekingStatus === 'fout'){ boekingBox.className = 'verdict bad'; boekingBox.innerHTML = '<span><b>' + esc(t('fOphalen')) + '</b></span>'; return; }
+    /* 29-09-2026 g: bij campers geen pitchnummer tonen (ze kiezen ter plekke zelf een plek) */
+    var plekTekst = /^Kamer /.test(String(boeking.kamer || '')) || boeking.kamer === 'Hele finca' ? String(boeking.kamer || '').replace(/^Kamer(?= )/, t('kamer')) : '';
+    var r = '<span><b>' + esc([boeking.gast, plekTekst].filter(Boolean).join(' · ')) + '</b><br>' + esc(datumBereik()) + '</span>';
+    var namen = (boeking.namen || []).map(esc).join(', ');
+    if (modus === 'dicht'){
+      /* 16-10-2026 a: ingecheckt via een andere kamer van dezelfde boeker: daar horen nieuwe personen bij, dus hier niets toevoegen */
+      var samenTekst = boeking.samen_met ? t('alSamen', { kamer: String(boeking.samen_met).replace(/^Kamer(?= )/, t('kamer')) }) : '';
+      r += '<span><b>' + esc(t('alIn')) + '</b> ' + namen + ' ✓</span><span>' + esc(samenTekst || t('fAlGemeld')) + '</span>' +
+           '<a href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+    } else if (modus === 'erbij'){
+      r += '<span><b>' + esc(t('alIn')) + '</b> ' + namen + ' ✓</span><span>' + esc(t('toevoegUitleg')) + '</span>' +
+           '<a href="#" id="allesOpnieuw">' + esc(t('allesOpnieuw')) + '</a>' +
+           '<a href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+    } else if (boeking.aantal_ingevuld > 0){
+      r += '<span>' + esc(t('alGeregistreerd', { n: boeking.aantal_ingevuld, p: meervoud(boeking.aantal_ingevuld) })) + '</span>' +
+           '<a href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+    }
+    boekingBox.className = 'verdict good'; boekingBox.innerHTML = r;
+    var ao = $('allesOpnieuw');
+    if (ao) ao.addEventListener('click', function(e){ e.preventDefault(); zetModus('alles'); aantalSel.value = String(Math.min(20, Math.max(1, (boeking.aantal_ingevuld || 0) + 1))); bouw(); });
+  }
+
+  function zetModus(m){
+    modus = m; offset = m === 'erbij' ? (boeking.aantal_ingevuld || 0) : 0;
+    var erbij = m === 'erbij';
+    $('aantalKop').setAttribute('data-t', erbij ? 'aantalKopExtra' : 'aantalKop');
+    $('aantalHint').setAttribute('data-t', erbij ? 'aantalHintExtra' : 'aantalHint');
+    $('aantalLabel').setAttribute('data-t', erbij ? 'aantalLabelExtra' : 'aantalLabel');
+    $('aantalKaart').hidden = m === 'dicht';
+    form.hidden = m === 'dicht';
+    document.querySelectorAll('.legenda').forEach(function(el){ el.hidden = m === 'dicht'; });
+  }
+
+  /* ---------- 10-10-2026 b: onthouden wat er is ingevuld ----------
+     Alleen op de telefoon van de gast (localStorage), per link, hooguit 3 dagen, en gewist na het versturen.
+     Handtekeningen worden niet bewaard. Gaat er iets mis met opslaan of teruglezen, dan werkt het formulier gewoon zoals voorheen. */
+  var CONCEPT = CODE ? 'kayu_concept_' + CODE + (aanvraag ? '_a' : '') : '', conceptKlaar = false, conceptTimer = null;
+  function conceptVelden(){ return [].slice.call(document.querySelectorAll('#personen input, #personen select, #verblijfKaart input, #verblijfKaart select')).filter(function(el){ return el.id && el.type !== 'hidden'; }); }
+  function conceptBewaar(){
+    if (!CONCEPT || conceptKlaar || modus === 'dicht') return;
+    var t0 = Date.now(); try { var oud = JSON.parse(localStorage.getItem(CONCEPT) || 'null'); if (oud && oud.modus === modus && oud.t) t0 = oud.t; } catch(e){}
+    var d = { t: t0, modus: modus, ingevuld: boeking ? (boeking.aantal_ingevuld || 0) : 0, aantal: aantalSel.value, v: {}, c: {} }, iets = false;
+    conceptVelden().forEach(function(el){
+      if (el.type === 'checkbox') d.c[el.id] = el.checked;
+      else if (el.getAttribute('data-auto')) return; /* 21-10-2026 e: vanzelf gekozen gemeente niet bewaren, die wordt opnieuw bepaald */
+      else if ((el.value || el.getAttribute('data-wil')) && el.value !== el.defaultValue){ d.v[el.id] = el.value || el.getAttribute('data-wil'); iets = true; } /* standaardwaarden (zoals 1 huisdier) tellen niet als ingevuld */
+    });
+    try { if (iets) localStorage.setItem(CONCEPT, JSON.stringify(d)); } catch(e){}
+  }
+  function conceptStraks(){ clearTimeout(conceptTimer); conceptTimer = setTimeout(conceptBewaar, 300); }
+  function conceptWis(){ conceptKlaar = true; clearTimeout(conceptTimer); try { if (CONCEPT) localStorage.removeItem(CONCEPT); } catch(e){} }
+  function conceptHerstel(){
+    if (!CONCEPT) return;
+    if (modus === 'dicht'){ conceptWis(); return; } /* al gemeld: niets meer bewaren */
+    var d = null; try { d = JSON.parse(localStorage.getItem(CONCEPT) || 'null'); } catch(e){ d = null; }
+    if (!d) return;
+    /* verlopen, andere stand of intussen iemand bijgekomen: niet terugzetten en meteen wissen */
+    if (!d.v || d.modus !== modus || !(Date.now() - d.t < 3 * 864e5) || (d.ingevuld || 0) !== (boeking ? (boeking.aantal_ingevuld || 0) : 0)){ try { localStorage.removeItem(CONCEPT); } catch(e){} return; }
+    if (d.aantal && [].some.call(aantalSel.options, function(o){ return o.value === d.aantal; })){ aantalSel.value = d.aantal; bouw(); }
+    var gezet = [];
+    Object.keys(d.c || {}).forEach(function(id){ var el = $(id); if (el && el.type === 'checkbox'){ el.checked = !!d.c[id]; gezet.push(el); } });
+    Object.keys(d.v).forEach(function(id){ var el = $(id); if (el && el.type !== 'hidden' && el.type !== 'checkbox'){ if (/_codigoMunicipio$/.test(id)) el.setAttribute('data-wil', d.v[id]); /* 21-10-2026 e: lijst komt later */ el.value = d.v[id]; gezet.push(el); } });
+    gezet.forEach(function(el){ el.dispatchEvent(new Event('change', { bubbles: true })); });
+    if (Object.keys(d.v).length){ verdictBox.hidden = false; verdictBox.className = 'verdict good'; verdictBox.innerHTML = '<span>' + esc(t('conceptTerug')) + '</span>'; }
+  }
+  /* bij het openen: bewaarde formulieren van andere links die ouder zijn dan 3 dagen opruimen */
+  try { for (var ci = localStorage.length - 1; ci >= 0; ci--){ var ck = localStorage.key(ci); if (ck && ck.indexOf('kayu_concept_') === 0){ var cd = null; try { cd = JSON.parse(localStorage.getItem(ck)); } catch(x){} if (!cd || !(Date.now() - cd.t < 3 * 864e5)) localStorage.removeItem(ck); } } } catch(e){}
+  document.addEventListener('input', function(e){ if (e.target && e.target.closest && e.target.closest('#personen, #verblijfKaart')) conceptStraks(); });
+  document.addEventListener('change', function(e){ if (e.target && (e.target === aantalSel || (e.target.closest && e.target.closest('#personen, #verblijfKaart')))) conceptStraks(); });
+
+  /* ---------- versturen ---------- */
+  function waarde(p, f){ var el = $(p + f); return el ? el.value.trim() : ''; }
+  /* 03-10-2026 a: het e-mailadres zelf controleren, met dezelfde regel als de database (camper_aanvraag_zet).
+     Spaties tellen niet mee (een iPhone zet er soms een tussen). Voorheen keurde alleen de database het af en zag de gast
+     alleen "Opslaan is niet gelukt" (Italiaanse campers, 03-10-2026). */
+  var MAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  function mailWaarde(p){ return waarde(p, 'correo').replace(/\s+/g, ''); }
+  /* controle per persoon (27-09-2026 i): precies dezelfde regels als voorheen bij Versturen, nu één functie,
+     zodat ook het groene vinkje per persoon op dezelfde regels steunt. Geeft null of { tekst, veld, pad }. */
+  function persoonFout(i){
+    var vandaag = new Date().toISOString().slice(0,10);
+    var p = 'p' + i + '_', nr = nummer(i), hoofd = isHoofd(i), zelfde = isZelfde(p) || (modus !== 'erbij' && i > 1 && isZelfde1(p));
+    if ($(p + 'gebD')) gebSync(p); /* ook als de telefoon de vakjes invult zonder dat er een tik-gebeurtenis komt */
+    var tipo = waarde(p,'tipoDocumento');
+    var geb = waarde(p,'fechaNacimiento');
+    var jaren = leeftijd(geb);
+    var verplicht = ['nombre','apellido1','fechaNacimiento','sexo','nacionalidad','tipoDocumento'];
+    if (tipo && tipo !== 'GEEN') verplicht.push('numeroDocumento');
+    if (tipo === 'NIF' || tipo === 'NIE') verplicht.push('soporteDocumento');
+    if (!zelfde) verplicht = verplicht.concat(['direccion','municipio','codigoPostal','pais']);
+    if (!zelfde && gemeenteNodig(p) && !$(p + 'codigoMunicipio_veld').hidden) verplicht.push('codigoMunicipio'); /* 21-10-2026 e */
+    if (hoofd) verplicht = verplicht.concat(['telefono','correo']);
+    for (var k = 0; k < verplicht.length; k++){
+      if (!waarde(p, verplicht[k])){ var leeg = verplicht[k] === 'fechaNacimiento' ? gebVeld(p) : $(p + verplicht[k]), naamV = veldNaam(leeg);
+        return { tekst: naamV ? t('fNogInP', { n:nr, veld:naamV }) : t('fOnvolledig', { n:nr }), veld: leeg }; }
+    }
+    if (jaren === null || !echteDatum(geb) || geb > vandaag || jaren > 120) return { tekst: t('fDatum', { n:nr }), veld: echteDatum(geb) ? ($(p + 'gebJ') || gebVeld(p)) : gebVeld(p) };
+    if (hoofd && jaren < 18) return { tekst: t('fHoofd18'), veld: gebVeld(p) };
+    if (tipo === 'GEEN' && jaren >= 14) return { tekst: t('fDoc14', { n:nr }), veld: $(p + 'tipoDocumento') };
+    if (tipo === 'NIF' && !waarde(p,'apellido2')) return { tekst: t('fAchternaam2', { n:nr }), veld: $(p + 'apellido2') };
+    if (!hoofd && !zelfde && !waarde(p,'telefono') && !waarde(p,'correo')) return { tekst: t('fContact', { n:nr }), veld: $(p + 'telefono') };
+    if (!zelfde && mailWaarde(p) && !MAIL_RE.test(mailWaarde(p))) return { tekst: t('fMail', { n:nr }), veld: $(p + 'correo') };
+    if (jaren < 18 && !waarde(p,'parentesco')) return { tekst: t('fRelatie', { n:nr }), veld: $(p + 'parentesco') };
+    if (tekentZelf(p) && (!pads[p] || !pads[p].heeftInkt())) return { tekst: t('fAHb'), veld: pads[p] ? pads[p].pad : null, pad: !!pads[p] };
+    return null;
+  }
+  /* groen vinkje in de kop van elke persoon die compleet is; alleen een hulpje, het versturen controleert zelf */
+  function werkVinkjesBij(){
+    var n = parseInt(aantalSel.value, 10) || 1;
+    for (var i = 1; i <= n; i++){ var el = $('p' + i + '_klaar'); if (el){ var ok = false; try { ok = !persoonFout(i); } catch(e){ ok = false; } el.hidden = !ok; } }
+  }
+  var vinkjesTimer = null;
+  function vinkjesStraks(){ clearTimeout(vinkjesTimer); vinkjesTimer = setTimeout(werkVinkjesBij, 150); }
+  houder.addEventListener('input', vinkjesStraks);
+  houder.addEventListener('change', vinkjesStraks);
+  houder.addEventListener('pointerup', vinkjesStraks);
+  houder.addEventListener('click', vinkjesStraks);
+  /* 03-10-2026 a: spaties uit het e-mailadres halen zodra de gast het veld verlaat */
+  houder.addEventListener('change', function(e){ var el = e.target; if (el && /_correo$/.test(el.id || '') && /\s/.test(el.value)) el.value = el.value.replace(/\s+/g, ''); });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!CODE){ toonFout(t('fCode')); return; }
+    var n = parseInt(aantalSel.value, 10) || 1;
+    if (aanvraag){ var fv = verblijfFout(); if (fv){ if (fv.teLang) toonTeLang(); else toonFout(fv.tekst, fv.veld); return; } }
+    if (aanvraag && !aantalSel.value){ toonFout(t('fAantal'), aantalSel); return; }
+    for (var i = 1; i <= n; i++){
+      var f = persoonFout(i);
+      if (f){ if (f.pad) f.veld.classList.add('fout-veld'); toonFout(f.tekst, f.veld); return; }
+    }
+    /* 03-10-2026 b: < of > weigert de database bij de aanvraag; het formulier wijst nu zelf het veld aan */
+    if (aanvraag){ var tv = [].slice.call(document.querySelectorAll('input')).filter(function(el){ return el.offsetParent !== null && /[<>]/.test(el.value); })[0]; if (tv){ toonFout(t('fATekens'), tv); return; } }
+    if (aanvraag && !(hbPad && hbPad.heeftInkt())){ $('hb_pad').classList.add('fout-veld'); toonFout(t('fAHb'), $('hb_pad')); return; }
+    /* 21-10-2026 e: adres in Spanje zonder gemeentelijst (laden mislukt): nog niet versturen, opnieuw laden. Lukt ook de tweede keer
+       niet, dan toch versturen zonder gemeente (de gast mag nooit vastlopen; SES-melding wordt dan "handmatig melden", zoals vroeger). */
+    for (var g = 1; g <= n; g++){ var gq = 'p' + g + '_'; if (!(modus === 'erbij' && isZelfde(gq)) && !(modus !== 'erbij' && g > 1 && isZelfde1(gq)) && gemeenteNodig(gq) && !GEMEENTEN && (gemeentenBezig || gemeentenPogingen < 2)){ laadGemeenten(); toonOpslaanFout(); return; } }
+    var personen = [];
+    for (var j = 1; j <= n; j++){
+      var q = 'p' + j + '_', tp = waarde(q,'tipoDocumento'), jr = leeftijd(waarde(q,'fechaNacimiento')), zf = modus === 'erbij' && isZelfde(q);
+      var aq = modus !== 'erbij' && j > 1 && isZelfde1(q) ? 'p1_' : q; /* bron van adres en contact */
+      personen.push({
+        nombre: waarde(q,'nombre'), apellido1: waarde(q,'apellido1'), apellido2: (tp === 'NIF' || tp === 'NIE') ? (waarde(q,'apellido2') || null) : null, /* 10-10-2026 b: vakje bestaat alleen bij een Spaans document */
+        tipo_documento: tp === 'GEEN' ? null : tp,
+        numero_documento: tp === 'GEEN' ? null : waarde(q,'numeroDocumento').toUpperCase().replace(/\s+/g,''),
+        soporte_documento: (tp === 'NIF' || tp === 'NIE') ? waarde(q,'soporteDocumento').toUpperCase().replace(/\s+/g,'') : null,
+        fecha_nacimiento: waarde(q,'fechaNacimiento'), nacionalidad: waarde(q,'nacionalidad'), sexo: waarde(q,'sexo'),
+        direccion: zf ? null : waarde(aq,'direccion'), municipio: zf ? null : waarde(aq,'municipio'), codigo_postal: zf ? null : waarde(aq,'codigoPostal'), pais: zf ? null : waarde(aq,'pais'),
+        telefono: zf ? null : (waarde(aq,'telefono') || null), correo: zf ? null : (mailWaarde(aq) || null), adres_van_1: zf,
+        codigo_municipio: zf || !gemeenteNodig(aq) ? null : (waarde(aq,'codigoMunicipio') || null), /* 21-10-2026 e */
+        parentesco: jr < 18 ? waarde(q,'parentesco') : null,
+        handtekening: aanvraag ? (j === 1 ? hbPad.afbeelding() : null) : (tekentZelf(q) ? pads[q].afbeelding() : null)
+      });
+    }
+    if (aanvraag) return verstuurAanvraag(n, personen);
+    var knop = form.querySelector('.submit');
+    knop.disabled = true; knop.textContent = t('bezig');
+    var verzoek = modus === 'erbij' ? rpc('gast_checkin_aanvul', { p_code: CODE, p_personen: personen }) : rpc('gast_checkin_zet', { p_code: CODE, p_aantal: n, p_personen: personen });
+    verzoek.then(function(j){
+      if (!j || j.fout){ knop.disabled = false; knop.textContent = t('versturen'); if (j && (j.fout === 'onbekend' || j.fout === 'verlopen')) toonFoutMetApp(t('fLink')); /* 18-10-2026 a: verlopen link (24 uur na uitchecken) */ else if (j && j.fout === 'al gemeld'){ conceptWis(); toonFout(t('fAlGemeld')); } else toonOpslaanFout(); return; }
+      conceptWis();
+      var naarGast = '/?ontbijt=' + encodeURIComponent(CODE);
+      /* 13-10-2026 a (Bart): gasten dachten na de check-in dat ze klaar waren. Moeten ze nog akkoord geven op de huisregels
+         en is de gastenpagina nu al open, dan eerst een duidelijke volgende stap met een knop (na 5 seconden vanzelf verder). */
+      var akkoordAl = false; try { akkoordAl = !!localStorage.getItem('kayu_akkoord_' + CODE); } catch(e){}
+      /* 20-10-2026 e: het gastenverblijf (familie) heeft geen huisregels-akkoord op de gastenpagina: meteen door */
+      if (modus !== 'erbij' && !akkoordAl && gastenpaginaNuOpen() && !(boeking && boeking.kamer === 'Gastenverblijf')){
+        stapKlaar = naarGast; toonStap();
+        window.scrollTo({ top:0, behavior:'smooth' });
+        setTimeout(function(){ location.replace(naarGast); }, 5000);
+        return;
+      }
+      verdictBox.hidden = false; verdictBox.className = 'verdict good';
+      verdictBox.innerHTML = '<span><b>' + esc(t(modus === 'erbij' ? 'klaarExtra' : 'klaar', { n: j.aantal, p: meervoud(j.aantal) })) + '</b></span>';
+      knop.textContent = t('openen');
+      window.scrollTo({ top:0, behavior:'smooth' });
+      setTimeout(function(){ location.replace(naarGast); }, 1500);
+    }).catch(function(){
+      knop.disabled = false; knop.textContent = t('versturen'); toonOpslaanFout();
+    });
+  });
+
+  /* 13-10-2026 a: scherm "Check-in gelukt, nog één stap"; wordt bij een taalwissel opnieuw opgebouwd */
+  var stapKlaar = '';
+  function toonStap(){
+    if (!stapKlaar) return;
+    verdictBox.hidden = false; verdictBox.className = 'verdict good klaarblok';
+    verdictBox.innerHTML = '<span class="stapkop">' + esc(t('klaarKop')) + '</span><span>' + esc(t('klaarStap')) + '</span>' +
+      '<a class="verderknop" id="naarRegels" href="' + stapKlaar + '">' + esc(t('klaarKnop')) + '</a>';
+    $('naarRegels').addEventListener('click', function(e){ e.preventDefault(); location.replace(stapKlaar); });
+    document.querySelectorAll('header p, .uitleg, #verblijfKaart, #form, .legenda, #aantalKaart, #boeking').forEach(function(el){ el.hidden = true; });
+  }
+  /* 13-10-2026 a: is de gastenpagina nu al open? Kamers altijd; campers vanaf de dag voor aankomst om 13:00 (Spaanse tijd), net als de gastenpagina zelf */
+  function gastenpaginaNuOpen(){
+    if (!camper || !boeking || !boeking.van) return true;
+    var g = new Date(boeking.van + 'T12:00:00Z'); g.setUTCDate(g.getUTCDate() - 1); var grens = g.toISOString().slice(0, 10), vandaag = vandaagIso();
+    if (vandaag > grens) return true;
+    if (vandaag < grens) return false;
+    var uur = 0; try { uur = parseInt(new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Madrid', hour:'2-digit', hourCycle:'h23' }).format(new Date()), 10) || 0; } catch(e){ uur = new Date().getHours(); }
+    return uur >= 13;
+  }
+
+  /* ---------- aanvraagformulier (versie h) ---------- */
+  /* 03-10-2026 b: "vandaag" in Spaanse tijd, net als de database (camper_aanvraag_zet); valt terug op de tijd van de telefoon */
+  function vandaagIso(){
+    try {
+      var o = {}; new Intl.DateTimeFormat('en-GB', { timeZone:'Europe/Madrid', year:'numeric', month:'2-digit', day:'2-digit' }).formatToParts(new Date()).forEach(function(x){ o[x.type] = x.value; });
+      var v = o.year + '-' + o.month + '-' + o.day; if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+    } catch(e){}
+    var d = new Date(); return new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0,10);
+  }
+  function plusDagen(iso, n){ var d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0,10); }
+  function verblijfFout(){
+    var inD = $('aAankomst').value, uitD = $('aVertrek').value;
+    if (!inD) return { tekst: t('fNogIn', { veld: veldNaam($('aAankomst')) }), veld: $('aAankomst') };
+    if (!uitD) return { tekst: t('fNogIn', { veld: veldNaam($('aVertrek')) }), veld: $('aVertrek') };
+    if (inD < vandaagIso() || inD > plusDagen(vandaagIso(), 365) || uitD <= inD || (new Date(uitD + 'T12:00:00Z') - new Date(inD + 'T12:00:00Z')) / 864e5 > 60) return { tekst: t('fADatums'), veld: uitD <= inD ? $('aVertrek') : $('aAankomst') };
+    var nodig = ['aTijd','aStroom','aKenteken','aLengte'];
+    for (var k = 0; k < nodig.length; k++) if (!$(nodig[k]).value.trim()) return { tekst: veldNaam($(nodig[k])) ? t('fNogIn', { veld: veldNaam($(nodig[k])) }) : t('fAVerblijf'), veld: $(nodig[k]) };
+    if (!/^[0-2]?[0-9][:.][0-5][0-9]$/.test($('aTijd').value.trim())) return { tekst: t('fATijd'), veld: $('aTijd') };
+    if (!(lengteGetal() > 0)) return { tekst: t('fALengteFout'), veld: $('aLengte') };
+    if (teLang()) return { teLang: true };
+    return null;
+  }
+  /* bevestiging na het versturen; wordt bij een taalwissel opnieuw opgebouwd (in de nieuwe taal) */
+  var aanvraagKlaar = null, aanvraagAlIngevuld = false;
+  /* 30-09-2026 b: ook de melding "al ingevuld" blijft staan bij een taalwissel */
+  function toonAlIngevuld(){
+    verdictBox.hidden = false; verdictBox.className = 'verdict good';
+    verdictBox.innerHTML = '<span><b>' + esc(t('fAIngevuld')) + '</b></span><a href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+  }
+  function toonAanvraagKlaar(){
+    var k = aanvraagKlaar; if (!k) return;
+    var data = '';
+    try { var loc = taal === 'en' ? 'en-GB' : intlTaal(); data = new Intl.DateTimeFormat(loc, { day:'numeric', month:'long' }).formatRange(new Date(k.aankomst + 'T12:00:00'), new Date(k.vertrek + 'T12:00:00')); }
+    catch(e){ data = k.aankomst + ' / ' + k.vertrek; }
+    var app = t('aAppTekst', { naam: k.naam, data: data });
+    verdictBox.hidden = false; verdictBox.className = 'verdict good klaarblok';
+    verdictBox.innerHTML = '<span><b>' + esc(t('aKlaar')) + '</b></span>' +
+      '<a class="appknop" id="appKnop" href="https://wa.me/34722162962?text=' + encodeURIComponent(app) + '" target="_blank" rel="noopener">' + esc(t('aAppKnop')) + '</a>' +
+      '<a class="naargast" href="/?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+    document.querySelectorAll('header p, .uitleg, #verblijfKaart, #form, .legenda').forEach(function(el){ el.hidden = true; });
+  }
+  /* 21-10-2026 d (review): de lengte in meter. "7,5", "7.5 m" en "7m50" of "7 m 50" (= 7,50) tellen. Een tweede getal ("7,5 x 2,3"),
+     meer dan 30 (zoals 750 cm) of 0 is geen lengte in meter: dan vraagt het formulier daarom (fALengteFout). Vroeger werd "7m50" 750. */
+  function lengteGetal(){
+    var s = String($('aLengte').value).trim().toLowerCase(), mm = s.match(/^(\d{1,2})\s*m\s*(\d{1,2})$/), x;
+    if (mm) x = parseFloat(mm[1] + '.' + mm[2]);
+    else { var g = s.match(/\d+(?:[.,]\d+)?/g); if (!g || g.length !== 1) return NaN; x = parseFloat(g[0].replace(',', '.')); }
+    return isFinite(x) && x > 0 && x <= 30 ? x : NaN;
+  }
+  /* 21-10-2026 d (Bart): campers tot de maximale lengte (instelling van de eigenaar, Finca KaYu 8 meter). Wie langer is, neemt eerst
+     contact op; Bart maakt soms een uitzondering en zet die boeking dan zelf. De database (camper_aanvraag_zet) weigert het ook.
+     De grens komt mee met camper_aanvraag_lees; null = geen grens. Zonder grens van de database (oudere versie): 8. */
+  var maxLengte = 8, aanvraagNaam = '';
+  function teLang(){ var x = lengteGetal(); return maxLengte !== null && x > maxLengte; }
+  function zetMaxLengte(j){
+    if (!j || !Object.prototype.hasOwnProperty.call(j, 'max_lengte')) return;
+    var ml = j.max_lengte === null ? null : Number(j.max_lengte);
+    if (ml === null || (isFinite(ml) && ml > 0)) maxLengte = ml;
+  }
+  function meter(x){ var s = String(Math.round(x * 100) / 100); return taal === 'en' ? s : s.replace('.', ','); }
+  function lengteTekst(){ return t('fALang', { m: meter(maxLengte) }); }
+  function lengteAppKnop(id){
+    var naam = [waarde('p1_', 'nombre'), waarde('p1_', 'apellido1')].filter(Boolean).join(' ') || aanvraagNaam;
+    /* de data erbij als die al zijn ingevuld (review 21-10 d: anders moet Bart ernaar vragen) */
+    var inD = $('aAankomst').value, uitD = $('aVertrek').value, data = '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(inD) && /^\d{4}-\d{2}-\d{2}$/.test(uitD) && uitD > inD){
+      try { var loc = taal === 'en' ? 'en-GB' : intlTaal(); data = new Intl.DateTimeFormat(loc, { day:'numeric', month:'long' }).formatRange(new Date(inD + 'T12:00:00'), new Date(uitD + 'T12:00:00')); }
+      catch(e){ data = inD + ' / ' + uitD; }
+    }
+    var erbij = [naam, data].filter(Boolean).join(', ');
+    var tekst = t('fALangApp', { lengte: meter(lengteGetal()) }) + (erbij ? ' ' + erbij : '');
+    return '<a class="appknop telang" id="' + id + '" href="https://wa.me/34722162962?text=' + encodeURIComponent(tekst) + '" target="_blank" rel="noopener">' + esc(t('fALangKnop')) + '</a>';
+  }
+  function toonLengteMelding(){
+    var m = $('aLengteMelding'); if (!m) return;
+    if (!aanvraag || !teLang()){
+      m.hidden = true; m.innerHTML = '';
+      /* de melding bovenaan (na versturen) ook weg zodra de lengte past (review 21-10 d) */
+      if (verdictBox.querySelector('a.telang')){ verdictBox.hidden = true; verdictBox.innerHTML = ''; }
+      return;
+    }
+    m.innerHTML = '<span>' + esc(lengteTekst()) + '</span>' + lengteAppKnop('lengteAppKnop');
+    m.hidden = false;
+  }
+  /* bij versturen: bovenaan dezelfde melding met knop, het vakje rood, en naar de melding onder het vakje */
+  function toonTeLang(){
+    verdictBox.hidden = false; verdictBox.className = 'verdict bad';
+    verdictBox.innerHTML = '<span><b>' + esc(lengteTekst()) + '</b></span>' + lengteAppKnop('foutAppKnop');
+    wisVeldFouten();
+    $('aLengte').classList.add('fout-veld');
+    toonLengteMelding();
+    $('aLengteMelding').scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+  /* 03-10-2026 b: samengestelde velden (naam, adres, medereizigers) nooit langer dan de database toestaat; de volledige gegevens gaan per persoon mee */
+  function kort200(x){ return String(x || '').slice(0, 200).replace(/[\ud800-\udbff]$/, ''); }
+  function verstuurAanvraag(n, personen){
+    var p1 = personen[0], dier = $('aDier').value;
+    var adres = [p1.direccion, [p1.codigo_postal, p1.municipio].filter(Boolean).join(' '), p1.pais].filter(Boolean).join(', ');
+    var boekingData = {
+      aankomst: $('aAankomst').value, vertrek: $('aVertrek').value, personen: n, aankomsttijd: $('aTijd').value.trim(),
+      stroom: $('aStroom').value === 'ja', dier: dier, dier_aantal: dier ? Math.min(9, Math.max(1, parseInt($('aDierAantal').value, 10) || 1)) : 0,
+      kenteken: $('aKenteken').value.trim().toUpperCase(), merk: $('aMerk').value.trim(), lengte: lengteGetal(),
+      naam: kort200([p1.nombre, p1.apellido1, p1.apellido2].filter(Boolean).join(' ')), telefoon: p1.telefono || '', email: p1.correo || '', adres: kort200(adres),
+      medereizigers: kort200(personen.slice(1).map(function(x){ return x.nombre; }).filter(Boolean).join(', '))
+    };
+    var knop = form.querySelector('.submit');
+    knop.disabled = true; knop.textContent = t('bezig');
+    /* p_akkoord: sinds 30-09-2026 a geen huisregels meer in het formulier (akkoord volgt op de gastenpagina); de database eist dit vinkje niet meer */
+    rpc('camper_aanvraag_zet', { p_code: CODE, p_boeking: boekingData, p_personen: personen, p_akkoord: false }).then(function(j){
+      if (!j || j.fout){
+        knop.disabled = false; knop.textContent = t('versturen');
+        if (j && j.fout === 'al ingevuld'){ conceptWis(); aanvraagAlIngevuld = true; toonAlIngevuld(); window.scrollTo({ top:0, behavior:'smooth' }); return; }
+        /* 03-10-2026 a, vangnet: "onvolledig" kan alleen nog door het e-mailadres komen (aankomsttijd controleert het formulier al met dezelfde regel) */
+        if (j && j.fout === 'onvolledig'){ toonFoutMetApp(t('fMail', { n: nummer(1) }), $('p1_correo')); return; }
+        /* 21-10-2026 d: de database weigert een te lange camper (de grens kan intussen veranderd zijn) */
+        if (j && j.fout === 'te_lang'){
+          rpc('camper_aanvraag_lees', { p_code: CODE }).then(zetMaxLengte).catch(function(){}).then(function(){ if (teLang()) toonTeLang(); else toonOpslaanFout(); });
+          return;
+        }
+        if (j && j.fout === 'onbekend') toonFoutMetApp(t('fLink')); else if (j && j.fout === 'datums') toonFoutMetApp(t('fADatums'), $('aAankomst')); else if (j && j.fout === 'tekens') toonFoutMetApp(t('fATekens')); else toonOpslaanFout();
+        return;
+      }
+      /* 30-09-2026 a (Bart): geen automatische doorsturing meer; de gast kan Bart en Loes met één tik een appje sturen */
+      conceptWis();
+      aanvraagKlaar = { naam: boekingData.naam, aankomst: boekingData.aankomst, vertrek: boekingData.vertrek };
+      toonAanvraagKlaar();
+      window.scrollTo({ top:0, behavior:'smooth' });
+    }).catch(function(){ knop.disabled = false; knop.textContent = t('versturen'); toonOpslaanFout(); });
+  }
+  function zetCamperVelden(){
+    $('verblijfKaart').hidden = !aanvraag; $('hbKaart').hidden = !aanvraag;
+    $('personenKop').hidden = !aanvraag; $('allen').hidden = !aanvraag;
+    document.querySelectorAll('[data-t="na2"], [data-t="daarna"]').forEach(function(el){ el.hidden = camper; });
+    if (aanvraag && hbPad) hbPad.size();
+  }
+  if (aanvraag){
+    $('aAankomst').min = vandaagIso(); $('aVertrek').min = vandaagIso(); $('aAankomst').max = plusDagen(vandaagIso(), 365);
+    $('aDier').addEventListener('change', function(){ $('aDierAantal_veld').hidden = !this.value; });
+    $('aLengte').addEventListener('input', toonLengteMelding);
+    $('aLengte').addEventListener('change', toonLengteMelding); /* ook na het terugzetten van een bewaard formulier */
+    /* het klaargezette appje bijwerken als de data of de naam later nog veranderen (review 21-10 d) */
+    $('aAankomst').addEventListener('change', toonLengteMelding); $('aVertrek').addEventListener('change', toonLengteMelding);
+    houder.addEventListener('change', function(e){ if (e.target && /^p1_(nombre|apellido1)$/.test(e.target.id || '')) toonLengteMelding(); });
+    $('aAankomst').addEventListener('change', function(){
+      var a = this.value; if (a && (!$('aVertrek').value || $('aVertrek').value <= a)){ $('aVertrek').value = plusDagen(a, 1); }
+      for (var i = 1; i <= (parseInt(aantalSel.value, 10) || 1); i++) pasAan('p' + i + '_');
+    });
+    hbPad = maakPad('hb_');
+    /* stap 2 (verzoek Bart): eerst de uitleg, dan het aantal personen, dan de personen */
+    form.insertBefore($('aantalKaart'), houder);
+  }
+
+  $('naarPrivacy').addEventListener('click', function(e){ e.preventDefault(); var d = $('privacy'); d.open = true; d.scrollIntoView({ behavior:'smooth', block:'start' }); });
+
+  /* ---------- start ---------- */
+  taal = startTaal();
+  vulAantal();
+  bouw();
+  if (CODE && aanvraag){
+    rpc('camper_aanvraag_lees', { p_code: CODE }).then(function(j){
+      if (!j || j.fout){ boekingStatus = 'ongeldig'; form.querySelector('.submit').disabled = true; toonBoeking(); return; }
+      if (j.status !== 'open'){ location.replace('/?ontbijt=' + encodeURIComponent(CODE)); return; }
+      boekingStatus = 'aanvraag';
+      zetMaxLengte(j);
+      aanvraagNaam = typeof j.naam === 'string' ? j.naam : '';
+      var eigenKeuze = false; try { eigenKeuze = !!localStorage.getItem('ontbijtTaal'); } catch(e){}
+      if (!eigenKeuze && j.taal && TALEN.indexOf(j.taal) >= 0 && !(j.taal === 'en' && (taal === 'fi' || taal === 'no' || taal === 'sv'))) taal = j.taal; /* 30-09-2026 b: Finse gasten krijgen via Bart een Engelse link (Fins bestaat niet in de berichten); staat hun telefoon op Fins, dan de pagina in het Fins */
+      vertaal();
+      conceptHerstel();
+    }).catch(function(){ boekingStatus = 'fout'; toonBoeking(); });
+  } else if (CODE){
+    rpc('gast_checkin_lees', { p_code: CODE }).then(function(j){
+      if (!j || j.fout){ boekingStatus = 'ongeldig'; form.querySelector('.submit').disabled = true; toonBoeking(); return; }
+      boeking = j; boekingStatus = 'ok';
+      camper = !/^Kamer /.test(String(j.kamer || '')) && j.kamer !== 'Hele finca';
+      var eigenKeuze = false; try { eigenKeuze = !!localStorage.getItem('ontbijtTaal'); } catch(e){}
+      if (!eigenKeuze && j.taal && TALEN.indexOf(j.taal) >= 0 && !(j.taal === 'en' && (taal === 'fi' || taal === 'no' || taal === 'sv'))) taal = j.taal; /* 30-09-2026 b: Finse gasten krijgen via Bart een Engelse link (Fins bestaat niet in de berichten); staat hun telefoon op Fins, dan de pagina in het Fins */
+      if (j.aantal_ingevuld > 0 && (GEMELD.indexOf(j.status) >= 0 || j.samen_met)){ zetModus('dicht'); } /* 16-10-2026 a: samen_met = ingecheckt via een andere kamer */
+      else if (j.aantal_ingevuld > 0){ zetModus('erbij'); aantalSel.value = '1'; }
+      else if (j.aantal_opgegeven && j.aantal_opgegeven >= 1 && j.aantal_opgegeven <= 20) aantalSel.value = String(j.aantal_opgegeven);
+      bouw();
+      conceptHerstel();
+    }).catch(function(){ boekingStatus = 'fout'; toonBoeking(); });
+  }
+})();
+
+</script>
+</body>
+</html>
