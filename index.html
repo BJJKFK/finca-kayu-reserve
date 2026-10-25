@@ -784,6 +784,8 @@
   html.nieuw #coLijst .pkrij em.actie{color:var(--tekst);font-weight:600}
   html.nieuw #coLijst .pkrij .pkpijl{width:18px;height:18px;flex:0 0 18px;color:var(--muted)}
   html.nieuw #coLijst .pkrij.tot{font-weight:700}
+  /* 25-10-2026 f: potloodje bij de startdatum van de kas (Exporteren) */
+  .balans .kaspotlood{border:1px solid #D9D4CB;background:#FFFFFF;color:var(--pine);border-radius:50%;width:24px;height:24px;padding:0;font-size:13px;cursor:pointer;vertical-align:middle;margin-left:4px}
   /* 25-10-2026 d: Huisregels en handleiding (Meer > Gasten): soortknoppen, en per blok een kaart met potloodje */
   #gtDlg .gtkeuze{display:flex;gap:8px;margin:0}
   html.nieuw #gtDlg .gtkeuze button.go{flex:1 1 0;width:auto;margin-top:0;padding:9px 6px;font-size:14px}
@@ -2284,8 +2286,7 @@ if(NIEUW) document.documentElement.classList.add("nieuw");
    Zo kan de eigenaar van een ander bedrijf (en Bart zelf) de app proberen en in Meer > Instellingen zien wat instelbaar wordt.
    De echte app wordt hier niet door geraakt: zonder ?proef=1 en buiten kayu-proef.… bestaat deze code alleen als tekst. */
 const PROEF = /^kayu-proef\./.test(location.hostname) || (new URLSearchParams(location.search).get("proef") === "1" && !/^finca-kayu(-test)?\./.test(location.hostname) && !/github\.io$|fincakayu\.com$/.test(location.hostname)); /* review c: nooit op de echte app of de testsite; review e: ook niet op het reserve-adres */
-/* 25-10-2026 e (review): op het reserve-adres (buiten Cloudflare) een smal bandje, omdat links die je daar maakt naar dat adres wijzen */
-const RESERVE = /github\.io$/.test(location.hostname);
+const RESERVE = /github\.io$/.test(location.hostname); /* 25-10-2026 e: het reserve-adres buiten Cloudflare */
 function proefZaad(){
   const d0 = new Date(); d0.setHours(12, 0, 0, 0);
   const dag = n => { const d = new Date(d0); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
@@ -2483,7 +2484,7 @@ if(PROEF){ (() => { const b = document.createElement("div"); b.id = "proefband";
   b.style.cssText = "position:sticky;top:0;z-index:99;background:#2F4F3F;color:#fff;font-size:12px;font-weight:700;text-align:center;padding:5px 10px;letter-spacing:.02em;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap";
   document.body.prepend(b); b.querySelector("#proefOpnieuw").style.cssText = "font:inherit;font-size:12px;padding:3px 10px;border-radius:999px;border:1px solid #fff;background:transparent;color:#fff;cursor:pointer";
   b.querySelector("#proefOpnieuw").onclick = () => { if(confirm("Alles terugzetten naar de verzonnen beginstand?")) db.proefOpnieuw(); }; })(); }
-if(RESERVE && !new URLSearchParams(location.search).get("ontbijt") && !new URLSearchParams(location.search).get("poets")){ (() => { const b = document.createElement("div"); b.id = "reserveband"; b.textContent = "Reserve-adres: zelfde app en gegevens; links die je hier maakt wijzen naar dit adres"; b.style.cssText = "position:sticky;top:0;z-index:99;background:#F0EEE6;color:#141413;font-size:12px;text-align:center;padding:5px 10px;border-bottom:1px solid #D9D4CB"; document.body.prepend(b); })(); }
+/* 25-10-2026 f (Bart): geen bandje meer op het reserve-adres; het reserve-adres is gewoon dé app (RESERVE blijft voor de proefversie-uitzondering) */
 if(TESTVERSIE){ (() => { const b = document.createElement("div"); b.id = "testband"; b.textContent = "TESTVERSIE: alleen kijken, er wordt niets opgeslagen"; b.style.cssText = "position:sticky;top:0;z-index:99;background:#B4462F;color:#fff;font-size:12px;font-weight:700;text-align:center;padding:5px 10px;letter-spacing:.04em"; document.body.prepend(b); })(); }
 
 const VAST = Array.from({length:10}, (_,i) => `Pitch ${i+1}`);
@@ -3776,7 +3777,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "25-10-2026 e";
+const VERSIE = "25-10-2026 f";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -12035,6 +12036,10 @@ function vulPeriodes(){
   const alle = new Set();
   boekingen.forEach(b => { const m = maandVan(b); if(m) alle.add(m); });
   consumpties.forEach(c => { const m = cMaandVan(c); if(m) alle.add(m); });
+  /* 25-10-2026 f: ook maanden met alleen bonnen of kosten, en altijd de huidige maand (anders is een maand met alleen kosten niet te kiezen) */
+  bonnen.forEach(x => { const m = String(x.datum || "").slice(0, 7); if(/^\d{4}-\d{2}$/.test(m)) alle.add(m); });
+  kosten.forEach(k => { const m = String(k.maand || "").slice(0, 7); if(/^\d{4}-\d{2}$/.test(m)) alle.add(m); });
+  alle.add(iso(new Date()).slice(0, 7));
   const maanden = [...alle].sort().reverse();
   const jaren = [...new Set(maanden.map(m => m.slice(0,4)))].sort().reverse();
   const vorige = sel.value;
@@ -12064,23 +12069,91 @@ function tekenBalans(){
   /* afspraken van groepen (paella, ontbijt, diner, yoga, massage) staan niet in de bar; ze tellen mee via hun eigen bon */
   const afspr = bonnen.filter(x => x.soort === "afspraken" && periodePast(String(x.datum || "").slice(0,7), keuze)).reduce((t, x) => t + Number(x.totaal || 0), 0);
   const el = document.getElementById("expBalans");
-  if(!bk.length && !co.length && !afspr){
-    el.className = "balans";
-    el.innerHTML = `<p class="kop">Overzicht ${periodeNaam(keuze)}</p>` +
-                   `<span class="leeg">Hier staat nog niets in.</span>`;
-    return;
-  }
   const nachtenTot = bk.reduce((t,b) => t + nachten(b), 0);
   el.className = "balans";
-  el.innerHTML = `<p class="kop">Overzicht ${periodeNaam(keuze)}</p>` +
+  /* 25-10-2026 f (review): ook zonder boekingen en bar de blokken betaalwijze, Eruit en Kas tonen (een maand met alleen kosten) */
+  el.innerHTML = `<p class="kop">Overzicht ${periodeNaam(keuze)}</p>` + (!bk.length && !co.length && !afspr ? `<span class="leeg">Geen boekingen of bar in deze periode.</span>` + betaalwijzeBalans(keuze) + kostenKasBalans(keuze) :
     `<div><span>Overnachtingen campers<em>${bk.length} ${bk.length===1?"boeking":"boekingen"}, ${nachtenTot} ${nachtenTot===1?"nacht":"nachten"}</em></span><b>${eur(verblijf)}</b></div>` +
     `<div><span>Honesty bar</span><b>${eur(bar)}</b></div>` +
     (overn ? `<div><span>Overnachting kamers</span><b>${eur(overn)}</b></div>` : "") +
     (fooi ? `<div><span>Fooi</span><b>${eur(fooi)}</b></div>` : "") +
     (korting ? `<div><span>Korting</span><b>${eur(korting)}</b></div>` : "") +
     (afspr ? `<div><span>Afspraken groepen<em>betaald bij inchecken</em></span><b>${eur(afspr)}</b></div>` : "") +
-    `<div class="eind"><span>Totaal</span><b>${eur(verblijf + bar + overn + fooi + korting + afspr)}</b></div>` + betaalwijzeBalans(keuze);
+    `<div class="eind"><span>Totaal</span><b>${eur(verblijf + bar + overn + fooi + korting + afspr)}</b></div>` + betaalwijzeBalans(keuze) + kostenKasBalans(keuze));
+  kasKnoppen(el);
   tekenBonnen(keuze);
+}
+/* ===================================================================================================================
+   25-10-2026 f (Bart): in Exporteren ook de kosten en de kas, per gekozen periode, in één oogopslag.
+   Eruit: de kosten per maand (Meer > Geld > Kosten per maand) per soort, en de inkoopbonnen apart (die gaan naar de boekhouder en
+   tellen niet in de kas). Kas buiten de boekhouding: wat via de app is afgerekend (contant en per bankoverschrijving) min de
+   kosten per maand (die betaalt Bart contant), voor de periode én lopend sinds een startdatum (instelling kas_start, standaard
+   01-10-2026; te wijzigen via het potloodje). Gefactureerd via MyTourist staat niet hier maar in Cijfers (gaat naar de boekhouder).
+   Zelfde rekenregels als Cijfers (bonnen zonder afspraken, kosten per maand). */
+let expInkoop = null; /* inkoopbonnen (datum, bedrag), apart opgehaald bij het openen van Exporteren */
+const kasStart = () => /^\d{4}-\d{2}-\d{2}$/.test(String(instellingen.kas_start || "")) ? String(instellingen.kas_start) : "2026-10-01";
+/* begin (jjjj-mm) en eind (jjjj-mm) van een gekozen periode; alles = geen grens */
+function periodeGrens(keuze){
+  if(!keuze || keuze === "alles") return { van: "0000-00", tot: "9999-99" };
+  return keuze.length === 4 ? { van: keuze + "-01", tot: keuze + "-12" } : { van: keuze, tot: keuze };
+}
+function kasCijfers(vanMaand, totMaand){
+  /* zelfde telling als "Afgerekend, per betaalwijze" en Cijfers: alle bonnen behalve afspraken; een terugbetaling staat er met
+     negatieve bedragen in en telt dus vanzelf af (apart zichtbaar gemaakt in de regel Terugbetaald) */
+  const bn = bonnen.filter(x => x.soort !== "afspraken" && String(x.datum || "").slice(0, 7) >= vanMaand && String(x.datum || "").slice(0, 7) <= totMaand);
+  const contant = bn.reduce((t, x) => t + Number(x.contant || 0), 0), bank = bn.reduce((t, x) => t + Number(x.tikkie || 0), 0);
+  const terug = bn.filter(x => x.soort === "terugbetaling").reduce((t, x) => t + Number(x.totaal || 0), 0);
+  const ko = kosten.filter(k => String(k.maand).slice(0, 7) >= vanMaand && String(k.maand).slice(0, 7) <= totMaand);
+  const perSoort = {}; ko.forEach(k => { perSoort[k.soort] = (perSoort[k.soort] || 0) + Number(k.bedrag || 0); });
+  const kostenTot = Object.values(perSoort).reduce((t, v) => t + v, 0);
+  /* review f: bonnen zonder verdeling (vóór 25-09-2026: contant en tikkie leeg) tellen niet mee; wel benoemen */
+  const zonderLijst = bn.filter(x => x.contant == null && x.tikkie == null);
+  return { contant, bank, terug, perSoort, kostenTot, zonder: zonderLijst.length, zonderSom: zonderLijst.reduce((t, x) => t + Number(x.totaal || 0), 0), saldo: Math.round((contant + bank - kostenTot) * 100) / 100 };
+}
+function kostenKasBalans(keuze){
+  const g = periodeGrens(keuze), k = kasCijfers(g.van, g.tot);
+  const inkoop = Array.isArray(expInkoop) ? expInkoop.filter(x => periodePast(String(x.datum || "").slice(0, 7), keuze)) : null;
+  const inkoopSom = inkoop ? inkoop.reduce((t, x) => t + Number(x.bedrag || 0), 0) : 0;
+  const soorten = Object.keys(k.perSoort).sort((a, b) => a.localeCompare(b, "nl"));
+  let h = `<p class="kop" style="margin-top:14px">Eruit ${periodeNaam(keuze)}<em>kosten per maand uit de app</em></p>`;
+  h += soorten.length ? soorten.map(x => `<div><span>${vrij(x)}</span><b>${eur(k.perSoort[x])}</b></div>`).join("") : `<span class="leeg">Geen kosten per maand ingevuld voor deze periode (Meer &gt; Geld &gt; Kosten per maand).</span>`;
+  if(soorten.length > 1) h += `<div class="eind"><span>Kosten samen</span><b>${eur(k.kostenTot)}</b></div>`;
+  h += `<div><span>Inkoopbonnen<em>${expInkoop === "fout" ? "konden niet worden opgehaald" : inkoop === null ? "nog aan het ophalen" : `${inkoop.length} ${inkoop.length === 1 ? "bon" : "bonnen"}, gaan naar de boekhouder, tellen niet in de kas`}</em></span><b>${inkoop === null ? "…" : eur(inkoopSom)}</b></div>`;
+  /* de kas: deze periode en lopend sinds de startdatum tot en met het eind van de periode */
+  const startM = kasStart().slice(0, 7), lopend = kasCijfers(startM, g.tot);
+  h += `<p class="kop" style="margin-top:14px">Kas buiten de boekhouding<em>wat in de app is afgerekend (contant en bank, zie hierboven) min de kosten per maand; niets hiervan gaat naar de boekhouder</em></p>`;
+  h += `<div><span>Bij: afgerekend in de app${k.terug ? `<em>contant en bank samen, na ${eur(-k.terug)} terugbetaald aan gasten</em>` : "<em>contant en bank samen</em>"}</span><b>${eur(k.contant + k.bank)}</b></div>`;
+  h += `<div><span>Af: kosten per maand</span><b>${eur(-k.kostenTot)}</b></div>`;
+  if(k.zonder) h += `<div><span>Niet geteld: bonnen zonder verdeling<em>${k.zonder} ${k.zonder === 1 ? "bon" : "bonnen"} van vóór 25-09-2026, contant of bank onbekend</em></span><b>${eur(k.zonderSom)}</b></div>`;
+  h += `<div class="eind"><span>Saldo ${periodeNaam(keuze)}</span><b>${eur(k.saldo)}</b></div>`;
+  const startNa = g.tot !== "9999-99" && startM > g.tot;
+  h += `<div class="eind"><span>Lopend saldo<em>sinds ${kort(kasStart())} ${kasStart().slice(0, 4)}${g.tot === "9999-99" ? "" : ", tot en met " + periodeNaam(keuze)}${startNa ? "; de startdatum ligt na deze periode" : ""} <button type="button" class="kaspotlood" data-kasstart="1" title="Startdatum wijzigen" aria-label="Startdatum van de kas wijzigen">✎</button></em></span><b>${eur(lopend.saldo)}</b></div>`;
+  if(lopend.zonder) h += `<p class="leeg" style="margin:4px 0 0;font-size:12px">Sinds de startdatum staan ook ${lopend.zonder} ${lopend.zonder === 1 ? "bon" : "bonnen"} zonder verdeling (${eur(lopend.zonderSom)}); die tellen niet mee in het lopend saldo.</p>`;
+  h += `<p class="leeg" style="margin:6px 0 0;font-size:12px">Gefactureerd via MyTourist (bank en platforms) staat in Cijfers en gaat naar de boekhouder; dat hoort niet in deze kas. Kosten per maand van langer dan 13 maanden geleden staan hier niet in.</p>`;
+  return h;
+}
+function kasKnoppen(el){
+  el.querySelectorAll("[data-kasstart]").forEach(kn => kn.onclick = async () => {
+    const nu = kasStart();
+    const w = prompt("Vanaf welke datum telt de kas? (dag-maand-jaar)", nu.split("-").reverse().join("-"));
+    if(w == null) return;
+    const m = String(w).trim().match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+    if(!m){ alert("Dat is geen datum. Schrijf hem als dag-maand-jaar, bijvoorbeeld 01-10-2026."); return; }
+    const d = `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+    const dt = new Date(d + "T12:00:00");
+    if(isNaN(dt) || iso(dt) !== d){ alert("Dat is geen geldige datum."); return; } /* 31-02 rolt anders door naar maart */
+    /* review f: de app laadt kosten per maand van de laatste 400 dagen; een oudere startdatum zou het lopend saldo stil te hoog maken */
+    if(dt < new Date(Date.now() - 395 * 864e5)){ alert("Kies een startdatum van hooguit 13 maanden geleden; oudere kosten per maand staan niet in de app."); return; }
+    const { error } = await db.from("instellingen").upsert({ sleutel:"kas_start", waarde:d, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+    if(error){ alert("Opslaan mislukt: " + error.message); return; }
+    instellingen.kas_start = d; tekenBalans();
+  });
+}
+async function expInkoopHaal(){
+  /* review f: alle rijen (zoals Cijfers), en een fout niet als € 0,00 tonen maar als "kon niet worden opgehaald" */
+  try { const { data, error } = await alleRijen(() => db.from("inkoop_bonnen").select("datum,bedrag", { count:"exact" }).order("datum").order("id")); expInkoop = error ? "fout" : (data || []); }
+  catch(e){ expInkoop = "fout"; }
+  if(document.getElementById("exporteren").open) tekenBalans();
 }
 /* hoe de afgeronde bonnen (kamers en campers) betaald zijn: contant of bankoverschrijving (tot 23-10-2026 d: Tikkie); oudere bonnen hebben geen verdeling */
 function betaalwijzeBalans(keuze){
@@ -12106,7 +12179,7 @@ function tekenBonnen(keuze){
   bak.innerHTML = `<p class="kop">Afgeronde bonnen<em>${lijst.length}</em></p>` +
     lijst.map(x => `<div style="border-top:1px solid var(--line);padding:8px 0">` +
       `<div style="display:flex;gap:8px"><span style="flex:1">${esc(x.gast) || esc(x.plek)}<em style="display:block;font-style:normal;font-size:12px;color:var(--muted)">${x.soort === "afspraken" ? "Afspraken groep · " : x.soort === "terugbetaling" ? "Terugbetaling · " : ""}${esc(x.plek)} · ${kort(x.datum)}${betaalTekst(x) ? ` · ${esc(betaalTekst(x))}${Number(x.tikkie) > 0 ? (x.tikkie_binnen ? " (binnen ✓)" : " (nog niet binnen)") : ""}` : ""}</em></span><b>${eur(x.totaal)}</b></div>` +
-      `<div class="vink" style="margin-top:6px"><button data-bonkop="${esc(x.id)}">Kopiëren</button><button data-bonzie="${esc(x.id)}">Bekijken</button></div>` +
+      `<div class="vink" style="margin-top:6px"><button data-bonkop="${esc(x.id)}">Kopiëren</button><button data-bonzie="${esc(x.id)}">Bekijken</button>${x.soort === "kamer" || x.soort === "camper" ? `<button data-bonwijzig="${esc(x.id)}">Betaalwijze wijzigen</button>` : ""}</div>` +
       `<div id="bon-${esc(x.id)}"></div></div>`).join("");
   bak.querySelectorAll("[data-bonkop]").forEach(kn => kn.onclick = async () => {
     const x = bonnen.find(y => String(y.id) === kn.dataset.bonkop); if(!x) return;
@@ -12120,6 +12193,29 @@ function tekenBonnen(keuze){
     const uit = document.getElementById("bon-" + x.id);
     uit.innerHTML = uit.innerHTML ? "" : `<pre style="white-space:pre-wrap;font-size:12px;background:var(--bone);padding:8px;border-radius:8px;margin-top:6px">${esc(x.tekst)}</pre>`;
   });
+  /* 25-10-2026 f (Bart): per ongeluk Contant gekozen terwijl het een bankoverschrijving was (of andersom): achteraf te wijzigen.
+     Alleen de betaalwijze van de bon verandert (contant, tikkie = bankoverschrijving, tikkie_binnen en de regel "Betaald:" in de
+     tekst); de gast, de bon zelf en de bedragen blijven gelijk. Het oude en het nieuwe staan in de tekst van de bon. */
+  bak.querySelectorAll("[data-bonwijzig]").forEach(kn => kn.onclick = () => bonBetaalwijzeWijzig(kn.dataset.bonwijzig));
+}
+async function bonBetaalwijzeWijzig(id){
+  const x = bonnen.find(y => String(y.id) === String(id)); if(!x) return;
+  const regels = Array.isArray(x.regels) ? x.regels : [];
+  const wijze = await betaalwijzeVraag(Number(x.totaal || 0), `${x.gast || x.plek}${x.gast ? ` · ${x.plek}` : ""}`, "Opslaan",
+    `Nu: ${betaalTekst(x) || "zonder verdeling"}. Kies hoe er echt betaald is; de bon en de bedragen blijven gelijk.`, 0, regels, "Betaalwijze wijzigen");
+  if(!wijze) return;
+  const hadVerdeling = x.contant != null || x.tikkie != null;
+  if(hadVerdeling && Math.abs(Number(wijze.contant || 0) - Number(x.contant || 0)) < 0.005 && Math.abs(Number(wijze.tikkie || 0) - Number(x.tikkie || 0)) < 0.005) return;
+  let binnen = x.tikkie_binnen || null;
+  if(Number(wijze.tikkie) > 0 && !binnen) binnen = confirm("Is de bankoverschrijving al binnen?") ? new Date().toISOString() : null;
+  if(!(Number(wijze.tikkie) > 0)) binnen = null;
+  const oud = betaalTekst(x) || "zonder verdeling", nieuwTekst = betaalTekst(wijze);
+  /* de regel "Betaald:" wordt vervangen; eerdere wijzigingsregels blijven staan (review f: geschiedenis bewaren) */
+  const tekst = String(x.tekst || "").replace(/\n\nBetaald: [^\n]*((\n\(betaalwijze gewijzigd[^\n]*\))*)$/, "$1") + `\n\nBetaald: ${nieuwTekst}\n(betaalwijze gewijzigd op ${kort(iso(new Date()))} ${iso(new Date()).slice(0, 4)}, was: ${oud})`;
+  const { error } = await db.from("bonnen").update({ contant: wijze.contant, tikkie: wijze.tikkie, tikkie_binnen: binnen, tekst }).eq("id", x.id);
+  if(error){ alert("Opslaan mislukt: " + error.message); return; }
+  x.contant = wijze.contant; x.tikkie = wijze.tikkie; x.tikkie_binnen = binnen; x.tekst = tekst;
+  tekenBalans(); if(typeof tekenNu === "function" && modus === "nu") tekenNu();
 }
 document.getElementById("expPeriode").onchange = tekenBalans;
 /* back-up: alle tabellen in één bestand, zodat de gegevens ook buiten de database bestaan */
@@ -12163,6 +12259,7 @@ document.getElementById("bBackup").onclick = async () => {
 };
 document.getElementById("bExporteren").onclick = () => {
   vulPeriodes();
+  expInkoop = null; expInkoopHaal(); /* 25-10-2026 f: inkoopbonnen voor het blok Eruit */
   tekenBalans();
   document.getElementById("exporteren").showModal();
 };
