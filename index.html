@@ -3777,7 +3777,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "25-10-2026 g";
+const VERSIE = "26-10-2026 a";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -5275,8 +5275,8 @@ const kamersBezet = d => {
   if(l.some(k => k.kamer === "Complete Finca")) return 5;
   return new Set(l.map(k => k.kamer)).size;
 };
-/* eerder vertrek: door ons in de app gezet (kamer_vinkjes.eerder_uit); MyTourist blijft ongemoeid.
-   k.uitMt = datum volgens MyTourist, k.uit = waar de hele app mee rekent */
+/* eerder of later vertrek: door ons in de app gezet (kamer_vinkjes.eerder_uit). Sinds 26-10-2026 a loopt de agenda in MyTourist mee
+   (checkoutNaarMyTourist). k.uitMt = datum volgens MyTourist (bij familie of vrienden: de dichtzetting), k.uit = waar de app mee rekent */
 function pasEerderToe(){
   kamers.forEach(k => {
     if(k.uitMt === undefined) k.uitMt = k.uit;
@@ -7548,13 +7548,18 @@ function tekenNu(){
   });
   agendaGroeiBoven = false; agendaNaarVandaag = false;
 }
-/* vertrekt eerder: zit in het kamergastprofiel; MyTourist blijft ongemoeid */
+/* vertrekt eerder of later: zit in het kamergastprofiel; de agenda in MyTourist loopt mee (26-10-2026 a) */
+let checkoutBezig = false; /* review 26-10 a: geen tweede tik tijdens het wachten op MyTourist */
 async function vertrektEerder(k){
-  {
+  if(checkoutBezig) return;
+  checkoutBezig = true;
+  try {
     const naam = kNaam(k) || k.kamer;
     const vraag = kEerder(k)
       ? `${naam} staat nu op vertrek ${kort(k.uit)} (MyTourist zegt ${kort(k.uitMt)}). Nieuwe vertrekdatum als dag-maand, of leeg laten om terug te gaan naar ${kort(k.uitMt)}:`
-      : `Nieuwe vertrekdatum voor ${naam} (${k.kamer}) als dag-maand, bijvoorbeeld 14-9. Eerder of later kan allebei. Volgens MyTourist vertrekken ze ${kort(k.uitMt)}; MyTourist zelf verandert niet (zet bij later vertrek de agenda in MyTourist zelf dicht):`;
+      : k.bron === "dicht"
+      ? `Nieuwe vertrekdatum voor ${naam} (${k.kamer}) als dag-maand, bijvoorbeeld 14-9. Eerder of later kan allebei; de kamer gaat in MyTourist mee dicht of open. Nu afgesproken tot ${kort(k.uitMt)}:`
+      : `Nieuwe vertrekdatum voor ${naam} (${k.kamer}) als dag-maand, bijvoorbeeld 14-9. Eerder of later kan allebei. Volgens MyTourist vertrekken ze ${kort(k.uitMt)}; blijven ze langer, dan zet de app die extra nachten in MyTourist dicht:`;
     const nu = new Date();
     const t = prompt(vraag, kEerder(k) ? "" : `${nu.getDate()}-${nu.getMonth()+1}`);
     if(t === null) return;
@@ -7568,11 +7573,15 @@ async function vertrektEerder(k){
       if(datum <= k.in){ alert(`Dat kan niet: ze komen pas ${kort(k.in)} aan.`); return; }
       if(datum === k.uitMt) datum = null;
       if(datum && datum > k.uitMt){
-        /* later vertrek: niet over een andere boeking van dezelfde kamer heen */
-        const botst = kamers.find(x => x.nr !== k.nr && (x.kamer === k.kamer || x.kamer === "Complete Finca" || k.kamer === "Complete Finca") && x.in < datum && (x.uitMt || x.uit) > k.uitMt);
-        if(botst){ alert(`Dat kan niet: ${kNaam(botst) || "een andere gast"} staat van ${kort(botst.in)} tot ${kort(botst.uitMt || botst.uit)} in ${botst.kamer}.`); return; }
+        /* later vertrek: niet over een andere boeking (of dichtzetting, 26-10-2026 a) van dezelfde kamer heen */
+        const raakt = x => x.nr !== k.nr && (x.kamer === k.kamer || x.kamer === "Complete Finca" || k.kamer === "Complete Finca") && x.in < datum && (x.uitMt || x.uit) > k.uitMt;
+        const botst = kamers.find(raakt) || kamerDicht.find(x => x.id !== k.dichtId && raakt(x));
+        if(botst){ alert(`Dat kan niet: ${botst.dicht ? "dichtgezet" : (kNaam(botst) || "een andere gast")} staat van ${kort(botst.in)} tot ${kort(botst.uitMt || botst.uit)} in ${botst.kamer}.`); return; }
       }
     }
+    const mt = await checkoutNaarMyTourist(k, datum);
+    if(!mt.gelukt) return;
+    datum = mt.datum;
     const gelukt = await kamerVink(k, "eerder_uit", datum);
     if(gelukt === false) return;
     pasEerderToe();
@@ -7581,7 +7590,46 @@ async function vertrektEerder(k){
     const vers = kamers.find(x => x.nr === k.nr);
     tekenNu();
     if(document.getElementById("detail").open) toonKamerDetail(vers || k);
+  } finally { checkoutBezig = false; }
+}
+/* 26-10-2026 a (Bart): de agenda in MyTourist loopt mee met een nieuwe check-out (datum = nieuwe vertrekdag, of null = terug naar
+   wat MyTourist/de dichtzetting zegt). Familie of vrienden: de dichtzetting zelf schuift mee (eerder weg: die nachten weer open;
+   langer: extra nachten dicht) en kamer_dicht.tot gaat mee. Echte MyTourist-boeking: langer blijven zet de extra nachten dicht,
+   terug naar eerder zet wat de app dichtzette weer open; eerder weg dan MyTourist zegt verandert niets in MyTourist.
+   Geeft { gelukt, datum }: datum is wat in eerder_uit moet (bij familie of vrienden altijd null, de dichtzetting is immers verschoven).
+   Review 26-10 a: "deels gelukt" (ok:false) telt als niet gelukt, met dezelfde vraag als bij een fout; alleenKamer kijkt naar elke
+   andere dichtzetting in die nachten (zoals bij Weer openzetten), zodat de hele finca dicht blijft. */
+async function checkoutNaarMyTourist(k, datum){
+  const nieuwUit = datum || k.uitMt, naam = kNaam(k) || k.kamer;
+  const geluktVan = r => !r.error && !!(r.data && r.data.ok);
+  const toch = (r, wat) => confirm(`${wat} in MyTourist ${r.error ? "mislukte: " + r.error.message : "is maar deels gelukt (controleer het daar)"}.\n\nToch de nieuwe datum bewaren? Zet die nachten dan zelf ${wat === "Dichtzetten" ? "dicht" : "open"} in MyTourist.`);
+  const wacht = `Bezig in MyTourist voor ${naam} (${k.kamer})… een halve minuut geduld.`;
+  if(k.bron === "dicht"){
+    const d = kamerDicht.find(x => x.id === k.dichtId);
+    if(!d){ alert("De dichtzetting van deze gast is niet gevonden. Sluit het profiel, wacht even en probeer het opnieuw."); return { gelukt:false }; }
+    if(nieuwUit !== d.uit){
+      let r, wat;
+      if(nieuwUit > d.uit){ wat = "Dichtzetten"; r = await mtSchrijvenMetWacht({ actie:"dicht", kamer:d.kamer, van:d.uit, tot:nieuwUit }, wacht); }
+      else { wat = "Openzetten"; const anderen = kamerDicht.filter(x => x.id !== d.id && x.in < d.uit && x.uit > nieuwUit);
+        r = await mtSchrijvenMetWacht({ actie:"open", kamer:d.kamer, van:nieuwUit, tot:d.uit, alleenKamer: anderen.length > 0 }, wacht); }
+      const mtOk = geluktVan(r);
+      if(!mtOk && !toch(r, wat)) return { gelukt:false };
+      const { error: e2 } = await db.from("kamer_dicht").update({ tot: nieuwUit, mt_gelukt: mtOk, mt_melding: JSON.stringify(r.error ? { fout: r.error.message } : (r.data && r.data.gedaan) || null).slice(0, 500) }).eq("id", d.id);
+      if(e2){ alert(`MyTourist is al aangepast (${wat.toLowerCase()} tot ${kort(wat === "Dichtzetten" ? nieuwUit : d.uit)}), maar bewaren in de app mislukte: ${e2.message}. Probeer het zo nog eens; tot die tijd lopen app en MyTourist uit elkaar.`); return { gelukt:false }; }
+      d.uit = nieuwUit; d.mtGelukt = mtOk; k.uitMt = nieuwUit; k.uit = nieuwUit;
+    }
+    return { gelukt:true, datum:null };
   }
+  const was = k.uit > k.uitMt ? k.uit : k.uitMt, wordt = nieuwUit > k.uitMt ? nieuwUit : k.uitMt;
+  if(wordt > was){
+    const r = await mtSchrijvenMetWacht({ actie:"dicht", kamer:k.kamer, van:was, tot:wordt }, wacht);
+    if(!geluktVan(r) && !toch(r, "Dichtzetten")) return { gelukt:false };
+  } else if(wordt < was){
+    const anderen = kamerDicht.filter(x => x.in < was && x.uit > wordt);
+    const r = await mtSchrijvenMetWacht({ actie:"open", kamer:k.kamer, van:wordt, tot:was, alleenKamer: anderen.length > 0 }, wacht);
+    if(!geluktVan(r) && !toch(r, "Openzetten")) return { gelukt:false };
+  }
+  return { gelukt:true, datum };
 }
 function bindRest(bak, morgen){
   bak.querySelectorAll("[data-vink]").forEach(kn => kn.onclick = async () => {
@@ -9772,12 +9820,13 @@ async function checkOutStart(k, b){
         const nOud = nachten(kamer ? k : b), nNieuw = Math.max(1, nachten({ in: kamer ? k.in : b.in, uit: vandaag }));
         const keusE = await coVraag({ titel:"Check-out", wie: wie(), kop:`Vertrekt ${naam()} eerder dan gepland?`,
           regels:[{ naam:"Gepland", waarde:`${dagT(uit)} · ${nOud} ${nOud === 1 ? "nacht" : "nachten"}` }, { naam:"Wordt", waarde:`vandaag, ${dagT(vandaag)} · ${nNieuw} ${nNieuw === 1 ? "nacht" : "nachten"}` }],
-          tekst: kamer ? (k.bron === "dicht" ? "De kamer blijft in MyTourist dicht tot de afgesproken dag. Ontbijt na vandaag vervalt." : "MyTourist verandert niet mee. Ontbijt na vandaag vervalt.") : "Het aantal nachten en de prijs gaan meteen mee. Stroom en ontbijt na vandaag vervallen.",
+          tekst: kamer ? (k.bron === "dicht" ? "De kamer gaat in MyTourist vanaf vandaag weer open. Ontbijt na vandaag vervalt." : "De boeking in MyTourist blijft staan. Ontbijt na vandaag vervalt.") : "Het aantal nachten en de prijs gaan meteen mee. Stroom en ontbijt na vandaag vervallen.",
           knoppen:[{ tekst:"Ja, vertrekt vandaag", waarde:"ja", klasse:"vol" }, { tekst:"Terug", waarde:null }] });
         if(keusE !== "ja") continue;
         if(kamer){
           const sesVoor = !!(ciStatus[k.nr] && SES_GEMELD.includes(ciStatus[k.nr].status));
-          const ok = await kamerVink(k, "eerder_uit", vandaag); if(ok === false) continue;
+          const mt = await checkoutNaarMyTourist(k, vandaag); if(!mt.gelukt) continue; /* 26-10-2026 a: MyTourist loopt mee */
+          const ok = await kamerVink(k, "eerder_uit", mt.datum); if(ok === false) continue;
           pasEerderToe(); await zorgGastLinks(); await syncPoets();
           k = kamerVoorNr(k.nr) || k;
           /* ontbijt na vandaag vervalt */
@@ -10979,6 +11028,12 @@ async function mtSchrijven(body){
   try { const r = await db.functions.invoke("mytourist-schrijven", { body }); if(r.error) return { data:null, error:r.error };
     if(r.data && r.data.fout) return { data:null, error:{ message:r.data.fout } }; return { data:r.data, error:null }; }
   catch(e){ return { data:null, error:{ message:String(e && e.message || e) } }; }
+}
+/* 26-10-2026 a: zelfde aanroep, met een zichtbare wachtregel in het open profiel (de MyTourist-functie kan een halve minuut duren) */
+async function mtSchrijvenMetWacht(body, tekst){
+  const el = document.getElementById("dBody"); let w = null;
+  if(el){ w = document.createElement("p"); w.className = "leeg"; w.style.cssText = "margin:8px 0;color:var(--muted)"; w.textContent = tekst; el.prepend(w); }
+  try { return await mtSchrijven(body); } finally { if(w) w.remove(); }
 }
 let knSoort = null;
 function kamerNieuwOpen(datum, kamer){
