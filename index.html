@@ -875,6 +875,28 @@
   .cf-bank button{border:1px solid var(--pine);background:var(--pine);color:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
   .cf-bank select{flex:1;min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:16px;background:#fff;color:var(--tekst)}
   /* 17-10-2026 c: inkoopbon vastleggen */
+  /* 26-10-2026 c: digitale kluis */
+  .kluisdlg h3{display:flex;align-items:center;gap:8px}
+  .kluiskop{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .kluisknopje{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;color:var(--tekst);cursor:pointer;margin-top:8px}
+  .kluisknopje .gi{width:16px;height:16px}
+  .kluiszoek{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;margin:6px 0 10px}
+  .kluiszoek input{flex:1;border:0;background:none;font:inherit;font-size:15px;outline:none;min-width:0}
+  .kluiszoek .gi{color:var(--muted);width:18px;height:18px}
+  .kluismappen{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .kluismappen button{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;font-weight:600;color:var(--tekst);cursor:pointer}
+  .kluismappen button.aan{border:2px solid var(--accent);padding:5px 10px}
+  .kluislijst{display:flex;flex-direction:column;gap:8px}
+  .kluislijst button{display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;color:var(--tekst);cursor:pointer}
+  .kluislijst button .gi{color:var(--accent);flex:0 0 22px}
+  .kluislijst button b{display:block;font-size:15px} .kluislijst button small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kluislijst button span{min-width:0;flex:1}
+  .kluisbijlagen{display:flex;flex-direction:column;gap:6px;margin:4px 0 10px}
+  .kluisbijlagen div{display:flex;align-items:center;gap:8px;background:var(--bone);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:14px}
+  .kluisbijlagen div .gi{width:16px;height:16px;color:var(--accent)}
+  .kluisbijlagen div span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .kluisbijlagen div button{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font:inherit;font-size:12.5px;cursor:pointer}
+  .kluisdlg textarea{width:100%;box-sizing:border-box;font:inherit;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card);resize:vertical}
   .ib-knoppen{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 10px}
   .ib-knop{position:relative;flex:1;min-width:140px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--pine);background:var(--pine);color:#fff;border-radius:12px;padding:14px 12px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;overflow:hidden}
   .ib-knop.licht{background:var(--card);color:var(--pine)}
@@ -1123,6 +1145,11 @@
   .balans div.eind{border-top:1px solid var(--line);margin-top:6px;padding-top:7px;
     color:var(--pine);font-weight:600;font-size:15px}
   .balans .leeg{display:block;color:var(--muted);font-size:14px;text-align:center;padding:6px 0}
+  /* 26-10-2026 d: gastenregister in Exporteren */
+  .regkop{margin:18px 0 4px;font-size:16px}
+  .regsnel{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px}
+  .regsnel button{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;font-weight:600;color:var(--tekst);cursor:pointer}
+  .regdatums{display:flex;gap:8px} .regdatums label{flex:1} .regdatums input{width:100%;box-sizing:border-box}
   .keuzes{display:flex;flex-direction:column;gap:9px}
   .keuzes button{width:100%;text-align:left;padding:14px;border-radius:10px;
     border:1px solid var(--line);background:var(--card);color:var(--pine);
@@ -1540,6 +1567,7 @@
   <symbol id="gi-scooter" viewBox="0 0 24 24"><circle cx="6" cy="17" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M8.6 17h6.8l2.1-7.5H20M17.5 9.5 16.4 6H14"/><path d="M3 13.5h7.5l1.5 3.5"/></symbol>
   <symbol id="gi-sleutel" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4"/><path d="M10.4 12.6 20 3M16.5 6.5 19 9M14.2 8.8l2 2"/></symbol>
   <!-- 23-10-2026 a: voor de handleiding op de gastenpagina (wifi, ontbijt) -->
+  <symbol id="gi-kluis" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /><circle cx="7.5" cy="7.5" r=".5" fill="currentColor" /><path d="m7.9 7.9 2.7 2.7" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /><path d="m13.4 10.6 2.7-2.7" /><circle cx="7.5" cy="16.5" r=".5" fill="currentColor" /><path d="m7.9 16.1 2.7-2.7" /><circle cx="16.5" cy="16.5" r=".5" fill="currentColor" /><path d="m13.4 13.4 2.7 2.7" /><circle cx="12" cy="12" r="2" /></symbol><symbol id="gi-slot" viewBox="0 0 24 24"><circle cx="12" cy="16" r="1" /><rect x="3" y="10" width="18" height="12" rx="2" /><path d="M7 10V7a5 5 0 0 1 10 0v3" /></symbol><symbol id="gi-open" viewBox="0 0 24 24"><circle cx="12" cy="16" r="1" /><rect width="18" height="12" x="3" y="10" rx="2" /><path d="M7 10V7a5 5 0 0 1 9.33-2.5" /></symbol><symbol id="gi-zoek" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></symbol><symbol id="gi-paperclip" viewBox="0 0 24 24"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></symbol><symbol id="gi-prullenbak" viewBox="0 0 24 24"><path d="M10 11v6" /><path d="M14 11v6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol>
   <symbol id="gi-wifi" viewBox="0 0 24 24"><path d="M12 19.5h.01"/><path d="M2.5 8.8a14 14 0 0 1 19 0M5.6 12.2a9.5 9.5 0 0 1 12.8 0M8.7 15.5a5 5 0 0 1 6.6 0"/></symbol>
   <symbol id="gi-koffie" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10.5h1.3a2.5 2.5 0 0 1 0 5H16"/><path d="M3.5 21.5h15"/><path d="M8.8 2.8c-.8 1 .8 2 0 3.4M12.2 2.8c-.8 1 .8 2 0 3.4"/></symbol>
 </svg>
@@ -1629,6 +1657,10 @@
     <button class="meerrij meeronderwerp" data-meerpagina="geld"><svg class="gi"><use href="#gi-euro"/></svg><span><b>Geld</b><small id="msGeld"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     <!-- 24-10-2026 c (proefversie): alles wat voor Finca KaYu vastligt wordt een instelling; hier begint dat, alleen zichtbaar op kayu-proef -->
     <button class="meerrij meeronderwerp" data-meerpagina="instellingen" id="msInstellingenKnop" hidden><svg class="gi"><use href="#gi-gereedschap"/></svg><span><b>Instellingen</b><small id="msInstellingen"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+    </div>
+    <!-- 26-10-2026 c (Bart): digitale kluis voor Bart en Loes, met een eigen code; alles versleuteld op de telefoon -->
+    <div class="meerkaart">
+      <button class="meerrij" data-meer="kluis"><svg class="gi"><use href="#gi-kluis"/></svg><span><b>Digitale kluis</b><small>Alleen met code · paspoorten, polissen, contracten</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
     <div class="meerkaart">
       <button class="meerrij" data-meer="bUit"><svg class="gi"><use href="#gi-uit"/></svg><span><b>Uitloggen</b></span></button>
@@ -1785,6 +1817,39 @@
   <div id="cijfersInhoud"></div>
   <div class="acts"><button id="cijfersDicht">Sluiten</button></div>
 </div></dialog>
+<dialog id="kluis2"><div class="dlg meerdlg kluisdlg">
+  <!-- 26-10-2026 c (Bart): digitale kluis. Alles wordt op de telefoon versleuteld met de kluiscode (AES-GCM, sleutel uit de code met
+       PBKDF2); in de database en de opslagmap staat alleen onleesbare inhoud. Code kwijt = kluis kwijt (geen herstel). -->
+  <div id="kluisSlot">
+    <h3><svg class="gi"><use href="#gi-kluis"/></svg> Digitale kluis</h3>
+    <p class="leeg" id="kluisUitleg" style="margin:0 0 10px"></p>
+    <label class="ib-veld" id="kluisCodeVeld">Code<input id="kluisCode" type="password" autocomplete="off" placeholder="minimaal 6 tekens"></label>
+    <label class="ib-veld" id="kluisCode2Veld" hidden>Nog een keer<input id="kluisCode2" type="password" autocomplete="off"></label>
+    <button class="ib-knop" id="kluisOpen" style="width:100%">Openen</button>
+    <p class="ib-melding" id="kluisMelding" aria-live="polite"></p>
+    <p class="leeg" style="margin:10px 0 0;font-size:12.5px">Loes en jij gebruiken dezelfde code. Schrijf hem op en leg hem in de kast: zonder code kan niemand de kluis openen, ook wij niet, en er is geen "code vergeten". Liever een korte zin dan een kort woord.</p>
+  </div>
+  <div id="kluisBinnen" hidden>
+    <div class="kluiskop"><h3><svg class="gi"><use href="#gi-open"/></svg> Digitale kluis</h3><button type="button" class="kluisknopje" id="kluisDichtdoen"><svg class="gi"><use href="#gi-slot"/></svg> Op slot</button></div>
+    <div class="kluiszoek"><svg class="gi"><use href="#gi-zoek"/></svg><input id="kluisZoek" placeholder="Zoek: NIE, polis, school…" autocomplete="off"></div>
+    <div class="kluismappen" id="kluisMappen"></div>
+    <div id="kluisLijst" class="kluislijst"></div>
+    <button class="ib-knop" id="kluisNieuw" style="width:100%;margin-top:10px">+ Nieuw in de kluis</button>
+  </div>
+  <div id="kluisItem" hidden>
+    <button type="button" class="meerterug" id="kluisTerug"><svg class="gi"><use href="#gi-pijl"/></svg>Kluis</button>
+    <label class="ib-veld">Titel<input id="kiTitel" autocomplete="off" placeholder="bijvoorbeeld NIE Bart"></label>
+    <label class="ib-veld">Map<select id="kiMap"></select></label>
+    <label class="ib-veld">Tekst<textarea id="kiTekst" rows="5" placeholder="nummers, namen, telefoonnummers, waar het origineel ligt"></textarea></label>
+    <div class="ib-knoppen"><label class="ib-knop licht"><svg class="gi"><use href="#gi-paperclip"/></svg> Bijlage (foto of pdf)<input type="file" id="kiBestand" accept="image/*,application/pdf" multiple aria-label="Bijlage kiezen"></label></div>
+    <div id="kiBijlagen" class="kluisbijlagen"></div>
+    <button class="ib-knop" id="kiBewaar" style="width:100%">Bewaren</button>
+    <button type="button" class="kluisknopje" id="kiWeg" hidden><svg class="gi"><use href="#gi-prullenbak"/></svg> Uit de kluis halen</button>
+    <p class="ib-melding" id="kiMelding" aria-live="polite"></p>
+  </div>
+  <div class="acts"><button id="kluisDicht">Sluiten</button></div>
+</div></dialog>
+<dialog id="kluisKijk"><div class="dlg meerdlg"><h3 id="kluisKijkNaam"></h3><div id="kluisKijkInhoud"></div><div class="acts"><button id="kluisKijkDicht">Sluiten</button></div></div></dialog>
 <dialog id="inkoop2"><div class="dlg meerdlg">
   <h3>Inkoopbon vastleggen</h3>
   <p class="cf-klein" style="margin:0 0 10px;font-size:13.5px">Maak een foto van de bon of de factuur. Twee pagina's? Maak dan twee foto's. Bedrag en winkel mag je leeg laten.</p>
@@ -1827,6 +1892,13 @@
     <button id="bBarExport"><b>Barverkoop</b><span>Consumpties per gast</span></button>
     <button id="bBackup"><b>Back-up van alles</b><span id="backupUit">Alle gegevens in één bestand, bewaar hem op je laptop</span></button>
   </div>
+  <!-- 26-10-2026 d (Bart): gastenregister als pdf, kamers en campers, met document, handtekening en SES-stand -->
+  <h4 class="regkop">Gastenregister</h4>
+  <p class="uitleg">Wie er verbleef, met document, handtekening en wat naar SES is gemeld. Als pdf, om te delen of te bewaren.</p>
+  <div class="regsnel"><button type="button" data-regsnel="maand">Deze maand</button><button type="button" data-regsnel="kwartaal">Dit kwartaal</button><button type="button" data-regsnel="jaar">Dit jaar</button></div>
+  <div class="regdatums"><label class="ib-veld">Van<input type="date" id="regVan"></label><label class="ib-veld">Tot en met<input type="date" id="regTot"></label></div>
+  <div class="keuzes"><button id="bRegister"><b>Maak pdf</b><span>Gastenregister van deze periode, om te delen of te bewaren</span></button></div>
+  <p class="ib-melding" id="regMelding" aria-live="polite"></p>
   <div class="acts"><button id="expDicht">Sluiten</button></div>
 </div></dialog>
 
@@ -2459,10 +2531,11 @@ const db = PROEF ? proefDb() : !TESTVERSIE ? echteDb : (() => {
   const LEES_RPC = new Set(["gast_ontbijt", "poets_lijst", "gast_checkin_lees", "camper_aanvraag_lees", "gast_samen_links", "gast_verleng_info", "gast_teksten_lees"]);
   return {
     /* uitzondering (26-09-2026): het afvinken van de documentcontrole in checkin_status moet op de testversie getest kunnen worden */
-    from: tabel => { const q = echteDb.from(tabel); return { select: (...a) => q.select(...a), insert: geblokkeerd, update: tabel === "checkin_status" ? (...a) => q.update(...a) : geblokkeerd, upsert: geblokkeerd, delete: geblokkeerd }; },
+    /* 26-10-2026 c: de digitale kluis mag ook op de testversie echt schrijven (zelfde kluis als de echte app; Bart wil hem daar proberen) */
+    from: tabel => { const q = echteDb.from(tabel); if(tabel === "kluis") return q; return { select: (...a) => q.select(...a), insert: geblokkeerd, update: tabel === "checkin_status" ? (...a) => q.update(...a) : geblokkeerd, upsert: geblokkeerd, delete: geblokkeerd }; },
     rpc: (naam, ...a) => LEES_RPC.has(naam) ? echteDb.rpc(naam, ...a) : geblokkeerd(),
     /* 17-10-2026 c: foto's van inkoopbonnen alleen bekijken, niet toevoegen of weghalen */
-    storage: { from: map => { const s = echteDb.storage.from(map); return { upload: geblokkeerd, remove: geblokkeerd, createSignedUrls: (...a) => s.createSignedUrls(...a) }; } },
+    storage: { from: map => { const s = echteDb.storage.from(map); if(map === "kluis") return s; return { upload: geblokkeerd, remove: geblokkeerd, createSignedUrls: (...a) => s.createSignedUrls(...a), download: (...a) => s.download(...a) }; } },
     auth: echteDb.auth, channel: (...a) => echteDb.channel(...a), removeChannel: (...a) => echteDb.removeChannel(...a)
   };
 })();
@@ -3777,7 +3850,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "26-10-2026 a";
+const VERSIE = "26-10-2026 h";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -11190,6 +11263,7 @@ if(NIEUW){
     if(w.startsWith("inst")){ wijzigBedrijfsinstelling(w); return; }
     if(w.startsWith("kosten")){ kostenActie(w, kn); return; }
     if(w === "obvandaag"){ obVandaagWissel(); return; }
+    if(w === "kluis"){ document.getElementById("meer2").close(); kluisOpenen(); return; }
     if(w === "herinnering"){ herinneringWissel(); return; }
     if(w === "herinneringtekst"){ openHerinneringTekst(); return; }
     if(w === "gastteksten"){ openGastTeksten(); return; } /* 25-10-2026 d */
@@ -11787,10 +11861,12 @@ function pdfAfbreken(s, max, vet, g){
   uit.push(r);
   return uit;
 }
-/* blokken (h1, h2, p, lijst, tabel) netjes op A4-pagina's zetten; geeft per pagina de tekenopdrachten */
+/* blokken (h1, h2, p, lijst, tabel, afb) netjes op A4-pagina's zetten; geeft per pagina de tekenopdrachten.
+   Sinds 26-10-2026 d ook plaatjes (blok "afb": jpeg-bytes als tekst, breedte, hoogte, onderschrift; voor de handtekeningen in het
+   gastenregister); die komen als paginas.afb mee naar pdfBytes. */
 function pdfPaginas(blokken, voet){
   const B = 595.28, H = 841.89, L = 48, R = 48, T = 52, O = 54, BR = B - L - R;
-  const paginas = []; let ops = [], y = H - T;
+  const paginas = [], afb = []; let ops = [], y = H - T;
   const nieuw = () => { paginas.push(ops); ops = []; y = H - T; };
   const tekst = (s, x, yy, g, vet, grijs) => ops.push(`BT /${vet ? "F2" : "F1"} ${pdfN(g)} Tf ${grijs ? "0.35 g" : "0 g"} 1 0 0 1 ${pdfN(x)} ${pdfN(yy)} Tm (${pdfEsc(s)}) Tj ET`);
   const lijn = (x1, yy, x2, dik, grijs) => ops.push(`${grijs} G ${pdfN(dik)} w ${pdfN(x1)} ${pdfN(yy)} m ${pdfN(x2)} ${pdfN(yy)} l S`);
@@ -11821,19 +11897,37 @@ function pdfPaginas(blokken, voet){
       for(const rij of b.rijen) teken(rij, rij.soort === "tot", false);
       y -= 4;
     }
+    else if(b.t === "afb"){  /* drie naast elkaar, hooguit 60 punten hoog, met onderschrift */
+      const per = 3, tussen = 8, bw = (BR - tussen * (per - 1)) / per, MH = 60;
+      const maat = l => l.map(it => { const sch = Math.min(bw / it.w, MH / it.h); return { it, w: it.w * sch, h: it.h * sch }; });
+      if(b.kop){ past(30 + Math.max(0, ...maat(b.items.slice(0, per)).map(g => g.h)) + 20);  /* het kopje nooit los van de eerste rij plaatjes */ y -= 6; alinea(b.kop, 9.5, true, true); }
+      for(let i = 0; i < b.items.length; i += per){
+        const groep = maat(b.items.slice(i, i + per));
+        const h = Math.max(...groep.map(g => g.h));
+        past(h + 20);
+        groep.forEach((g, j) => { const n = afb.push(g.it), x = L + j * (bw + tussen);
+          ops.push(`q ${pdfN(g.w)} 0 0 ${pdfN(g.h)} ${pdfN(x)} ${pdfN(y - g.h)} cm /Im${n} Do Q`);
+          lijn(x, y - h - 2, x + bw, 0.4, 0.82);
+          if(g.it.onder){ const rr = pdfAfbreken(pdfTekens(g.it.onder), bw - 6, false, 8); tekst(rr.length > 1 ? rr[0] + "…" : rr[0], x, y - h - 12, 8, false, true); } });
+        y -= h + 20;
+      }
+    }
   }
-  paginas.push(ops);
+  paginas.push(ops); paginas.afb = afb;
   /* voetregel met paginanummer */
   paginas.forEach((p, i) => { const s = pdfTekens(`${voet} · pagina ${i + 1} van ${paginas.length}`); p.push(`BT /F1 8 Tf 0.45 g 1 0 0 1 ${pdfN(L)} 30 Tm (${pdfEsc(s)}) Tj ET`); });
   return paginas;
 }
-/* de pdf zelf: catalogus, pagina's, twee lettertypes en per pagina één inhoudsstroom; geeft de bytes */
+/* de pdf zelf: catalogus, pagina's, twee lettertypes, eventueel plaatjes (jpeg, sinds 26-10-2026 d) en per pagina één inhoudsstroom; geeft de bytes */
 function pdfBytes(paginas, titel){
   const obj = [null, "<< /Type /Catalog /Pages 2 0 R >>", "", "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>",
     "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>"];
-  const kids = [];
+  const kids = [], xo = [];
+  (paginas.afb || []).forEach((a, i) => { xo.push(`/Im${i + 1} ${obj.length} 0 R`);
+    obj.push(`<< /Type /XObject /Subtype /Image /Width ${a.w} /Height ${a.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${a.jpeg.length} >>\nstream\n${a.jpeg}\nendstream`); });
+  const xobj = xo.length ? ` /XObject << ${xo.join(" ")} >>` : "";
   paginas.forEach(ops => { const p = obj.length, c = p + 1, stroom = ops.join("\n"); kids.push(`${p} 0 R`);
-    obj.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${c} 0 R >>`);
+    obj.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /Font << /F1 3 0 R /F2 4 0 R >>${xobj} >> /Contents ${c} 0 R >>`);
     obj.push(`<< /Length ${stroom.length} >>\nstream\n${stroom}\nendstream`); });
   obj[2] = `<< /Type /Pages /Kids [${kids.join(" ")}] /Count ${paginas.length} >>`;
   const info = obj.length; obj.push(`<< /Title (${pdfEsc(pdfTekens(titel))}) /Producer (Finca KaYu app) >>`);
@@ -11937,6 +12031,174 @@ document.getElementById("cijfersDicht").onclick = () => document.getElementById(
    Rijen in tabel inkoop_bonnen; de bestanden in de afgesloten opslagmap "inkoopbonnen" (alleen voor wie is ingelogd).
    Foto's worden eerst verkleind (lange kant hooguit 2000 pixels), zodat de opslag niet volloopt. Geen kas: die blijft buiten de app.
    Weghalen kan alleen op de dag zelf (een verkeerde foto); daarna blijft een bon staan. */
+
+/* ---------- digitale kluis (26-10-2026 c, wens Bart: één plek voor paspoortkopieën, polissen, contracten, NIE, met een eigen code
+   voor Bart en Loes). Versleuteling op de telefoon: sleutel = PBKDF2(code, zout, 310.000 x SHA-256) -> AES-GCM 256. In de tabel
+   `kluis` staat één rij soort 'sleutel' (zout + versleutelde controletekst) en per item een rij soort 'item' met versleutelde JSON
+   {titel, map, tekst, bijlagen:[{pad, naam, soort, iv}]}. Bijlagen staan versleuteld (bytes) in de opslagmap `kluis`.
+   De sleutel blijft alleen in het geheugen van de app en gaat na 5 minuten niets doen, bij sluiten en bij "Op slot" weg. */
+const KLUIS_MAPPEN = ["Identiteit", "Verzekeringen", "Wonen", "Kinderen", "Finca", "Codes", "Overig"];
+const KLUIS_CONTROLE = "Finca KaYu kluis", KLUIS_MAP = "kluis", KLUIS_MAX = 10 * 1024 * 1024, KLUIS_STIL = 5 * 60 * 1000;
+let kluisSleutel = null, kluisItems = [], kluisZout = null, kluisMapKeuze = "", kluisHuidig = null, kluisBijlagenNieuw = [], kluisTimer = null;
+const kb64 = b => { const u = new Uint8Array(b); let t = ""; for(let i = 0; i < u.length; i += 0x8000) t += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(t); };
+const kvan64 = t => Uint8Array.from(atob(t), c => c.charCodeAt(0));
+const kel = id => document.getElementById(id);
+function kluisMeld(id, t, soort){ const m = kel(id); m.textContent = t; m.className = "ib-melding" + (soort ? " " + soort : ""); }
+async function kluisSleutelVan(code, zout){
+  const basis = await crypto.subtle.importKey("raw", new TextEncoder().encode(code.normalize("NFC")), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name:"PBKDF2", salt: zout, iterations: 310000, hash:"SHA-256" }, basis, { name:"AES-GCM", length:256 }, false, ["encrypt", "decrypt"]);
+}
+async function kluisVersleutel(bytes){ const iv = crypto.getRandomValues(new Uint8Array(12)); const uit = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, kluisSleutel, bytes); return { iv: kb64(iv), inhoud: kb64(uit) }; }
+async function kluisOntsleutel(iv, inhoud){ return crypto.subtle.decrypt({ name:"AES-GCM", iv: kvan64(iv) }, kluisSleutel, typeof inhoud === "string" ? kvan64(inhoud) : inhoud); } /* review c: bijlagen als bytes, zonder base64-omweg */
+const kluisTekstIn = async obj => kluisVersleutel(new TextEncoder().encode(JSON.stringify(obj)));
+const kluisTekstUit = async (iv, inhoud) => JSON.parse(new TextDecoder().decode(await kluisOntsleutel(iv, inhoud)));
+function kluisTik(){ clearTimeout(kluisTimer); if(kluisSleutel) kluisTimer = setTimeout(() => { if(!kel("kluisItem").hidden){ kluisTik(); return; } /* review c: nooit op slot met een open formulier (tekst zou verloren gaan) */ kluisOpSlot("Na 5 minuten niets doen gaat de kluis vanzelf op slot."); }, KLUIS_STIL); }
+function kluisOpSlot(melding){
+  kluisSleutel = null; kluisItems = []; kluisHuidig = null; kluisBijlagenNieuw = []; clearTimeout(kluisTimer);
+  kel("kluisBinnen").hidden = true; kel("kluisItem").hidden = true; kel("kluisSlot").hidden = false; kel("kluisCode").value = ""; kel("kluisCode2").value = "";
+  kel("kluisLijst").innerHTML = ""; kel("kluisMappen").innerHTML = ""; kel("kluisZoek").value = ""; kel("kiTitel").value = ""; kel("kiTekst").value = ""; kel("kiBijlagen").innerHTML = ""; /* review c: geen klaartekst achterlaten */
+  kluisMeld("kluisMelding", melding || "");
+  if(kluisZout){ kel("kluisCode2Veld").hidden = true; kel("kluisOpen").textContent = "Openen"; kel("kluisUitleg").textContent = "Vul de code van de kluis in."; } /* na de eerste keer: gewoon openen */
+}
+async function kluisOpenen(){
+  const d = kel("kluis2"); kluisOpSlot("");
+  const { data, error } = await db.from("kluis").select("id,soort,zout,iv,inhoud").eq("soort", "sleutel").limit(1);
+  if(error){ alert("De kluis kon niet geopend worden: " + error.message); return; }
+  const eerste = !data || !data.length; kluisZout = eerste ? null : data[0];
+  kel("kluisCode2Veld").hidden = !eerste; kel("kluisOpen").textContent = eerste ? "Code instellen en openen" : "Openen";
+  kel("kluisUitleg").textContent = eerste ? "Er is nog geen kluis. Kies een code van minimaal 6 tekens; die gebruiken Loes en jij allebei." : "Vul de code van de kluis in.";
+  if(!d.open) d.showModal(); kel("kluisCode").focus();
+}
+async function kluisProbeer(){
+  const code = kel("kluisCode").value, code2 = kel("kluisCode2").value, eerste = !kluisZout;
+  if(code.length < 6){ kluisMeld("kluisMelding", "De code moet minimaal 6 tekens zijn.", "fout"); return; }
+  if(eerste && code !== code2){ kluisMeld("kluisMelding", "De twee codes zijn niet gelijk.", "fout"); return; }
+  kel("kluisOpen").disabled = true; kluisMeld("kluisMelding", "Even geduld…");
+  try {
+    if(eerste){
+      const zout = crypto.getRandomValues(new Uint8Array(16));
+      kluisSleutel = await kluisSleutelVan(code, zout);
+      const c = await kluisVersleutel(new TextEncoder().encode(KLUIS_CONTROLE));
+      const { data, error } = await db.from("kluis").insert({ soort:"sleutel", zout: kb64(zout), iv: c.iv, inhoud: c.inhoud }).select("id,soort,zout,iv,inhoud");
+      if(error) throw new Error(/duplicate|unique/i.test(error.message) ? "Iemand anders heeft net een code ingesteld. Sluit de kluis en open hem opnieuw." : error.message);
+      kluisZout = data && data[0] ? data[0] : { zout: kb64(zout), iv: c.iv, inhoud: c.inhoud };
+    } else {
+      kluisSleutel = await kluisSleutelVan(code, kvan64(kluisZout.zout));
+      let goed = false;
+      try { goed = new TextDecoder().decode(await kluisOntsleutel(kluisZout.iv, kluisZout.inhoud)) === KLUIS_CONTROLE; } catch(e){ goed = false; }
+      if(!goed){ kluisSleutel = null; kluisMeld("kluisMelding", "De code klopt niet.", "fout"); return; }
+    }
+    await kluisLaad();
+    kel("kluisSlot").hidden = true; kel("kluisBinnen").hidden = false; kel("kluisCode").value = ""; kel("kluisCode2").value = "";
+    kluisTik();
+  } catch(e){ kluisSleutel = null; kluisMeld("kluisMelding", "Mislukt: " + (e && e.message || e), "fout"); }
+  finally { kel("kluisOpen").disabled = false; }
+}
+async function kluisLaad(){
+  const { data, error } = await db.from("kluis").select("id,iv,inhoud,gewijzigd").eq("soort", "item").order("gewijzigd", { ascending:false });
+  if(error) throw new Error(error.message);
+  kluisItems = [];
+  for(const r of data || []){ try { const o = await kluisTekstUit(r.iv, r.inhoud); kluisItems.push({ id: r.id, gewijzigd: r.gewijzigd, ...o }); } catch(e){ kluisItems.push({ id: r.id, titel: "(onleesbaar met deze code)", map: "Overig", tekst: "", bijlagen: [], kapot: true }); } }
+  kluisTekenLijst();
+}
+function kluisTekenLijst(){
+  const zoek = (kel("kluisZoek").value || "").trim().toLowerCase();
+  const tel = m => kluisItems.filter(x => x.map === m).length;
+  kel("kluisMappen").innerHTML = [`<button type="button" data-kmap="" class="${kluisMapKeuze ? "" : "aan"}">Alles (${kluisItems.length})</button>`]
+    .concat(KLUIS_MAPPEN.filter(m => tel(m)).map(m => `<button type="button" data-kmap="${m}" class="${kluisMapKeuze === m ? "aan" : ""}">${m} (${tel(m)})</button>`)).join("");
+  const lijst = kluisItems.filter(x => (!kluisMapKeuze || x.map === kluisMapKeuze) && (!zoek || `${x.titel} ${x.tekst} ${(x.bijlagen || []).map(b => b.naam).join(" ")}`.toLowerCase().includes(zoek)));
+  kel("kluisLijst").innerHTML = lijst.length ? lijst.map(x => `<button type="button" data-kitem="${x.id}">${gIcoon(x.bijlagen && x.bijlagen.length ? "paperclip" : "bon")}<span><b>${vrij(x.titel || "(zonder titel)")}</b><small>${vrij(x.map || "Overig")}${x.tekst ? " · " + vrij(String(x.tekst).split("\n")[0]) : ""}${x.bijlagen && x.bijlagen.length ? ` · ${x.bijlagen.length} ${x.bijlagen.length === 1 ? "bijlage" : "bijlagen"}` : ""}</small></span></button>`).join("")
+    : `<p class="leeg">${kluisItems.length ? "Niets gevonden." : "De kluis is nog leeg. Tik op + Nieuw in de kluis."}</p>`;
+}
+function kluisToonItem(x){
+  kluisHuidig = x ? Object.assign({}, x, { bijlagen: (x.bijlagen || []).slice(), weg: [] }) : null; kluisBijlagenNieuw = [];
+  kel("kluisBinnen").hidden = true; kel("kluisItem").hidden = false;
+  kel("kiTitel").value = x ? x.titel || "" : ""; kel("kiTekst").value = x ? x.tekst || "" : "";
+  kel("kiMap").innerHTML = KLUIS_MAPPEN.map(m => `<option${(x ? x.map : (kluisMapKeuze || "Overig")) === m ? " selected" : ""}>${m}</option>`).join("");
+  kel("kiWeg").hidden = !x; kluisMeld("kiMelding", ""); kel("kiBestand").value = "";
+  kluisTekenBijlagen();
+  if(!x) kel("kiTitel").focus();
+}
+function kluisTekenBijlagen(){
+  const oud = kluisHuidig && kluisHuidig.bijlagen ? kluisHuidig.bijlagen : [];
+  kel("kiBijlagen").innerHTML = oud.map((b, i) => `<div>${gIcoon("paperclip")}<span>${vrij(b.naam)}</span><button type="button" data-kbopen="${i}">Bekijken</button><button type="button" data-kbweg="${i}">Weg</button></div>`).join("")
+    + kluisBijlagenNieuw.map((f, i) => `<div>${gIcoon("paperclip")}<span>${vrij(f.name)} (nieuw)</span><button type="button" data-kbnieuwweg="${i}">Weg</button></div>`).join("");
+}
+async function kluisBijlageOpen(b){
+  kluisTik();
+  const { data, error } = await db.storage.from(KLUIS_MAP).download(b.pad);
+  if(error){ alert("Bijlage ophalen mislukt: " + error.message); return; }
+  try {
+    const bytes = await kluisOntsleutel(b.iv, await data.arrayBuffer());
+    const soort = b.soort || "application/octet-stream", url = URL.createObjectURL(new Blob([bytes], { type: soort }));
+    /* review c: in de app zelf tonen (een nieuw tabblad werkt niet in een geïnstalleerde app op de iPhone) */
+    const v = kel("kluisKijk"), bak = kel("kluisKijkInhoud"); kel("kluisKijkNaam").textContent = b.naam || "";
+    bak.innerHTML = /^image\//.test(soort) ? `<img src="${url}" alt="${vrij(b.naam)}" style="max-width:100%;max-height:70vh;display:block;margin:0 auto;border-radius:10px">`
+      : `<iframe src="${url}" title="${vrij(b.naam)}" style="width:100%;height:70vh;border:0;border-radius:10px;background:#fff"></iframe>`;
+    v.onclose = () => { bak.innerHTML = ""; URL.revokeObjectURL(url); };
+    v.showModal();
+  } catch(e){ alert("Bijlage kon niet ontsleuteld worden: " + (e && e.message || e)); }
+}
+async function kluisBewaar(){
+  kluisTik();
+  const titel = kel("kiTitel").value.trim(), map = kel("kiMap").value, tekst = kel("kiTekst").value;
+  if(!titel){ kluisMeld("kiMelding", "Geef het een titel.", "fout"); return; }
+  kel("kiBewaar").disabled = true; kluisMeld("kiMelding", "Bewaren…");
+  try {
+    const id = kluisHuidig ? kluisHuidig.id : crypto.randomUUID();
+    const bijlagen = (kluisHuidig && kluisHuidig.bijlagen ? kluisHuidig.bijlagen : []).slice();
+    for(const f of kluisBijlagenNieuw){
+      const klein = await ibVerklein(f);
+      if(klein.size > KLUIS_MAX) throw new Error(`${f.name} is te groot (hooguit 10 MB).`);
+      const v = await kluisVersleutel(await klein.arrayBuffer());
+      const pad = `${id}/${crypto.randomUUID()}.bin`;
+      const { error } = await db.storage.from(KLUIS_MAP).upload(pad, new Blob([kvan64(v.inhoud)], { type:"application/octet-stream" }), { contentType:"application/octet-stream", upsert:false });
+      if(error) throw new Error("Bijlage opslaan mislukt: " + error.message);
+      bijlagen.push({ pad, naam: f.name, soort: klein.type || f.type, iv: v.iv });
+    }
+    const v = await kluisTekstIn({ titel, map, tekst, bijlagen });
+    const rij = { id, soort:"item", iv: v.iv, inhoud: v.inhoud, bijlagen: bijlagen.map(b => b.pad), gewijzigd: new Date().toISOString() };
+    const { error } = await db.from("kluis").upsert(rij, { onConflict:"id" });
+    if(error){ const nieuw = bijlagen.slice((kluisHuidig && kluisHuidig.bijlagen ? kluisHuidig.bijlagen.length : 0)).map(b => b.pad); if(nieuw.length) await db.storage.from(KLUIS_MAP).remove(nieuw); throw new Error(error.message); } /* review c: geen wezen in de opslag */
+    /* weggehaalde bijlagen ook uit de opslag */
+    if(kluisHuidig && kluisHuidig.weg && kluisHuidig.weg.length){ const r = await db.storage.from(KLUIS_MAP).remove(kluisHuidig.weg); if(r && r.error) alert("Bewaard, maar een oude bijlage kon niet uit de opslag worden gehaald: " + r.error.message); }
+    await kluisLaad(); kel("kluisItem").hidden = true; kel("kluisBinnen").hidden = false;
+  } catch(e){ kluisMeld("kiMelding", String(e && e.message || e), "fout"); }
+  finally { kel("kiBewaar").disabled = false; }
+}
+async function kluisWeg(){
+  if(!kluisHuidig || !confirm(`"${kluisHuidig.titel}" uit de kluis halen? Dit kan niet ongedaan worden gemaakt.`)) return;
+  const paden = (kluisHuidig.bijlagen || []).map(b => b.pad);
+  const { error } = await db.from("kluis").delete().eq("id", kluisHuidig.id);
+  if(error){ alert("Weghalen mislukt: " + error.message); return; }
+  if(paden.length){ const r = await db.storage.from(KLUIS_MAP).remove(paden); if(r && r.error) alert("De regel is weg, maar een bijlage kon niet uit de opslag worden gehaald: " + r.error.message); }
+  await kluisLaad(); kel("kluisItem").hidden = true; kel("kluisBinnen").hidden = false;
+}
+{
+  const d = kel("kluis2");
+  kel("kluisOpen").onclick = kluisProbeer;
+  kel("kluisCode").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); if(kel("kluisCode2Veld").hidden) kluisProbeer(); else kel("kluisCode2").focus(); } });
+  kel("kluisCode2").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); kluisProbeer(); } });
+  kel("kluisDichtdoen").onclick = () => kluisOpSlot("De kluis is op slot.");
+  kel("kluisDicht").onclick = () => { kluisOpSlot(""); d.close(); };
+  d.addEventListener("close", () => kluisOpSlot(""));
+  kel("kluisZoek").oninput = () => { kluisTik(); kluisTekenLijst(); };
+  kel("kluisMappen").onclick = e => { const b = e.target.closest("[data-kmap]"); if(!b) return; kluisMapKeuze = b.dataset.kmap; kluisTik(); kluisTekenLijst(); };
+  kel("kluisLijst").onclick = e => { const b = e.target.closest("[data-kitem]"); if(!b) return; const x = kluisItems.find(i => i.id === b.dataset.kitem); if(x) kluisToonItem(x); kluisTik(); };
+  kel("kluisNieuw").onclick = () => { kluisTik(); kluisToonItem(null); };
+  kel("kluisTerug").onclick = () => { kluisTik(); kel("kluisItem").hidden = true; kel("kluisBinnen").hidden = false; kluisTekenLijst(); };
+  kel("kiBestand").onchange = () => { kluisTik(); kluisBijlagenNieuw.push(...[...kel("kiBestand").files]); kel("kiBestand").value = ""; kluisTekenBijlagen(); };
+  kel("kiBijlagen").onclick = e => {
+    const o = e.target.closest("[data-kbopen]"), w = e.target.closest("[data-kbweg]"), n = e.target.closest("[data-kbnieuwweg]");
+    if(o){ kluisBijlageOpen(kluisHuidig.bijlagen[Number(o.dataset.kbopen)]); }
+    else if(w){ const b = kluisHuidig.bijlagen.splice(Number(w.dataset.kbweg), 1)[0]; kluisHuidig.weg.push(b.pad); kluisTekenBijlagen(); }
+    else if(n){ kluisBijlagenNieuw.splice(Number(n.dataset.kbnieuwweg), 1); kluisTekenBijlagen(); }
+  };
+  kel("kiBewaar").onclick = kluisBewaar;
+  kel("kiWeg").onclick = kluisWeg;
+  kel("kluisKijkDicht").onclick = () => kel("kluisKijk").close();
+  d.addEventListener("pointerdown", kluisTik); d.addEventListener("input", kluisTik); d.addEventListener("keydown", kluisTik);
+}
 const IB_MAP = "inkoopbonnen", IB_MAX = 10 * 1024 * 1024;
 const IB_SOORT = { "image/jpeg":"jpg", "image/png":"png", "image/webp":"webp", "image/heic":"heic", "image/heif":"heif", "application/pdf":"pdf" };
 let ibBestanden = [], ibBezig = false, ibVerwerkt = 0, ibRecent = null, ibRecentFout = "", ibUrls = {};
@@ -12362,6 +12624,111 @@ document.getElementById("bBarExport").onclick = () => {
   download("finca-kayu-barverkoop-" + (keuze||"alles") + ".csv", kop+"\n"+regels.join("\n"));
   document.getElementById("exporteren").close();
 };
+/* ---------- gastenregister (26-10-2026 d, wens Bart: bij een controle in seconden kunnen laten zien wie er verbleef, met document,
+   handtekening en wat naar SES is gemeld; kamers én campers). Haalt per periode de verblijven (gastenlinks van kamers, camperboekingen),
+   de ingevulde check-ingegevens (checkin_personen) en de SES-stand (checkin_status) op en maakt daar een pdf van, met de handtekeningen
+   als plaatjes. Campers gaan niet naar SES (besluit Bart); dat staat zo in het register. */
+const REG_DOC = { PAS:"paspoort", NIF:"DNI/NIF", NIE:"NIE", OTRO:"ander document" };
+function regMeld(t, soort){ const m = document.getElementById("regMelding"); m.textContent = t; m.className = "ib-melding" + (soort ? " " + soort : ""); }
+function regPeriodeZet(soort){
+  const nu = new Date(); let van, tot;
+  if(soort === "maand"){ van = new Date(nu.getFullYear(), nu.getMonth(), 1); tot = new Date(nu.getFullYear(), nu.getMonth() + 1, 0); }
+  else if(soort === "kwartaal"){ const k = Math.floor(nu.getMonth() / 3) * 3; van = new Date(nu.getFullYear(), k, 1); tot = new Date(nu.getFullYear(), k + 3, 0); }
+  else { van = new Date(nu.getFullYear(), 0, 1); tot = new Date(nu.getFullYear(), 11, 31); }
+  document.getElementById("regVan").value = iso(van); document.getElementById("regTot").value = iso(tot);
+}
+/* handtekening (png als data-url) naar jpeg-bytes voor de pdf; klein gehouden (hooguit 360 px breed) */
+async function regHandtekening(dataUrl){
+  if(!dataUrl || !/^data:image\//.test(dataUrl)) return null;
+  try {
+    const img = new Image(); img.src = dataUrl; await img.decode();
+    const s = Math.min(1, 360 / Math.max(1, img.naturalWidth)), c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(img.naturalWidth * s)); c.height = Math.max(1, Math.round(img.naturalHeight * s));
+    const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+    const b64 = c.toDataURL("image/jpeg", 0.8).split(",")[1];
+    return { jpeg: atob(b64), w: c.width, h: c.height };
+  } catch(e){ return null; }
+}
+async function regAlle(maak, nrs){ /* in stukken van 100 nummers */
+  const uit = []; for(let i = 0; i < nrs.length; i += 100){ const { data, error } = await maak(nrs.slice(i, i + 100)); if(error) throw new Error(error.message); uit.push(...(data || [])); } return uit;
+}
+async function gastenregister(){
+  regMeld("");
+  const van = document.getElementById("regVan").value, tot = document.getElementById("regTot").value;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(van) || !/^\d{4}-\d{2}-\d{2}$/.test(tot) || tot < van){ regMeld("Kies een begin- en einddatum (de einddatum niet vóór het begin).", "fout"); return; }
+  const knop = document.getElementById("bRegister"); knop.disabled = true; regMeld("Gegevens ophalen…");
+  try {
+    /* verblijven die de periode raken: aankomst op of voor de einddatum, vertrek na de begindatum */
+    const gl = await alleRijen(() => db.from("gast_links").select("nr,kamer,gast,van,tot", { count:"exact" }).lte("van", tot).gt("tot", van).not("nr", "like", "SESTEST-%").not("nr", "like", "demo-%").order("van"));
+    if(gl.error) throw new Error(gl.error.message);
+    /* campers hebben ook een rij in gast_links (zelfde nr als de boeking); die komen hieronder uit boekingen, niet dubbel */
+    const kamerLinks = (gl.data || []).filter(x => !isCamperPlek(x.kamer) && x.kamer !== "Kamer TEST");
+    const bk = await alleRijen(() => db.from("boekingen").select("id,plek,naam,aankomst,vertrek,personen,gestald", { count:"exact" }).lte("aankomst", tot).gt("vertrek", van).order("aankomst"));
+    if(bk.error) throw new Error(bk.error.message);
+    const verblijven = kamerLinks.map(x => ({ nr: x.nr, waar: x.kamer, naam: x.gast, in: x.van, uit: x.tot, soort: "kamer" }))
+      .concat((bk.data || []).filter(b => !b.gestald).map(b => ({ nr: b.id, waar: b.plek, naam: b.naam, in: b.aankomst, uit: b.vertrek, soort: "camper", personen: b.personen })))
+      .sort((a, b) => a.in < b.in ? -1 : a.in > b.in ? 1 : String(a.waar).localeCompare(String(b.waar)));
+    const nrs = verblijven.map(v => v.nr);
+    const personen = nrs.length ? await regAlle(l => db.from("checkin_personen").select("nr,volgnr,nombre,apellido1,apellido2,tipo_documento,numero_documento,fecha_nacimiento,nacionalidad,direccion,municipio,codigo_postal,pais,handtekening").in("nr", l).order("volgnr"), nrs) : [];
+    const statussen = nrs.length ? await regAlle(l => db.from("checkin_status").select("nr,status,verzonden_op,bevestigd_op,lote_code,comunicacion_code,fout").in("nr", l), nrs) : [];
+    const perNr = {}; personen.forEach(p => (perNr[p.nr] = perNr[p.nr] || []).push(p));
+    const stNr = {}; statussen.forEach(s => stNr[s.nr] = s);
+    /* samen geboekte kamers (zelfde naam, van en tot, één check-in voor alle kamers): zelfde regel als gast_checkin_lees in de database */
+    const samenMet = v => { if(v.soort !== "kamer" || !/^Kamer /.test(v.waar) || (perNr[v.nr] || []).length || !String(v.naam || "").trim()) return null;
+      const n = String(v.naam).trim().toLowerCase();
+      return verblijven.filter(a => a.nr !== v.nr && /^Kamer /.test(a.waar) && String(a.naam || "").trim().toLowerCase() === n && a.in === v.in && a.uit === v.uit && (perNr[a.nr] || []).length)
+        .sort((a, b) => perNr[b.nr].length - perNr[a.nr].length || String(a.nr).localeCompare(String(b.nr)))[0] || null; };
+    regMeld("Pdf maken…");
+    const dl = d => d ? `${String(parse(d).getDate()).padStart(2, "0")}-${String(parse(d).getMonth() + 1).padStart(2, "0")}-${parse(d).getFullYear()}` : "";
+    const dt = t => t ? `${dl(String(t).slice(0, 10))} ${String(t).slice(11, 16)}` : "";
+    const bl = [{ t:"h1", s:"Gastenregister Finca KaYu" },
+      { t:"p", s:`Periode ${dl(van)} tot en met ${dl(tot)} · gemaakt op ${dt(new Date().toISOString())} · ${verblijven.length} ${verblijven.length === 1 ? "verblijf" : "verblijven"}, ${personen.length} ${personen.length === 1 ? "persoon" : "personen"}` },
+      { t:"p", klein:true, s:"Kamers en de hele finca worden gemeld bij SES Hospedajes (Ministerio del Interior); per verblijf staat de melding hieronder. Camperplaatsen worden niet gemeld. De gegevens komen uit de online check-in van de gasten zelf, met hun handtekening. Finca KaYu, Coín." }];
+    if(!verblijven.length) bl.push({ t:"p", s:"Geen verblijven in deze periode." });
+    for(const v of verblijven){
+      const n = nachten(v), ps = perNr[v.nr] || [], st = stNr[v.nr];
+      bl.push({ t:"h2", s:`${v.waar} · ${v.naam || "naam onbekend"} · ${dl(v.in)} tot ${dl(v.uit)} (${n} ${n === 1 ? "nacht" : "nachten"})` });
+      const samen = samenMet(v); if(samen){ bl.push({ t:"p", s:`Samen ingecheckt met ${samen.waar} (zelfde naam en data); de personen en de SES-melding staan daar.` }); continue; }
+      /* de SES-regel volgt de status (zelfde woorden als het check-inscherm), niet de tijdstempels: bij fout of afgewezen blijft verzonden_op staan */
+      const codes = `${st && st.lote_code ? `, lote ${st.lote_code}` : ""}${st && st.comunicacion_code ? `, comunicación ${st.comunicacion_code}` : ""}`;
+      const sst = st ? st.status : null; let ses;
+      if(v.soort === "camper") ses = "SES: niet van toepassing (camperplaats, wordt niet gemeld).";
+      else if(/^eigen-/.test(String(v.nr)) || isDichtNr(v.nr)) ses = "SES: niet van toepassing (familie of vrienden, geen betaald verblijf).";
+      else if(sst === "bevestigd") ses = `SES: gemeld${st.verzonden_op ? ` op ${dt(st.verzonden_op)}` : ""}, bevestigd op ${dt(st.bevestigd_op)}${codes}.`;
+      else if(sst === "gemeld" || sst === "verzenden") ses = `SES: gemeld${st.verzonden_op ? ` op ${dt(st.verzonden_op)}` : ""}${codes}, wacht op bevestiging.`;
+      else if(sst === "handmatig") ses = `SES: zelf gemeld in het portaal${st.bevestigd_op ? ` op ${dt(st.bevestigd_op)}` : ""}${codes}.`;
+      else if(sst === "fout" || sst === "afgewezen" || sst === "onzeker") ses = `SES: melding niet gelukt (${sst}${st.verzonden_op ? `, laatste poging ${dt(st.verzonden_op)}` : ""}${st.fout ? `: ${st.fout}` : ""}).`;
+      else if(sst === "gecontroleerd") ses = "SES: nog niet gemeld (check-in gecontroleerd, melding volgt).";
+      else if(sst === "ontvangen") ses = "SES: nog niet gemeld (check-in ontvangen, nog niet gecontroleerd).";
+      else if(sst === "gecontroleerd_zonder_ses") ses = "SES: niet gemeld.";
+      else ses = `SES: niet gemeld${sst ? ` (stand: ${sst})` : " (geen check-in ontvangen)"}.`;
+      bl.push({ t:"p", s: ses });
+      if(!ps.length){ bl.push({ t:"p", klein:true, s:`Geen online check-in ingevuld${v.personen ? ` (${v.personen} personen volgens de boeking)` : ""}.` }); continue; }
+      const hts = [], onleesbaar = [];
+      for(const p of ps){ if(!p.handtekening) continue; const h = await regHandtekening(p.handtekening); const nm = `${p.nombre || ""} ${p.apellido1 || ""}`.trim(); if(h) hts.push({ ...h, onder: nm }); else onleesbaar.push(nm); }
+      bl.push({ t:"tabel", kop:true, kolommen:[{ kop:"Naam", breedte:.2 }, { kop:"Document", breedte:.21 }, { kop:"Geboren", breedte:.12 }, { kop:"Nat.", breedte:.065 }, { kop:"Adres", breedte:.32 }, { kop:"Handt.", breedte:.085 }],
+        rijen: ps.map(p => ({ cellen:[`${p.nombre || ""} ${p.apellido1 || ""} ${p.apellido2 || ""}`.replace(/\s+/g, " ").trim(), p.tipo_documento ? `${REG_DOC[p.tipo_documento] || p.tipo_documento} ${p.numero_documento || ""}`.trim() : "geen document", dl(p.fecha_nacimiento), p.nacionalidad || "", [p.direccion, [p.codigo_postal, p.municipio].filter(Boolean).join(" "), p.pais].filter(Boolean).join(", "), p.handtekening ? "ja" : "nee"] })) });
+      if(hts.length) bl.push({ t:"afb", items: hts, kop:"Handtekeningen" });
+      if(onleesbaar.length) bl.push({ t:"p", klein:true, s:`Handtekening wel gezet maar niet leesbaar als plaatje: ${onleesbaar.join(", ")}.` });
+    }
+    const titel = `Gastenregister Finca KaYu ${dl(van)} tot ${dl(tot)}`;
+    const bestand = new File([pdfBytes(pdfPaginas(bl, `Finca KaYu · Gastenregister ${dl(van)} tot ${dl(tot)}`), titel)], titel.replace(/[^\w\- ]+/g, "") + ".pdf", { type:"application/pdf" });
+    regMeld(`Klaar: ${verblijven.length} ${verblijven.length === 1 ? "verblijf" : "verblijven"}, ${personen.length} ${personen.length === 1 ? "persoon" : "personen"}.`);
+    await deelOfDownload(bestand);
+  } catch(e){ regMeld("Het register kon niet worden gemaakt: " + (e && e.message || e), "fout"); }
+  finally { knop.disabled = false; }
+}
+/* delen via het deelmenu van de telefoon, anders downloaden (zelfde aanpak als het maandoverzicht) */
+async function deelOfDownload(bestand){
+  const data = { files:[bestand] }; let kan = false; try { kan = !!(navigator.canShare && navigator.share && navigator.canShare(data)); } catch(e){}
+  if(kan){ try { await navigator.share(data); return; } catch(e){ if(e && e.name === "AbortError") return; } }
+  const url = URL.createObjectURL(bestand), a = document.createElement("a"); a.href = url; a.download = bestand.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+{
+  document.getElementById("bRegister").onclick = gastenregister;
+  document.querySelectorAll("[data-regsnel]").forEach(b => b.onclick = () => regPeriodeZet(b.dataset.regsnel));
+  regPeriodeZet("maand");
+}
 document.getElementById("bExport").onclick = () => {
   const kop = "Maand;Plek;Naam;Aankomst;Vertrek;Nachten;Personen;Telefoon;E-mail;Woonadres;" +
               "Kenteken;Merk;Lengte;Aankomsttijd;Huisdier;" +
