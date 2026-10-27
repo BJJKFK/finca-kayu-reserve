@@ -501,6 +501,13 @@
   #gast .omgrij .omgweek p.nu span{color:var(--tekst);font-weight:600}
   #gast .omgslot{margin:0}
   /* 22-10-2026 a: Omgeving in twee stappen */
+  /* 26-10-2026 i: kaart boven de tegels van Omgeving */
+  #gast .omgkaart{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:8px;margin-bottom:10px}
+  #gast .omgkaart .kaartplek{height:260px;border-radius:10px;overflow:hidden;background:var(--bone)}
+  #gast .omgkaart iframe{display:block;width:100%;height:260px;border:0;border-radius:10px;background:var(--bone)}
+  #gast .omgkaart .kaartwacht{display:flex;align-items:center;justify-content:center;background:#F5EEE3;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D9C8B0' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0'/><circle cx='12' cy='10' r='3'/></svg>");background-size:120px;background-position:center 40px;background-repeat:no-repeat}
+  #gast .omgkaart .kaartknop{font:inherit;font-size:15px;font-weight:600;padding:11px 20px;border-radius:999px;border:1px solid #8F8B80;background:#F0EEE6;color:#141413;cursor:pointer;margin-top:70px}
+  #gast .omgkaart .omgnoot{margin:8px 4px 2px} #gast .omgkaart a{color:var(--pine);font-weight:600;text-decoration:none;white-space:nowrap}
   #gast .omgtegels{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
   #gast .omgtegel{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px 12px;min-height:96px;font:inherit;color:var(--tekst);cursor:pointer}
   #gast .omgtegel .omgemoji{font-size:26px;line-height:1}
@@ -2884,6 +2891,21 @@ const OMG_KOP = {
 const OMG_ZEE = { nl:"aan zee", en:"by the sea", de:"am Meer", es:"junto al mar", it:"sul mare", fr:"au bord de la mer", pt:"à beira-mar", cs:"u moře", fi: "meren äärellä", no: "ved sjøen", sv: "vid havet" };
 const OMG_SITE = { nl:"Website", en:"Website", de:"Website", es:"Web", it:"Sito", fr:"Site web", pt:"Site", cs:"Web", fi: "Verkkosivut", no: "Nettside", sv: "Webbplats" };
 const OMG_ROUTE = { nl:"Route", en:"Directions", de:"Route", es:"Cómo llegar", it:"Percorso", fr:"Itinéraire", pt:"Como chegar", cs:"Trasa", fi: "Reittiohjeet", no: "Veibeskrivelse", sv: "Vägbeskrivning" };
+/* 26-10-2026 i (Bart): kaart bij Omgeving. Een Google My Maps-kaart in het Google-account van Finca KaYu ("Finca KaYu · Omgeving",
+   per onderwerp een laag; de plekken komen uit de lijst hieronder). De kaart staat als kadertje boven de tegels; tik op een speldje
+   en Google Maps geeft de route. Leeg laten = geen kaart. Personaliseren (aan/uit, eigen kaart) komt later als instelling.
+   Beginstand van de kaart: Coín met de kust (ll en z in de adresregel); de kaart zelf staat in My Maps op "Iedereen met de link". */
+const OMG_KAART_MID = "1_IDoQgF-TyqRs_QgHtJaHV_wXNUOwq8";
+const OMG_KAART_TEKST = { nl:"Al onze tips op de kaart. Tik op een speldje voor de route.", en:"All our tips on the map. Tap a pin for directions.", de:"Alle unsere Tipps auf der Karte. Tippt auf eine Nadel für die Route.", es:"Todos nuestros consejos en el mapa. Tocad un marcador para la ruta.", it:"Tutti i nostri consigli sulla mappa. Toccate un segnaposto per il percorso.", fr:"Tous nos conseils sur la carte. Touchez un repère pour l'itinéraire.", pt:"Todas as nossas dicas no mapa. Toquem num marcador para o caminho.", cs:"Všechny naše tipy na mapě. Klepněte na špendlík pro trasu.", fi: "Kaikki vinkkimme kartalla. Napauttakaa nastaa reittiohjeita varten.", no: "Alle tipsene våre på kartet. Trykk på en nål for veibeskrivelse.", sv: "Alla våra tips på kartan. Tryck på en nål för vägbeskrivning." };
+const OMG_KAART_GROOT = { nl:"Kaart groot openen", en:"Open the map full size", de:"Karte groß öffnen", es:"Abrir el mapa a pantalla completa", it:"Apri la mappa a schermo intero", fr:"Ouvrir la carte en grand", pt:"Abrir o mapa em ecrã inteiro", cs:"Otevřít mapu na celou obrazovku", fi: "Avaa kartta koko näytölle", no: "Åpne kartet i full størrelse", sv: "Öppna kartan i full storlek" };
+const OMG_KAART_KNOP = { nl:"Kaart tonen", en:"Show the map", de:"Karte anzeigen", es:"Mostrar el mapa", it:"Mostra la mappa", fr:"Afficher la carte", pt:"Mostrar o mapa", cs:"Zobrazit mapu", fi: "Näytä kartta", no: "Vis kartet", sv: "Visa kartan" };
+const OMG_KAART_GOOGLE = { nl:"De kaart komt van Google.", en:"The map is provided by Google.", de:"Die Karte kommt von Google.", es:"El mapa es de Google.", it:"La mappa è fornita da Google.", fr:"La carte est fournie par Google.", pt:"O mapa é do Google.", cs:"Mapu poskytuje Google.", fi: "Kartan tarjoaa Google.", no: "Kartet kommer fra Google.", sv: "Kartan kommer från Google." };
+let gastKaartAan = false; /* 26-10-2026 j (review i): de kaart pas laden na een tik van de gast (Google zet cookies zodra het kader laadt); blijft aan tot de pagina sluit */
+const omgKaartSrc = l => `https://www.google.com/maps/d/embed?mid=${encodeURIComponent(OMG_KAART_MID)}&ehbc=FAF9F5&hl=${encodeURIComponent(l)}&ll=36.64,-4.70&z=10`;
+const omgKaartHtml = (l, esc) => OMG_KAART_MID ? `<div class="omgkaart">` + (gastKaartAan
+    ? `<div class="kaartplek"><iframe src="${esc(omgKaartSrc(l))}" title="Finca KaYu · Omgeving" referrerpolicy="no-referrer" allowfullscreen></iframe></div>`
+    : `<div class="kaartplek kaartwacht"><button type="button" class="kaartknop" data-kaarttoon="1">${esc(OMG_KAART_KNOP[l] || OMG_KAART_KNOP.nl)}</button></div>`) +
+  `<p class="omgnoot">${esc(OMG_KAART_TEKST[l] || OMG_KAART_TEKST.nl)} ${esc(OMG_KAART_GOOGLE[l] || OMG_KAART_GOOGLE.nl)} <a href="https://www.google.com/maps/d/viewer?mid=${encodeURIComponent(OMG_KAART_MID)}" target="_blank" rel="noopener noreferrer">${esc(OMG_KAART_GROOT[l] || OMG_KAART_GROOT.nl)} ›</a></p></div>` : "";
 const OMG_UITLEG = { nl:"Hier vind je onze aanbevelingen, van restaurants tot activiteiten. Tik op Route en Google Maps brengt je erheen.", en:"Here you'll find our recommendations, from restaurants to activities. Tap Directions and Google Maps takes you there.", de:"Hier findet ihr unsere Empfehlungen, von Restaurants bis zu Aktivitäten. Tippt auf Route und Google Maps führt euch hin.", es:"Aquí encontraréis nuestras recomendaciones, desde restaurantes hasta actividades. Tocad Cómo llegar y Google Maps os lleva.", it:"Qui trovate i nostri consigli, dai ristoranti alle attività. Toccate Percorso e Google Maps vi ci porta.", fr:"Vous trouverez ici nos recommandations, des restaurants aux activités. Touchez Itinéraire et Google Maps vous y emmène.", pt:"Aqui encontram as nossas recomendações, de restaurantes a atividades. Toquem em Como chegar e o Google Maps leva-vos lá.", cs:"Najdete tu naše doporučení, od restaurací po aktivity. Klepněte na Trasa a Google Maps vás tam dovedou.", fi: "Täältä löydätte suosituksemme ravintoloista aktiviteetteihin. Napauttakaa Reittiohjeet, niin Google Maps vie teidät perille.", no: "Her finner dere anbefalingene våre, fra restauranter til aktiviteter. Trykk på Veibeskrivelse, så tar Google Maps dere dit.", sv: "Här hittar ni våra rekommendationer, från restauranger till aktiviteter. Tryck på Vägbeskrivning så tar Google Maps er dit." };
 /* Bezorgen (Bart, 22-09-2026): in de honesty bar, onder Eten, zaken uit Coín die bij ons bezorgen (sinds 02-10-2026 twee, en ook bovenaan Restaurants bij Omgeving).
    De gast bestelt en betaalt rechtstreeks bij de bezorger; niets hiervan komt op de honestylijst.
@@ -3194,7 +3216,7 @@ function gastOmgevingHtml(taal, camper){
   const groepen = OMG.filter(g => g.kop !== "vroeg" && (!g.alleen || (g.alleen === "camper") === !!camper));
   const g = groepen.find(x => x.kop === gastOmgSoort);
   if(!g) return `<div class="dag"><div class="info" style="color:var(--pine);font-size:14px">${esc(OMG_UITLEG[l] || OMG_UITLEG.nl)}</div></div>` +
-    `<div class="omgtegels">` + groepen.map(x => `<button class="omgtegel" data-gomg="${x.kop}"><span class="omgemoji" aria-hidden="true">${omgIcoon(x.kop)}</span>` +
+    omgKaartHtml(l, esc) + `<div class="omgtegels">` + groepen.map(x => `<button class="omgtegel" data-gomg="${x.kop}"><span class="omgemoji" aria-hidden="true">${omgIcoon(x.kop)}</span>` +
       `<b>${naam(x)}</b><span class="omgaantal">${aantal(x)}</span></button>`).join("") + `</div>`;
   let inhoud;
   if(g.kop === "restaurants"){
@@ -3850,7 +3872,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "26-10-2026 h";
+const VERSIE = "26-10-2026 k";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -4447,6 +4469,7 @@ function tekenGast(){
   const t = GT[gastTaal], bak = document.getElementById("gastInhoud");
   /* 21-10-2026 b (review): een opengetikte week bij Omgeving blijft open als de pagina zichzelf ververst */
   const omgOpen = new Set([...bak.querySelectorAll("details.omguur[open]")].map(d => d.dataset.k)); /* 22-10-2026 a: op naam, de lijst wisselt nu per soort */
+  const kaartOud = bak.querySelector(".omgkaart iframe"); /* 26-10-2026 j: de geladen kaart niet opnieuw laden bij de verversing */
   const talen = `<div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span>` +
     `<div class="gtaal">${gIcoon("bol")}<select data-gtaal="1" aria-label="Taal">` +
     Object.keys(GT).map(l => `<option value="${l}"${l === gastTaal ? " selected" : ""}>${taalOptie(l)}</option>`).join("") +
@@ -4921,6 +4944,7 @@ function tekenGast(){
   h += `<p class="slot">${t.slot}</p>` + `<div class="versie">${VERSIE}</div>`;
   if(NIEUW) h += gOnderbalk(t);
   bak.innerHTML = h;
+  if(kaartOud){ const plek = bak.querySelector(".omgkaart .kaartplek"); if(plek){ plek.innerHTML = ""; plek.appendChild(kaartOud); } }
   gastIcoontjes(bak); /* 23-10-2026 a: emoji worden lijn-icoontjes of een puntje (alleen de weergave) */
   bak.querySelectorAll("details.omguur").forEach(d => { if(omgOpen.has(d.dataset.k)) d.open = true; });
   bind();
@@ -4936,6 +4960,7 @@ function tekenGast(){
     bak.querySelectorAll("[data-gnieuw]").forEach(kn => kn.addEventListener("click", () => gastNieuwsZet(kn.dataset.gnieuw)));
     bak.querySelectorAll("[data-gtab]").forEach(kn => kn.onclick = e => { e.stopPropagation(); if(gastTab !== kn.dataset.gtab) gastVasteLijst = null; if(kn.dataset.gtab === "omgeving"){ gastOmgSoort = null; gastOmgFilter = null; } gastTab = kn.dataset.gtab; gastTabGekozen = true; tekenGast(); window.scrollTo({ top:0 }); });
     /* 22-10-2026 a: Omgeving in twee stappen (tegel of terug; knopjes bij Restaurants) */
+    bak.querySelectorAll("[data-kaarttoon]").forEach(kn => kn.onclick = () => { gastKaartAan = true; tekenGast(); });
     bak.querySelectorAll("[data-gomg]").forEach(kn => kn.onclick = () => { gastOmgSoort = kn.dataset.gomg || null; gastOmgFilter = null; tekenGast(); window.scrollTo({ top:0 }); });
     bak.querySelectorAll("[data-gomgf]").forEach(kn => kn.onclick = () => { gastOmgFilter = kn.dataset.gomgf; tekenGast(); });
     const dagVan = kn => kn.closest(".dag").dataset.datum;
