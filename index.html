@@ -1296,6 +1296,17 @@
   .los input{padding:10px;font-size:15px}
   .los button{border:1px solid var(--moss);background:var(--moss);color:#fff;
     border-radius:8px;font:inherit;font-size:18px;cursor:pointer}
+  /* 27-10-2026 a: geschiedenis van de bar */
+  .barhist{width:100%;margin-top:10px;padding:11px;border:1px solid #8F8B80;background:#F0EEE6;border-radius:999px;font:inherit;font-size:15px;font-weight:600;color:#141413;cursor:pointer}
+  .barhistlijst{margin-top:8px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:4px 12px;font-size:14px}
+  .barhistlijst .bhrij{display:flex;flex-wrap:wrap;gap:2px 10px;padding:8px 0;border-top:1px solid var(--line)}
+  .barhistlijst .bhrij:first-child{border-top:0}
+  .barhistlijst .bhtijd{color:var(--muted);min-width:7.2em;font-variant-numeric:tabular-nums}
+  .barhistlijst .bhwat{flex:1;min-width:9em} .barhistlijst .bhwat small{color:var(--muted)}
+  .barhistlijst .bhwie{width:100%;color:var(--muted);font-size:13px;padding-left:7.9em}
+  .barhistlijst .bhrij.min .bhwat b.bhstap{color:#B4462F}
+  .barhistlijst .bhuitleg{font-size:12.5px;border-top:1px solid var(--line)}
+  .barhistlijst .bhleeg{color:var(--muted);padding:8px 0;margin:0}
   .barknop{width:100%;margin-top:10px;padding:12px;border:1px solid var(--line);
     background:var(--bone);border-radius:9px;font:inherit;font-size:15px;
     font-weight:600;color:var(--pine);cursor:pointer}
@@ -1782,6 +1793,8 @@
     <div class="meerkaart">
       <button class="meerrij" data-meer="cijfers"><span><b>Cijfers</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="naarPrijzen"><span><b>Prijzen</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <!-- 27-10-2026 a: knop Geschiedenis bar in de barvensters tonen of verbergen (het logboek in de database loopt altijd) -->
+      <div class="meerinst"><span><b>Geschiedenis van de bar</b><small id="mpBarGesch"></small></span><button type="button" class="meerzet" data-meer="bargesch" id="meerBarGesch"></button></div>
       <!-- 24-10-2026 d (Bart): kosten per maand (poets, tuinman, eigen soorten) en de inkoopbon hier bij Geld -->
       <button class="meerrij meeronderwerp" data-meerpagina="kosten"><span><b>Kosten per maand</b><small id="msKosten"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="inkoop"><span><b>Inkoopbon vastleggen</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
@@ -1929,6 +1942,9 @@
     <button id="vAdd">+</button>
   </div>
   <div class="money"><span>Bartotaal</span><b id="barTot">€ 0,00</b></div>
+  <!-- 27-10-2026 a (Bart): wie wat hoe laat geplust of gemint heeft (logboek in de database, alleen lezen) -->
+  <button type="button" class="barhist" id="barGesch" data-bargesch="bar">Geschiedenis bar</button>
+  <div class="barhistlijst" id="barGeschLijst" hidden></div>
   <button class="barknop" id="naarPrijzen">Prijzen aanpassen</button>
   <p class="leeg" id="barLive" style="margin:8px 0 0">Elke tik wordt meteen opgeslagen. De gast ziet dezelfde lijst op zijn eigen pagina.</p>
   <div class="acts">
@@ -2221,6 +2237,8 @@
     <button id="kvAdd">+</button>
   </div>
   <div class="money"><span>Totaal</span><b id="kTot">€ 0,00</b></div>
+  <button type="button" class="barhist" id="kGesch" data-bargesch="kamer" hidden>Geschiedenis bar</button>
+  <div class="barhistlijst" id="kGeschLijst" hidden></div>
   <p class="leeg" id="kLive" hidden style="margin:8px 0 0">Elke tik wordt meteen opgeslagen. De gast ziet dezelfde lijst op zijn eigen pagina.</p>
   <div class="stuur">
     <p class="kop">Bon sturen</p>
@@ -3872,7 +3890,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "26-10-2026 k";
+const VERSIE = "27-10-2026 b";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -8453,6 +8471,8 @@ function tekenMeer(){
     : "Staat uit: voor vandaag bestelt alleen de gast zelf (tot 07:30).");
   meerZet("meerObVandaag", obVandaagAan() ? "Uitzetten" : "Aanzetten");
   /* 23-10-2026 e: herinnering de dag voor vertrek */
+  meerZet("mpBarGesch", barGeschAan() ? "Knop Geschiedenis bar staat in de barvensters. Het logboek loopt altijd." : "Knop verborgen. Het logboek loopt gewoon door.");
+  meerZet("meerBarGesch", barGeschAan() ? "Verbergen" : "Tonen");
   meerZet("mpHerinnering", herinneringAan() ? "Staat aan: de dag voor vertrek staat bij Vandaag wie nog een herinnering moet krijgen (als er nog iets open staat)." : "Staat uit.");
   meerZet("meerHerinnering", herinneringAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpHerinneringTekst", herinneringEigen() ? (herinneringMist().length ? "Eigen tekst, nog niet in alle talen vertaald" : "Eigen tekst, in alle talen") : "Vaste tekst, in de taal van de gast");
@@ -10621,8 +10641,58 @@ function tekenBar(){
     ? "Deze gast staat op Betaald. Hij kan zelf niets meer aantikken, jij kunt hier wel nog aanpassen."
     : "Elke tik wordt meteen opgeslagen. De gast ziet dezelfde lijst op zijn eigen pagina.";
 }
+/* ---------- 27-10-2026 a (Bart): geschiedenis van de bar ----------
+   Uit de tabel bar_logboek (alleen lezen): de database schrijft bij elke plus, min of verwijdering zelf een regel, ook als de gast het op
+   zijn eigen pagina doet. "gast" of "in de app" volgt uit de login van wie tikte (Bart of Loes die op hun eigen telefoon een gastlink
+   openen, tellen als "in de app"); de naam bij een gast is wat de gast zelf intikt bij "wie".
+   Review 27-10: nieuwste 500 regels (oud naar nieuw getoond), regels zonder verandering weg (bar_stap zet eerst op 0 en haalt dan weg),
+   automatische regels (ontbijt, extra's, die de app bij elke verandering opnieuw neerzet) niet in de lijst, geen "nu n" (dat is de stand
+   van één regel, niet het totaal op de bon).
+   Instelling bar_geschiedenis (aan/uit, standaard aan) verbergt alleen de knop; het logboek loopt altijd. */
+const barGeschAan = () => (instellingen.bar_geschiedenis || "aan") !== "uit";
+const BAR_GESCH_MAX = 500;
+let mijnEmail = null, barGeschBeurt = 0;
+function barGeschRij(r){
+  const d = new Date(r.tijd), tijd = `${DG[d.getDay()].slice(0, 2)} ${d.getDate()} ${MNDKORT[d.getMonth()]} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  const verschil = (r.nieuw || 0) - (r.oud || 0), stap = (verschil > 0 ? "+" : "−") + Math.abs(verschil);
+  const door = r.door === "gast" ? "gast" + (r.wie ? ` · "${vrij(r.wie)}"` : "")
+    : r.door === "app" ? (r.door_email && mijnEmail && r.door_email.toLowerCase() === mijnEmail.toLowerCase() ? "jij, in de app" : "in de app" + (r.door_email ? " · " + vrij(r.door_email) : ""))
+    : "beheer (database)";
+  return `<div class="bhrij${verschil < 0 ? " min" : ""}"><span class="bhtijd">${tijd}</span>` +
+    `<span class="bhwat">${vrij(r.product || "?")} <b class="bhstap">${stap}</b></span><span class="bhwie">${door}</span></div>`;
+}
+async function barGeschToon(knop, lijstId, nr, boekingId){
+  const lijst = document.getElementById(lijstId);
+  if(!lijst.hidden){ lijst.hidden = true; knop.textContent = "Geschiedenis bar"; return; }
+  const beurt = ++barGeschBeurt;
+  lijst.hidden = false; knop.textContent = "Geschiedenis verbergen"; lijst.innerHTML = `<p class="bhleeg">Even ophalen…</p>`;
+  if(!mijnEmail){ try { const { data:{ session } } = await db.auth.getSession(); mijnEmail = session && session.user ? session.user.email : null; } catch(e){} }
+  let q = db.from("bar_logboek").select("*").order("tijd", { ascending:false }).limit(BAR_GESCH_MAX);
+  q = boekingId ? q.or(`nr.eq.${boekingId},boeking_id.eq.${boekingId}`) : q.eq("nr", nr);
+  const { data, error } = await q;
+  if(beurt !== barGeschBeurt) return; /* intussen een ander venster of een andere gast geopend */
+  if(error){ lijst.innerHTML = `<p class="bhleeg">Ophalen mislukt: ${vrij(error.message)}</p>`; return; }
+  const alle = data || [], rijen = alle.filter(r => !r.auto && (r.nieuw || 0) !== (r.oud || 0)).reverse();
+  lijst.innerHTML = (alle.length >= BAR_GESCH_MAX ? `<p class="bhleeg">Alleen de laatste ${BAR_GESCH_MAX} wijzigingen.</p>` : "") +
+    (rijen.length ? rijen.map(barGeschRij).join("") : `<p class="bhleeg">Nog niets vastgelegd. Het logboek loopt sinds 27 oktober 2026; wat daarvoor gebeurde is niet bewaard.</p>`) +
+    `<p class="bhleeg bhuitleg">Ontbijt en extra's staan hier niet in. De naam bij een gast is wat de gast zelf intikt.</p>`;
+}
+document.getElementById("barGesch").onclick = e => barBoeking && barGeschToon(e.currentTarget, "barGeschLijst", null, barBoeking.id);
+document.getElementById("kGesch").onclick = e => kamerNr && barGeschToon(e.currentTarget, "kGeschLijst", kamerNr, null);
+function barGeschReset(knopId, lijstId, zichtbaar){
+  barGeschBeurt++;
+  const k = document.getElementById(knopId), l = document.getElementById(lijstId);
+  k.hidden = !zichtbaar; k.textContent = "Geschiedenis bar"; l.hidden = true; l.innerHTML = "";
+}
+async function barGeschWissel(){
+  const nieuw = barGeschAan() ? "uit" : "aan";
+  instellingen.bar_geschiedenis = nieuw; tekenMeer();
+  const { error } = await db.from("instellingen").upsert({ sleutel:"bar_geschiedenis", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
+}
 function openBar(b){
   barBoeking = b;
+  barGeschReset("barGesch", "barGeschLijst", barGeschAan());
   document.getElementById("barTitel").textContent = "Honesty bar · " + b.naam;
   document.getElementById("vNaam").value = "";
   document.getElementById("vPrijs").value = "";
@@ -11290,6 +11360,7 @@ if(NIEUW){
     if(w === "obvandaag"){ obVandaagWissel(); return; }
     if(w === "kluis"){ document.getElementById("meer2").close(); kluisOpenen(); return; }
     if(w === "herinnering"){ herinneringWissel(); return; }
+    if(w === "bargesch"){ barGeschWissel(); return; }
     if(w === "herinneringtekst"){ openHerinneringTekst(); return; }
     if(w === "gastteksten"){ openGastTeksten(); return; } /* 25-10-2026 d */
     document.getElementById("meer2").close();
@@ -13571,6 +13642,7 @@ function openKamerbon(naam, kamer, regels, nr){
   document.getElementById("kvNaam").value = "";
   document.getElementById("kvPrijs").value = "";
   document.getElementById("kUit").innerHTML = "";
+  barGeschReset("kGesch", "kGeschLijst", kamerLive && barGeschAan());
   tekenKamerbon();
   document.getElementById("kamerbon").showModal();
 }
