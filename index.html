@@ -404,6 +404,16 @@
   #tkLijst .tkrij{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 13px;margin-bottom:7px;font:inherit;font-size:15px;color:var(--pine);cursor:pointer}
   #tkLijst .tkrij span.vink{flex:0 0 auto;width:20px;height:20px;border:2px solid var(--line);border-radius:6px}
   #tkLijst .tkrij b{flex:1 1 auto;font-weight:400}
+  /* 29-10-2026 a: To do met datum in Let op */
+  #tkLijst .tkrij small.tkwanneer{flex:0 0 auto;font-size:12px;color:var(--muted)}
+  .tkdatum{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:12px 0 0;font-size:14px;color:var(--pine)}
+  .tkdatum input{padding:7px 8px;font:inherit;font-size:14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--pine)}
+  .tkdatum small{flex:1 1 100%;font-size:12px;color:var(--muted)}
+  .tkdatum[hidden]{display:none}
+  .letregel .letsinds{color:var(--muted);font-size:12px}
+  /* 29-10-2026 c: aankondiging voor wie die dag vertrekt */
+  #gast .dag.aank .info.aankvertrek{font-size:15px;font-weight:600;color:var(--pine);margin:0 0 8px}
+  #aankBlok .tag.vertrekt{background:#F5EEE3;color:var(--pine)}
   .st.gedeeld{background:#E6F0E4;color:#2F5A34;border-color:#CFE3CB}
   #bkLijst .bkrij{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:11px 13px;margin-bottom:7px;font:inherit;font-size:15px;color:var(--pine);cursor:pointer}
   #bkLijst .bkrij b{flex:1 1 auto;font-weight:600}
@@ -1452,6 +1462,11 @@
   .cf-let > b, .cf-let b{color:var(--tekst)}
   .cf-let > b::before{background:var(--stiprood)}
   #cfBankOpen, #cijfersInhoud .cf-kaart > button{min-height:44px}
+  /* 29-10-2026 e: betalingen afvinken en toevoegen */
+  #cijfersInhoud .cf-let .cf-betaald{display:block;margin-top:8px;min-height:40px}
+  #cijfersInhoud .cf-betaalrij{margin:0 0 12px}
+  #cijfersInhoud .cf-betaalrij .cf-klein{margin:6px 0 0}
+  #cijfersInhoud .cf-betaalform .cf-bank{display:flex;gap:8px;margin-top:8px}
   /* Schoonmaken: geen gekleurde labeltjes maar een stip; gekozen kamers en "Gedeeld" in de gewone gekozen-stijl (wit, terra rand) */
   .pdag .st{background:none;border:0;color:var(--muted);font-weight:500;font-size:14px;padding:0;margin-left:12px;white-space:nowrap}
   .pdag .st.gedeeld::before, .pdag .st.komt::before{background:var(--stipgroen)}
@@ -1736,6 +1751,7 @@
     <div class="meerkaart">
       <button class="meerrij" data-meer="bMededeling"><span><b id="meerMededeling">Bericht aan alle gasten</b><small id="mpMededeling"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="bAank"><span><b id="meerAank">Aankondiging</b><small id="mpAank"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <div class="meerinst"><span><b>Aankondiging ook voor wie die dag vertrekt</b><small id="mpAankVertrek"></small></span><button type="button" class="meerzet" data-meer="aankvertrek" id="meerAankVertrek"></button></div>
     </div>
     <div class="meerkaart">
       <div class="meerinst"><span><b>Herinnering de dag voor vertrek</b><small id="mpHerinnering"></small></span><button type="button" class="meerzet" data-meer="herinnering" id="meerHerinnering"></button></div>
@@ -1761,6 +1777,7 @@
     <div class="meerkaart">
       <button class="meerrij" data-meer="bBoodschappen"><span><b>Boodschappen</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="bTaken"><span><b>To do</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <div class="meerinst"><span><b>To do met datum in Let op</b><small id="mpTodoLetOp"></small></span><button type="button" class="meerzet" data-meer="todoletop" id="meerTodoLetOp"></button></div>
     </div>
   </section>
   <section class="meerpagina" data-pagina="instellingen" hidden>
@@ -1792,6 +1809,8 @@
     <h3>Geld</h3>
     <div class="meerkaart">
       <button class="meerrij" data-meer="cijfers"><span><b>Cijfers</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <!-- 29-10-2026 e: slot op Geld met de kluiscode, aan of uit -->
+      <div class="meerinst"><span><b>Slot op Geld</b><small id="mpGeldSlot"></small></span><button type="button" class="meerzet" data-meer="geldslot" id="meerGeldSlot"></button></div>
       <button class="meerrij" data-meer="naarPrijzen"><span><b>Prijzen</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 27-10-2026 a: knop Geschiedenis bar in de barvensters tonen of verbergen (het logboek in de database loopt altijd) -->
       <div class="meerinst"><span><b>Geschiedenis van de bar</b><small id="mpBarGesch"></small></span><button type="button" class="meerzet" data-meer="bargesch" id="meerBarGesch"></button></div>
@@ -1868,6 +1887,15 @@
     <p class="ib-melding" id="kiMelding" aria-live="polite"></p>
   </div>
   <div class="acts"><button id="kluisDicht">Sluiten</button></div>
+</div></dialog>
+<!-- 29-10-2026 e (Bart): Geld (Meer > Geld en Exporteren) achter dezelfde code als de digitale kluis -->
+<dialog id="geldSlot"><div class="dlg meerdlg">
+  <h3><svg class="gi"><use href="#gi-slot"/></svg> Geld</h3>
+  <p class="leeg" style="margin:0 0 10px">Vul de code van de digitale kluis in. Daarna blijft Geld 5 minuten open.</p>
+  <label class="ib-veld">Code<input id="gsCode" type="password" autocomplete="off"></label>
+  <button class="ib-knop" id="gsOpen" style="width:100%">Openen</button>
+  <p class="ib-melding" id="gsMelding" aria-live="polite"></p>
+  <div class="acts"><button id="gsDicht">Annuleren</button></div>
 </div></dialog>
 <dialog id="kluisKijk"><div class="dlg meerdlg"><h3 id="kluisKijkNaam"></h3><div id="kluisKijkInhoud"></div><div class="acts"><button id="kluisKijkDicht">Sluiten</button></div></div></dialog>
 <dialog id="inkoop2"><div class="dlg meerdlg">
@@ -2073,6 +2101,7 @@
   <h3>To do</h3>
   <p class="leeg" style="margin:0 0 8px">Eén gedeelde lijst voor jullie samen. Tik een regel aan als hij klaar is, dan is hij weg.</p>
   <div id="tkLijst"></div>
+  <div class="tkdatum" id="tkDatumRij"><label for="tkDatum">Ook bij Let op vanaf</label><input type="date" id="tkDatum"><small>Leeg laten: alleen op deze lijst.</small></div>
   <div class="bsvrij" style="margin-top:10px"><input id="tkNieuw" placeholder="Wat moet er gebeuren?" autocomplete="off"><button id="tkOk">OK</button></div>
   <div class="row" style="margin-top:16px"><button class="go" id="tkSluit">Sluiten</button></div>
 </div></dialog>
@@ -2377,6 +2406,9 @@ const TESTVERSIE = /^finca-kayu-test\./.test(location.hostname);
 /* sinds 20-09-2026 staat KaYu 2.0 overal aan; met ?oud=1 in het adres zie je nog één keer de oude opbouw (voor vergelijking) */
 const NIEUW = new URLSearchParams(location.search).get("oud") !== "1";
 if(NIEUW) document.documentElement.classList.add("nieuw");
+/* 29-10-2026 a: de To do-lijst staat hier bovenaan, omdat Let op (tekenNu) hem ook leest. takenStand (review 29-10): elke eigen
+   wijziging en elke ophaalronde hoogt hem op; een ophaalronde die al liep vóór een wijziging, overschrijft de lijst dan niet meer */
+let taken = [], takenStand = 0;
 /* ---------- PROEFVERSIE (24-10-2026 c, wens Bart): dezelfde app met een nepdatabase in de browser ----------
    Op kayu-proef.… (of met ?proef=1) draait de app zonder Supabase: alle tabellen zitten in localStorage, gevuld met verzonnen
    gasten, en elke wijziging blijft alleen op dit toestel. Geen inloggen, geen SES, geen MyTourist, geen echte gegevens.
@@ -3890,7 +3922,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "27-10-2026 b";
+const VERSIE = "29-10-2026 f";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -4520,7 +4552,9 @@ function tekenGast(){
     const totaal = (m.volw||0) + (m.kind||0);
     /* 09-10-2026 a: extra uitleg van Bart, in de taal van de gast (anders het Nederlands) */
     const toel = String((gastTaal !== "nl" && a.toelichting_vertaald && a.toelichting_vertaald[gastTaal]) || a.toelichting || "").trim();
+    /* 29-10-2026 c: vertrekt de gast die dag, dan onder de tekst de uitnodiging om te blijven (review: niet meer als aanmelden dicht is) */
     let x = `<div class="dag aank"><h2>${t.aankKop}</h2><div class="info" style="font-size:14px;color:var(--pine);margin-bottom:8px">${t.aankUitleg(Object.assign({}, a, { titel }), dl)}</div>` +
+      (a.vertrekdag === true && !a.gesloten ? `<div class="info aankvertrek">${vrij(aankVertrektZin(gastTaal))}</div>` : "") +
       (toel ? `<div class="info aanktoel" style="font-size:14px;color:var(--pine);margin-bottom:8px">${vrij(toel).replace(/\n/g, "<br>")}</div>` : "");
     if(a.gesloten){
       x += `<div class="info">${totaal ? t.aangemeld + ": " + [m.volw ? m.volw + " " + t.volw.toLowerCase() : "", m.kind ? m.kind + " " + t.kind12.toLowerCase() : "", m.sangria_wit ? m.sangria_wit + "× " + t.wit.toLowerCase() : "", m.sangria_rood ? m.sangria_rood + "× " + t.rood.toLowerCase() : ""].filter(Boolean).join(", ") : t.nietAangemeld}</div><div class="melding">${t.aankGesloten}</div>`;
@@ -5254,8 +5288,8 @@ document.getElementById("bUit").onclick = async () => {
    met oude boekingen de gastenlink van een verlengde camper terugzetten */
 let haalNr = 0;
 async function haal(){
-  const mijn = ++haalNr;
-  const [bk, pr, co, kv, ob, gl, pd, pl, ak, am, ins, av, tp, bn, br, ep, ca, kd, ko, gt] = await Promise.all([
+  const mijn = ++haalNr, takenVoor = takenStand;
+  const [bk, pr, co, kv, ob, gl, pd, pl, ak, am, ins, av, tp, bn, br, ep, ca, kd, ko, gt, tk] = await Promise.all([
     alleRijen(() => db.from("boekingen").select("*", { count:"exact" }).order("aankomst").order("id")),
     db.from("producten").select("*").order("volgorde"),
     alleRijen(() => db.from("consumpties").select("*", { count:"exact" }).order("datum").order("id")),
@@ -5275,12 +5309,13 @@ async function haal(){
     db.from("camper_aanvragen").select("*").gte("aangemaakt", new Date(Date.now() - 60*864e5).toISOString()).order("aangemaakt"),
     db.from("kamer_dicht").select("*").gte("tot", iso(new Date(Date.now() - 30*864e5))).order("van"),
     db.from("kosten").select("*").gte("maand", iso(new Date(Date.now() - 400*864e5)).slice(0, 7) + "-01").order("maand").order("soort"),
-    db.from("gast_teksten").select("*") /* 25-10-2026 d: de handleiding zoals Bart hem heeft aangepast */
+    db.from("gast_teksten").select("*"), /* 25-10-2026 d: de handleiding zoals Bart hem heeft aangepast */
+    db.from("taken").select("*") /* 29-10-2026 a: To do met datum staat ook bij Let op */
   ]);
   if(mijn !== haalNr) return;
   if(bk.error){ console.error(bk.error); syncMag = false; appLaadFout = laadFout = "boekingen: " + bk.error.message; try { tekenNu(); } catch(e){} return; }
   /* een tabel die niet gelezen kan worden (bijvoorbeeld door ontbrekende rechten) mag nooit stil blijven: dat zie je bovenaan het startscherm */
-  laadFout = [["producten", pr], ["consumpties", co], ["kamer_vinkjes", kv], ["ontbijt", ob], ["gast_links", gl], ["poets_dagen", pd], ["poets_links", pl], ["aankondigingen", ak], ["aanmeldingen", am], ["instellingen", ins], ["aanvragen", av], ["tips", tp], ["bonnen", bn], ["broodjes", br], ["eigen_plekken", ep], ["camper_aanvragen", ca], ["kamer_dicht", kd], ["kosten", ko], ["gast_teksten", gt]]
+  laadFout = [["producten", pr], ["consumpties", co], ["kamer_vinkjes", kv], ["ontbijt", ob], ["gast_links", gl], ["poets_dagen", pd], ["poets_links", pl], ["aankondigingen", ak], ["aanmeldingen", am], ["instellingen", ins], ["aanvragen", av], ["tips", tp], ["bonnen", bn], ["broodjes", br], ["eigen_plekken", ep], ["camper_aanvragen", ca], ["kamer_dicht", kd], ["kosten", ko], ["gast_teksten", gt], ["taken", tk]]
     .filter(([, r]) => r.error).map(([n, r]) => `${n}: ${r.error.message}`).join(" · ");
   appLaadFout = [["consumpties", co], ["bonnen", bn]].filter(([, r]) => r.error).map(([n, r]) => `${n}: ${r.error.message}`).join(" · ");
   /* het ontbijt op de rekening alleen bijwerken als alles waar het van afhangt goed is opgehaald (ook de kamervinkjes:
@@ -5308,6 +5343,7 @@ async function haal(){
   /* 25-10-2026 d: bij een leesfout de vorige lijst houden (de vaste tekst blijft dan staan) */
   if(!gt.error){ gastTeksten = {}; (gt.data || []).forEach(r => gastTeksten[gtSleutel(r.soort, r.taal)] = { regels: Array.isArray(r.regels) ? r.regels : [], nog_vertalen: Array.isArray(r.nog_vertalen) ? r.nog_vertalen : [], bijgewerkt: r.bijgewerkt }); }
   /* 24-10-2026 f: dichtgezette kamers mét gastenpagina horen bij kamers (zie mengKamers); bij een leesfout de oude lijst houden (review f) */
+  if(!tk.error && takenVoor === takenStand){ taken = (tk.data || []).sort((x, y) => String(x.gemaakt || "").localeCompare(String(y.gemaakt || ""))); if(document.getElementById("taken").open) tekenTaken(); }
   if(!kd.error){ kamerDicht = (kd.data || []).map(r => ({ id:r.id, kamer:r.kamer, in:r.van, uit:r.tot, naam:r.naam || "", dicht:true, nr:"dicht-" + r.id, mtGelukt:!!r.mt_gelukt, gastprofiel:!!r.gastprofiel })); mengKamers(); }
   /* 21-10-2026 b (Bart): na verlengen van een camper zag de gast de paella niet, omdat de gastenlink nog de oude vertrekdag had:
      die werd alleen bijgewerkt als de kamers uit MyTourist opnieuw werden opgehaald (hooguit eens per 5 minuten, en niet als dat
@@ -7207,6 +7243,19 @@ function tekenNu(){
   boekingen.filter(b => b.zelfVerlengdVan && !DEMO(b.id)).forEach(b => letAdd(`<b>${vrij(b.naam || "Gast")}</b> (${vrij(b.plek)}) blijft langer: nu tot ${DG[parse(b.uit).getDay()].slice(0,2)} ${kort(b.uit)}, zelf verlengd (was ${DG[parse(b.zelfVerlengdVan).getDay()].slice(0,2)} ${kort(b.zelfVerlengdVan)}) <button data-vgezien="${vrij(b.id)}">Gezien</button>`, "nu"));
   /* 21-10-2026 c (Bart): een gast bleef langer en de app zette een camper die nog moet komen op een andere vrije plek (plekindeling vrij) */
   boekingen.filter(b => b.plekGeschovenVan && b.plekGeschovenVan !== b.plek && !DEMO(b.id)).forEach(b => letAdd(`<b>${vrij(b.naam || "Gast")}</b> (komt ${DG[parse(b.in).getDay()].slice(0,2)} ${kort(b.in)}) staat nu op ${vrij(b.plek)} in plaats van ${vrij(b.plekGeschovenVan)}: plek vrijgemaakt voor een gast die langer blijft <button data-plgezien="${vrij(b.id)}">Gezien</button>`, "nu"));
+  /* 29-10-2026 c (review): een vertrekker die al heeft afgerekend en zich daarna aanmeldt: de paella (en de extra nacht) is dan nog niet
+     betaald. Afvinken per aanmelding (aantal personen zit in de sleutel: verandert het, dan staat hij er weer). */
+  /* nacontrole review: alleen als de aanmelding (personen of sangria) niet al op de bewaarde bon van die gast staat */
+  aankondigingen.filter(a => a.actief && a.datum >= vandaag).forEach(a => aankVertrekkers(a).filter(g => g.betaald).forEach(g => {
+    const m = aanmeldingen.find(x => x.aankondiging_id === a.id && x.nr === g.nr); if(!m) return;
+    const n = (m.volw||0) + (m.kind||0), sg = (m.sangria_wit||0) + (m.sangria_rood||0); if(!n && !sg) return;
+    const naam = a.soort === "paella" ? "Paella-avond" : a.titel;
+    const opBon = namen => bonnen.filter(x => x.soort !== "afspraken" && x.soort !== "terugbetaling" && (x.nr === g.nr || x.boeking_id === g.nr))
+      .reduce((t, x) => t + (x.regels || []).filter(r => namen.includes(r.naam)).reduce((u, r) => u + (Number(r.aantal) || 0), 0), 0);
+    if(opBon([naam, naam + " kind"]) >= n && opBon(["Kan sangria wit", "Kan sangria rood"]) >= sg) return;
+    const wat = [n ? `${n} ${n === 1 ? "persoon" : "personen"}` : "", sg ? `${sg} ${sg === 1 ? "kan" : "kannen"} sangria` : ""].filter(Boolean).join(", ");
+    letPush(`<span data-naaraank="1"><b>${vrij(g.naam)}</b> (${vrij(g.plek)}) vertrekt ${wanneerTekst(a.datum)}, is al afgerekend en doet mee met de ${vrij(aankNaam(a))} (${wat}): regel de extra nacht en de betaling <span class="letbekijk">Bekijk ›</span></span>`, ["weg","aankbetaald",a.id,g.nr,n,sg], "nu");
+  }));
   /* aankondiging: alleen als het minimum nog niet gehaald is en de datum dichtbij komt (doorgaan of niet) */
   aankondigingen.filter(a => a.actief && a.datum >= vandaag).forEach(a => {
     const st = aanmeldStand(a);
@@ -7266,6 +7315,9 @@ function tekenNu(){
     .forEach(b => notitieRegel(b.naam || "de gast", b.plek, String(b.notities).trim(), b.id, b.in));
   kamers.filter(k => !DEMO(k.nr) && kNotitie(k) && (k.in === vandaag || k.in === morgen))
     .forEach(k => notitieRegel(kNaam(k) || "de gast", k.kamer, kNotitie(k), k.nr, k.in));
+  /* 29-10-2026 a (Bart): zelf iets toevoegen wat je niet mag vergeten. Een To do met datum staat vanaf die dag hier, tot hij is afgevinkt */
+  takenLetOp(vandaag).forEach(t => letAdd(`<b>Niet vergeten:</b> ${vrij(t.tekst)}${t.datum < vandaag ? ` <span class="letsinds">(sinds ${wanneerKort(t.datum)})</span>` : ""}<button class="letvink" data-tkklaar="${vrij(t.id)}" title="Klaar">✓</button>`, "vandaag"));
+  const letNieuwHtml = todoLetOpAan() ? `<div class="letlater"><button data-letnieuw="1">+ Zelf iets toevoegen</button></div>` : "";
   let letEl = null;
   const nAandacht = let_.nu.length + let_.vandaag.length, nLater = let_.later.length;
   /* fase 1: één lijst zonder tussenkopjes (Nu eerst), Later blijft ingeklapt; geen wegvegen meer (bedieningsconcept: een status verandert door een handeling) */
@@ -7274,15 +7326,15 @@ function tekenNu(){
   if(nAandacht){
     const el = document.createElement("div"); el.className = "blok let" + (letBlokOpen ? "" : " ingeklapt");
     el.innerHTML = `<h2 class="klap" data-ltoggle="1">Let op<b>${nAandacht}</b></h2>` +
-      (letBlokOpen ? letLijst.map(x => `<div class="letregel">${x}</div>`).join("") + laterHtml() : "");
+      (letBlokOpen ? letLijst.map(x => `<div class="letregel">${x}</div>`).join("") + laterHtml() + letNieuwHtml : "");
     bak.appendChild(el); letEl = el;
   } else if(NIEUW){
     const el = document.createElement("div"); el.className = "blok rustig";
-    el.innerHTML = `<h2>Alles geregeld voor vandaag<b>✓</b></h2>` + laterHtml();
+    el.innerHTML = `<h2>Alles geregeld voor vandaag<b>✓</b></h2>` + laterHtml() + letNieuwHtml;
     bak.appendChild(el); letEl = el;
   } else if(nLater){
     const el = document.createElement("div"); el.className = "blok let";
-    el.innerHTML = `<h2>Let op<b>0</b></h2>` + laterHtml();
+    el.innerHTML = `<h2>Let op<b>0</b></h2>` + laterHtml() + letNieuwHtml;
     bak.appendChild(el); letEl = el;
   }
   /* Ontbijt vandaag: staat vlak boven Ontbijt morgen en klapt na 11:00 vanzelf dicht */
@@ -7652,6 +7704,9 @@ function tekenNu(){
   if(poetsBlokOpen && document.getElementById("poetsBlok")) tekenPoetsTab();
   bak.querySelectorAll("[data-ltoggle]").forEach(el => el.onclick = () => { letBlokOpen = !letBlokOpen; tekenNu(); });
   bak.querySelectorAll("[data-letlater]").forEach(el => el.onclick = e => { e.stopPropagation(); letLaterOpen = !letLaterOpen; tekenNu(); });
+  /* 29-10-2026 a: zelf iets toevoegen (To do met de datum van vandaag) en afvinken */
+  bak.querySelectorAll("[data-letnieuw]").forEach(el => el.onclick = e => { e.stopPropagation(); openTaken(iso(new Date())); });
+  bak.querySelectorAll("[data-tkklaar]").forEach(el => el.onclick = e => { e.stopPropagation(); taakKlaar(el.dataset.tkklaar); });
   bak.querySelectorAll("[data-vtoggle]").forEach(el => el.onclick = () => { obVandaagKeuze = !obVandaagOpenNu(); tekenNu(); });
   bindAgenda(bak);
   bindRest(bak, morgen);
@@ -8042,6 +8097,24 @@ function nuMelding(html, klasse){
   const m = document.createElement("div"); m.className = "berichtuit boven " + klasse; m.style.marginBottom = "12px"; m.innerHTML = html;
   bak.prepend(m); return m;
 }
+/* 29-10-2026 c (Bart: "de Paella-avond is juist iets waardoor mensen soms een dagje langer blijven"): wie op de dag zelf vertrekt,
+   ziet de aankondiging ook (database: gast_ontbijt en gast_aanmelden, script database/29-10-2026-c-aankondiging-vertrekdag.sql),
+   met deze zin op de gastenpagina en in de WhatsApp-uitnodiging. Aan/uit in Meer, Gasten (instelling aank_vertrekdag, standaard aan).
+   Tekst NL goedgekeurd door Bart (29-10-2026); aanspreekvorm per taal als in teksten.js. */
+const aankVertrekAan = () => (instellingen.aank_vertrekdag || "aan") !== "uit";
+const AANK_VERTREKT = {
+  nl:"Jullie vertrekken die dag. Blijf een nachtje langer en eet gezellig mee!",
+  en:"You're leaving that day. Stay one more night and join us for dinner!",
+  de:"Ihr reist an dem Tag ab. Bleibt doch eine Nacht länger und esst gemütlich mit!",
+  es:"Ese día os vais. ¡Quedaos una noche más y cenad con nosotros!",
+  it:"Quel giorno partite. Restate una notte in più e cenate con noi!",
+  fr:"Vous partez ce jour-là. Restez une nuit de plus et venez dîner avec nous !",
+  pt:"Vocês partem nesse dia. Fiquem mais uma noite e venham jantar connosco!",
+  cs:"V ten den odjíždíte. Zůstaňte o noc déle a přijďte s námi povečeřet!",
+  fi:"Lähdette sinä päivänä. Jääkää vielä yhdeksi yöksi ja tulkaa syömään kanssamme!",
+  no:"Dere reiser den dagen. Bli en natt til og spis sammen med oss!",
+  sv:"Ni åker den dagen. Stanna en natt till och ät tillsammans med oss!" };
+const aankVertrektZin = taal => AANK_VERTREKT[taal] || AANK_VERTREKT.en;
 const aankActief = () => aankondigingen.filter(a => a.actief && a.datum >= iso(new Date())).sort((a,b) => a.datum.localeCompare(b.datum))[0] || null;
 const aankNaam = a => a.soort === "paella" ? "Paella-avond" : a.titel;
 const aankDag = a => `${DG[parse(a.datum).getDay()]} ${datumLang(a.datum)}`;
@@ -8058,12 +8131,31 @@ function aankTekst(a, link, taal){
   return t.aankondiging(a, dag, (taal === "en" || taal === "de") ? hoofdletter(kd) : kd, link, a.titel);
 }
 /* 09-10-2026 a: uitnodiging per WhatsApp, in de taal van de gast, zonder sluittijd (wens Bart), met de extra uitleg */
-function aankUitnodiging(a, naam, link, taal){
+function aankUitnodiging(a, naam, link, taal, vertrekt){
   const t = TK(taal || "nl"); if(!t || !t.aankUitnodiging) return "";
   const x = parse(a.datum), v = a.toelichting_vertaald || {};
-  const toelichting = String((taal !== "nl" && v[taal]) || a.toelichting || "").trim();
+  /* 29-10-2026 c: vertrekt de gast die dag, dan eerst de uitnodiging om een nacht langer te blijven */
+  const toelichting = [vertrekt ? aankVertrektZin(taal || "nl") : "", String((taal !== "nl" && v[taal]) || a.toelichting || "").trim()].filter(Boolean).join("\n\n");
   return t.aankUitnodiging({ naam: naam && naam !== "Naam onbekend" ? aanhef(naam) : "", dagnaam: t.dagen[x.getDay()], datum: t.datum(x.getDate(), t.maanden[x.getMonth()]),
     dag: x.getDate(), maand: t.maanden[x.getMonth()], tijd: a.tijd, soort: a.soort, titel: a.titel, prijs: a.prijs, prijs_kind: a.prijs_kind, toelichting, link });
+}
+/* wie er op de dag van de aankondiging is (blijft slapen of komt aan) */
+const aankBlijvers = a => [
+  ...kamers.filter(k => aanwezigOp(k, a.datum)).map(k => ({ nr:k.nr, naam:kNaam(k) || "Naam onbekend", plek:k.kamer, link:gastLink(k), tel:kTel(k) })),
+  ...boekingen.filter(b => !b.gestald && aanwezigOp(b, a.datum)).map(b => ({ nr:b.id, naam:b.naam, plek:b.plek, link:gastLinkVan(b.id), tel:b.tel || "" }))
+];
+/* 29-10-2026 c: wie die dag vertrekt (minstens één nacht geweest). Review: niet als dezelfde naam of hetzelfde nummer die dag ook als
+   blijver in de lijst staat (aansluitend opnieuw geboekt of van kamer gewisseld); met de instelling uit alleen wie zich al heeft
+   aangemeld (anders klopt de telling niet met de lijst); wie zich al heeft aangemeld, staat er altijd (nacontrole review).
+   betaald: al afgerekend (dan een label, en een regel in Let op als de aanmelding niet op de bon staat). */
+function aankVertrekkers(a){
+  const blijf = aankBlijvers(a), naamS = x => String(x || "").trim().toLowerCase();
+  const namen = new Set(blijf.map(g => naamS(g.naam)).filter(x => x && x !== "naam onbekend")), nrs = new Set(blijf.map(g => waNummer(g.tel)).filter(Boolean));
+  const aangemeld = nr => aanmeldingen.some(m => m.aankondiging_id === a.id && m.nr === nr && ((m.volw||0) + (m.kind||0) + (m.sangria_wit||0) + (m.sangria_rood||0)) > 0);
+  return [
+    ...kamers.filter(k => k.uit === a.datum && k.in < a.datum).map(k => ({ nr:k.nr, naam:kNaam(k) || "Naam onbekend", plek:k.kamer, link:gastLink(k), tel:kTel(k), vertrekt:true, betaald:kVink(k, "betaald") })),
+    ...boekingen.filter(b => !b.gestald && b.uit === a.datum && b.in < a.datum).map(b => ({ nr:b.id, naam:b.naam, plek:b.plek, link:gastLinkVan(b.id), tel:b.tel || "", vertrekt:true, betaald:!!b.betaald }))
+  ].filter(g => aangemeld(g.nr) || (aankVertrekAan() && !namen.has(naamS(g.naam)) && !(waNummer(g.tel) && nrs.has(waNummer(g.tel)))));
 }
 const aankVoor = (inDag, uitDag) => { const a = aankActief(); return a && inDag <= a.datum && a.datum < uitDag ? a : null; };
 function tekenAankBlok(bak, vandaag){
@@ -8075,10 +8167,8 @@ function tekenAankBlok(bak, vandaag){
   tekenMededeling();
   if(!a) return;
   const st = aanmeldStand(a);
-  const gasten = [
-    ...kamers.filter(k => aanwezigOp(k, a.datum)).map(k => ({ nr:k.nr, naam:kNaam(k) || "Naam onbekend", plek:k.kamer, link:gastLink(k), tel:kTel(k) })),
-    ...boekingen.filter(b => !b.gestald && aanwezigOp(b, a.datum)).map(b => ({ nr:b.id, naam:b.naam, plek:b.plek, link:gastLinkVan(b.id), tel:b.tel || "" }))
-  ];
+  /* 29-10-2026 c: wie die dag vertrekt, staat er ook bij (onderaan), met "vertrekt die dag" (zie aankVertrekkers) */
+  const gasten = aankBlijvers(a).concat(aankVertrekkers(a));
   const nummers = {}; /* zelfde telefoonnummer bij twee kamers (een gast met twee kamers): Bart ziet het en stuurt er één */
   const el = document.createElement("div"); el.className = "blok"; el.id = "aankBlok";
   el.innerHTML = `<h2>${vrij(aankNaam(a))} ${DG[parse(a.datum).getDay()].slice(0,2)} ${kort(a.datum)} · ${a.tijd}<b>${st.personen} aangemeld${st.personen < a.minimum ? ` · min. ${a.minimum}` : ""}</b></h2>` +
@@ -8097,9 +8187,9 @@ function tekenAankBlok(bak, vandaag){
     /* 09-10-2026 a: WhatsApp-knop met de uitnodiging in de taal van de gast (taalknop ernaast), direct naar het nummer als dat met landcode in de app staat */
     const wa = waNummer(g.tel), zelfde = wa && nummers[wa] ? nummers[wa] : "";
     if(wa && !nummers[wa]) nummers[wa] = g.plek;
-    const tekst = g.link ? aankUitnodiging(a, g.naam, g.link, taalVan(g.nr)) : "";
+    const tekst = g.link ? aankUitnodiging(a, g.naam, g.link, taalVan(g.nr), g.vertrekt) : "";
     const href = tekst ? `https://wa.me/${wa ? wa : ""}?text=${encodeURIComponent(tekst)}` : "#";
-    r.innerHTML = `<div class="kop"><b>${vrij(g.naam)}${tot ? `<span class="tag gastzelf">doet mee</span>` : ""}</b><em>${vrij(g.plek)}</em></div><div class="info">${info}${zelfde ? ` · zelfde telefoonnummer als ${vrij(zelfde)}` : ""}</div>` +
+    r.innerHTML = `<div class="kop"><b>${vrij(g.naam)}${tot ? `<span class="tag gastzelf">doet mee</span>` : ""}${g.vertrekt ? `<span class="tag vertrekt">vertrekt die dag</span>` : ""}${g.vertrekt && g.betaald ? `<span class="tag vertrekt">al afgerekend</span>` : ""}</b><em>${vrij(g.plek)}</em></div><div class="info">${info}${zelfde ? ` · zelfde telefoonnummer als ${vrij(zelfde)}` : ""}</div>` +
       (open ? `<div class="ontbl">` + teller("volw", "Volwassenen") + teller("kind", "Kinderen tot 12") + teller("sangria_wit", "Kan sangria wit") + teller("sangria_rood", "Kan sangria rood") + `<div class="vink"><button data-amsluit="1">Klaar</button></div></div>`
             : `<div class="vink"><a class="b1wa${m && m.bericht ? " gestuurd" : ""}" data-amwa="1" href="${href}" target="_blank" rel="noopener">${m && m.bericht ? "✓ WhatsApp gestuurd" : wa ? "WhatsApp" : "WhatsApp, kies contact"}</a>${taalKnop(g.nr)}<button data-amopen="1">${tot ? "Wijzigen" : "Aanmelden"}</button></div>`);
     el.appendChild(r);
@@ -8473,6 +8563,15 @@ function tekenMeer(){
   /* 23-10-2026 e: herinnering de dag voor vertrek */
   meerZet("mpBarGesch", barGeschAan() ? "Knop Geschiedenis bar staat in de barvensters. Het logboek loopt altijd." : "Knop verborgen. Het logboek loopt gewoon door.");
   meerZet("meerBarGesch", barGeschAan() ? "Verbergen" : "Tonen");
+  /* 29-10-2026 e: slot op Geld */
+  meerZet("mpGeldSlot", geldSlotAan() ? "Staat aan: Geld en Exporteren vragen de code van de digitale kluis. Daarna 5 minuten open; bij het wegzetten van de app meteen weer op slot." : "Staat uit: Geld is open voor wie ingelogd is.");
+  meerZet("meerGeldSlot", geldSlotAan() ? "Uitzetten" : "Aanzetten");
+  /* 29-10-2026 c: aankondiging ook voor wie die dag vertrekt */
+  meerZet("mpAankVertrek", aankVertrekAan() ? "Staat aan: wie op de dag zelf vertrekt, ziet de aankondiging ook, met de uitnodiging om een nacht langer te blijven, en staat in de lijst om een WhatsApp te sturen." : "Staat uit: alleen wie die nacht nog blijft, ziet de aankondiging.");
+  meerZet("meerAankVertrek", aankVertrekAan() ? "Uitzetten" : "Aanzetten");
+  /* 29-10-2026 a: To do met datum in Let op */
+  meerZet("mpTodoLetOp", todoLetOpAan() ? "Staat aan: geef je een taak een datum, dan staat hij vanaf die dag ook bij Let op, tot je hem afvinkt. In Let op staat ook de knop Zelf iets toevoegen." : "Staat uit: To do is alleen een lijst.");
+  meerZet("meerTodoLetOp", todoLetOpAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpHerinnering", herinneringAan() ? "Staat aan: de dag voor vertrek staat bij Vandaag wie nog een herinnering moet krijgen (als er nog iets open staat)." : "Staat uit.");
   meerZet("meerHerinnering", herinneringAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpHerinneringTekst", herinneringEigen() ? (herinneringMist().length ? "Eigen tekst, nog niet in alle talen vertaald" : "Eigen tekst, in alle talen") : "Vaste tekst, in de taal van de gast");
@@ -8522,6 +8621,9 @@ function tekenMeer(){
   }
 }
 function meerToon(naam){
+  /* 29-10-2026 e: de pagina's van Geld alleen met de kluiscode */
+  if(GELD_PAGINAS.includes(naam) && !geldOpen()){ geldVraagCode(() => meerToon(naam)); return; }
+  if(GELD_PAGINAS.includes(naam)) geldVerleng();
   document.querySelectorAll("#meer2 [data-pagina]").forEach(el => el.hidden = el.dataset.pagina !== naam);
   const dlg = document.querySelector("#meer2 .dlg"); if(dlg) dlg.scrollTop = 0;
   /* geen zwarte focusrand op de eerste regel (het venster zet de focus vanzelf op de eerste knop); de focus gaat naar de kop
@@ -11361,6 +11463,9 @@ if(NIEUW){
     if(w === "kluis"){ document.getElementById("meer2").close(); kluisOpenen(); return; }
     if(w === "herinnering"){ herinneringWissel(); return; }
     if(w === "bargesch"){ barGeschWissel(); return; }
+    if(w === "todoletop"){ todoLetOpWissel(); return; } /* 29-10-2026 a */
+    if(w === "aankvertrek"){ aankVertrekWissel(); return; } /* 29-10-2026 c */
+    if(w === "geldslot"){ geldSlotWissel(); return; } /* 29-10-2026 e */
     if(w === "herinneringtekst"){ openHerinneringTekst(); return; }
     if(w === "gastteksten"){ openGastTeksten(); return; } /* 25-10-2026 d */
     document.getElementById("meer2").close();
@@ -11722,7 +11827,7 @@ const cfDatum = d => { const s = String(d || "").slice(0, 10); return /^\d{4}-\d
 const cfKw = m => Math.floor((Number(m.slice(5, 7)) - 1) / 3) + 1;
 const cfDag = d => `${DG[parse(d).getDay()]} ${parse(d).getDate()} ${MND[parse(d).getMonth()]}`;
 const cfDagenTot = (van, tot) => Math.round((parse(tot) - parse(van)) / 864e5);
-let cfData = null, cfFout = "", cfBankOpen = false;
+let cfData = null, cfFout = "", cfBankOpen = false, cfBetaalOpen = false, cfBetaalMelding = "";
 async function cfAlles(tabel, kolommen){
   const { data, error } = await alleRijen(() => db.from(tabel).select(kolommen, { count:"exact" }).order("id"));
   if(error) throw new Error(tabel + ": " + error.message);
@@ -11802,13 +11907,14 @@ function cfOpgehaald(klaar){
   const oud = nu - t > 36 * 3600e3;
   return { tekst: `Kamers uit MyTourist, opgehaald ${wanneer}${oud ? ". Let op: al meer dan een dag niet gelukt" : ""} · campers, bar en ontbijt uit de app`, oud };
 }
-function cfMelding(x, vandaag){
-  const u = cfDatum(x && x.uiterlijk); if(!u) return "";
+function cfMelding(x, vandaag, i){
+  const u = cfDatum(x && x.uiterlijk); if(!u || x.betaald) return ""; /* 29-10-2026 e: afgevinkt in de app */
   const nog = cfDagenTot(vandaag, u);
   /* vanaf twee weken vooraf; na de uiterste datum blijft hij nog twee weken staan, tot hij uit de instellingen is gehaald */
   if(nog > 14 || nog < -14) return "";
-  const wanneer = nog >= 0 ? `${x.uitleg ? cfEsc(x.uitleg) + ", uiterlijk " : "Uiterlijk "}${cfEsc(cfDag(u))}.` : `${x.uitleg ? cfEsc(x.uitleg) + ". " : ""}De uiterste datum was ${cfEsc(cfDag(u))}. Al betaald? Laat het Claude weten, dan gaat de melding weg.`;
-  return `<div class="cf-let"><b>${cfEsc(x.wat)}: ${cfEur(x.bedrag)}</b>${wanneer}${x.opmerking && nog >= 0 ? " " + cfEsc(x.opmerking) : ""}</div>`;
+  const wanneer = nog >= 0 ? `${x.uitleg ? cfEsc(x.uitleg) + ", uiterlijk " : "Uiterlijk "}${cfEsc(cfDag(u))}.` : `${x.uitleg ? cfEsc(x.uitleg) + ". " : ""}De uiterste datum was ${cfEsc(cfDag(u))}. Al betaald? Tik op Betaald, dan gaat de melding weg.`;
+  return `<div class="cf-let"><b>${cfEsc(x.wat)}: ${cfEur(x.bedrag)}</b>${wanneer}${x.opmerking && nog >= 0 ? " " + cfEsc(x.opmerking) : ""}` +
+    `<button type="button" class="cf-knop cf-betaald" data-cfbetaald="${i}">Betaald ✓</button></div>`;
 }
 function tekenCijfers(){
   const bak = document.getElementById("cijfersInhoud");
@@ -11819,6 +11925,11 @@ function tekenCijfers(){
   const open = document.getElementById("cfBankOpen");
   if(open) open.onclick = () => { cfBankOpen = true; tekenCijfers(); const v = document.getElementById("cfBankVeld"); if(v) v.focus(); };
   const naarInk = document.getElementById("cfNaarInkoop"); if(naarInk) naarInk.onclick = () => openInkoop();
+  /* 29-10-2026 e: betalingen afvinken en toevoegen */
+  bak.querySelectorAll("[data-cfbetaald]").forEach(kn => kn.onclick = () => cfBetaald(Number(kn.dataset.cfbetaald)));
+  const btOpen = document.getElementById("cfBtOpen"); if(btOpen) btOpen.onclick = () => { cfBetaalOpen = true; cfBetaalMelding = ""; tekenCijfers(); const v = document.getElementById("cfBtWat"); if(v) v.focus(); };
+  const btTerug = document.getElementById("cfBtTerug"); if(btTerug) btTerug.onclick = () => { cfBetaalOpen = false; tekenCijfers(); };
+  const btOk = document.getElementById("cfBtOk"); if(btOk) btOk.onclick = cfBetaalToevoegen;
   const uit = document.getElementById("cfUitKnop"); if(uit) uit.onclick = () => cfDeel(document.getElementById("cfUitMaand").value);
   const ok = document.getElementById("cfBankOk"), veld = document.getElementById("cfBankVeld");
   if(veld) veld.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); ok.click(); } });
@@ -11832,6 +11943,46 @@ function tekenCijfers(){
     if(error){ ok.disabled = false; fout.textContent = "Opslaan lukte niet: " + error.message; return; }
     instellingen.bank_saldo = waarde; cfBankOpen = false; tekenCijfers();
   };
+}
+/* 29-10-2026 e: de lijst te_betalen staat in instellingen 'cockpit' (samen met andere instellingen van Cijfers). Eerst vers ophalen,
+   dan alleen te_betalen aanpassen, zodat de rest van 'cockpit' nooit met een oude stand wordt overschreven. */
+async function cfCockpitZet(pas){
+  const { data, error } = await db.from("instellingen").select("waarde").eq("sleutel", "cockpit").limit(1);
+  if(error) return error.message;
+  let cfg = {}; try { cfg = cfObj(JSON.parse((data && data[0] && data[0].waarde) || "{}")) || {}; } catch(e){ return "de instellingen van Cijfers zijn niet te lezen"; }
+  const lijst = Array.isArray(cfg.te_betalen) ? cfg.te_betalen : [];
+  const fout = pas(lijst); if(fout) return fout;
+  cfg.te_betalen = lijst;
+  const waarde = JSON.stringify(cfg);
+  const r = await db.from("instellingen").upsert({ sleutel:"cockpit", waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(r.error) return r.error.message;
+  instellingen.cockpit = waarde; return "";
+}
+async function cfBetaald(i){
+  const cfg = cfJson("cockpit") || {}, x = cfObj((Array.isArray(cfg.te_betalen) ? cfg.te_betalen : [])[i]); if(!x) return;
+  if(!confirm(`${x.wat || "Deze betaling"} (${cfEur(x.bedrag)}) is betaald? Dan gaat de melding weg.`)) return;
+  const fout = await cfCockpitZet(lijst => {
+    const y = cfObj(lijst[i]);
+    if(!y || y.wat !== x.wat || y.uiterlijk !== x.uiterlijk) return "de lijst is intussen veranderd, open Cijfers opnieuw";
+    y.betaald = iso(new Date()); return "";
+  });
+  if(fout){ alert("Opslaan lukte niet: " + fout); return; }
+  tekenCijfers();
+}
+async function cfBetaalToevoegen(){
+  const fout = document.getElementById("cfBtFout"), ok = document.getElementById("cfBtOk");
+  const wat = document.getElementById("cfBtWat").value.trim(), bedragT = document.getElementById("cfBtBedrag").value, d = document.getElementById("cfBtDatum");
+  const bedrag = bedragLees(bedragT);
+  if(!wat){ fout.textContent = "Vul in wat er betaald moet worden."; return; }
+  if(!bedragT.trim() || !isFinite(bedrag) || bedrag <= 0){ fout.textContent = "Vul een bedrag in, bijvoorbeeld 1500 of 1.500,25."; return; }
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d.value || "")){ fout.textContent = "Kies de datum waarop het uiterlijk betaald moet zijn."; return; }
+  ok.disabled = true;
+  const f = await cfCockpitZet(lijst => { lijst.push({ wat, bedrag, uiterlijk: d.value }); return ""; });
+  if(f){ ok.disabled = false; fout.textContent = "Opslaan lukte niet: " + f; return; }
+  const nog = cfDagenTot(iso(new Date()), d.value);
+  cfBetaalOpen = false;
+  cfBetaalMelding = nog > 14 ? `Opgeslagen. Twee weken vóór ${kort(d.value)} staat "${wat}" hier bovenaan.` : `Opgeslagen.`;
+  tekenCijfers();
 }
 function cfHtml(){
   const cfg = cfJson("cockpit") || {}, bank = cfJson("bank_saldo");
@@ -11847,7 +11998,19 @@ function cfHtml(){
   h += `<p class="cf-vers${opg.oud ? " oud" : ""}">${cfEsc(opg.tekst)}</p>`;
   if(appLaadFout) h += `<div class="cf-let"><b>Cijfers uit de app konden niet worden geladen</b>Campers, bar, ontbijt, contant en bankoverschrijving kloppen nu niet (${cfEsc(appLaadFout)}). Ververs de app en open Cijfers opnieuw.</div>`;
   /* een aangifte die binnenkort betaald moet zijn, of net te laat is */
-  (Array.isArray(cfg.te_betalen) ? cfg.te_betalen : []).forEach(x => { h += cfMelding(cfObj(x), vandaag); });
+  (Array.isArray(cfg.te_betalen) ? cfg.te_betalen : []).forEach((x, i) => { h += cfMelding(cfObj(x), vandaag, i); });
+  /* 29-10-2026 e (Bart): zelf een betaling toevoegen (wat, bedrag, uiterlijk); twee weken vooraf staat hij hier bovenaan */
+  { const later = (Array.isArray(cfg.te_betalen) ? cfg.te_betalen : []).map(cfObj).filter(x => x && !x.betaald && cfDatum(x.uiterlijk) && cfDagenTot(vandaag, cfDatum(x.uiterlijk)) > 14)
+      .sort((a, b) => cfDatum(a.uiterlijk).localeCompare(cfDatum(b.uiterlijk)));
+    h += cfBetaalOpen
+      ? `<div class="cf-kaart cf-betaalform"><h4>Betaling toevoegen</h4>` +
+        `<label class="ib-veld">Wat<input id="cfBtWat" autocomplete="off" placeholder="bijvoorbeeld Belasting 4e kwartaal"></label>` +
+        `<label class="ib-veld">Bedrag<input id="cfBtBedrag" inputmode="decimal" placeholder="in euro"></label>` +
+        `<label class="ib-veld">Uiterlijk<input id="cfBtDatum" type="date"></label>` +
+        `<div class="cf-bank"><button id="cfBtOk">Opslaan</button><button type="button" class="cf-knop" id="cfBtTerug">Annuleren</button></div><p class="ci-uitleg ci-let" id="cfBtFout" aria-live="polite"></p></div>`
+      : `<div class="cf-betaalrij"><button type="button" class="cf-knop" id="cfBtOpen">+ Betaling toevoegen</button>` +
+        (cfBetaalMelding ? `<p class="cf-klein">${cfEsc(cfBetaalMelding)}</p>` : "") +
+        (later.length ? `<p class="cf-klein">Later: ${later.map(x => `${cfEsc(x.wat)} (${cfEsc(datumKort(cfDatum(x.uiterlijk)))})`).join(", ")}</p>` : "") + `</div>`; }
   /* nu: de bank */
   h += `<div class="cf-kaart"><h4>Nu</h4><div class="cf-label">Op de bank</div>`;
   const bankDatum = bank && cfDatum(bank.datum);
@@ -11857,6 +12020,13 @@ function cfHtml(){
   h += cfBankOpen
     ? `<div class="cf-bank"><input id="cfBankVeld" inputmode="decimal" placeholder="Saldo in euro" aria-label="Saldo op de bank in euro"><button id="cfBankOk">Opslaan</button></div><p class="ci-uitleg ci-let" id="cfBankFout" aria-live="polite"></p>`
     : `<button class="cf-knop" id="cfBankOpen">Saldo bijwerken</button>`;
+  /* 29-10-2026 e (Bart): de kas onder de bank. Zelfde telling als Exporteren, "Kas buiten de boekhouding", lopend sinds de startdatum:
+     afgerekend in de app (contant en per bank) min de kosten per maand. Wat je er zelf uit haalt of bijlegt, weet de app niet. */
+  { const ks = kasStart(), kas = kasCijfers(ks.slice(0, 7), "9999-99");
+    /* review e: het grote getal is wat er echt in de kas ligt (contant min kosten); de bankoverschrijvingen zitten al in het banksaldo */
+    h += `<div class="cf-label" style="margin-top:16px">In de kas</div><div class="cf-groot">${cfEur(Math.round((kas.contant - kas.kostenTot) * 100) / 100)}</div>` +
+      `<p class="cf-klein">Sinds ${cfEsc(kort(ks))} ${ks.slice(0, 4)}: contant afgerekend ${cfEur(kas.contant)} − kosten per maand ${cfEur(kas.kostenTot)}. Wat je er zelf uit haalt of bijlegt, weet de app niet.` +
+      ` Met de bankoverschrijvingen erbij (${cfEur(kas.bank)}), zoals bij Exporteren: ${cfEur(kas.saldo)}.${kas.zonder ? ` ${kas.zonder} oude ${kas.zonder === 1 ? "bon telt" : "bonnen tellen"} niet mee (contant of bank onbekend).` : ""}</p>`; }
   h += `</div>`;
   /* deze maand */
   h += `<div class="cf-kaart"><h4>${Maand}<em>alle verblijven met vertrek in ${maandNaam}</em></h4><div class="cf-label">Binnen</div>`;
@@ -12114,8 +12284,10 @@ async function cfDeel(mu){
   cfUitMeld(`De pdf staat in je downloads (${bestand.name}).`);
 }
 async function openCijfers(){
+  if(!geldOpen()){ geldVraagCode(() => openCijfers()); return; } /* 29-10-2026 e */
+  geldVerleng();
   const dlg = document.getElementById("cijfers2");
-  cfFout = ""; cfData = null; cfBankOpen = false; tekenCijfers();
+  cfFout = ""; cfData = null; cfBankOpen = false; cfBetaalOpen = false; cfBetaalMelding = ""; tekenCijfers(); /* review e: formulier en melding niet laten staan */
   if(!dlg.open) dlg.showModal();
   try { cfData = await haalCijfers(); } catch(e){ cfFout = e.message || String(e); }
   tekenCijfers();
@@ -12189,6 +12361,61 @@ async function kluisProbeer(){
     kluisTik();
   } catch(e){ kluisSleutel = null; kluisMeld("kluisMelding", "Mislukt: " + (e && e.message || e), "fout"); }
   finally { kel("kluisOpen").disabled = false; }
+}
+/* ---------- 29-10-2026 e (Bart): Geld achter de kluiscode ----------
+   Meer > Geld (en Kosten per maand), Cijfers en Exporteren vragen de code van de digitale kluis. De app controleert de code op dezelfde
+   manier als de kluis (sleutel uit de code, de controletekst moet te ontsleutelen zijn); de code zelf wordt nergens bewaard. Daarna blijft
+   Geld 5 minuten open (elke keer dat je Geld opent, begint die tijd opnieuw), en meteen op slot zodra de app op de achtergrond gaat.
+   Eerlijk: dit is een slot op het scherm, geen versleuteling; de cijfers staan gewoon in de database voor wie ingelogd is.
+   Is er nog geen kluiscode, dan is Geld gewoon open. Aan/uit: instelling geld_slot (standaard aan), op de pagina Geld zelf. */
+const GELD_PAGINAS = ["geld", "kosten"], GELD_OPEN = 5 * 60 * 1000;
+let geldOpenTot = 0, geldNa = null, geldControle = null;
+const geldSlotAan = () => (instellingen.geld_slot || "aan") !== "uit";
+const geldOpen = () => !geldSlotAan() || Date.now() < geldOpenTot || !!kluisSleutel;
+const geldVerleng = () => { if(Date.now() < geldOpenTot) geldOpenTot = Date.now() + GELD_OPEN; };
+/* review e: bij wegzetten ook wat al open staat dicht (Cijfers, Exporteren, de pagina's Geld en Kosten); Inkoop niet, want een foto maken
+   zet de app ook even weg en dan zou het ingevulde verloren gaan */
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState !== "hidden" || !geldSlotAan()) return;
+  geldOpenTot = 0; kel("gsCode").value = "";
+  ["cijfers2", "exporteren"].forEach(id => { const d = kel(id); if(d && d.open) d.close(); });
+  const m = kel("meer2"), pag = m && m.open && [...m.querySelectorAll("[data-pagina]")].find(x => !x.hidden);
+  if(pag && GELD_PAGINAS.includes(pag.dataset.pagina)) meerToon("menu");
+});
+async function geldVraagCode(na){
+  const { data, error } = await db.from("kluis").select("zout,iv,inhoud").eq("soort", "sleutel").limit(1);
+  if(error){ alert("Geld kon niet geopend worden: " + error.message); return; }
+  if(!data || !data.length){ geldOpenTot = Date.now() + GELD_OPEN; na(); return; } /* nog geen kluiscode: geen slot mogelijk */
+  geldControle = data[0]; geldNa = na;
+  kel("gsCode").value = ""; kluisMeld("gsMelding", "");
+  const d = kel("geldSlot"); if(!d.open) d.showModal(); kel("gsCode").focus();
+}
+async function geldProbeer(){
+  if(kel("gsOpen").disabled) return; /* review e: niet twee controles tegelijk (Enter meerdere keren) */
+  const code = kel("gsCode").value; if(!code || !geldControle) return;
+  kel("gsOpen").disabled = true; kluisMeld("gsMelding", "Even geduld…");
+  let goed = false;
+  try {
+    const sleutel = await kluisSleutelVan(code, kvan64(geldControle.zout));
+    const uit = await crypto.subtle.decrypt({ name:"AES-GCM", iv: kvan64(geldControle.iv) }, sleutel, kvan64(geldControle.inhoud));
+    goed = new TextDecoder().decode(uit) === KLUIS_CONTROLE;
+  } catch(e){ goed = false; }
+  finally { kel("gsOpen").disabled = false; kel("gsCode").value = ""; }
+  if(!goed){ kluisMeld("gsMelding", "De code klopt niet.", "fout"); kel("gsCode").focus(); return; }
+  geldOpenTot = Date.now() + GELD_OPEN;
+  kel("geldSlot").close(); kluisMeld("gsMelding", "");
+  const na = geldNa; geldNa = null; if(na) na();
+}
+kel("gsOpen").onclick = geldProbeer;
+kel("gsCode").onkeydown = e => { if(e.key === "Enter"){ e.preventDefault(); geldProbeer(); } };
+kel("gsDicht").onclick = () => { geldNa = null; kel("geldSlot").close(); };
+kel("geldSlot").addEventListener("close", () => { kel("gsCode").value = ""; });
+async function geldSlotWissel(){
+  const nieuw = geldSlotAan() ? "uit" : "aan";
+  if(nieuw === "uit" && !confirm("Slot op Geld uitzetten? Dan kan iedereen die de app open ziet, de cijfers en de kas zien.")) return;
+  instellingen.geld_slot = nieuw; if(nieuw === "aan") geldOpenTot = Date.now() + GELD_OPEN; tekenMeer();
+  const { error } = await db.from("instellingen").upsert({ sleutel:"geld_slot", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
 }
 async function kluisLaad(){
   const { data, error } = await db.from("kluis").select("id,iv,inhoud,gewijzigd").eq("soort", "item").order("gewijzigd", { ascending:false });
@@ -12686,6 +12913,8 @@ document.getElementById("bBackup").onclick = async () => {
   knop.disabled = false;
 };
 document.getElementById("bExporteren").onclick = () => {
+  if(!geldOpen()){ geldVraagCode(() => document.getElementById("bExporteren").click()); return; } /* 29-10-2026 e */
+  geldVerleng();
   vulPeriodes();
   expInkoop = null; expInkoopHaal(); /* 25-10-2026 f: inkoopbonnen voor het blok Eruit */
   tekenBalans();
@@ -13755,40 +13984,87 @@ async function bsStap(id, stap){
   const { error } = await db.from("boodschappen").update({ aantal: x.aantal, bijgewerkt: new Date().toISOString() }).eq("id", id);
   if(error) alert("Opslaan mislukt: " + error.message);
 }
-/* To do: één gedeelde lijst, aantikken is klaar en dan is de regel weg */
-let taken = [];
+/* To do: één gedeelde lijst, aantikken is klaar en dan is de regel weg.
+   29-10-2026 a (Bart: "aan Let op iets vrij toevoegen wat ik niet mag vergeten"): een taak kan een datum krijgen (kolom taken.datum);
+   vanaf die dag staat hij ook bij Let op, tot hij is afgevinkt (afvinken haalt hem ook van de To do-lijst). Aan/uit in Meer,
+   Boodschappen en taken (instelling todo_letop, standaard aan). De lijst zelf (let taken) staat bovenaan het script. */
+const todoLetOpAan = () => (instellingen.todo_letop || "aan") !== "uit";
+const takenSorteer = l => (l || []).sort((x, y) => String(x.gemaakt || "").localeCompare(String(y.gemaakt || "")));
+const takenWeg = new Set(); /* review 29-10: taken die nu worden weggehaald (per taak, zodat je intussen een andere kunt afvinken) */
+let tkDatumStart = "";
 async function haalTaken(){
+  const mijn = ++takenStand;
   const { data, error } = await db.from("taken").select("*");
+  if(mijn !== takenStand) return; /* intussen zelf iets gewijzigd of opnieuw opgehaald: die stand is nieuwer */
   if(error){ console.error("taken", error.message); return; }
-  taken = (data || []).sort((x, y) => String(x.gemaakt || "").localeCompare(String(y.gemaakt || "")));
+  taken = takenSorteer(data);
   if(document.getElementById("taken").open) tekenTaken();
+  if(modus === "nu" && todoLetOpAan()) tekenNu();
+}
+/* taken die vandaag bij Let op horen: met datum, vanaf die dag */
+const takenLetOp = vandaag => todoLetOpAan() ? taken.filter(t => /^\d{4}-\d{2}-\d{2}$/.test(String(t.datum || "")) && t.datum <= vandaag) : [];
+async function taakKlaar(id){
+  const weg = taken.find(x => x.id === id); if(!weg || takenWeg.has(id)) return;
+  if(!confirm("Klaar met \"" + weg.tekst + "\"? Dan haal ik hem van de lijst.")) return;
+  takenWeg.add(id); takenStand++;
+  taken = taken.filter(x => x.id !== id); tekenTaken(); if(modus === "nu") tekenNu();
+  try {
+    const { error } = await db.from("taken").delete().eq("id", id);
+    takenStand++;
+    /* review 29-10 (nacontrole): mislukt (bijvoorbeeld geen bereik), dan zet de app de taak meteen zelf terug */
+    if(error){ if(!taken.some(x => x.id === id)){ taken.push(weg); takenSorteer(taken); } tekenTaken(); if(modus === "nu") tekenNu(); alert("Weghalen mislukt: " + error.message); }
+  } finally { takenWeg.delete(id); }
+  haalTaken(); /* daarna één keer opnieuw ophalen, zodat ook wijzigingen van de ander erin staan */
 }
 function tekenTaken(){
   const bak = document.getElementById("tkLijst");
   const esc = x => String(x == null ? "" : x).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+  document.getElementById("tkDatumRij").hidden = !todoLetOpAan();
   if(!taken.length){ bak.innerHTML = `<p class="leeg">Niets te doen. Lekker zo.</p>`; return; }
-  bak.innerHTML = taken.map(t => `<button class="tkrij" data-tk="${esc(t.id)}"><span class="vink"></span><b>${esc(t.tekst)}</b></button>`).join("");
-  bak.querySelectorAll("[data-tk]").forEach(kn => kn.onclick = async () => {
-    const id = kn.dataset.tk, weg = taken.find(x => x.id === id); if(!weg) return;
-    if(!confirm("Klaar met \"" + weg.tekst + "\"? Dan haal ik hem van de lijst.")) return;
-    taken = taken.filter(x => x.id !== id); tekenTaken();
-    const { error } = await db.from("taken").delete().eq("id", id);
-    if(error){ alert("Weghalen mislukt: " + error.message); await haalTaken(); }
-  });
+  const vandaag = iso(new Date());
+  const wanneer = t => !todoLetOpAan() || !/^\d{4}-\d{2}-\d{2}$/.test(String(t.datum || "")) ? ""
+    : t.datum <= vandaag ? "Staat bij Let op" : `Let op vanaf ${DG[parse(t.datum).getDay()].slice(0,2)} ${kort(t.datum)}`;
+  bak.innerHTML = taken.map(t => `<button class="tkrij" data-tk="${esc(t.id)}"><span class="vink"></span><b>${esc(t.tekst)}</b>${wanneer(t) ? `<small class="tkwanneer">${wanneer(t)}</small>` : ""}</button>`).join("");
+  bak.querySelectorAll("[data-tk]").forEach(kn => kn.onclick = () => taakKlaar(kn.dataset.tk));
 }
 async function taakErbij(){
-  const veld = document.getElementById("tkNieuw");
+  const veld = document.getElementById("tkNieuw"), dVeld = document.getElementById("tkDatum");
   const tekst = (veld.value || "").trim(); if(!tekst) return;
-  veld.value = ""; veld.focus();
-  const { data, error } = await db.from("taken").insert({ tekst }).select().single();
-  if(error){ alert("Opslaan mislukt: " + error.message); return; }
-  taken.push(data); tekenTaken();
+  /* review 29-10: een half ingevulde datum (computer) geeft een lege waarde; dan niet stil zonder datum opslaan */
+  if(todoLetOpAan() && dVeld.validity && dVeld.validity.badInput){ alert("De datum is niet compleet. Vul hem helemaal in, of maak hem leeg."); return; }
+  const datum = todoLetOpAan() && /^\d{4}-\d{2}-\d{2}$/.test(dVeld.value || "") ? dVeld.value : null;
+  veld.value = ""; dVeld.value = tkDatumStart; veld.focus();
+  takenStand++;
+  const { data, error } = await db.from("taken").insert(datum ? { tekst, datum } : { tekst }).select().single();
+  takenStand++;
+  if(error){ veld.value = tekst; dVeld.value = datum || ""; alert("Opslaan mislukt: " + error.message); return; }
+  if(data && !taken.some(x => x.id === data.id)) taken.push(data);
+  tekenTaken(); if(datum && modus === "nu") tekenNu();
+  haalTaken();
 }
-document.getElementById("bTaken").onclick = async () => {
+/* datum: leeg bij openen via de knop To do; vanuit Let op ("Zelf iets toevoegen") staat hij op vandaag. Na elke OK gaat de datum
+   terug naar deze beginwaarde (review 29-10), zodat een gekozen datum niet ongemerkt bij de volgende taak blijft staan. */
+async function openTaken(datum){
+  tkDatumStart = datum || "";
+  document.getElementById("tkDatum").value = tkDatumStart;
   document.getElementById("taken").showModal();
   tekenTaken();
+  if(datum) document.getElementById("tkNieuw").focus();
   await haalTaken();
-};
+}
+document.getElementById("bTaken").onclick = () => openTaken(null);
+async function aankVertrekWissel(){
+  const nieuw = aankVertrekAan() ? "uit" : "aan";
+  instellingen.aank_vertrekdag = nieuw; tekenMeer(); if(modus === "nu") tekenNu();
+  const { error } = await db.from("instellingen").upsert({ sleutel:"aank_vertrekdag", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
+}
+async function todoLetOpWissel(){
+  const nieuw = todoLetOpAan() ? "uit" : "aan";
+  instellingen.todo_letop = nieuw; tekenMeer(); if(modus === "nu") tekenNu();
+  const { error } = await db.from("instellingen").upsert({ sleutel:"todo_letop", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
+}
 document.getElementById("tkOk").onclick = taakErbij;
 document.getElementById("tkNieuw").onkeydown = e => { if(e.key === "Enter"){ e.preventDefault(); taakErbij(); } };
 document.getElementById("tkSluit").onclick = () => document.getElementById("taken").close();
