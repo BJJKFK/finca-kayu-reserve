@@ -1463,6 +1463,9 @@
   .cf-let > b::before{background:var(--stiprood)}
   #cfBankOpen, #cijfersInhoud .cf-kaart > button{min-height:44px}
   /* 29-10-2026 e: betalingen afvinken en toevoegen */
+  /* 29-10-2026 g: Toch niet verstuurd */
+  .stontrij{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--muted)}
+  .stontrij button{padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);font:inherit;font-size:13px;font-weight:600;color:var(--pine);cursor:pointer;min-height:40px}
   #cijfersInhoud .cf-let .cf-betaald{display:block;margin-top:8px;min-height:40px}
   #cijfersInhoud .cf-betaalrij{margin:0 0 12px}
   #cijfersInhoud .cf-betaalrij .cf-klein{margin:6px 0 0}
@@ -1481,6 +1484,11 @@
     -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z'/%3E%3C/svg%3E") center/contain no-repeat;
             mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z'/%3E%3C/svg%3E") center/contain no-repeat}
   #aankBlok .vink button{min-height:44px}
+  /* 30-10-2026 a: totaal voor de kok */
+  #aankBlok .aanktotaal{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:6px 0 8px;background:var(--card)}
+  #aankBlok .aankgroot{font-size:22px;font-weight:700;color:var(--pine)}
+  #aankBlok .aankdeel{font-size:15px;color:var(--pine);margin-top:2px}
+  #aankBlok .aanksangria{margin:6px 0 0;padding-left:18px;font-size:14px;color:var(--pine)}
   .gi.taalicoon, html.nieuw .gi.taalicoon{width:16px;height:16px;vertical-align:-3px;margin-right:6px}
   /* gastenpagina: een dag waarop bestellen dicht is niet meer half doorzichtig (de tekst werd te licht), wel een grijze kop */
   #gast .dag.dicht{opacity:1}
@@ -2202,6 +2210,8 @@
     <button id="stKopie" class="stknop" type="button">Alleen kopiëren</button>
   </div>
   <div id="stUit"></div>
+  <!-- 29-10-2026 g (Bart): stond hij al op Verstuurd ✓ maar is hij niet echt verstuurd, dan hier het vinkje weghalen -->
+  <div id="stOntRij" class="stontrij" hidden><span>Staat op Verstuurd ✓.</span><button type="button" id="stOnt">Toch niet verstuurd</button></div>
   <div class="row" style="margin-top:10px"><button class="go" id="stSluit">Sluiten</button></div>
 </div></dialog>
 <dialog id="eigenDlg"><div class="dlg">
@@ -3922,7 +3932,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "29-10-2026 f";
+const VERSIE = "30-10-2026 b";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -6321,6 +6331,23 @@ async function syncOntbijtBarDoe(){
 }
 const barAuto = id => consumpties.filter(c => c.boeking_id === id && c.auto);
 
+/* 29-10-2026 g: een berichtvinkje weghalen of weer zetten ("Toch niet verstuurd"); geeft false bij een fout. Het profiel (venster
+   detail) wordt daarna opnieuw getekend als het open staat. */
+async function camperVinkWeg(b, veld, waarde){
+  const kolom = { bericht:"bericht", bedankt:"bedankt", overzichtGestuurd:"overzicht_gestuurd", herinnering:"herinnering_vertrek" }[veld];
+  const vb = boekingen.find(x => x.id === b.id), oud = b[veld];
+  b[veld] = waarde; if(vb) vb[veld] = waarde;
+  const { error } = await db.from("boekingen").update({ [kolom]: waarde === "" ? null : waarde }).eq("id", b.id);
+  if(error){ b[veld] = oud; if(vb) vb[veld] = oud; alert("Opslaan mislukt: " + error.message); return false; }
+  if(document.getElementById("detail").open) toonDetail(vb || b);
+  tekenNu(); return true;
+}
+async function kamerVinkWeg(k, veld, waarde){
+  const r = await kamerVink(k, veld, waarde);
+  if(r === false) return false;
+  if(document.getElementById("detail").open) toonKamerDetail(kamerVoorNr(k.nr) || k);
+  tekenNu(); return true;
+}
 /* knop Bericht: tekst op het klembord, vinkje aan */
 /* 23-10-2026 d: berichten vanaf Vandaag gaan ook via de keuze WhatsApp, Mail of Kopiëren; daarna het vinkje en opnieuw tekenen */
 async function berichtKnop(kn, tekst, zetVink, waNr, email){
@@ -7806,6 +7833,13 @@ function bindRest(bak, morgen){
   bak.querySelectorAll("[data-vink]").forEach(kn => kn.onclick = async () => {
     const b = boekingen.find(x => x.id === kn.dataset.id); if(!b) return;
     const veld = kn.dataset.vink;
+    /* review g: al verstuurd? Dan niet stil uitzetten, maar het venster opnieuw met Toch niet verstuurd (zoals in het profiel) */
+    if((veld === "bedankt" && b.bedankt) || (veld === "bericht" && b.bericht)){
+      if(veld === "bericht" && !gastLinks[b.id]) await zorgGastLinks();
+      const tekst = veld === "bedankt" ? berichtBedankt(aanhef(b.naam), false, taalVan(b.id)) : berichtCamperWelkom(b);
+      return stuurKeuze({ tekst, waNr: waNummer(b.tel), email: b.email, verstuurd:true, ontVink: () => camperVinkWeg(b, veld, false),
+        zetVink: async () => { if(!b[veld]) await camperVinkWeg(b, veld, true); } });
+    }
     if(veld === "bedankt" && !b.bedankt){
       return berichtKnop(kn, berichtBedankt(aanhef(b.naam), false, taalVan(b.id)), async (w) => {
         b.bedankt = w;
@@ -7829,6 +7863,13 @@ function bindRest(bak, morgen){
   bak.querySelectorAll("[data-kvink]").forEach(kn => kn.onclick = async () => {
     const nr = kn.dataset.nr, veld = kn.dataset.kvink;
     const k = kamers.find(x => x.nr === nr);
+    /* review g: al verstuurd? Dan niet stil uitzetten, maar het venster opnieuw met Toch niet verstuurd (zoals in het profiel) */
+    if(k && ["bericht", "welkom", "bedankt"].includes(veld) && kVink(k, veld)){
+      if(!gastLinks[k.nr]) await zorgGastLinks();
+      let tekst; try { tekst = veld === "bericht" ? berichtKamer24u(k) : veld === "welkom" ? berichtKamerWelkom(k) : berichtBedankt(aanhef(kNaam(k)), true, taalVan(k.nr)); } catch(e){ alert(e.message); return; }
+      return stuurKeuze({ tekst, waNr: kTelWa(k), verstuurd:true, ontVink: () => kamerVinkWeg(k, veld, false),
+        zetVink: async () => { if(!kVink(k, veld)) await kamerVinkWeg(k, veld, true); } });
+    }
     if(veld === "bericht" && k && !kVink(k, "bericht")){
       if(kNieuw(k) && !gastLinks[k.nr]) await zorgGastLinks();
       let tekst; try { tekst = berichtKamer24u(k); } catch(e){ alert(e.message); return; }
@@ -8158,6 +8199,22 @@ function aankVertrekkers(a){
   ].filter(g => aangemeld(g.nr) || (aankVertrekAan() && !namen.has(naamS(g.naam)) && !(waNummer(g.tel) && nrs.has(waNummer(g.tel)))));
 }
 const aankVoor = (inDag, uitDag) => { const a = aankActief(); return a && inDag <= a.datum && a.datum < uitDag ? a : null; };
+/* 30-10-2026 a (Bart: "in één oogopslag: hoeveel volwassenen, hoeveel kinderen, hoeveel kannen sangria, en de namen bij de sangria"):
+   bovenaan het blok een vak met het totaal voor de kok. Telling als aanmeldStand (zonder demo); namen uit de lijst van het blok,
+   anders de naam die bij de aanmelding staat. */
+function aankTotaalHtml(a, st, gasten){
+  const mv = (n, een, meer) => `${n} ${n === 1 ? een : meer}`;
+  const sang = aanmeldingen.filter(m => m.aankondiging_id === a.id && !DEMO(m.nr) && ((m.sangria_wit||0) + (m.sangria_rood||0)) > 0).map(m => {
+    const g = gasten.find(x => x.nr === m.nr);
+    const naam = (g && g.naam !== "Naam onbekend" && g.naam) || m.gast || "Naam onbekend", plek = (g && g.plek) || m.plek || ""; /* review: echte naam gaat voor */
+    const wat = [m.sangria_wit ? `${m.sangria_wit} wit` : "", m.sangria_rood ? `${m.sangria_rood} rood` : ""].filter(Boolean).join(", ");
+    return { naam, plek, wat };
+  }).sort((x, y) => x.plek.localeCompare(y.plek, "nl", { numeric:true }));
+  return `<div class="aanktotaal"><div class="aankgroot">${mv(st.personen, "persoon", "personen")}</div>` +
+    `<div class="aankdeel">${mv(st.volw, "volwassene", "volwassenen")} · ${mv(st.kind, "kind", "kinderen")} tot 12</div>` +
+    `<div class="aankdeel">Sangria: ${st.sangria ? `${mv(st.sangria, "kan", "kannen")} (${st.wit} wit, ${st.rood} rood)` : "geen"}</div>` +
+    (sang.length ? `<ul class="aanksangria">${sang.map(x => `<li><b>${vrij(x.naam)}</b>${x.plek ? ` (${vrij(x.plek)})` : ""}: ${x.wat}</li>`).join("")}</ul>` : "") + `</div>`;
+}
 function tekenAankBlok(bak, vandaag){
   const a = aankActief();
   const kn = document.getElementById("bAank");
@@ -8172,7 +8229,8 @@ function tekenAankBlok(bak, vandaag){
   const nummers = {}; /* zelfde telefoonnummer bij twee kamers (een gast met twee kamers): Bart ziet het en stuurt er één */
   const el = document.createElement("div"); el.className = "blok"; el.id = "aankBlok";
   el.innerHTML = `<h2>${vrij(aankNaam(a))} ${DG[parse(a.datum).getDay()].slice(0,2)} ${kort(a.datum)} · ${a.tijd}<b>${st.personen} aangemeld${st.personen < a.minimum ? ` · min. ${a.minimum}` : ""}</b></h2>` +
-    `<p class="leeg">${st.volw} volwassenen, ${st.kind} kinderen${st.sangria ? ` · sangria: ${st.wit} wit, ${st.rood} rood` : ""} · opgeven kan tot ${DG[parse(a.datum).getDay()].slice(0,2)} ${kort(a.datum)} 12:00</p>`;
+    aankTotaalHtml(a, st, gasten) +
+    `<p class="leeg">Opgeven kan tot ${DG[parse(a.datum).getDay()].slice(0,2)} ${kort(a.datum)} 12:00</p>`;
   if(!gasten.length) el.innerHTML += `<p class="leeg">Nog geen gasten bekend op die dag</p>`;
   gasten.forEach(g => {
     const m = aanmeldingen.find(x => x.aankondiging_id === a.id && x.nr === g.nr);
@@ -9498,6 +9556,17 @@ function stuurKeuze(opt){
   wa.textContent = opt.waNr ? "WhatsApp" : "WhatsApp, kies het contact";
   ml.textContent = opt.email ? `Mail naar ${opt.email}` : "Mail";
   uit.textContent = "";
+  /* 29-10-2026 g (Bart: "WhatsApp afgesloten zonder te versturen, maar de app zegt verzonden"): de app kan niet zien of WhatsApp het
+     bericht echt verstuurt. Staat het al op Verstuurd ✓ (opt.verstuurd) en is er een opt.ontVink, dan kun je hier het vinkje weghalen.
+     Daarna zet WhatsApp, Mail of Kopiëren het vinkje gewoon weer aan. */
+  const ontRij = document.getElementById("stOntRij"), ont = document.getElementById("stOnt");
+  ontRij.hidden = !(opt.verstuurd && opt.ontVink); ont.disabled = false;
+  ont.onclick = async () => {
+    ont.disabled = true;
+    let ok = true; try { ok = (await opt.ontVink()) !== false; } catch(e){ ok = false; console.error("vinkje weg", e); }
+    if(!ok){ ont.disabled = false; uit.textContent = "Het vinkje weghalen lukte niet. Probeer het nog eens."; return; }
+    gedaan = false; ontRij.hidden = true; uit.textContent = "Vinkje weggehaald. Stuur het bericht opnieuw, of sluit dit venster.";
+  };
   /* WhatsApp en Mail zijn gewone links (geen venster openen vanuit code, dat blokkeert de browser soms); daarna het vinkje en dicht */
   wa.onclick = () => { zet(); setTimeout(() => { if(d.open) d.close(); }, 300); };
   ml.onclick = () => { zet(); setTimeout(() => { if(d.open) d.close(); }, 300); };
@@ -9541,10 +9610,12 @@ function herinneringSturenCamper(b, na){
   const uit = b.uit, oud = b.herinnering || "";
   stuurKeuze({ titel:"Herinnering vertrek", wie: b.naam || b.plek, taal: taalVan(b.id), tekstVoor: t => herinneringTekst(t, aanhef(b.naam), eur(herinneringBedragCamper(b))),
     waNr: waNummer(b.tel), email: b.email, onderwerp:"Finca KaYu",
+    verstuurd: oud === uit, ontVink: async () => { const r = await camperVinkWeg(b, "herinnering", ""); if(r && na) na(); return r; }, /* 29-10-2026 g */
     zetVink: async () => {
-      const vb = boekingen.find(x => x.id === b.id); b.herinnering = uit; if(vb) vb.herinnering = uit;
+      const vb = boekingen.find(x => x.id === b.id), voor = b.herinnering || ""; /* review g: terug naar de stand vlak hiervoor */
+      b.herinnering = uit; if(vb) vb.herinnering = uit;
       const { error } = await db.from("boekingen").update({ herinnering_vertrek: uit }).eq("id", b.id);
-      if(error){ b.herinnering = oud; if(vb) vb.herinnering = oud; alert("Opslaan mislukt: " + error.message); }
+      if(error){ b.herinnering = voor; if(vb) vb.herinnering = voor; alert("Opslaan mislukt: " + error.message); }
       if(na) na();
     } });
 }
@@ -9552,6 +9623,7 @@ function herinneringSturenKamer(k, na){
   const uit = k.uit;
   stuurKeuze({ titel:"Herinnering vertrek", wie: kNaam(k) || k.kamer, taal: taalVan(samenTaalNr(k)), tekstVoor: t => herinneringTekst(t, aanhef(kNaam(k)), eur(herinneringBedragKamer(k))),
     waNr: kTelWa(k), onderwerp:"Finca KaYu",
+    verstuurd: herinneringGestuurdKamer(k), ontVink: async () => { const r = await kamerVinkWeg(k, "herinnering_vertrek", null); if(r && na) na(); return r; }, /* 29-10-2026 g */
     zetVink: async () => { await kamerVink(k, "herinnering_vertrek", uit); if(na) na(); } });
 }
 /* 23-10-2026 e (Bart): na "Zelf verlengen toestaan" meteen een bericht aan de gast, in zijn taal, met de link naar zijn gastenpagina */
@@ -9724,7 +9796,7 @@ function toonDetail(b){
     if(veld === "bericht"){
       if(!gastLinks[b.id]) await zorgGastLinks();
       /* review 23-10 d: al verstuurd? Dan opent het venster opnieuw en blijft het vinkje aan (vroeger zette een tik het stil uit) */
-      if(b.bericht) return profielBericht("cdUit", berichtCamperWelkom(b), null, waNummer(b.tel), { titel:"Welkomstbericht (nog een keer)", wie:`${b.naam} · ${TAAL_NL[taalVan(b.id)] || taalVan(b.id)}`, email: b.email });
+      if(b.bericht) return profielBericht("cdUit", berichtCamperWelkom(b), async () => { if(!b.bericht) await camperVinkWeg(b, "bericht", true); }, waNummer(b.tel), { titel:"Welkomstbericht (nog een keer)", wie:`${b.naam} · ${TAAL_NL[taalVan(b.id)] || taalVan(b.id)}`, email: b.email, verstuurd:true, ontVink: () => camperVinkWeg(b, "bericht", false) });
       return profielBericht("cdUit", berichtCamperWelkom(b), async () => {
         b.bericht = true;
         const { error } = await db.from("boekingen").update({ bericht: true }).eq("id", b.id);
@@ -9734,7 +9806,7 @@ function toonDetail(b){
     }
     /* 23-10-2026 d: het bedankbericht als laatste stap, ook vanuit het profiel */
     if(veld === "bedankt"){
-      if(b.bedankt) return profielBericht("cdUit", berichtBedankt(aanhef(b.naam), false, taalVan(b.id)), null, waNummer(b.tel), { titel:"Bedankbericht (nog een keer)", wie:`${b.naam} · ${TAAL_NL[taalVan(b.id)] || taalVan(b.id)}`, email: b.email });
+      if(b.bedankt) return profielBericht("cdUit", berichtBedankt(aanhef(b.naam), false, taalVan(b.id)), async () => { if(!b.bedankt) await camperVinkWeg(b, "bedankt", true); }, waNummer(b.tel), { titel:"Bedankbericht (nog een keer)", wie:`${b.naam} · ${TAAL_NL[taalVan(b.id)] || taalVan(b.id)}`, email: b.email, verstuurd:true, ontVink: () => camperVinkWeg(b, "bedankt", false) });
       return profielBericht("cdUit", berichtBedankt(aanhef(b.naam), false, taalVan(b.id)), async () => {
         b.bedankt = true;
         const { error } = await db.from("boekingen").update({ bedankt: true }).eq("id", b.id);
@@ -9819,6 +9891,7 @@ function toonDetail(b){
   document.getElementById("dBody").querySelectorAll("[data-cdoverzicht]").forEach(kn => kn.onclick = () => {
     stuurKeuze({ titel:"Overzicht sturen", wie: b.naam, tekstVoor: t => overzichtTekst(b, t, true), mailVoor: t => overzichtTekst(b, t, false),
       taal: taalVan(b.id), waNr: waNummer(b.tel), email: b.email, onderwerp:"Finca KaYu",
+      verstuurd: !!b.overzichtGestuurd, ontVink: () => camperVinkWeg(b, "overzichtGestuurd", false), /* 29-10-2026 g */
       /* 23-10-2026 e: daarna staat de stap op Verstuurd ✓ */
       zetVink: async () => {
         if(b.overzichtGestuurd) return;
@@ -10007,8 +10080,9 @@ async function checkOutStart(k, b){
         if(afsprakenRegels(k.nr).length && !kVink(k, "afspraken_betaald")) h += vast("Afspraken", `${eur(afsprakenTotaal(k.nr))} nog niet betaald (zie profiel)`, "actie");
         if(kVink(k, "borg_ontvangen") && !kVink(k, "borg_terug")) h += vast("Borg", "Nog terugbetalen (zie profiel)", "actie");
       }
-      h += overzichtNodig() ? rij("overzicht", "Overzicht sturen", "Nog sturen · " + vrij(taalT()), "actie") : vast("Overzicht sturen", "Verstuurd ✓", "goed");
-      h += bedanktNodig() ? rij("bedankt", "Bedankbericht", "Nog sturen · " + vrij(taalT()), "actie") : vast("Bedankbericht", "Verstuurd ✓", "goed");
+      /* 29-10-2026 g (Bart): ook als hij op Verstuurd ✓ staat aan te tikken (opnieuw sturen, of Toch niet verstuurd) */
+      h += overzichtNodig() ? rij("overzicht", "Overzicht sturen", "Nog sturen · " + vrij(taalT()), "actie") : rij("overzicht", "Overzicht sturen", "Verstuurd ✓", "goed");
+      h += bedanktNodig() ? rij("bedankt", "Bedankbericht", "Nog sturen · " + vrij(taalT()), "actie") : rij("bedankt", "Bedankbericht", "Verstuurd ✓", "goed");
       document.getElementById("clRijen").innerHTML = h;
       const klaarAlles = !eerderNodig() && !nogOpen() && !overzichtNodig() && !bedanktNodig();
       document.getElementById("clTekst").textContent = klaarAlles ? "Alles is geregeld." : "Tik op een stap om hem nu te regelen. Overzicht en bedankbericht kunnen ook later vanuit het profiel.";
@@ -10103,12 +10177,13 @@ async function checkOutStart(k, b){
         continue;
       }
       /* 2. overzicht sturen */
-      if(keus === "overzicht" && overzichtNodig()){
+      if(keus === "overzicht"){
         const taal = taalVan(kamer ? k.nr : b.id);
         /* bij een kamer zit het overzicht in de kamerbon (knop Overzicht sturen daar); we wachten tot dat venster dicht is */
         if(kamer){ openKamerbon(kNaam(k), (k.kamer.match(/^Kamer (\d)$/) || [])[1], [], k.nr); await wachtOpDialoog("kamerbon"); k = kamerVoorNr(k.nr) || k; }
         else {
           stuurKeuze({ titel:"Overzicht sturen", wie: b.naam, tekstVoor: t => overzichtTekst(b, t, true), mailVoor: t => overzichtTekst(b, t, false), taal, waNr: waNummer(b.tel), email: b.email, onderwerp:"Finca KaYu",
+            verstuurd: !!b.overzichtGestuurd, ontVink: () => camperVinkWeg(b, "overzichtGestuurd", false), /* 29-10-2026 g */
             zetVink: async () => { if(b.overzichtGestuurd) return; const vb = boekingen.find(x => x.id === b.id); b.overzichtGestuurd = true; if(vb) vb.overzichtGestuurd = true;
               const { error } = await db.from("boekingen").update({ overzicht_gestuurd: true }).eq("id", b.id); if(error){ b.overzichtGestuurd = false; if(vb) vb.overzichtGestuurd = false; } } });
           await wachtOpStuur();
@@ -10116,9 +10191,10 @@ async function checkOutStart(k, b){
         continue;
       }
       /* 3. bedankbericht */
-      if(keus === "bedankt" && bedanktNodig()){
+      if(keus === "bedankt"){
         const taal = taalVan(kamer ? k.nr : b.id);
         stuurKeuze({ tekst: berichtBedankt(aanhef(naam()), kamer, taal), waNr: kamer ? kTelWa(k) : waNummer(b.tel), email: kamer ? undefined : b.email, titel:"Bedankbericht", wie:`${naam()} · ${TAAL_NL[taal] || taal}`,
+          verstuurd: !bedanktNodig(), ontVink: () => kamer ? kamerVinkWeg(k, "bedankt", false) : camperVinkWeg(b, "bedankt", false), /* 29-10-2026 g */
           zetVink: async () => { if(kamer){ await kamerVink(k, "bedankt", true); return; } b.bedankt = true; const vb = boekingen.find(x => x.id === b.id); if(vb) vb.bedankt = true;
             const { error } = await db.from("boekingen").update({ bedankt: true }).eq("id", b.id); if(error){ b.bedankt = false; if(vb) vb.bedankt = false; } } });
         await wachtOpStuur();
@@ -10468,6 +10544,12 @@ function toonKamerDetail(k){
   body.querySelectorAll("[data-kdvink]").forEach(kn => kn.onclick = async () => {
     const veld = kn.dataset.kdvink;
     /* het 24-uursbericht en de handleiding worden meteen gekopieerd als je het vinkje aanzet */
+    /* 29-10-2026 g: al verstuurd? Dan het venster opnieuw, met Toch niet verstuurd (vroeger zette een tik het stil uit) */
+    if(veld === "bericht" && kVink(k, "bericht")){
+      if(kNieuw(k) && !gastLinks[k.nr]) await zorgGastLinks();
+      let tekst; try { tekst = berichtKamer24u(k); } catch(e){ alert(e.message); return; }
+      return profielBericht("kdUit", tekst, async () => { if(!kVink(k, "bericht")) await kamerVinkWeg(k, "bericht", true); }, kTelWa(k), { titel:"Check-inbericht (nog een keer)", wie:`${kNaam(k) || k.kamer} · ${taalNaam(k.nr)}`, verstuurd:true, ontVink: () => kamerVinkWeg(k, "bericht", false) });
+    }
     if(veld === "bericht" && !kVink(k, "bericht")){
       if(kNieuw(k) && !gastLinks[k.nr]) await zorgGastLinks();
       let tekst; try { tekst = berichtKamer24u(k); } catch(e){ alert(e.message); return; }
@@ -10478,14 +10560,14 @@ function toonKamerDetail(k){
     if(veld === "welkom"){
       if(!gastLinks[k.nr]) await zorgGastLinks();
       /* review 23-10 d: al verstuurd? Dan opent het venster opnieuw en blijft het vinkje aan */
-      if(kVink(k, "welkom")) return profielBericht("kdUit", berichtKamerWelkom(k), null, kTelWa(k), { titel:"Welkomstbericht (nog een keer)", wie:`${kNaam(k) || k.kamer} · ${taalNaam(k.nr)}` });
+      if(kVink(k, "welkom")) return profielBericht("kdUit", berichtKamerWelkom(k), async () => { if(!kVink(k, "welkom")) await kamerVinkWeg(k, "welkom", true); }, kTelWa(k), { titel:"Welkomstbericht (nog een keer)", wie:`${kNaam(k) || k.kamer} · ${taalNaam(k.nr)}`, verstuurd:true, ontVink: () => kamerVinkWeg(k, "welkom", false) });
       return profielBericht("kdUit", berichtKamerWelkom(k), async () => {
         await kamerVink(k, "welkom", true); toonKamerDetail(k); tekenNu();
       }, kTelWa(k), { titel:"Welkomstbericht", wie:`${kNaam(k) || k.kamer} · ${taalNaam(k.nr)}` });
     }
     /* 23-10-2026 d: het bedankbericht als laatste stap, ook vanuit het profiel */
     if(veld === "bedankt"){
-      if(kVink(k, "bedankt")) return profielBericht("kdUit", berichtBedankt(aanhef(kNaam(k)), true, taalVan(k.nr)), null, kTelWa(k), { titel:"Bedankbericht (nog een keer)", wie:`${kNaam(k) || k.kamer} · ${taalNaam(k.nr)}` });
+      if(kVink(k, "bedankt")) return profielBericht("kdUit", berichtBedankt(aanhef(kNaam(k)), true, taalVan(k.nr)), async () => { if(!kVink(k, "bedankt")) await kamerVinkWeg(k, "bedankt", true); }, kTelWa(k), { titel:"Bedankbericht (nog een keer)", wie:`${kNaam(k) || k.kamer} · ${taalNaam(k.nr)}`, verstuurd:true, ontVink: () => kamerVinkWeg(k, "bedankt", false) });
       return profielBericht("kdUit", berichtBedankt(aanhef(kNaam(k)), true, taalVan(k.nr)), async () => {
         await kamerVink(k, "bedankt", true); toonKamerDetail(k); tekenNu();
       }, kTelWa(k), { titel:"Bedankbericht", wie:`${kNaam(k) || k.kamer} · ${taalNaam(k.nr)}` });
@@ -14249,6 +14331,7 @@ document.querySelectorAll("[data-ktaal]").forEach(kn => {
     /* 23-10-2026 d: via de keuze WhatsApp, Mail of Kopiëren */
     const kk = kamerNr ? kamerVoorNr(kamerNr) : null;
     stuurKeuze({ titel:"Bon sturen", wie: TAAL_NL[taal] || taal, tekst, mailVoor: () => mail, waNr: kk ? kTelWa(kk) : null, onderwerp:"Finca KaYu",
+      verstuurd: !!(kk && kVink(kk, "overzicht_gestuurd")), ontVink: kk ? () => kamerVinkWeg(kk, "overzicht_gestuurd", false) : null, /* 29-10-2026 g */
       /* 23-10-2026 e: bij een kamer staat de stap Overzicht sturen daarna op Verstuurd ✓ */
       zetVink: async () => { if(kk && !kVink(kk, "overzicht_gestuurd")) await kamerVink(kk, "overzicht_gestuurd", true); } });
   };
