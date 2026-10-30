@@ -3956,7 +3956,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "30-10-2026 f";
+const VERSIE = "30-10-2026 h";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -12047,7 +12047,7 @@ const cfDatum = d => { const s = String(d || "").slice(0, 10); return /^\d{4}-\d
 const cfKw = m => Math.floor((Number(m.slice(5, 7)) - 1) / 3) + 1;
 const cfDag = d => `${DG[parse(d).getDay()]} ${parse(d).getDate()} ${MND[parse(d).getMonth()]}`;
 const cfDagenTot = (van, tot) => Math.round((parse(tot) - parse(van)) / 864e5);
-let cfData = null, cfFout = "", cfBankOpen = false, cfBetaalOpen = false, cfBetaalMelding = "";
+let cfData = null, cfFout = "", cfBankOpen = false, cfKasOpen = false, cfBetaalOpen = false, cfBetaalMelding = "";
 async function cfAlles(tabel, kolommen){
   const { data, error } = await alleRijen(() => db.from(tabel).select(kolommen, { count:"exact" }).order("id"));
   if(error) throw new Error(tabel + ": " + error.message);
@@ -12151,6 +12151,21 @@ function tekenCijfers(){
   const btTerug = document.getElementById("cfBtTerug"); if(btTerug) btTerug.onclick = () => { cfBetaalOpen = false; tekenCijfers(); };
   const btOk = document.getElementById("cfBtOk"); if(btOk) btOk.onclick = cfBetaalToevoegen;
   const uit = document.getElementById("cfUitKnop"); if(uit) uit.onclick = () => cfDeel(document.getElementById("cfUitMaand").value);
+  /* 30-10-2026 h: kas bijwerken (zelf geteld bedrag) */
+  const kasOpen = document.getElementById("cfKasOpen");
+  if(kasOpen) kasOpen.onclick = () => { cfKasOpen = true; tekenCijfers(); const v = document.getElementById("cfKasVeld"); if(v) v.focus(); };
+  const kasOk = document.getElementById("cfKasOk"), kasVeld = document.getElementById("cfKasVeld");
+  if(kasVeld) kasVeld.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); kasOk.click(); } });
+  if(kasOk) kasOk.onclick = async () => {
+    const fout = document.getElementById("cfKasFout");
+    const n = bedragLees(kasVeld.value);
+    if(!kasVeld.value.trim() || !isFinite(n) || n < 0){ fout.textContent = "Vul het getelde bedrag in, bijvoorbeeld 450 of 1.234,50."; return; }
+    kasOk.disabled = true;
+    const waarde = JSON.stringify({ bedrag: Math.round(n * 100) / 100, tijd: new Date().toISOString() });
+    const { error } = await db.from("instellingen").upsert({ sleutel:"kas_saldo", waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+    if(error){ kasOk.disabled = false; fout.textContent = "Opslaan lukte niet: " + error.message; return; }
+    instellingen.kas_saldo = waarde; cfKasOpen = false; tekenCijfers();
+  };
   const ok = document.getElementById("cfBankOk"), veld = document.getElementById("cfBankVeld");
   if(veld) veld.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); ok.click(); } });
   if(ok) ok.onclick = async () => {
@@ -12244,9 +12259,23 @@ function cfHtml(){
      afgerekend in de app (contant en per bank) min de kosten per maand. Wat je er zelf uit haalt of bijlegt, weet de app niet. */
   { const ks = kasStart(), kas = kasCijfers(ks.slice(0, 7), "9999-99");
     /* review e: het grote getal is wat er echt in de kas ligt (contant min kosten); de bankoverschrijvingen zitten al in het banksaldo */
-    h += `<div class="cf-label" style="margin-top:16px">In de kas</div><div class="cf-groot">${cfEur(Math.round((kas.contant - kas.kostenTot) * 100) / 100)}</div>` +
-      `<p class="cf-klein">Sinds ${cfEsc(kort(ks))} ${ks.slice(0, 4)}: contant afgerekend ${cfEur(kas.contant)} − kosten per maand ${cfEur(kas.kostenTot)}. Wat je er zelf uit haalt of bijlegt, weet de app niet.` +
-      ` Met de bankoverschrijvingen erbij (${cfEur(kas.bank)}), zoals bij Exporteren: ${cfEur(kas.saldo)}.${kas.zonder ? ` ${kas.zonder} oude ${kas.zonder === 1 ? "bon telt" : "bonnen tellen"} niet mee (contant of bank onbekend).` : ""}</p>`; }
+    /* 30-10-2026 h (Bart: "een knop bijwerken voor de kas, dan kan ik elke keer toevoegen wat het actuele saldo is"): zelf geteld
+       bedrag (instellingen kas_saldo: bedrag en tijd). Is er geteld, dan staat dat groot, met wat er daarna contant via de app binnenkwam
+       (bonnen met gemaakt na het tellen). De kosten per maand gaan er dan niet af: de app weet niet wanneer die betaald worden. */
+    const kt = kasGeteld();
+    if(kt){
+      const sinds = bonnen.filter(x => x.gemaakt && new Date(x.gemaakt) > new Date(kt.tijd)).reduce((t, x) => t + bonVerdeling(x).contant, 0);
+      const d = new Date(kt.tijd), wanneer = `${DG[d.getDay()].slice(0, 2)} ${kort(iso(d))} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+      h += `<div class="cf-label" style="margin-top:16px">In de kas</div><div class="cf-groot">${cfEur(kt.bedrag)}</div>` +
+        `<p class="cf-klein">Zelf geteld op ${cfEsc(wanneer)}.${Math.abs(sinds) >= 0.005 ? ` Sindsdien contant afgerekend in de app: ${cfEur(Math.round(sinds * 100) / 100)}.` : " Sindsdien niets contant afgerekend in de app."}</p>`;
+    } else {
+      h += `<div class="cf-label" style="margin-top:16px">In de kas</div><div class="cf-groot">${cfEur(Math.round((kas.contant - kas.kostenTot) * 100) / 100)}</div>` +
+        `<p class="cf-klein">Sinds ${cfEsc(kort(ks))} ${ks.slice(0, 4)}: contant afgerekend ${cfEur(kas.contant)} − kosten per maand ${cfEur(kas.kostenTot)}. Wat je er zelf uit haalt of bijlegt, weet de app niet.` +
+        ` Met de bankoverschrijvingen erbij (${cfEur(kas.bank)}), zoals bij Exporteren: ${cfEur(kas.saldo)}.${kas.zonder ? ` ${kas.zonder} oude ${kas.zonder === 1 ? "bon telt" : "bonnen tellen"} niet mee (contant of bank onbekend).` : ""}</p>`;
+    }
+    h += cfKasOpen
+      ? `<div class="cf-bank"><input id="cfKasVeld" inputmode="decimal" placeholder="Geteld in euro" aria-label="Geteld bedrag in de kas in euro"><button id="cfKasOk">Opslaan</button></div><p class="ci-uitleg ci-let" id="cfKasFout" aria-live="polite"></p>`
+      : `<button class="cf-knop" id="cfKasOpen">Kas bijwerken</button>`; }
   h += `</div>`;
   /* deze maand */
   h += `<div class="cf-kaart"><h4>${Maand}<em>alle verblijven met vertrek in ${maandNaam}</em></h4><div class="cf-label">Binnen</div>`;
@@ -12507,7 +12536,7 @@ async function openCijfers(){
   if(!geldOpen()){ geldVraagCode(() => openCijfers()); return; } /* 29-10-2026 e */
   geldVerleng();
   const dlg = document.getElementById("cijfers2");
-  cfFout = ""; cfData = null; cfBankOpen = false; cfBetaalOpen = false; cfBetaalMelding = ""; tekenCijfers(); /* review e: formulier en melding niet laten staan */
+  cfFout = ""; cfData = null; cfBankOpen = false; cfKasOpen = false; cfBetaalOpen = false; cfBetaalMelding = ""; tekenCijfers(); /* review e: formulier en melding niet laten staan */
   if(!dlg.open) dlg.showModal();
   try { cfData = await haalCijfers(); } catch(e){ cfFout = e.message || String(e); }
   tekenCijfers();
@@ -12955,6 +12984,8 @@ function tekenBalans(){
    01-10-2026; te wijzigen via het potloodje). Gefactureerd via MyTourist staat niet hier maar in Cijfers (gaat naar de boekhouder).
    Alle bonnen (sinds g ook de afspraken van groepen, Bart 25-10) min de kosten per maand; Cijfers toont de afspraken apart op een eigen regel. */
 let expInkoop = null; /* inkoopbonnen (datum, bedrag), apart opgehaald bij het openen van Exporteren */
+/* 30-10-2026 h: zelf geteld bedrag in de kas (instellingen kas_saldo, JSON: bedrag en tijd); null als het er niet (goed) staat */
+const kasGeteld = () => { try { const v = JSON.parse(instellingen.kas_saldo || "null"); return v && isFinite(Number(v.bedrag)) && !isNaN(new Date(v.tijd)) ? { bedrag: Number(v.bedrag), tijd: v.tijd } : null; } catch(e){ return null; } };
 const kasStart = () => /^\d{4}-\d{2}-\d{2}$/.test(String(instellingen.kas_start || "")) ? String(instellingen.kas_start) : "2026-10-01";
 /* begin (jjjj-mm) en eind (jjjj-mm) van een gekozen periode; alles = geen grens */
 function periodeGrens(keuze){
