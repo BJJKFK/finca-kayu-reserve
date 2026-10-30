@@ -1782,7 +1782,7 @@ nl: {
   ontbijtNeeToch: naam => `Hoi ${naam}, helaas lukt het ontbijt toch niet, alle plekken zijn bezet. Voor koffie, thee of een drankje uit de honesty bar zijn jullie uiteraard van harte welkom.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `${dag} komt er een paellakok koken op de finca: paella met kip, om ${a.tijd} op het terras.` : `${dag} om ${a.tijd}: ${titel}, op het terras.`;
-    return `${kern} € ${pr(a.prijs)} per persoon, kinderen tot 12 jaar € ${pr(a.prijs_kind)}. Er is ook een kan sangria (wit of rood, huisgemaakt door Loes) te bestellen voor € ${pr(a.prijs_sangria)}. Doe je mee? Geef het door via je gastenpagina, tot ${kd} 12:00 uur${link ? ": " + link : "."}`;
+    return `${kern} € ${pr(a.prijs)} per persoon, kinderen tot 12 jaar € ${pr(a.prijs_kind)}. Er is ook een kan sangria (wit of rood, huisgemaakt door Loes) te bestellen voor € ${pr(a.prijs_sangria)}. Doe je mee? Geef het door via je gastenpagina, tot ${kd} ${a.sluit_tijd || "12:00"} uur${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Hoi ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Hoi", (u.soort === "paella"
@@ -2121,7 +2121,7 @@ en: {
   ontbijtNeeToch: naam => `Hi ${naam}, unfortunately breakfast is not available after all, all places are taken. You are of course very welcome for coffee, tea or a drink from the honesty bar.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `On ${dag} a paella chef is coming to cook at the finca: chicken paella, at ${a.tijd} on the terrace.` : `${dag} at ${a.tijd}: ${titel}, on the terrace.`;
-    return `${kern} € ${prEn(a.prijs)} per person, children up to 12 € ${prEn(a.prijs_kind)}. You can also order a jug of sangria (white or red, homemade by Loes) for € ${prEn(a.prijs_sangria)}. Joining us? Let us know via your guest page, until ${kd} 12:00${link ? ": " + link : "."}`;
+    return `${kern} € ${prEn(a.prijs)} per person, children up to 12 € ${prEn(a.prijs_kind)}. You can also order a jug of sangria (white or red, homemade by Loes) for € ${prEn(a.prijs_sangria)}. Joining us? Let us know via your guest page, until ${kd} ${a.sluit_tijd || "12:00"}${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Hi ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Hi", (u.soort === "paella"
@@ -2460,7 +2460,7 @@ de: {
   ontbijtNeeToch: naam => `Hallo ${naam}, leider klappt das Frühstück doch nicht, alle Plätze sind belegt. Für Kaffee, Tee oder ein Getränk aus der Honesty Bar seid ihr natürlich herzlich willkommen.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `Am ${dag} kommt ein Paella-Koch auf die Finca: Hähnchen-Paella, um ${a.tijd} Uhr auf der Terrasse.` : `${dag} um ${a.tijd} Uhr: ${titel}, auf der Terrasse.`;
-    return `${kern} € ${pr(a.prijs)} pro Person, Kinder bis 12 Jahre € ${pr(a.prijs_kind)}. Dazu gibt es einen Krug Sangria (weiß oder rot, hausgemacht von Loes) für € ${pr(a.prijs_sangria)}. Seid ihr dabei? Gebt es über eure Gästeseite durch, bis ${kd} 12:00 Uhr${link ? ": " + link : "."}`;
+    return `${kern} € ${pr(a.prijs)} pro Person, Kinder bis 12 Jahre € ${pr(a.prijs_kind)}. Dazu gibt es einen Krug Sangria (weiß oder rot, hausgemacht von Loes) für € ${pr(a.prijs_sangria)}. Seid ihr dabei? Gebt es über eure Gästeseite durch, bis ${kd} ${a.sluit_tijd || "12:00"} Uhr${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Hallo ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Hallo", (u.soort === "paella"
@@ -2799,7 +2799,7 @@ es: {
   ontbijtNeeToch: naam => `Hola ${naam}, lamentablemente el desayuno al final no es posible, todas las plazas están ocupadas. Para un café, un té o una bebida del honesty bar sois, por supuesto, bienvenidos.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `El ${dag} viene un paellero a cocinar a la finca: paella de pollo, a las ${a.tijd} en la terraza.` : `${dag} a las ${a.tijd}: ${titel}, en la terraza.`;
-    return `${kern} ${pr(a.prijs)} € por persona, niños hasta 12 años ${pr(a.prijs_kind)} €. También se puede pedir una jarra de sangría (blanca o tinta, casera de Loes) por ${pr(a.prijs_sangria)} €. ¿Os apuntáis? Decídnoslo desde vuestra página de huéspedes, hasta el ${kd} a las 12:00${link ? ": " + link : "."}`;
+    return `${kern} ${pr(a.prijs)} € por persona, niños hasta 12 años ${pr(a.prijs_kind)} €. También se puede pedir una jarra de sangría (blanca o tinta, casera de Loes) por ${pr(a.prijs_sangria)} €. ¿Os apuntáis? Decídnoslo desde vuestra página de huéspedes, hasta el ${kd} a las ${a.sluit_tijd || "12:00"}${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Hola ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Hola", (u.soort === "paella"
@@ -3137,7 +3137,7 @@ it: {
   ontbijtNeeToch: naam => `Ciao ${naam}, purtroppo la colazione alla fine non è possibile, tutti i posti sono occupati. Per un caffè, un tè o una bevanda dall'honesty bar siete naturalmente i benvenuti.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `${dag} viene un cuoco di paella a cucinare alla finca: paella di pollo, alle ${a.tijd} sulla terrazza.` : `${dag} alle ${a.tijd}: ${titel}, sulla terrazza.`;
-    return `${kern} € ${pr(a.prijs)} a persona, bambini fino a 12 anni € ${pr(a.prijs_kind)}. Si può ordinare anche una caraffa di sangria (bianca o rossa, fatta in casa da Loes) a € ${pr(a.prijs_sangria)}. Venite? Fatecelo sapere dalla vostra pagina ospiti, entro ${kd} alle 12:00${link ? ": " + link : "."}`;
+    return `${kern} € ${pr(a.prijs)} a persona, bambini fino a 12 anni € ${pr(a.prijs_kind)}. Si può ordinare anche una caraffa di sangria (bianca o rossa, fatta in casa da Loes) a € ${pr(a.prijs_sangria)}. Venite? Fatecelo sapere dalla vostra pagina ospiti, entro ${kd} alle ${a.sluit_tijd || "12:00"}${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Ciao ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Ciao", (u.soort === "paella"
@@ -3475,7 +3475,7 @@ fr: {
   ontbijtNeeToch: naam => `Bonjour ${naam}, malheureusement le petit-déjeuner n'est finalement pas possible, toutes les places sont prises. Pour un café, un thé ou une boisson de l'honesty bar, vous êtes bien sûr les bienvenus.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `${dag}, un cuisinier de paella vient cuisiner à la finca : paella au poulet, à ${a.tijd.replace(":", "h")} sur la terrasse.` : `${dag} à ${a.tijd.replace(":", "h")} : ${titel}, sur la terrasse.`;
-    return `${kern} ${pr(a.prijs)} € par personne, enfants jusqu'à 12 ans ${pr(a.prijs_kind)} €. Vous pouvez aussi commander un pichet de sangria (blanche ou rouge, faite maison par Loes) pour ${pr(a.prijs_sangria)} €. Vous êtes de la partie ? Dites-le-nous depuis votre page d'accueil, jusqu'à ${kd} 12h00${link ? " : " + link : "."}`;
+    return `${kern} ${pr(a.prijs)} € par personne, enfants jusqu'à 12 ans ${pr(a.prijs_kind)} €. Vous pouvez aussi commander un pichet de sangria (blanche ou rouge, faite maison par Loes) pour ${pr(a.prijs_sangria)} €. Vous êtes de la partie ? Dites-le-nous depuis votre page d'accueil, jusqu'à ${kd} ${String(a.sluit_tijd || "12:00").replace(":", "h")}${link ? " : " + link : "."}`;
   },
   aankBericht: naam => `Bonjour ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Bonjour", (u.soort === "paella"
@@ -3813,7 +3813,7 @@ pt: {
   ontbijtNeeToch: naam => `Olá ${naam}, infelizmente o pequeno-almoço acabou por não ser possível, todos os lugares estão ocupados. Para um café, um chá ou uma bebida do honesty bar são, claro, muito bem-vindos.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `${dag} vem um cozinheiro de paella cozinhar à finca: paella de frango, às ${a.tijd} no terraço.` : `${dag} às ${a.tijd}: ${titel}, no terraço.`;
-    return `${kern} ${pr(a.prijs)} € por pessoa, crianças até aos 12 anos ${pr(a.prijs_kind)} €. Também podem encomendar um jarro de sangria (branca ou tinta, feita em casa pela Loes) por ${pr(a.prijs_sangria)} €. Vêm connosco? Digam-nos através da vossa página de hóspedes, até ${kd} às 12:00${link ? ": " + link : "."}`;
+    return `${kern} ${pr(a.prijs)} € por pessoa, crianças até aos 12 anos ${pr(a.prijs_kind)} €. Também podem encomendar um jarro de sangria (branca ou tinta, feita em casa pela Loes) por ${pr(a.prijs_sangria)} €. Vêm connosco? Digam-nos através da vossa página de hóspedes, até ${kd} às ${a.sluit_tijd || "12:00"}${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Olá ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Olá", (u.soort === "paella"
@@ -4150,7 +4150,7 @@ cs: {
   ontbijtNeeToch: naam => `Dobrý den ${naam}, snídaně nakonec bohužel není možná, všechna místa jsou obsazená. Na kávu, čaj nebo drink z honesty baru jste samozřejmě srdečně vítáni.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `${dag} k nám na fincu přijede kuchař na paellu: kuřecí paella, v ${a.tijd} na terase.` : `${dag} v ${a.tijd}: ${titel}, na terase.`;
-    return `${kern} ${pr(a.prijs)} € za osobu, děti do 12 let ${pr(a.prijs_kind)} €. Můžete si objednat i džbán sangrie (bílé nebo červené, domácí od Loes) za ${pr(a.prijs_sangria)} €. Přidáte se? Dejte nám vědět přes stránku pro hosty, do ${({ "neděle":"neděle", "pondělí":"pondělí", "úterý":"úterý", "středa":"středy", "čtvrtek":"čtvrtka", "pátek":"pátku", "sobota":"soboty" })[kd] || kd} 12:00${link ? ": " + link : "."}`;
+    return `${kern} ${pr(a.prijs)} € za osobu, děti do 12 let ${pr(a.prijs_kind)} €. Můžete si objednat i džbán sangrie (bílé nebo červené, domácí od Loes) za ${pr(a.prijs_sangria)} €. Přidáte se? Dejte nám vědět přes stránku pro hosty, do ${({ "neděle":"neděle", "pondělí":"pondělí", "úterý":"úterý", "středa":"středy", "čtvrtek":"čtvrtka", "pátek":"pátku", "sobota":"soboty" })[kd] || kd} ${a.sluit_tijd || "12:00"}${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Dobrý den ${naam} 😊\n\n`,
   aankUitnodiging: u => { const v = ({ "neděle":"v neděli", "pondělí":"v pondělí", "úterý":"v úterý", "středa":"ve středu", "čtvrtek":"ve čtvrtek", "pátek":"v pátek", "sobota":"v sobotu" })[u.dagnaam] || u.dagnaam;
@@ -4490,7 +4490,7 @@ fi: {
   aankondiging: (a, dag, kd, link, titel) => {
     const ess = x => String(x).replace(/^(\S+)/, "$1na"); /* Fins: "Keskiviikko 7. lokakuuta" wordt "Keskiviikkona 7. lokakuuta" */
     const kern = a.soort === "paella" ? `${ess(dag)} paellakokki tulee fincalle valmistamaan kanapaellaa, klo ${a.tijd} terassilla.` : `${ess(dag)} klo ${a.tijd}: ${titel}, terassilla.`;
-    return `${kern} € ${pr(a.prijs)} per henkilö, enintään 12-vuotiaat lapset € ${pr(a.prijs_kind)}. Voitte myös tilata kannullisen sangriaa (valkoista tai punaista, Loesin itse tekemää) hintaan € ${pr(a.prijs_sangria)}. Tuletteko mukaan? Ilmoittakaa meille vierassivunne kautta viimeistään ${ess(kd)} klo 12:00${link ? ": " + link : "."}`;
+    return `${kern} € ${pr(a.prijs)} per henkilö, enintään 12-vuotiaat lapset € ${pr(a.prijs_kind)}. Voitte myös tilata kannullisen sangriaa (valkoista tai punaista, Loesin itse tekemää) hintaan € ${pr(a.prijs_sangria)}. Tuletteko mukaan? Ilmoittakaa meille vierassivunne kautta viimeistään ${ess(kd)} klo ${a.sluit_tijd || "12:00"}${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Hei ${naam} 😊\n\n`,
   aankUitnodiging: u => { const ess = HL(String(u.dagnaam).replace(/^(\S+)/, "$1na")); /* Fins: lauantai wordt Lauantaina */
@@ -4829,7 +4829,7 @@ no: {
   ontbijtNeeToch: naam => `Hei ${naam}, dessverre kan vi likevel ikke servere frokost, alle plassene er opptatt. Dere er selvfølgelig hjertelig velkomne til kaffe, te eller noe å drikke fra honesty bar.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `${dag} kommer en paellakokk og lager mat på fincaen: kyllingpaella, kl. ${a.tijd} på terrassen.` : `${dag} kl. ${a.tijd}: ${titel}, på terrassen.`;
-    return `${kern} € ${pr(a.prijs)} per person, barn opptil 12 år € ${pr(a.prijs_kind)}. Dere kan også bestille en mugge sangria (hvit eller rød, hjemmelaget av Loes) for € ${pr(a.prijs_sangria)}. Blir dere med? Gi beskjed via gjestesiden, innen ${kd} kl. 12:00${link ? ": " + link : "."}`;
+    return `${kern} € ${pr(a.prijs)} per person, barn opptil 12 år € ${pr(a.prijs_kind)}. Dere kan også bestille en mugge sangria (hvit eller rød, hjemmelaget av Loes) for € ${pr(a.prijs_sangria)}. Blir dere med? Gi beskjed via gjestesiden, innen ${kd} kl. ${a.sluit_tijd || "12:00"}${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Hei ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Hei", (u.soort === "paella"
@@ -5167,7 +5167,7 @@ sv: {
   ontbijtNeeToch: naam => `Hej ${naam}, tyvärr kan vi ändå inte servera frukost, alla platser är upptagna. Ni är förstås varmt välkomna på kaffe, te eller något att dricka från honesty bar.`,
   aankondiging: (a, dag, kd, link, titel) => {
     const kern = a.soort === "paella" ? `${dag} kommer en paellakock och lagar mat på fincan: kycklingpaella, kl. ${a.tijd} på terrassen.` : `${dag} kl. ${a.tijd}: ${titel}, på terrassen.`;
-    return `${kern} € ${pr(a.prijs)} per person, barn upp till 12 år € ${pr(a.prijs_kind)}. Ni kan också beställa en kanna sangria (vit eller röd, hemgjord av Loes) för € ${pr(a.prijs_sangria)}. Är ni med? Meddela oss via gästsidan, senast ${kd} kl. 12:00${link ? ": " + link : "."}`;
+    return `${kern} € ${pr(a.prijs)} per person, barn upp till 12 år € ${pr(a.prijs_kind)}. Ni kan också beställa en kanna sangria (vit eller röd, hemgjord av Loes) för € ${pr(a.prijs_sangria)}. Är ni med? Meddela oss via gästsidan, senast ${kd} kl. ${a.sluit_tijd || "12:00"}${link ? ": " + link : "."}`;
   },
   aankBericht: naam => `Hej ${naam} 😊\n\n`,
   aankUitnodiging: u => UITN("Hej", (u.soort === "paella"
