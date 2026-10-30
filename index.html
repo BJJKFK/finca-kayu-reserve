@@ -1038,6 +1038,7 @@
   #kalinfo b{font-size:14px}
   html.nieuw .kalr .n{font-size:12px;font-weight:500;color:var(--tekst)}
   html.nieuw .kalsub{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 2px}
+  .kallang{display:block;margin:10px 0 0;padding:6px 14px;border:1px solid #D9D5CC;border-radius:999px;background:var(--card);color:var(--tekst);font-size:13px;font-weight:600;cursor:pointer} /* 30-10-2026 e */
   html.nieuw .kallegenda{display:flex;flex-wrap:wrap;gap:8px 12px;font-size:11px;color:var(--muted);margin-top:10px}
   html.nieuw .kallegenda i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
   html.nieuw .kallegenda i.k{background:#C3CDDA} html.nieuw .kallegenda i.c{background:#E2CD9C} html.nieuw .kallegenda i.g{background:#E3AE9A} html.nieuw .kallegenda i.x{background:#CFDCC8} html.nieuw .kallegenda i.gs{background:#DCD6D0}
@@ -1320,6 +1321,14 @@
   .barknop{width:100%;margin-top:10px;padding:12px;border:1px solid var(--line);
     background:var(--bone);border-radius:9px;font:inherit;font-size:15px;
     font-weight:600;color:var(--pine);cursor:pointer}
+  /* 30-10-2026 f: producten van de honesty bar: knoppen op een eigen regel, uitgezette producten lichter */
+  .prijsrij.barprod{flex-wrap:wrap} .prijsrij.barprod.uit span{color:var(--muted)} .prijsrij span small{display:block;color:var(--muted);font-size:12px}
+  .prknoppen{flex-basis:100%;display:flex;justify-content:flex-end;gap:8px}
+  .prknoppen button{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 12px;font:inherit;font-size:13px;color:var(--tekst);cursor:pointer}
+  .prknoppen button[data-prweg]{color:var(--rood)}
+  #prijsLijst .groep{margin:12px 0 2px;font-weight:700;font-size:13px;color:var(--muted)}
+  .prnieuw{display:grid;grid-template-columns:1fr 84px;gap:8px} .prnieuw > div:last-child{grid-column:1 / -1}
+  .prnieuw input,.prnieuw select{width:100%}
   .prijsrij{display:flex;align-items:center;gap:10px;padding:7px 0;
     border-bottom:1px solid var(--line)}
   .prijsrij span{flex:1;font-size:15px}
@@ -1820,7 +1829,7 @@
       <button class="meerrij" data-meer="cijfers"><span><b>Cijfers</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 29-10-2026 e: slot op Geld met de kluiscode, aan of uit -->
       <div class="meerinst"><span><b>Slot op Geld</b><small id="mpGeldSlot"></small></span><button type="button" class="meerzet" data-meer="geldslot" id="meerGeldSlot"></button></div>
-      <button class="meerrij" data-meer="naarPrijzen"><span><b>Prijzen</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="naarPrijzen"><span><b>Producten en prijzen</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 27-10-2026 a: knop Geschiedenis bar in de barvensters tonen of verbergen (het logboek in de database loopt altijd) -->
       <div class="meerinst"><span><b>Geschiedenis van de bar</b><small id="mpBarGesch"></small></span><button type="button" class="meerzet" data-meer="bargesch" id="meerBarGesch"></button></div>
       <!-- 24-10-2026 d (Bart): kosten per maand (poets, tuinman, eigen soorten) en de inkoopbon hier bij Geld -->
@@ -1982,7 +1991,7 @@
   <!-- 27-10-2026 a (Bart): wie wat hoe laat geplust of gemint heeft (logboek in de database, alleen lezen) -->
   <button type="button" class="barhist" id="barGesch" data-bargesch="bar">Geschiedenis bar</button>
   <div class="barhistlijst" id="barGeschLijst" hidden></div>
-  <button class="barknop" id="naarPrijzen">Prijzen aanpassen</button>
+  <button class="barknop" id="naarPrijzen">Producten en prijzen</button>
   <p class="leeg" id="barLive" style="margin:8px 0 0">Elke tik wordt meteen opgeslagen. De gast ziet dezelfde lijst op zijn eigen pagina.</p>
   <div class="acts">
     <button class="go" id="barKlaar">Klaar</button>
@@ -2309,9 +2318,18 @@
 </div></dialog>
 
 <dialog id="prijzen"><div class="dlg">
-  <h3>Prijslijst</h3>
-  <p class="note" style="margin-top:0">Pas een prijs aan en sla op. Geldt voor alle nieuwe consumpties.</p>
+  <h3>Producten en prijzen</h3>
+  <!-- 30-10-2026 f (Bart): producten van de honesty bar aan- en uitzetten, weghalen en toevoegen -->
+  <p class="note" style="margin-top:0">Pas een prijs aan en tik op Opslaan; dat geldt voor alle nieuwe consumpties. Bij de honesty bar: met Uitzetten ziet de gast een product niet meer (bijvoorbeeld als het op is), met Aanzetten staat het er weer. Weghalen haalt het helemaal weg; wat gasten al hadden, blijft op hun rekening.</p>
+  <p class="subkop">Nieuw product voor de honesty bar (vul in en tik op Opslaan)</p>
+  <div class="prnieuw">
+    <div><label for="prNieuwNaam">Naam</label><input id="prNieuwNaam" maxlength="40" autocomplete="off" placeholder="Bijvoorbeeld: Estrella Galicia"></div>
+    <div><label for="prNieuwPrijs">Prijs (€)</label><input id="prNieuwPrijs" inputmode="decimal" autocomplete="off" placeholder="2,50"></div>
+    <div><label for="prNieuwGroep">Soort</label><select id="prNieuwGroep"></select></div>
+  </div>
+  <p class="subkop">Alle producten</p>
   <div id="prijsLijst"></div>
+  <p class="err" id="prErr"></p>
   <div class="acts">
     <button id="prAnnuleer">Terug</button>
     <button class="go" id="prOpslaan">Opslaan</button>
@@ -3938,7 +3956,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "30-10-2026 d";
+const VERSIE = "30-10-2026 f";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -6555,6 +6573,12 @@ function poetsBlok(vandaag){
 /* ---------- KaYu 2.0: tijdlijn van vandaag en morgen, en de weekkalender met kamers en plekken in één ---------- */
 let kalScroll = null, agendaOudOpen = false;
 const KAL_TERUG = 7, KAL_VOORUIT = 183;
+/* 30-10-2026 e (Bart: "ik wil 2 jaar vooruit kunnen kijken, mocht ik dat willen"): onder de kalender een knop om tot 2 jaar vooruit te
+   kijken. Niet standaard, omdat het Vandaag-scherm daarmee ongeveer twee keer zo lang over het opbouwen doet (gemeten 30-10). De keuze
+   blijft op deze telefoon bewaard. */
+const KAL_VOORUIT_LANG = 731;
+let kalLang = (() => { try { return localStorage.getItem("kayu_kal_lang") === "1"; } catch(e){ return false; } })();
+const kalVooruit = () => kalLang ? KAL_VOORUIT_LANG : KAL_VOORUIT;
 /* 13-10-2026 b (Bart: "alle vrije Spaanse dagen in de kalender, zowel Spaans als Nederlands", plus de vrije schooldagen):
    feestdagen en vakanties in de kalender. Vaste lijst, elk jaar bijwerken. Bronnen (gecontroleerd 13-10-2026):
    - Spanje (geldt in Coín): Junta de Andalucía, Decreto 101/2025 (BOJA 93, 19-05-2025) voor 2026 en Decreto 84/2026 (BOJA 84, 05-05-2026) voor 2027.
@@ -6790,7 +6814,7 @@ function kalenderBlok(vandaag){
   const el = document.createElement("div"); el.className = "blok kal2";
   /* één strook van een week terug tot een half jaar vooruit; scrolt van links naar rechts, de namen van kamers en plekken blijven links staan */
   const start = parse(vandaag); start.setDate(start.getDate() - KAL_TERUG);
-  const N = KAL_TERUG + KAL_VOORUIT;
+  const N = KAL_TERUG + kalVooruit();
   const dagen = Array.from({ length:N }, (_, i) => { const d = new Date(start); d.setDate(d.getDate() + i); return iso(d); });
   const eersteDag = dagen[0], laatsteDag = dagen[N - 1];
   let h = `<div class="kalnav"><button data-kalscroll="-7" aria-label="Week terug">‹</button><b data-kalmaand>${MND[parse(vandaag).getMonth()]} ${parse(vandaag).getFullYear()}</b><button data-kalscroll="0">Vandaag</button><button data-kalscroll="7" aria-label="Week verder">›</button></div>`;
@@ -6890,6 +6914,7 @@ function kalenderBlok(vandaag){
   rijen += `<div class="kalsub"><span class="n">Camperplaatsen</span></div>` + [...VAST, ...noodInGebruik].map(x => rij(false, x, x.replace("Pitch ", "P").replace("Boven ", "B"))).join("");
   h += `<div class="kalscroll" data-kalscrollbox="1"><div class="kalbinnen" style="--n:${N}">` + kop + rijen + `</div></div>`;
   h += `<div class="kallegenda"><span><i class="k"></i>Kamer</span><span><i class="c"></i>Camper</span><span><i class="g"></i>Hele finca</span><span><i class="gs"></i>Gestald</span><span><i class="x"></i>G gastenverblijf, C camper H&M (zelf invullen)</span><span><i class="fes"></i>Feestdag Spanje</span><span><i class="fnl"></i>Feestdag Nederland</span><span><i class="vnl"></i>Schoolvakantie NL</span><span><i class="sch"></i>Schoolvrij Coín</span><span>Tik op een datum of balk: welke feestdag of vakantie die dag</span><span>Veeg naar links en rechts voor andere dagen</span>${laatsteDag > FEEST_TOT ? `<span class="feestlet">Feestdagen en vakanties na 31 december 2027 staan er nog niet in. Vraag Claude ze bij te werken.</span>` : laatsteDag > SCHOOL_TOT ? `<span class="feestlet">Schoolvrije dagen in Coín na 9 september 2027 staan er nog niet in. Vraag Claude ze bij te werken.</span>` : ""}${FEEST_ONBEKEND && eersteDag <= "2027-12-31" && laatsteDag >= "2027-01-01" ? `<span class="feestnog">${FEEST_ONBEKEND} Vraag Claude ze toe te voegen zodra ze bekend zijn.</span>` : ""}</div>`;
+  h += `<button type="button" class="kallang" data-kallang="1">${kalLang ? "Terug naar een half jaar vooruit (sneller)" : "Verder vooruit kijken, tot 2 jaar"}</button>`;
   el.innerHTML = `<h2><span class="kt">${gi2("cal")}Kalender</span><b>tik op een balk of een lege dag</b></h2>` + h;
   return el;
 }
@@ -7648,6 +7673,8 @@ function tekenNu(){
       bak.querySelectorAll("[data-kalscroll]").forEach(kn => kn.onclick = () => { const st = Number(kn.dataset.kalscroll); if(st === 0) naarDag(KAL_TERUG, true); else box.scrollTo({ left: box.scrollLeft + st * kolom, behavior:"smooth" }); });
     }
     bak.querySelectorAll("[data-agoudtoggle]").forEach(kn => kn.onclick = () => { agendaOudOpen = !agendaOudOpen; tekenNu(); });
+    /* 30-10-2026 e: kalender tot 2 jaar vooruit, of weer een half jaar (bewaard op deze telefoon) */
+    bak.querySelectorAll("[data-kallang]").forEach(kn => kn.onclick = () => { kalLang = !kalLang; try { localStorage.setItem("kayu_kal_lang", kalLang ? "1" : "0"); } catch(e){} tekenNu(); });
     bak.querySelectorAll("[data-morgentoggle]").forEach(kn => kn.onclick = () => { morgenOpen = !morgenOpen; tekenNu(); });
     bak.querySelectorAll("[data-tlnaar]").forEach(kn => kn.onclick = () => { const doel = document.getElementById(kn.dataset.tlnaar); if(!doel) return; if(doel.classList.contains("ingeklapt")){ const k = doel.querySelector("h2.klap"); if(k) k.click(); } const d2 = document.getElementById(kn.dataset.tlnaar); if(d2) d2.scrollIntoView({ behavior:"smooth", block:"start" }); });
   }
@@ -10811,7 +10838,7 @@ const vastRij = (naam, prijs, aantal) =>
 function vaakGebruikt(uitsluiten = ["Ontbijt en avonden", "Winkel"], n = 6){
   const tel = {};
   (consumpties || []).forEach(c => { if(c.auto) return; const k = c.naam + "|" + Number(c.prijs); tel[k] = (tel[k] || 0) + (Number(c.aantal) || 0); });
-  const lijst = producten.filter(p => Number(p.prijs) > 0 && !uitsluiten.includes(p.groep) && tel[p.naam + "|" + Number(p.prijs)] > 0)
+  const lijst = producten.filter(p => Number(p.prijs) > 0 && p.actief !== false && !uitsluiten.includes(p.groep) && tel[p.naam + "|" + Number(p.prijs)] > 0)
     .sort((a, b) => tel[b.naam + "|" + Number(b.prijs)] - tel[a.naam + "|" + Number(a.prijs)]).slice(0, n);
   return lijst.length >= 3 ? lijst : [];
 }
@@ -10828,7 +10855,8 @@ function tekenBar(){
   let h = "";
   { const vaak = vaakGebruikt(); if(vaak.length) h += `<p class="groep">Vaak gebruikt</p>` + vaak.map(p => { const r = lijst.find(x => x.naam===p.naam && Number(x.prijs)===Number(p.prijs)); return rij(p.naam, Number(p.prijs), r ? r.aantal : 0, r ? r.vanGast : 0); }).join("") + `<p class="groep">Alles</p>`; }
   groepen.forEach(g => {
-    const lijstG = producten.filter(p => p.groep===g);
+    /* 30-10-2026 f: een uitgezet product alleen als deze gast er al iets van heeft (om terug te kunnen zetten) */
+    const lijstG = producten.filter(p => p.groep===g && (p.actief !== false || lijst.some(x => x.naam===p.naam && Number(x.prijs)===Number(p.prijs) && x.aantal > 0)));
     if(!lijstG.length) return;
     const rijenG = lijstG.map(p => {
       const r = lijst.find(x => x.naam===p.naam && Number(x.prijs)===Number(p.prijs));
@@ -10950,26 +10978,105 @@ document.getElementById("barKlaar").onclick = async () => {
 };
 
 /* ---------- prijslijst ---------- */
+/* 30-10-2026 f (Bart: "producten weghalen en toevoegen als ik dat wil, of tijdelijk uitzetten"): bij de producten van de honesty bar
+   (dezelfde soorten die de gast ziet, zie gast_ontbijt) een knop Uitzetten/Aanzetten (producten.actief) en Weghalen; onderaan een nieuw
+   product. Andere soorten (ontbijt, diensten, broodjes) alleen de prijs, zoals vroeger: die namen gebruikt de app zelf. */
+const BAR_GROEPEN = ["Fris", "Water", "Bier", "Wijn en cava", "Sterk", "Warm", "Drank", "Eten"];
+const isBarProduct = p => BAR_GROEPEN.includes(p.groep) && p.naam !== "Ontbijt";
+let prBezig = false;
+function tekenPrijzen(){
+  const ingevuld = {}; document.querySelectorAll("#prijsLijst [data-pid]").forEach(i => { ingevuld[i.dataset.pid] = i.value; });
+  const groepen = [...new Set(producten.map(p => p.groep))];
+  document.getElementById("prijsLijst").innerHTML = groepen.map(g => `<p class="groep">${vrij(g)}</p>` + producten.filter(p => p.groep === g).map(p => {
+    const bar = isBarProduct(p), uit = p.actief === false;
+    return `<div class="prijsrij${bar ? " barprod" : ""}${uit ? " uit" : ""}"><span>${vrij(p.naam)}${uit ? "<small>Staat uit: gasten zien het niet</small>" : ""}</span>` +
+      `<input type="number" step="0.05" min="0" value="${vrij(ingevuld[p.id] != null ? ingevuld[p.id] : Number(p.prijs).toFixed(2))}" data-pid="${vrij(p.id)}" aria-label="Prijs ${vrij(p.naam)}">` +
+      (bar ? `<div class="prknoppen"><button type="button" data-praan="${vrij(p.id)}">${uit ? "Aanzetten" : "Uitzetten"}</button><button type="button" data-prweg="${vrij(p.id)}">Weghalen</button></div>` : "") + `</div>`;
+  }).join("")).join("");
+  document.querySelectorAll("#prijsLijst [data-praan]").forEach(k => k.onclick = () => prAanUit(k.dataset.praan));
+  document.querySelectorAll("#prijsLijst [data-prweg]").forEach(k => k.onclick = () => prWeg(k.dataset.prweg));
+}
+function prKnoppen(aan){ document.querySelectorAll("#prijzen button").forEach(k => k.disabled = !aan); }
+async function prAanUit(id){
+  const p = producten.find(x => x.id === id && isBarProduct(x)), err = document.getElementById("prErr");
+  if(!p || prBezig) return;
+  prBezig = true; prKnoppen(false);
+  const { error } = await db.from("producten").update({ actief: p.actief === false }).eq("id", p.id);
+  prBezig = false; prKnoppen(true);
+  if(error){ err.textContent = (p.actief === false ? "Aanzetten" : "Uitzetten") + " mislukt: " + error.message; return; }
+  err.textContent = "";
+  await haal(); tekenPrijzen(); tekenBar();
+}
+async function prWeg(id){
+  const p = producten.find(x => x.id === id && isBarProduct(x)), err = document.getElementById("prErr");
+  if(!p || prBezig) return;
+  if(!confirm(`${p.naam} weghalen? Gasten zien het dan niet meer en kunnen het niet meer aantikken. Wat gasten al hadden, blijft op hun rekening staan.\n\nIs het maar even op? Kies dan liever Uitzetten.`)) return;
+  prBezig = true; prKnoppen(false);
+  const { error } = await db.from("producten").delete().eq("id", p.id);
+  prBezig = false; prKnoppen(true);
+  if(error){ err.textContent = "Weghalen mislukt: " + error.message; return; }
+  err.textContent = "";
+  await haal(); tekenPrijzen(); tekenBar();
+}
 document.getElementById("naarPrijzen").onclick = () => {
-  document.getElementById("prijsLijst").innerHTML = producten.map(p =>
-    `<div class="prijsrij"><span>${vrij(p.naam)}</span>` +
-    `<input type="number" step="0.05" min="0" value="${Number(p.prijs).toFixed(2)}" data-pid="${p.id}"></div>`
-  ).join("");
+  document.getElementById("prijsLijst").innerHTML = "";
+  const sel = document.getElementById("prNieuwGroep");
+  const soorten = [...new Set(producten.filter(isBarProduct).map(p => p.groep))];
+  sel.innerHTML = (soorten.length ? soorten : BAR_GROEPEN).map(g => `<option value="${vrij(g)}">${vrij(g)}</option>`).join("");
+  document.getElementById("prNieuwNaam").value = ""; document.getElementById("prNieuwPrijs").value = "";
+  document.getElementById("prErr").textContent = "";
+  tekenPrijzen();
   document.getElementById("prijzen").showModal();
+  if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
 };
+document.getElementById("prijzen").addEventListener("cancel", e => { if(prBezig) e.preventDefault(); });
 document.getElementById("prAnnuleer").onclick = () => document.getElementById("prijzen").close();
 document.getElementById("prOpslaan").onclick = async () => {
-  const velden = document.getElementById("prijsLijst").querySelectorAll("[data-pid]");
-  for(const v of velden){
-    const p = producten.find(x => x.id===v.dataset.pid);
-    const nieuw = parseFloat(v.value);
-    if(p && !isNaN(nieuw) && Number(p.prijs) !== nieuw){
-      await db.from("producten").update({ prijs:nieuw }).eq("id", p.id);
-    }
+  const err = document.getElementById("prErr"); err.textContent = "";
+  if(prBezig) return;
+  /* nieuw product eerst controleren, zodat er bij een fout niets half wordt opgeslagen */
+  const naam = document.getElementById("prNieuwNaam").value.trim().replace(/\s+/g, " "), prijsIn = document.getElementById("prNieuwPrijs").value.trim(), groep = document.getElementById("prNieuwGroep").value;
+  let nieuw = null;
+  if(naam || prijsIn){
+    if(naam.length < 2){ err.textContent = "Vul de naam van het nieuwe product in."; document.getElementById("prNieuwNaam").focus(); return; }
+    if(/[<>"|`]/.test(naam)){ err.textContent = "Gebruik in de naam geen < > \" | of `."; document.getElementById("prNieuwNaam").focus(); return; }
+    if(["korting", "fooi", "overnachting", "ontbijt"].includes(naam.toLowerCase())){ err.textContent = `${naam} is een vaste naam in de app. Kies een andere naam.`; return; }
+    const n = leesPrijs(prijsIn);
+    if(n === null){ err.textContent = "Vul een prijs in voor het nieuwe product, bijvoorbeeld 2,50."; document.getElementById("prNieuwPrijs").focus(); return; }
+    if(producten.some(p => p.naam.toLowerCase() === naam.toLowerCase())){ err.textContent = `Er staat al een product met de naam ${naam} in de app. Kies een andere naam.`; return; }
+    if(!BAR_GROEPEN.includes(groep)){ err.textContent = "Kies de soort van het nieuwe product."; return; }
+    nieuw = { naam, prijs: n, groep };
   }
+  prBezig = true; prKnoppen(false);
+  let fout = "", mist = [];
+  try {
+    for(const v of document.getElementById("prijsLijst").querySelectorAll("[data-pid]")){
+      const p = producten.find(x => x.id === v.dataset.pid);
+      const n = parseFloat(v.value);
+      if(p && !isNaN(n) && Number(p.prijs) !== n){
+        const { error } = await db.from("producten").update({ prijs:n }).eq("id", p.id);
+        if(error){ fout = "Prijs opslaan mislukt: " + error.message; break; }
+      }
+    }
+    if(!fout && nieuw){
+      err.textContent = "Vertalen...";
+      const doel = TALEN.filter(l => l !== "nl");
+      const metTijd = l => Promise.race([vertaal(nieuw.naam, "nl", l), new Promise(r => setTimeout(() => r(null), 10000))]);
+      const uit = await Promise.all(doel.map(metTijd));
+      const vt = {}; doel.forEach((l, i) => { const t = uit[i] ? zonderEntiteiten(uit[i]).replace(/[<>"|`]/g, "").trim().slice(0, 80) : ""; if(t) vt[l] = t; });
+      mist = doel.filter(l => !vt[l]);
+      const volgorde = Math.max(0, ...producten.filter(p => p.groep === nieuw.groep).map(p => Number(p.volgorde) || 0)) + 1;
+      const { error } = await db.from("producten").insert({ naam: nieuw.naam, prijs: nieuw.prijs, groep: nieuw.groep, volgorde, actief: true,
+        naam_en: vt.en || null, naam_de: vt.de || null, naam_vertaald: Object.keys(vt).length ? JSON.stringify(vt) : null });
+      if(error) fout = "Toevoegen mislukt: " + error.message;
+    }
+  } finally { prBezig = false; prKnoppen(true); }
+  if(fout){ err.textContent = fout; await haal(); tekenPrijzen(); return; }
+  err.textContent = "";
   document.getElementById("prijzen").close();
   await haal();
   tekenBar();
+  if(nieuw && modus === "nu") nuMelding(`${vrij(nieuw.naam)} staat in de honesty bar.${mist.length ? ` Vertalen lukte niet in het ${mist.map(l => TAAL_NL[l] || l).join(", ")}: die gasten zien de naam niet in hun eigen taal.` : ""}`, mist.length ? "waarschuw" : "gelukt");
 };
 
 /* ---------- boeking maken en aanpassen ---------- */
@@ -13884,7 +13991,8 @@ function tekenKamerbon(){
   let h = "";
   { const vaak = vaakGebruikt(); if(vaak.length) h += `<p class="groep">Vaak gebruikt</p>` + vaak.map(p => { const r = lijst.find(x => x.naam===p.naam && Number(x.prijs)===Number(p.prijs)); return rij(p.naam, Number(p.prijs), r ? r.aantal : 0, r ? r.vanGast : 0); }).join("") + `<p class="groep">Alles</p>`; }
   groepen.forEach(g => {
-    const lijstG = producten.filter(p => p.groep===g);
+    /* 30-10-2026 f: een uitgezet product alleen als deze gast er al iets van heeft (om terug te kunnen zetten) */
+    const lijstG = producten.filter(p => p.groep===g && (p.actief !== false || lijst.some(x => x.naam===p.naam && Number(x.prijs)===Number(p.prijs) && x.aantal > 0)));
     if(!lijstG.length) return;
     const rijenG = lijstG.map(p => {
       const r = lijst.find(x => x.naam===p.naam && Number(x.prijs)===Number(p.prijs));
