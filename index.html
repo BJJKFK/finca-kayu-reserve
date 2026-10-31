@@ -3987,7 +3987,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "30-10-2026 l";
+const VERSIE = "31-10-2026 a";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -5519,7 +5519,7 @@ async function verversKamers(forceer){
     const { data:{ session } } = await db.auth.getSession();
     if(!session) throw new Error("niet ingelogd");
     const van = new Date(); van.setDate(van.getDate()-30);
-    const tot = new Date(); tot.setDate(tot.getDate()+365);
+    const tot = new Date(); tot.setDate(tot.getDate()+731); /* 30-10-2026 n (review): de kalender kan tot 2 jaar vooruit */
     const r = await fetch(`${KOERIER}?van=${iso(van)}&tot=${iso(tot)}`,
       { headers: { Authorization: "Bearer " + session.access_token } });
     const j = await r.json();
@@ -8274,7 +8274,8 @@ function aankVertrekkers(a){
     ...boekingen.filter(b => !b.gestald && b.uit === a.datum && b.in < a.datum).map(b => ({ nr:b.id, naam:b.naam, plek:b.plek, link:gastLinkVan(b.id), tel:b.tel || "", vertrekt:true, betaald:!!b.betaald }))
   ].filter(g => aangemeld(g.nr) || (aankVertrekAan() && !namen.has(naamS(g.naam)) && !(waNummer(g.tel) && nrs.has(waNummer(g.tel)))));
 }
-const aankVoor = (inDag, uitDag) => { const a = aankActief(); return a && inDag <= a.datum && a.datum < uitDag ? a : null; };
+/* 30-10-2026 n (review): is opgeven al dicht, dan noemt het welkomstbericht de aankondiging niet meer */
+const aankVoor = (inDag, uitDag) => { const a = aankActief(); return a && !aankDicht(a) && inDag <= a.datum && a.datum < uitDag ? a : null; };
 /* 30-10-2026 a (Bart: "in één oogopslag: hoeveel volwassenen, hoeveel kinderen, hoeveel kannen sangria, en de namen bij de sangria"):
    bovenaan het blok een vak met het totaal voor de kok. Telling als aanmeldStand (zonder demo); namen uit de lijst van het blok,
    anders de naam die bij de aanmelding staat. */
@@ -9530,6 +9531,8 @@ document.getElementById("akOpslaan").onclick = async () => {
   if(!/^\d{1,2}[:.]\d{2}$/.test(sluitRuw) || Number(sluitRuw.split(/[:.]/)[0]) > 23 || Number(sluitRuw.split(/[:.]/)[1]) > 59){ err.textContent = "Opgeven kan tot: tijd als 12:00."; return; }
   const sluitTijd = sluitRuw.replace(".", ":").padStart(5, "0");
   if(sluitDatum > datum){ err.textContent = "Opgeven kan tot: kies de dag van de avond of eerder."; return; }
+  /* 30-10-2026 n (review): gasten lezen alleen de weekdag ("tot donderdag 20:00"); daarom hooguit 6 dagen voor de avond */
+  if(Math.round((parse(datum) - parse(sluitDatum)) / 864e5) > 6){ err.textContent = "Opgeven kan tot: kies een dag in de week van de avond (hooguit 6 dagen ervoor)."; return; }
   const opgeven_tot = sluitDatum === datum && sluitTijd === "12:00" ? null : `${sluitDatum}T${sluitTijd}:00`;
   if([prijs, prijs_kind, prijs_sangria].some(isNaN) || isNaN(minimum)){ err.textContent = "Vul de prijzen en het minimum in."; return; }
   const a = aankActief();
@@ -11031,14 +11034,14 @@ async function voorraadHaal(){
   if(!geteld.length){ voorraadLog = []; voorraadLogFout = ""; return; }
   const van = geteld.map(p => new Date(p.voorraad_tijd).toISOString()).sort()[0];
   try {
-    const { data, error } = await alleRijen(() => db.from("bar_logboek").select("id,tijd,product,oud,nieuw,auto", { count:"exact" }).gte("tijd", van).order("tijd").order("id"));
+    const { data, error } = await alleRijen(() => db.from("bar_logboek").select("id,tijd,nr,product,oud,nieuw,auto", { count:"exact" }).gte("tijd", van).order("tijd").order("id"));
     if(error) throw new Error(error.message);
     voorraadLog = data || []; voorraadLogFout = "";
   } catch(e){ voorraadLogFout = e.message || String(e); }
 }
-const voorraadVerkocht = p => voorraadLog.filter(r => !r.auto && r.product === p.naam && new Date(r.tijd) > new Date(p.voorraad_tijd))
+const voorraadVerkocht = p => voorraadLog.filter(r => !r.auto && !DEMO(r.nr) && r.product === p.naam && new Date(r.tijd) > new Date(p.voorraad_tijd))
   .reduce((t, r) => t + (Number(r.nieuw) || 0) - (Number(r.oud) || 0), 0);
-const voorraadNu = p => p.voorraad_geteld == null || !p.voorraad_tijd ? null : Number(p.voorraad_geteld) + (Number(p.voorraad_erbij) || 0) - voorraadVerkocht(p);
+const voorraadNu = p => p.voorraad_geteld == null || !p.voorraad_tijd || voorraadLogFout ? null : /* review n: zonder geschiedenis geen stand */ Number(p.voorraad_geteld) + (Number(p.voorraad_erbij) || 0) - voorraadVerkocht(p);
 const voorraadLaag = () => !voorraadAan() || voorraadLogFout ? [] : producten.filter(p => isBarProduct(p) && p.actief !== false && p.voorraad_min != null && voorraadNu(p) != null && voorraadNu(p) <= Number(p.voorraad_min));
 async function voorraadWissel(){
   const nieuw = voorraadAan() ? "uit" : "aan";
@@ -11059,14 +11062,15 @@ function tekenVoorraad(){
   document.getElementById("vrOpslaan").hidden = !vrModus;
   document.getElementById("vrSluit").textContent = vrModus ? "Terug" : "Sluiten";
   const groepen = [...new Set(lijst.map(p => p.groep))];
-  const stand = p => { const n = voorraadNu(p); return n == null ? "niet geteld" : `nog ${n}`; };
+  const stand = p => { const n = voorraadNu(p); return n != null ? `nog ${n}` : p.voorraad_tijd ? "onbekend" : "niet geteld"; };
+  const laagSet = new Set(voorraadLaag()); /* review n: één keer uitrekenen */
   const onder = p => [p.voorraad_min != null ? `seintje bij ${p.voorraad_min}` : "", p.voorraad_verschil ? `bij het tellen ${Math.abs(p.voorraad_verschil)} ${p.voorraad_verschil > 0 ? "minder" : "meer"} dan verwacht` : ""].filter(Boolean).join(" · ");
   document.getElementById("vrLijst").innerHTML = (voorraadLogFout ? `<p class="err">De geschiedenis van de bar kon niet worden geladen (${vrij(voorraadLogFout)}); de stand kan niet worden berekend.</p>` : "") +
     groepen.map(g => `<p class="subkop">${vrij(g)}</p>` + lijst.filter(p => p.groep === g).map(p => {
-      const laag = voorraadLaag().includes(p), n = voorraadNu(p);
+      const laag = laagSet.has(p), n = voorraadNu(p);
       if(!vrModus) return `<div class="vrrij${laag ? " laag" : ""}"><span>${vrij(p.naam)}${onder(p) ? `<small>${vrij(onder(p))}</small>` : ""}</span><b>${stand(p)}</b></div>`;
       const waarde = vrModus === "seintje" && p.voorraad_min != null ? String(p.voorraad_min) : "";
-      const uit = vrModus === "erbij" && n == null;
+      const uit = vrModus === "erbij" && !p.voorraad_tijd;
       return `<div class="vrrij"><span>${vrij(p.naam)}<small>${uit ? "eerst tellen" : stand(p)}</small></span><input type="number" min="0" step="1" inputmode="numeric" data-vrid="${vrij(p.id)}" value="${waarde}" ${uit ? "disabled" : ""} placeholder="${vrModus === "tellen" && n != null ? n : ""}" aria-label="${vrij(p.naam)}"></div>`;
     }).join("")).join("");
 }
@@ -11104,7 +11108,7 @@ document.getElementById("vrOpslaan").onclick = async () => {
         if(verwacht != null && verwacht !== n) verschillen.push(`${p.naam}: ${Math.abs(verwacht - n)} ${verwacht > n ? "minder" : "meer"} dan verwacht`);
         rij = { voorraad_geteld: n, voorraad_tijd: new Date().toISOString(), voorraad_erbij: 0, voorraad_verschil: verwacht == null ? null : verwacht - n };
       } else if(vrModus === "erbij"){
-        /* vers ophalen, zodat bijvullen op twee telefoons tegelijk niet verloren gaat */
+        /* vers ophalen: bijvullen op twee telefoons kort na elkaar gaat zo niet verloren (precies tegelijk blijft een kleine kans) */
         const { data, error } = await db.from("producten").select("voorraad_erbij").eq("id", p.id).single();
         if(error){ fout = error.message; break; }
         rij = { voorraad_erbij: (Number(data && data.voorraad_erbij) || 0) + n };
@@ -11132,7 +11136,7 @@ function tekenPrijzen(){
   document.getElementById("prijsLijst").innerHTML = groepen.map(g => `<p class="groep">${vrij(g)}</p>` + producten.filter(p => p.groep === g).map(p => {
     const bar = isBarProduct(p), uit = p.actief === false;
     return `<div class="prijsrij${bar ? " barprod" : ""}${uit ? " uit" : ""}"><span>${vrij(p.naam)}${uit ? "<small>Staat uit: gasten zien het niet</small>" : ""}</span>` +
-      `<input type="number" step="0.05" min="0" value="${vrij(ingevuld[p.id] != null ? ingevuld[p.id] : Number(p.prijs).toFixed(2))}" data-pid="${vrij(p.id)}" aria-label="Prijs ${vrij(p.naam)}">` +
+      `<input type="number" step="0.05" min="0" value="${vrij(ingevuld[p.id] != null ? ingevuld[p.id] : Number(p.prijs).toFixed(2))}" data-pid="${vrij(p.id)}" data-org="${vrij(Number(p.prijs).toFixed(2))}" aria-label="Prijs ${vrij(p.naam)}">` +
       (bar ? `<div class="prknoppen"><button type="button" data-praan="${vrij(p.id)}">${uit ? "Aanzetten" : "Uitzetten"}</button><button type="button" data-prweg="${vrij(p.id)}">Weghalen</button></div>` : "") + `</div>`;
   }).join("")).join("");
   document.querySelectorAll("#prijsLijst [data-praan]").forEach(k => k.onclick = () => prAanUit(k.dataset.praan));
@@ -11195,7 +11199,8 @@ document.getElementById("prOpslaan").onclick = async () => {
     for(const v of document.getElementById("prijsLijst").querySelectorAll("[data-pid]")){
       const p = producten.find(x => x.id === v.dataset.pid);
       const n = parseFloat(v.value);
-      if(p && !isNaN(n) && Number(p.prijs) !== n){
+      /* review n: alleen een prijs die je hier zelf veranderde (anders zet een open venster een nieuwere prijs van een andere telefoon terug) */
+      if(p && !isNaN(n) && n !== parseFloat(v.dataset.org) && Number(p.prijs) !== n){
         const { error } = await db.from("producten").update({ prijs:n }).eq("id", p.id);
         if(error){ fout = "Prijs opslaan mislukt: " + error.message; break; }
       }
@@ -12172,7 +12177,7 @@ document.getElementById("checkin2Inhoud").addEventListener("click", async e => {
    Eén scherm om in één oogopslag te zien hoe het ervoor staat. Alleen lezen, behalve het banksaldo.
    Kamers: mt_facturen en mt_boekingen, een kopie uit MyTourist die de functie mytourist-ophalen elke nacht om 04:00 bijwerkt;
    mt_ophaalrondes zegt wanneer dat het laatst gelukt is. Campers, bar en ontbijt: de gegevens die de app al heeft,
-   met dezelfde rekenregels als Overzicht en exporteren. Geen kas: die blijft buiten de app.
+   met dezelfde rekenregels als Overzicht en exporteren. De kas staat niet in dit overzicht (sinds 30-10-2026 h zelf in te vullen bij Cijfers).
    Instellingen (alleen voor ingelogde gebruikers): "cockpit" (JSON: te_betalen, vaste_lasten, iva_tegoed, uitzonderingen, nakijken,
    eventueel indicatie_tekst) en "bank_saldo" (JSON: bedrag, datum, opmerking). Bedragen en namen staan daar, niet in deze openbare code.
    Omzet = definitieve facturen (soort invoice) met een bedrag, waarvan de boeking niet geannuleerd is, op factuurdatum
@@ -12627,7 +12632,7 @@ function cfUitdraaiBlokken(mu){
   bl.push(twee(binnen));
   bl.push({ t: "h2", s: "Hoe er betaald is" });
   bl.push(twee([rij("Gefactureerd via MyTourist (bank en platforms)", cfEur(totM)), rij("In de app afgerekend, contant", cfEur(app.contant)), rij("In de app afgerekend, per bankoverschrijving", cfEur(app.tikkie))]));
-  bl.push({ t: "p", klein: true, s: "Afgerekend telt op de dag van afrekenen. De kas staat niet in de app en dus ook niet in dit overzicht." });
+  bl.push({ t: "p", klein: true, s: "Afgerekend telt op de dag van afrekenen. De kas staat niet in dit overzicht (die vul je zelf in bij Cijfers, Kas bijwerken)." });
   bl.push({ t: "h2", s: "Uit" });
   if(!ink) bl.push({ t: "p", s: "Inkoopbonnen: nog niet beschikbaar." });
   else if(!ink.n) bl.push({ t: "p", s: `Geen inkoopbonnen in de app voor ${maandNaam}.` });
@@ -12699,7 +12704,7 @@ async function cfDeel(mu){
    aantal ingevulde check-ins, dan MyTourist; nergens bekend = onbekend (niet geschat). Verkocht: de consumpties, zelfde telling als
    Barverkoop (maand van vertrek bij campers, anders de datum), zonder Overnachting, Fooi en Korting. Leest alleen; niets in de database. */
 const GV_NIET = ["Overnachting", "Fooi", "Korting"];
-const GV_UITLEG_GASTEN = "Verblijven en personen tellen in de maand van aankomst, nachten in de maand waarin ze vallen. Overnachtingen zijn personen maal nachten. Personen bij kamers: eerst het aantal in het profiel van de app, dan het aantal ingevulde online check-ins, dan het aantal uit MyTourist; is het nergens bekend, dan staat het als onbekend en telt het niet mee. Kamers uit MyTourist, campers uit de app.";
+const GV_UITLEG_GASTEN = "Verblijven en personen tellen in de periode van aankomst, nachten in de periode waarin ze vallen; geboekte verblijven die nog moeten komen tellen ook mee. Overnachtingen zijn personen maal nachten. Personen bij kamers: eerst het aantal in het profiel van de app, dan het aantal ingevulde online check-ins, dan het aantal uit MyTourist; is het nergens bekend, dan staat het als onbekend en tellen ook de overnachtingen van dat verblijf niet mee. Kamers uit MyTourist, campers uit de app.";
 const GV_UITLEG_VERKOOP = "Alles wat in de app is aangetikt of besteld (bar, ontbijt, aanmeldingen, extra's), zelfde telling als Barverkoop bij Exporteren; zonder overnachting, fooi en korting. Bijgehouden sinds 11 september 2026.";
 let gvFout = "";
 function gvGrens(keuze){
@@ -14463,7 +14468,8 @@ function tekenBoodschappen(){
   document.getElementById("bsKop").textContent = halen.length ? `${halen.length} ${halen.length === 1 ? "product" : "producten"} te halen. Streep af met de min.` : "Niets te halen. Tik een categorie open en zet aantallen bij wat op is.";
   document.getElementById("bsHalen").innerHTML = (laag.length ? `<p class="subkop">Honesty bar, bijna op</p>` + laag.map(p => `<div class="bsvoorraad"><span>${vrij(p.naam)}</span><small>nog ${voorraadNu(p)}</small></div>`).join("") + (halen.length ? `<p class="subkop">Op de lijst</p>` : "") : "") +
     halen.map(x => bsRij(x, false)).join("");
-  if(laag.length) document.getElementById("bsKop").textContent += ` ${laag.length} ${laag.length === 1 ? "drankje" : "drankjes"} uit de honesty bar bijna op.`;
+  if(laag.length) document.getElementById("bsKop").textContent = (halen.length ? document.getElementById("bsKop").textContent + " " : "") +
+    `Uit de honesty bar ${laag.length === 1 ? "is 1 drankje" : `zijn ${laag.length} drankjes`} bijna op. Die gaan van de lijst als je ze aanvult bij Meer, Boodschappen en taken, Voorraad (Bijvullen).`;
   const groepen = [...new Set([...BS_GROEPEN.filter(g => boodschappen.some(x => x.groep === g)), ...boodschappen.map(x => x.groep)])].sort((a,b) => bsGroepVolg(a) - bsGroepVolg(b));
   document.getElementById("bsGroepen").innerHTML = groepen.map(g => {
     const l = boodschappen.filter(x => x.groep === g), open = bsOpen.has(g), n = l.filter(x => x.aantal > 0).length;
