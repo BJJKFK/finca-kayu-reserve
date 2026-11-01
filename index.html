@@ -4005,6 +4005,16 @@ const gastCamperAkkoord = () => !!gastData && isCamperPlek(gastData.kamer) && St
 const gastIsKamer = () => !!gastData && /^Kamer /.test(gastData.kamer || "");
 const gastAkkoordSleutel = () => "kayu_akkoord_" + gastCode;
 const kijkMee = new URLSearchParams(location.search).get("kijk") === "1";
+/* review 01-11 k: staat het akkoord op deze telefoon maar kwam het (trage verbinding, meer dan 3 seconden) niet in de database, geef het dan
+   bij een volgend bezoek nog één keer door, zodat Bart en Loes het in de app zien. Niet bij de hele finca: daar telt elke aanroep een
+   persoon extra (kamer_vinkjes.akkoord_aantal). */
+function gastAkkoordNazenden(){
+  if(kijkMee || !gastCode || !gastData || gastData.fout || gastData.kamer === "Hele finca") return;
+  let staat = false, gemeld = false;
+  try { staat = !!localStorage.getItem(gastAkkoordSleutel()); gemeld = !!localStorage.getItem(gastAkkoordSleutel() + "_db"); } catch(e){ return; }
+  if(!staat || gemeld) return;
+  Promise.resolve(db.rpc("gast_akkoord", { p_code: gastCode })).then(r => { if(r && r.data && r.data.ok) try { localStorage.setItem(gastAkkoordSleutel() + "_db", "1"); } catch(e){} }).catch(() => {});
+}
 /* review 01-11 c: is er op deze telefoon echt akkoord gegeven (in de link of in de opslag)? Bij geblokkeerde opslag: nee */
 const gastAkkoordGegeven = () => { if(akkoordInLink) return true; try { return !!localStorage.getItem(gastAkkoordSleutel()); } catch(e){ return false; } };
 const gastAkkoordNodig = () => {
@@ -4022,12 +4032,13 @@ async function gastAkkoordGeef(){
   if(akkoordBezig) return; akkoordBezig = true;
   document.querySelectorAll("[data-gakkoord]").forEach(k => { k.disabled = true; k.textContent = "…"; });
   try { localStorage.setItem(gastAkkoordSleutel(), new Date().toISOString()); } catch(e){}
-  try { await Promise.race([db.rpc("gast_akkoord", { p_code: gastCode }), new Promise(r => setTimeout(r, 3000))]); } catch(e){}
+  try { const r = await Promise.race([db.rpc("gast_akkoord", { p_code: gastCode }), new Promise(r => setTimeout(r, 3000))]);
+        if(r && r.data && r.data.ok) try { localStorage.setItem(gastAkkoordSleutel() + "_db", "1"); } catch(e){} } catch(e){} /* review 01-11 k: doorgekomen */
   const u = new URL(location.href); u.searchParams.set("ak", String(Date.now()));
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "01-11-2026 i";
+const VERSIE = "01-11-2026 k";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -4246,6 +4257,7 @@ async function startGast(code){
   toon("gast");
   if(kijkMee) document.getElementById("kijkband").style.display = "";
   try { gastData = await gastHaal(); } catch(e){ gastData = { fout:"onbekend" }; }
+  gastAkkoordNazenden(); /* review 01-11 k */
   /* taal: wat Bart of de gast koos; anders de taal van de telefoon (wordt pas bewaard als de gast zelf een taal kiest) */
   if(gastData && gastData.taal && GT[gastData.taal]) gastTaal = gastData.taal;
   /* campers met de nieuwe check-in (plan 29-09-2026): de gastenpagina opent pas de dag vóór aankomst vanaf 13:00; tot dan een korte wachtpagina */
@@ -9895,6 +9907,14 @@ const pkVast = (links, rechts, soort) => `<div class="pkrij${pkLang(rechts)}"><s
 const pkStappen = groepen => groepen.map(g => ({ kop: g.kop, rijen: g.rijen.filter(Boolean) })).filter(g => g.rijen.length)
   .map(g => `<div class="pkgroep">${g.kop}</div>` + g.rijen.join("")).join("");
 const pkGedaan = (aan, ja) => aan ? [ja + " ✓", "goed"] : ["Nog niet", ""];
+/* 01-11-2026 k (Bart: "in de app zien wie de huisregels heeft gelezen"): het eerste akkoord op de gastenpagina staat sinds 01-11-2026
+   (21:10 Spaanse tijd) in gast_links.akkoord_op (databasefunctie gast_akkoord). Van links die daarvoor zijn gemaakt weten we een eerder
+   akkoord niet: dan alleen een regel als er na die tijd akkoord is gegeven, geen "Nog niet". */
+const AKKOORD_SINDS = "2026-11-01T20:10:00Z";
+const pkHuisregels = nr => { const g = gastLinks[nr]; if(!g || g.kamer === "Hele finca") return ""; /* review k: bij de hele finca telt de regel "Huisregels geaccepteerd op de pagina: N keer" */
+  const t = g.akkoord_op ? new Date(g.akkoord_op) : null;
+  if(t && !isNaN(t)) return pkVast("Huisregels", `Gelezen ✓ ${DG[t.getDay()].slice(0, 2)} ${kort(iso(t))}`, "goed");
+  return g.gemaakt && new Date(g.gemaakt) >= new Date(AKKOORD_SINDS) ? pkVast("Huisregels", "Nog niet gelezen") : ""; };
 
 /* 24-10-2026 a (Bart, schets B): het profiel van een kamergast en een campergast zo gelijk als kan. Gedeelde stukken:
    de drie ronde knoppen bovenaan (WhatsApp met een groen icoontje, Gastenpagina, Taal met het lijstje), de stappen ingeklapt
@@ -9961,7 +9981,7 @@ function toonDetail(b){
       bNieuw(b) ? pkRij(`data-cdcilink="1"`, "Check-inlink sturen", taalN) : "" ] },
     /* zoals bij een kamer: met de nieuwe check-in (versie f) vervangt de check-in het paspoortvinkje en het welkomstbericht */
     { kop:"Aankomst", rijen: bNieuw(b)
-      ? [pkRij(`data-cdcheckin="1"`, "Check-in", ci === "klaar" ? "Klaar ✓" : CI_LABEL[ci].replace("Check-in nog niet ingevuld", "Nog niet ingevuld"), ci === "klaar" ? "goed" : ci === "controleren" ? "actie" : "")]
+      ? [pkRij(`data-cdcheckin="1"`, "Check-in", ci === "klaar" ? "Klaar ✓" : CI_LABEL[ci].replace("Check-in nog niet ingevuld", "Nog niet ingevuld"), ci === "klaar" ? "goed" : ci === "controleren" ? "actie" : ""), pkHuisregels(b.id) /* 01-11-2026 k */]
       : [pkRij(`data-cdvink="paspoort"`, "Paspoort", paT, paS), pkRij(`data-cdvink="bericht"`, "Welkomstbericht", weT, weS)] },
     { kop:"Vertrek", rijen:[
       /* 23-10-2026 e: herinnering de dag voor vertrek (alleen zolang er iets open staat) */
@@ -10743,6 +10763,7 @@ function toonKamerDetail(k){
     aank.push(rij(`data-kdvink="paspoort"`, "Paspoort", kVink(k, "paspoort") ? "Gezien ✓" : "Nog niet", kVink(k, "paspoort") ? "goed" : ""));
     aank.push(rij(`data-kdvink="welkom"`, "Welkomstbericht", kVink(k, "welkom") ? "Verstuurd ✓" : "Nog niet", kVink(k, "welkom") ? "goed" : ""));
   }
+  { const hr = pkHuisregels(k.nr); if(hr) aank.push(hr); } /* 01-11-2026 k: akkoord op de huisregels */
   /* Link sturen pas als er is ingecheckt (via de hoofdkamer); daarvoor zou de link van een bijkamer de check-in openen (review 16-10) */
   if(samenK.length && hoofdIn && !groepTeWeinig(k)) aank.push(rij(`data-kdsamenlink="1"${bij ? ` data-bij="1"` : ""}`, "Link van deze kamer sturen", taalNaam(samenTaalNr(k))));
   const afTekst = "Afgerekend ✓" + ((x => x ? " · " + x : "")(betaalTekst(bonnen.find(x => x.soort !== "afspraken" && x.soort !== "terugbetaling" && x.nr === k.nr))));
