@@ -114,7 +114,8 @@
   .verdict a{align-self:flex-start; color:#141413; background:#F0EEE6; text-decoration:none; border-radius:8px; padding:10px 14px; font-weight:600;}
   /* na het versturen van de camperaanvraag (30-09-2026 a): grote groene WhatsApp-knop, daaronder rustig de link naar de eigen pagina */
   .verdict.klaarblok{font-size:17px; gap:14px;}
-  .verdict a:not(.appknop):not(.naargast){border:1px solid #8F8B80;}
+  .verdict a:not(.appknop):not(.naargast):not(.huisregelknop){border:1px solid #8F8B80;}
+  .verdict a.huisregelknop{align-self:stretch; text-align:center; background:var(--pine); color:#fff; font-size:17px; font-weight:600; padding:15px 14px; border-radius:var(--r); text-decoration:none;}
   .verdict a.appknop{align-self:stretch; text-align:center; background:#25D366; color:#073B1E; font-size:17px; padding:15px 14px; border-radius:var(--r);}
   /* 13-10-2026 a: na de check-in een duidelijke volgende stap (huisregels) met een grote knop */
   .verdict a.verderknop{align-self:stretch; text-align:center; font-size:17px; padding:15px 14px; border-radius:var(--r);}
@@ -261,7 +262,7 @@ nl: {
   fOpslaan:"Opslaan is niet gelukt. Probeer het opnieuw of neem contact met ons op.",
   klaar:"Check-in compleet ({n} {p}). Je gastenpagina wordt geopend…",
   alGeregistreerd:"Voor deze boeking is al ingecheckt ({n} {p}). Opnieuw versturen vervangt die gegevens.",
-  naarGast:"Naar je gastenpagina",
+  naarGast:"Naar je gastenpagina", aHuisregels:"Lees nu onze huisregels",
   testmodus:"Testmodus zonder boeking. Er staat geen gastcode in de link, dus er wordt niets opgeslagen.",
   pKop:"Privacy",
   pa:"Verantwoordelijke: Bart Jacobus Johannus Kessler, handelend onder de naam Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spanje. Contact: info@fincakayu.com of WhatsApp +34 722 162 962.",
@@ -330,7 +331,7 @@ en: {
   fOpslaan:"Saving didn't work. Please try again or contact us.",
   klaar:"Check-in complete ({n} {p}). Opening your guest page…",
   alGeregistreerd:"This booking has already been checked in ({n} {p}). Sending again replaces those details.",
-  naarGast:"Go to your guest page",
+  naarGast:"Go to your guest page", aHuisregels:"Read our house rules now",
   testmodus:"Test mode without a booking. There is no guest code in the link, so nothing will be saved.",
   pKop:"Privacy",
   pa:"Controller: Bart Jacobus Johannus Kessler, trading as Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spain. Contact: info@fincakayu.com or WhatsApp +34 722 162 962.",
@@ -381,7 +382,7 @@ de: {
   fOpslaan:"Das Speichern hat nicht geklappt. Bitte versucht es noch einmal oder kontaktiert uns.",
   klaar:"Check-in vollständig ({n} {p}). Eure Gästeseite wird geöffnet…",
   alGeregistreerd:"Für diese Buchung wurde bereits eingecheckt ({n} {p}). Erneutes Absenden ersetzt diese Daten.",
-  naarGast:"Zu eurer Gästeseite",
+  naarGast:"Zu eurer Gästeseite", aHuisregels:"Jetzt unsere Hausregeln lesen",
   testmodus:"Testmodus ohne Buchung. Im Link fehlt der Gästecode, daher wird nichts gespeichert.",
   pKop:"Datenschutz",
   pa:"Verantwortlich: Bart Jacobus Johannus Kessler, tätig unter dem Namen Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spanien. Kontakt: info@fincakayu.com oder WhatsApp +34 722 162 962.",
@@ -432,7 +433,7 @@ es: {
   fOpslaan:"No se ha podido guardar. Intentadlo de nuevo o contactad con nosotros.",
   klaar:"Check-in completo ({n} {p}). Abriendo vuestra página de huéspedes…",
   alGeregistreerd:"Esta reserva ya tiene el check-in hecho ({n} {p}). Si lo enviáis de nuevo, se sustituirán esos datos.",
-  naarGast:"Ir a vuestra página de huéspedes",
+  naarGast:"Ir a vuestra página de huéspedes", aHuisregels:"Leed ahora nuestras normas de la casa",
   testmodus:"Modo de prueba sin reserva. Falta el código de huésped en el enlace, así que no se guardará nada.",
   pKop:"Privacidad",
   pa:"Responsable: Bart Jacobus Johannus Kessler, que opera con el nombre comercial Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga). Contacto: info@fincakayu.com o WhatsApp +34 722 162 962.",
@@ -483,7 +484,7 @@ it: {
   fOpslaan:"Il salvataggio non è riuscito. Riprovate o contattateci.",
   klaar:"Check-in completo ({n} {p}). Apertura della vostra pagina ospiti…",
   alGeregistreerd:"Il check-in per questa prenotazione è già stato fatto ({n} {p}). Un nuovo invio sostituisce quei dati.",
-  naarGast:"Alla vostra pagina ospiti",
+  naarGast:"Alla vostra pagina ospiti", aHuisregels:"Leggete ora le nostre regole della casa",
   testmodus:"Modalità di prova senza prenotazione. Nel link manca il codice ospite, quindi non verrà salvato nulla.",
   pKop:"Privacy",
   pa:"Titolare: Bart Jacobus Johannus Kessler, che opera con il nome Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spagna. Contatto: info@fincakayu.com o WhatsApp +34 722 162 962.",
@@ -534,7 +535,7 @@ fr: {
   fOpslaan:"L'enregistrement a échoué. Réessayez ou contactez-nous.",
   klaar:"Enregistrement complet ({n} {p}). Ouverture de votre page…",
   alGeregistreerd:"L'enregistrement de cette réservation est déjà fait ({n} {p}). Un nouvel envoi remplace ces données.",
-  naarGast:"Aller à votre page",
+  naarGast:"Aller à votre page", aHuisregels:"Lisez maintenant nos règles de la maison",
   testmodus:"Mode test sans réservation. Le code client manque dans le lien, rien ne sera donc enregistré.",
   pKop:"Confidentialité",
   pa:"Responsable : Bart Jacobus Johannus Kessler, exerçant sous le nom Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Espagne. Contact : info@fincakayu.com ou WhatsApp +34 722 162 962.",
@@ -585,7 +586,7 @@ pt: {
   fOpslaan:"Não foi possível guardar. Tentem de novo ou contactem-nos.",
   klaar:"Check-in completo ({n} {p}). A abrir a vossa página de hóspedes…",
   alGeregistreerd:"O check-in desta reserva já foi feito ({n} {p}). Um novo envio substitui esses dados.",
-  naarGast:"Ir para a vossa página de hóspedes",
+  naarGast:"Ir para a vossa página de hóspedes", aHuisregels:"Leiam agora as nossas regras da casa",
   testmodus:"Modo de teste sem reserva. Falta o código de hóspede no link, por isso nada será guardado.",
   pKop:"Privacidade",
   pa:"Responsável: Bart Jacobus Johannus Kessler, que opera com o nome Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Espanha. Contacto: info@fincakayu.com ou WhatsApp +34 722 162 962.",
@@ -636,7 +637,7 @@ cs: {
   fOpslaan:"Uložení se nezdařilo. Zkuste to prosím znovu nebo nás kontaktujte.",
   klaar:"Registrace dokončena ({n} {p}). Otevírá se vaše stránka pro hosty…",
   alGeregistreerd:"Tato rezervace už byla zaregistrována ({n} {p}). Nové odeslání tyto údaje nahradí.",
-  naarGast:"Na vaši stránku pro hosty",
+  naarGast:"Na vaši stránku pro hosty", aHuisregels:"Přečtěte si teď náš domovní řád",
   testmodus:"Testovací režim bez rezervace. V odkazu chybí kód hosta, takže se nic neuloží.",
   pKop:"Ochrana osobních údajů",
   pa:"Správce: Bart Jacobus Johannus Kessler, podnikající pod názvem Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Španělsko. Kontakt: info@fincakayu.com nebo WhatsApp +34 722 162 962.",
@@ -735,7 +736,7 @@ fi: {
   fOpslaan:"Tallennus ei onnistunut. Yrittäkää uudelleen tai ottakaa meihin yhteyttä.",
   klaar:"Check-in valmis ({n} {p}). Vierassivunne avautuu…",
   alGeregistreerd:"Tälle varaukselle on jo tehty check-in ({n} {p}). Uusi lähetys korvaa aiemmat tiedot.",
-  naarGast:"Avaa vierassivunne",
+  naarGast:"Avaa vierassivunne", aHuisregels:"Lukekaa nyt talon säännöt",
   testmodus:"Testitila ilman varausta. Linkistä puuttuu vieraskoodi, joten mitään ei tallenneta.",
   pKop:"Tietosuoja",
   pa:"Rekisterinpitäjä: Bart Jacobus Johannus Kessler, toiminimellä Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Espanja. Yhteystiedot: info@fincakayu.com tai WhatsApp +34 722 162 962.",
@@ -880,7 +881,7 @@ no: {
   fOpslaan:"Lagringen mislyktes. Prøv igjen eller ta kontakt med oss.",
   klaar:"Innsjekkingen er fullført ({n} {p}). Gjestesiden deres åpnes…",
   alGeregistreerd:"Innsjekking er allerede gjort for denne bestillingen ({n} {p}). Sender dere på nytt, erstattes disse opplysningene.",
-  naarGast:"Til gjestesiden deres",
+  naarGast:"Til gjestesiden deres", aHuisregels:"Les husreglene våre nå",
   testmodus:"Testmodus uten bestilling. Lenken mangler gjestekode, så ingenting blir lagret.",
   pKop:"Personvern",
   pa:"Behandlingsansvarlig: Bart Jacobus Johannus Kessler, som driver under navnet Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spania. Kontakt: info@fincakayu.com eller WhatsApp +34 722 162 962.",
@@ -1025,7 +1026,7 @@ sv: {
   fOpslaan:"Det gick inte att spara. Försök igen eller kontakta oss.",
   klaar:"Incheckningen är klar ({n} {p}). Er gästsida öppnas…",
   alGeregistreerd:"Incheckning har redan gjorts för den här bokningen ({n} {p}). Skickar ni igen ersätts de uppgifterna.",
-  naarGast:"Till er gästsida",
+  naarGast:"Till er gästsida", aHuisregels:"Läs våra husregler nu",
   testmodus:"Testläge utan bokning. Länken saknar gästkod, så ingenting sparas.",
   pKop:"Integritet",
   pa:"Personuppgiftsansvarig: Bart Jacobus Johannus Kessler, verksam under namnet Finca KaYu (casa rural, Registro de Turismo de Andalucía CR/MA/02953), Diseminado La Ventanilla, Polígono 9, nº 385, 29100 Coín (Málaga), Spanien. Kontakt: info@fincakayu.com eller WhatsApp +34 722 162 962.",
@@ -1779,8 +1780,9 @@ sv: {
     var app = t('aAppTekst', { naam: k.naam, data: data });
     verdictBox.hidden = false; verdictBox.className = 'verdict good klaarblok';
     verdictBox.innerHTML = '<span><b>' + esc(t('aKlaar')) + '</b></span>' +
-      '<a class="appknop" id="appKnop" href="https://wa.me/34722162962?text=' + encodeURIComponent(app) + '" target="_blank" rel="noopener">' + esc(t('aAppKnop')) + '</a>' +
-      '<a class="naargast" href="./?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('naarGast')) + '</a>';
+      /* 01-11-2026 c (Bart): meteen na het inchecken de huisregels lezen; dat is nu de grote knop, appen eronder */
+      '<a class="huisregelknop" id="huisregelKnop" href="./?ontbijt=' + encodeURIComponent(CODE) + '">' + esc(t('aHuisregels')) + '</a>' +
+      '<a class="appknop" id="appKnop" href="https://wa.me/34722162962?text=' + encodeURIComponent(app) + '" target="_blank" rel="noopener">' + esc(t('aAppKnop')) + '</a>';
     document.querySelectorAll('header p, .uitleg, #verblijfKaart, #form, .legenda').forEach(function(el){ el.hidden = true; });
   }
   /* 21-10-2026 d (review): de lengte in meter. "7,5", "7.5 m" en "7m50" of "7 m 50" (= 7,50) tellen. Een tweede getal ("7,5 x 2,3"),

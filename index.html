@@ -880,6 +880,15 @@
   .cf-kaart{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:0 0 10px}
   .cf-kaart h4{margin:0 0 6px;font-size:16px;font-weight:700}
   .cf-kaart h4 em{font-style:normal;font-weight:400;font-size:12.5px;color:var(--muted);margin-left:6px}
+  /* 01-11-2026 i: bladeren tussen maanden */
+  .cf-maandkop{display:flex;align-items:center;gap:8px;margin:0 0 2px}
+  .cf-maandkop h4{flex:1;text-align:center;margin:0;font-size:18px}
+  .cf-pijl{flex:0 0 auto;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--vlak, #F0EEE6);color:var(--pine);font:inherit;font-size:24px;line-height:1;padding:0;cursor:pointer}
+  .cf-pijl:disabled{opacity:.3;cursor:default}
+  .cf-klein.cf-maanduitleg{text-align:center;margin:0 0 8px}
+  .cf-maanduitleg .cf-link{font-size:14px;padding:8px 4px}
+  .cf-link{background:none;border:0;padding:0;font:inherit;color:var(--terra, #A0522D);text-decoration:underline;cursor:pointer}
+  .cf-maandkaart{touch-action:pan-y pinch-zoom} /* review i: zoomen met twee vingers blijft werken */
   .cf-label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 2px}
   .cf-groot{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1.25}
   .cf-klein{font-size:12px;color:var(--muted);margin:2px 0 0}
@@ -1424,8 +1433,15 @@
      =================================================================================================================== */
   /* 23-10-2026 h: afrekenscherm, twee grote knoppen naast elkaar en een tekstlink voor deels contant */
   .bwkeuze{display:flex;gap:8px;margin:2px 0 0}
-  .bwkeuze .bwgroot{flex:1;min-height:56px;padding:10px 8px;border-radius:14px;border:1px solid var(--stipgrijs, #8F8B80);background:var(--vlak, #F0EEE6);color:var(--pine);font:inherit;font-size:16px;font-weight:600;cursor:pointer}
+  .bwkeuze .bwgroot{flex:1;min-width:0;overflow-wrap:anywhere;min-height:56px;padding:10px 8px;border-radius:14px;border:1px solid var(--stipgrijs, #8F8B80);background:var(--vlak, #F0EEE6);color:var(--pine);font:inherit;font-size:16px;font-weight:600;cursor:pointer}
   .bwkeuze .bwgroot:active{background:var(--line)}
+.bwkeuze .bwgroot small{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-top:2px}
+.bwkeuze.bwrek .bwgroot{min-height:48px}
+.bwkeuze.bwrek .bwgroot[aria-pressed="true"]{border:2px solid var(--pine);background:var(--card, #fff)}
+.bkblok{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px}
+.bkblok .bkaan{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--pine);margin:2px 0 4px}
+.bkblok .bkaan input{flex:0 0 auto;width:22px;height:22px;min-height:0;margin:0;padding:0}
+.bwaanpas{display:block;width:100%;margin:2px 0 12px;padding:11px 12px;border-radius:12px;border:1px solid var(--stipgrijs, #8F8B80);background:var(--card, #fff);color:var(--pine);font:inherit;font-size:15px;font-weight:600;cursor:pointer}
   #betaalDlg [hidden]{display:none !important}
   .bwdeelsknop{display:block;margin:10px 0 0;padding:6px 0;border:0;background:none;color:var(--accent);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
   /* 24-10-2026 b: check-out stap voor stap. Grote knoppen onder elkaar; de eerste (class vol) is de gewone keuze, "stil" is een tekstknop */
@@ -1842,6 +1858,8 @@
       <button class="meerrij" data-meer="gastenverkoop"><span><b>Gasten en verkoop</b><small>per maand, kwartaal of jaar</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 29-10-2026 e: slot op Geld met de kluiscode, aan of uit -->
       <div class="meerinst"><span><b>Slot op Geld</b><small id="mpGeldSlot"></small></span><button type="button" class="meerzet" data-meer="geldslot" id="meerGeldSlot"></button></div>
+      <!-- 01-11-2026 g (Bart): Tikkie en Mollie zelf instellen -->
+      <button class="meerrij" data-meer="betaalknoppen"><span><b>Betaalwijzen bij afrekenen</b><small id="mpBetaalKnoppen"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="naarPrijzen"><span><b>Producten en prijzen</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 27-10-2026 a: knop Geschiedenis bar in de barvensters tonen of verbergen (het logboek in de database loopt altijd) -->
       <div class="meerinst"><span><b>Geschiedenis van de bar</b><small id="mpBarGesch"></small></span><button type="button" class="meerzet" data-meer="bargesch" id="meerBarGesch"></button></div>
@@ -1876,6 +1894,20 @@
   <label class="bslabel" for="pwWachtwoord">Wifi-wachtwoord</label><input id="pwWachtwoord" autocomplete="off">
   <div id="pwErr" style="color:var(--rood, #b3261e);font-size:13px;min-height:18px;margin-top:6px"></div>
   <div class="acts"><button id="pwSluit">Annuleren</button><button class="go" id="pwOk">Opslaan</button></div>
+</div></dialog>
+<!-- 01-11-2026 g (Bart): de knoppen voor betalen per bank zelf instellen (naam, rekening, aan of uit) -->
+<dialog id="betaalKnoppen"><div class="dlg">
+  <h3>Betaalwijzen bij afrekenen</h3>
+  <p class="leeg" style="margin:0 0 10px">Naast Contant heb je bij afrekenen twee knoppen, elk voor een eigen rekening. Zet een knop uit als je hem niet gebruikt. Staan ze allebei uit, dan zie je één knop Bankoverschrijving.</p>
+  <div class="bkblok"><label class="bkaan"><input type="checkbox" id="bkAan1"> Knop 1 gebruiken</label>
+    <label class="bslabel" for="bkNaam1">Naam op de knop</label><input id="bkNaam1" autocomplete="off" maxlength="20" placeholder="bijvoorbeeld Tikkie">
+    <label class="bslabel" for="bkRek1">Komt binnen op</label><input id="bkRek1" autocomplete="off" maxlength="20" placeholder="bijvoorbeeld ING"></div>
+  <div class="bkblok"><label class="bkaan"><input type="checkbox" id="bkAan2"> Knop 2 gebruiken</label>
+    <label class="bslabel" for="bkNaam2">Naam op de knop</label><input id="bkNaam2" autocomplete="off" maxlength="20" placeholder="bijvoorbeeld Mollie">
+    <label class="bslabel" for="bkRek2">Komt binnen op</label><input id="bkRek2" autocomplete="off" maxlength="20" placeholder="bijvoorbeeld Sabadell"></div>
+  <p class="leeg" style="margin:8px 0 0;font-size:12px">Een nieuwe naam geldt ook voor wat eerder via die knop is afgerekend (Let op, Cijfers, Exporteren). Ga je een andere rekening gebruiken, zet dan liever de andere knop aan.</p>
+  <div id="bkErr" style="color:var(--rood, #b3261e);font-size:13px;min-height:18px;margin-top:6px"></div>
+  <div class="acts"><button id="bkSluit">Annuleren</button><button class="go" id="bkOk">Opslaan</button></div>
 </div></dialog>
 <dialog id="checkin2"><div class="dlg meerdlg ci-dlg">
   <h3>Check-in gasten</h3>
@@ -2025,6 +2057,7 @@
   <button class="barknop" id="naarPrijzen">Producten en prijzen</button>
   <p class="leeg" id="barLive" style="margin:8px 0 0">Elke tik wordt meteen opgeslagen. De gast ziet dezelfde lijst op zijn eigen pagina.</p>
   <div class="acts">
+    <button class="go" id="barNaarAf" hidden>Klaar, naar afrekenen</button><!-- 01-11-2026 e: alleen als je hier vanuit Afrekenen komt -->
     <button class="go" id="barKlaar">Klaar</button>
   </div>
 </div></dialog>
@@ -2182,15 +2215,19 @@
   <p id="bwWie" style="margin:0 0 4px;font-size:15px"></p>
   <div id="bwRegels" class="regels" style="margin:6px 0 8px"></div>
   <p id="bwUitleg" class="leeg" style="margin:0 0 8px;font-size:12px;color:var(--muted)"></p>
+  <!-- 01-11-2026 e (Bart): bij het afrekenen nog iets toevoegen of aanpassen, daarna terug naar dit scherm -->
+  <button type="button" class="bwaanpas" id="bwAanpassen" hidden>Rekening aanpassen</button>
   <!-- 23-10-2026 h (Bart): bij het uitchecken alleen de keuze contant of bankoverschrijving; deels contant achter een link -->
   <p class="zone" style="margin:4px 0 6px">Hoe is er betaald?</p>
-  <div id="bwSnel"><div class="bwkeuze"><button type="button" class="bwgroot" id="bwAlContant">Contant</button><button type="button" class="bwgroot" id="bwAlBank">Bankoverschrijving</button></div>
-  <p class="leeg" style="margin:6px 0 0;font-size:12px;color:var(--muted)">Een bankoverschrijving blijft in Let op staan tot je op Binnen tikt.</p></div>
-  <div><button type="button" class="bwdeelsknop" id="bwDeelsKnop">Deels contant, rest per bankoverschrijving</button></div>
+  <!-- 01-11-2026 e (Bart): Tikkie komt op de ING, Mollie op de Sabadell; per rekening bijhouden wat er via de app binnenkomt -->
+  <div id="bwSnel"><div class="bwkeuze"><button type="button" class="bwgroot" id="bwAlContant">Contant</button><button type="button" class="bwgroot" id="bwAlIng">Tikkie<small>ING</small></button><button type="button" class="bwgroot" id="bwAlSab">Mollie<small>Sabadell</small></button><button type="button" class="bwgroot" id="bwAlBank" hidden>Bankoverschrijving</button></div>
+  <p class="leeg" id="bwBankUitleg" style="margin:6px 0 0;font-size:12px;color:var(--muted)">Tikkie en Mollie blijven in Let op staan tot je op Binnen tikt.</p></div>
+  <div><button type="button" class="bwdeelsknop" id="bwDeelsKnop">Deels contant, rest per Tikkie of Mollie</button></div>
   <div id="bwDeels" hidden>
     <label class="bslabel" for="bwContant">Contant €</label><input id="bwContant" inputmode="decimal" autocomplete="off">
-    <label class="bslabel" for="bwTikkie">Bankoverschrijving €</label><input id="bwTikkie" inputmode="decimal" autocomplete="off" placeholder="0,00">
-    <p class="leeg" style="margin:6px 0 0;font-size:12px;color:var(--muted)">Vul het contante bedrag in; de rest rekent de app als bankoverschrijving.</p>
+    <label class="bslabel" for="bwTikkie" id="bwRestLabel">Rest per Tikkie of Mollie €</label><input id="bwTikkie" inputmode="decimal" autocomplete="off" placeholder="0,00">
+    <div class="bwkeuze bwrek" style="margin-top:8px"><button type="button" class="bwgroot" id="bwDeelIng" aria-pressed="false">Tikkie<small>ING</small></button><button type="button" class="bwgroot" id="bwDeelSab" aria-pressed="false">Mollie<small>Sabadell</small></button></div>
+    <p class="leeg" id="bwRestUitleg" style="margin:6px 0 0;font-size:12px;color:var(--muted)">Vul het contante bedrag in; de rest rekent de app als Tikkie of Mollie. Kies hierboven welke.</p>
     <button class="go" id="bwOk" type="button">Afrekenen</button>
   </div>
   <div id="bwErr" style="color:var(--rood, #b3261e);font-size:13px;min-height:18px;margin-top:6px"></div>
@@ -2237,7 +2274,7 @@
     <p class="leeg" style="margin:6px 0 0;font-size:12px;color:var(--muted)">MyTourist stuurt de gast geen mail; de boeking en de factuur maak je daar verder af zoals altijd.</p>
   </div>
   <div id="knDicht" hidden>
-    <label class="bslabel" for="knWie">Voor wie (bijvoorbeeld: Hans van Iersel)</label><input id="knWie" autocomplete="off">
+    <label class="bslabel" for="knWie">Voor wie (bijvoorbeeld: Jan Jansen)</label><input id="knWie" autocomplete="off">
     <!-- 24-10-2026 f (Bart): familie en vrienden krijgen standaard een gastenpagina (check-inlink, bar, ontbijt, rekening); nooit SES, nooit een factuur -->
     <label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="knGastprofiel" checked> Met gastenpagina: check-inlink, bar, ontbijt en rekening, net als bij een gewone kamer</label>
     <p class="leeg" style="margin:6px 0 0;font-size:12px;color:var(--muted)">De kamer en de hele finca gaan voor deze nachten dicht in MyTourist; er komt geen boeking en geen factuur, en de check-in gaat niet naar SES. Met gastenpagina staat de gast als groene balk in de kalender, met een gewoon gastprofiel. Zonder gastenpagina komt er een grijze balk "Dicht". Weer openzetten kan via het profiel of die balk.</p>
@@ -2344,6 +2381,7 @@
   </div>
   <div class="acts">
     <button id="kLeeg">Leegmaken</button>
+    <button class="go" id="kNaarAf" hidden>Klaar, naar afrekenen</button><!-- 01-11-2026 e: alleen als je hier vanuit Afrekenen komt -->
     <button class="go" id="kSluit">Sluiten</button>
   </div>
 </div></dialog>
@@ -3967,6 +4005,8 @@ const gastCamperAkkoord = () => !!gastData && isCamperPlek(gastData.kamer) && St
 const gastIsKamer = () => !!gastData && /^Kamer /.test(gastData.kamer || "");
 const gastAkkoordSleutel = () => "kayu_akkoord_" + gastCode;
 const kijkMee = new URLSearchParams(location.search).get("kijk") === "1";
+/* review 01-11 c: is er op deze telefoon echt akkoord gegeven (in de link of in de opslag)? Bij geblokkeerde opslag: nee */
+const gastAkkoordGegeven = () => { if(akkoordInLink) return true; try { return !!localStorage.getItem(gastAkkoordSleutel()); } catch(e){ return false; } };
 const gastAkkoordNodig = () => {
   if(kijkMee) return false;
   if(akkoordInLink) return false; /* 13-10-2026 a: net akkoord gegeven (staat in de link) */
@@ -3987,7 +4027,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "31-10-2026 a";
+const VERSIE = "01-11-2026 i";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -3995,17 +4035,17 @@ const MAP = location.pathname.replace(/[^/]*$/, "");
 /* een ochtend waarvoor "geen ontbijt" is doorgegeven: wel een regel, maar niets erop */
 const leegOntbijt = x => !x || (!Object.values(x.gerechten || {}).some(n => Number(n) > 0) && !Number(x.kind));
 /* wachtpagina en routeknop voor campers met de nieuwe check-in (plan 29-09-2026) */
-Object.assign(GT.nl, { wachtKop:"Jullie check-in is binnen ✓", wachtTekst: d => `Jullie eigen gastenpagina opent op ${d} vanaf 13:00 uur, de dag vóór aankomst. Daar vind je dan de poortcode, de wifi en alles over de finca. Tot dan!`, route:"Route, via de goede weg", kort:"In het kort" });
-Object.assign(GT.en, { wachtKop:"Your check-in has arrived ✓", wachtTekst: d => `Your own guest page opens on ${d} from 13:00, the day before arrival. There you will find the gate code, the wifi and everything about the finca. See you then!`, route:"Route, via the good road", kort:"In short" });
-Object.assign(GT.de, { wachtKop:"Euer Check-in ist da ✓", wachtTekst: d => `Eure eigene Gästeseite öffnet am ${d} ab 13:00 Uhr, am Tag vor der Ankunft. Dort findet ihr dann den Torcode, das WLAN und alles über die Finca. Bis dann!`, route:"Route, über die gute Straße", kort:"Kurz gesagt" });
-Object.assign(GT.es, { wachtKop:"Vuestro check-in ha llegado ✓", wachtTekst: d => `Vuestra página de huéspedes se abre el ${d} a partir de las 13:00, el día antes de la llegada. Allí encontraréis el código de la puerta, el wifi y todo sobre la finca. ¡Hasta entonces!`, route:"Ruta, por el buen camino", kort:"En resumen" });
-Object.assign(GT.it, { wachtKop:"Il vostro check-in è arrivato ✓", wachtTekst: d => `La vostra pagina ospiti si apre il ${d} dalle 13:00, il giorno prima dell'arrivo. Lì troverete il codice del cancello, il wifi e tutto sulla finca. A presto!`, route:"Percorso, per la strada giusta", kort:"In breve" });
-Object.assign(GT.fr, { wachtKop:"Votre enregistrement est bien reçu ✓", wachtTekst: d => `Votre page invités s'ouvre le ${d} à partir de 13h00, la veille de votre arrivée. Vous y trouverez le code du portail, le wifi et tout sur la finca. À bientôt !`, route:"Itinéraire, par la bonne route", kort:"En bref" });
-Object.assign(GT.pt, { wachtKop:"O vosso check-in chegou ✓", wachtTekst: d => `A vossa página de hóspedes abre a ${d} a partir das 13:00, no dia anterior à chegada. Lá encontram o código do portão, o wifi e tudo sobre a finca. Até lá!`, route:"Caminho, pela boa estrada", kort:"Em resumo" });
-Object.assign(GT.cs, { wachtKop:"Váš check-in dorazil ✓", wachtTekst: d => `Vaše stránka pro hosty se otevře ${d} od 13:00, den před příjezdem. Najdete tam kód od brány, wifi a vše o fince. Tak zatím!`, route:"Trasa, po správné cestě", kort:"Stručně" });
-Object.assign(GT.fi, { wachtKop:"Check-in on vastaanotettu ✓", wachtTekst: d => `Oma vierassivunne avautuu ${d} klo 13:00 alkaen, saapumista edeltävänä päivänä. Sieltä löydätte portin koodin, wifin ja kaiken tiedon fincasta. Nähdään silloin!`, route:"Reitti, hyvää tietä pitkin", kort:"Lyhyesti" });
-Object.assign(GT.no, { wachtKop:"Vi har mottatt innsjekkingen deres ✓", wachtTekst: d => `Gjestesiden deres åpner ${d} fra kl. 13:00, dagen før ankomst. Der finner dere portkoden, wifi og alt om fincaen. Vi ses!`, route:"Veibeskrivelse, via den riktige veien", kort:"Kort fortalt" });
-Object.assign(GT.sv, { wachtKop:"Vi har tagit emot er incheckning ✓", wachtTekst: d => `Er egen gästsida öppnar den ${d} från kl. 13:00, dagen före ankomsten. Där hittar ni koden till grinden, wifi och allt om fincan. Vi ses!`, route:"Vägbeskrivning, via rätt väg", kort:"I korthet" });
+Object.assign(GT.nl, { wachtGelezen:"Bedankt voor het lezen van onze huisregels.", wachtKop:"Jullie check-in is binnen ✓", wachtTekst: d => `Jullie eigen gastenpagina opent op ${d} vanaf 13:00 uur, de dag vóór aankomst. Daar vind je dan de poortcode, de wifi en alles over de finca. Tot dan!`, route:"Route, via de goede weg", kort:"In het kort" });
+Object.assign(GT.en, { wachtGelezen:"Thank you for reading our house rules.", wachtKop:"Your check-in has arrived ✓", wachtTekst: d => `Your own guest page opens on ${d} from 13:00, the day before arrival. There you will find the gate code, the wifi and everything about the finca. See you then!`, route:"Route, via the good road", kort:"In short" });
+Object.assign(GT.de, { wachtGelezen:"Danke, dass ihr unsere Hausregeln gelesen habt.", wachtKop:"Euer Check-in ist da ✓", wachtTekst: d => `Eure eigene Gästeseite öffnet am ${d} ab 13:00 Uhr, am Tag vor der Ankunft. Dort findet ihr dann den Torcode, das WLAN und alles über die Finca. Bis dann!`, route:"Route, über die gute Straße", kort:"Kurz gesagt" });
+Object.assign(GT.es, { wachtGelezen:"Gracias por leer nuestras normas de la casa.", wachtKop:"Vuestro check-in ha llegado ✓", wachtTekst: d => `Vuestra página de huéspedes se abre el ${d} a partir de las 13:00, el día antes de la llegada. Allí encontraréis el código de la puerta, el wifi y todo sobre la finca. ¡Hasta entonces!`, route:"Ruta, por el buen camino", kort:"En resumen" });
+Object.assign(GT.it, { wachtGelezen:"Grazie per aver letto le nostre regole della casa.", wachtKop:"Il vostro check-in è arrivato ✓", wachtTekst: d => `La vostra pagina ospiti si apre il ${d} dalle 13:00, il giorno prima dell'arrivo. Lì troverete il codice del cancello, il wifi e tutto sulla finca. A presto!`, route:"Percorso, per la strada giusta", kort:"In breve" });
+Object.assign(GT.fr, { wachtGelezen:"Merci d'avoir lu nos règles de la maison.", wachtKop:"Votre enregistrement est bien reçu ✓", wachtTekst: d => `Votre page invités s'ouvre le ${d} à partir de 13h00, la veille de votre arrivée. Vous y trouverez le code du portail, le wifi et tout sur la finca. À bientôt !`, route:"Itinéraire, par la bonne route", kort:"En bref" });
+Object.assign(GT.pt, { wachtGelezen:"Obrigado por lerem as nossas regras da casa.", wachtKop:"O vosso check-in chegou ✓", wachtTekst: d => `A vossa página de hóspedes abre a ${d} a partir das 13:00, no dia anterior à chegada. Lá encontram o código do portão, o wifi e tudo sobre a finca. Até lá!`, route:"Caminho, pela boa estrada", kort:"Em resumo" });
+Object.assign(GT.cs, { wachtGelezen:"Děkujeme, že jste si přečetli náš domovní řád.", wachtKop:"Váš check-in dorazil ✓", wachtTekst: d => `Vaše stránka pro hosty se otevře ${d} od 13:00, den před příjezdem. Najdete tam kód od brány, wifi a vše o fince. Tak zatím!`, route:"Trasa, po správné cestě", kort:"Stručně" });
+Object.assign(GT.fi, { wachtGelezen:"Kiitos, että luitte talon säännöt.", wachtKop:"Check-in on vastaanotettu ✓", wachtTekst: d => `Oma vierassivunne avautuu ${d} klo 13:00 alkaen, saapumista edeltävänä päivänä. Sieltä löydätte portin koodin, wifin ja kaiken tiedon fincasta. Nähdään silloin!`, route:"Reitti, hyvää tietä pitkin", kort:"Lyhyesti" });
+Object.assign(GT.no, { wachtGelezen:"Takk for at dere leste husreglene våre.", wachtKop:"Vi har mottatt innsjekkingen deres ✓", wachtTekst: d => `Gjestesiden deres åpner ${d} fra kl. 13:00, dagen før ankomst. Der finner dere portkoden, wifi og alt om fincaen. Vi ses!`, route:"Veibeskrivelse, via den riktige veien", kort:"Kort fortalt" });
+Object.assign(GT.sv, { wachtGelezen:"Tack för att ni läste våra husregler.", wachtKop:"Vi har tagit emot er incheckning ✓", wachtTekst: d => `Er egen gästsida öppnar den ${d} från kl. 13:00, dagen före ankomsten. Där hittar ni koden till grinden, wifi och allt om fincan. Vi ses!`, route:"Vägbeskrivning, via rätt väg", kort:"I korthet" });
 /* 08-10-2026 c: KaYu-plank (Bart): op een plankochtend ziet de gast alleen de plank, met het aantal vegetariërs en een vakje voor allergieën */
 Object.assign(GT.nl, { plankKop:"KaYu-plank", plankTekst:"Deze ochtend serveren we onze KaYu-plank: een ontbijt in tapasstijl, met allerlei kleine lekkere dingen op één plank. Denk aan overnight oats, yoghurt met vers fruit, een croissant, een broodje, iets met ei en een verrassing van de dag. Wat er precies op ligt, verschilt per dag. € 10 per persoon, kinderen € 5.", plankVega:"Waarvan vegetarisch", plankAllergieKop:"Allergieën?", plankAllergiePlaats:"Bijvoorbeeld: noten, gluten of lactose. Geen allergie? Laat dit leeg." });
 Object.assign(GT.en, { plankKop:"KaYu-plank", plankTekst:"This morning we're serving our KaYu-plank: a tapas-style breakfast with all kinds of tasty little things on one board. Think overnight oats, yoghurt with fresh fruit, a croissant, a bread roll, something with egg and a surprise of the day. What's on it varies from day to day. € 10 per person, children € 5.", plankVega:"Of which vegetarian", plankAllergieKop:"Any allergies?", plankAllergiePlaats:"For example: nuts, gluten or lactose. No allergies? Just leave this empty." });
@@ -4209,7 +4249,12 @@ async function startGast(code){
   /* taal: wat Bart of de gast koos; anders de taal van de telefoon (wordt pas bewaard als de gast zelf een taal kiest) */
   if(gastData && gastData.taal && GT[gastData.taal]) gastTaal = gastData.taal;
   /* campers met de nieuwe check-in (plan 29-09-2026): de gastenpagina opent pas de dag vóór aankomst vanaf 13:00; tot dan een korte wachtpagina */
-  if(gastData && !gastData.fout && gastWachtNodig()){ tekenGastWacht(); setTimeout(() => location.reload(), 5 * 60000); return; }
+  /* 01-11-2026 c (Bart: "beter dat de pagina voor de huisregels is"): wie online heeft ingecheckt maar nog niet akkoord gaf, leest meteen de
+     huisregels, ook als de pagina nog niet open is. Na akkoord komt de wachtpagina (poortcode en wifi pas de dag vóór aankomst vanaf 13:00). */
+  if(gastData && !gastData.fout && gastWachtNodig()){
+    if(gastAkkoordNodig()){ tekenGast(); return; }
+    tekenGastWacht(); setTimeout(() => location.reload(), 5 * 60000); return;
+  }
   if(gastData && !gastData.fout && gastVertrokken()) gastTab = "rekening";
   tekenGast();
   gastSamenHaal();
@@ -4233,7 +4278,7 @@ function tekenGastWacht(){
   const talen = `<div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span><div class="gtaal">${gIcoon("bol")}<select data-gtaal="1" aria-label="Taal">` +
     Object.keys(GT).map(l => `<option value="${l}"${l === gastTaal ? " selected" : ""}>${taalOptie(l)}</option>`).join("") + `</select></div></div>`;
   bak.innerHTML = `<div class="gkop">${talen}</div><div class="dag akkoord" style="margin-top:14px"><b style="display:block;font-size:16px;font-weight:600;margin-bottom:6px">${t.wachtKop}</b>` +
-    `<p style="margin:0 0 12px">${t.wachtTekst(taalDatum(iso(g), gastTaal))}</p>` +
+    `<p style="margin:0 0 12px">${gastCamperAkkoord() && !kijkMee && gastAkkoordGegeven() ? (t.wachtGelezen || GT.nl.wachtGelezen) + " " : ""}${t.wachtTekst(taalDatum(iso(g), gastTaal))}</p>` +
     (route ? `<a class="groute" href="${route}" target="_blank" rel="noopener">${t.route}</a>` + routeStopHtml() : "") + `</div>`;
   bak.querySelectorAll("[data-gtaal]").forEach(sel => sel.onchange = () => { gastTaal = sel.value; try{ localStorage.setItem("ontbijtTaal", gastTaal); }catch(e){} tekenGastWacht(); });
 }
@@ -4506,7 +4551,7 @@ function gastInfoHtml(){
   gtGastLaad(soort, gastTaal);
   const regels = vulGeheim(metEigenHandleiding(camper
     ? tk.camperWelkom({ naam:"", van:"", tot:"", prijs:"", nachten:1, personen:1, stroom:false, link, pagina:link, aank:"", totDag:"" })
-    : tk.kamerWelkom({ naam:"", link, groep: gastData.kamer === "Hele finca", aank:"" }), soort, gastTaal, gc), gastData, false);
+    : tk.kamerWelkom({ naam:"", link, groep: gastData.kamer === "Hele finca", aank:"" }), soort, gastTaal, gc), gastWachtNodig() ? {} : gastData, false); /* 01-11-2026 c: huisregels vóór de dag van openen, dan zonder poortcode en wifi (die regels vallen weg) */
   let i = regels.indexOf(STREEP), lijst = i >= 0 ? regels.slice(i) : regels;
   /* campers met de akkoordstap (30-09-2026 a): het blok "✅ AKKOORD, stuur ons Akkoord terug" uit het WhatsApp-bericht hoort niet op de pagina */
   if(camper && gastCamperAkkoord()){ const a = lijst.findIndex(x => String(x).startsWith("✅")); if(a >= 0){ let e = lijst.indexOf(STREEP, a); if(e < 0) e = lijst.length; lijst = lijst.slice(0, a).concat(lijst.slice(e)); } }
@@ -4526,7 +4571,8 @@ function gastInfoHtml(){
   if(camper){
     const kop = "📌 " + ((GT[gastTaal] || GT.nl).kort || "In het kort");
     /* 25-10-2026 c (Bart): ook de drie kernregels over plek en kinderen, eten en drinken, en de bar */
-    const top = regels.slice(0, i >= 0 ? i : regels.length).filter(x => /^(⏰|📍|🚪|🌐|🏕️|🍽️|🍺)/.test(String(x)));
+    /* 01-11-2026 c (Bart: "de rest ontdek je zelf" was weg): ook de regel over je plek (🚐) */
+    const top = regels.slice(0, i >= 0 ? i : regels.length).filter(x => /^(⏰|📍|🚪|🚐|🌐|🏕️|🍽️|🍺)/.test(String(x)));
     lijst = [kop, ...top, ...lijst];
   }
   const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
@@ -4581,6 +4627,9 @@ function gastIcoontjes(root){
     const sp = maak(`<span class="hweg"></span>`); sp.textContent = m[0]; n.after(sp); n = na; } });
 }
 function tekenGast(){
+  /* review 01-11 c: is de pagina nog niet open en is er al akkoord (bijvoorbeeld net getikt, of een late verversing), dan de wachtpagina,
+     nooit de volle pagina */
+  if(gastData && !gastData.fout && gastWachtNodig() && !gastAkkoordNodig()){ tekenGastWacht(); return; }
   const t = GT[gastTaal], bak = document.getElementById("gastInhoud");
   /* 21-10-2026 b (review): een opengetikte week bij Omgeving blijft open als de pagina zichzelf ververst */
   const omgOpen = new Set([...bak.querySelectorAll("details.omguur[open]")].map(d => d.dataset.k)); /* 22-10-2026 a: op naam, de lijst wisselt nu per soort */
@@ -4656,11 +4705,13 @@ function tekenGast(){
     /* geen tabbladen: eerst de huisregels lezen en akkoord geven, daarna gaat de pagina open */
     /* 11-10-2026 a (Bart): veel gasten tikken de huisregels weg zonder te lezen; bovenaan een duidelijke oproep, met wat ze ervoor terugkrijgen */
     if(!gastAkkoordStart) gastAkkoordStart = Date.now();
+    /* 01-11-2026 c: vóór de dag van openen staat na akkoord nog de wachtpagina; de zin dat de pagina dan opengaat valt weg */
+    const vroeg = gastWachtNodig(), zonderSlot = x => { const z = String(x || ""), i = z.lastIndexOf(". ", z.length - 2); return vroeg && i > 0 ? z.slice(0, i + 1) : z; };
     bak.innerHTML = noodHtml + `<div class="gkop">` + talen + `</div>` +
-      `<div class="dag akkoordletop" style="border:2px solid #D9822B;background:#FFF4E5;border-radius:12px"><h2 style="color:#8A4A00">${t.akkoordLetOpKop || GT.nl.akkoordLetOpKop}</h2><div class="info" style="color:#5A3A1A;font-size:16px;line-height:1.55">${t.akkoordLetOp || GT.nl.akkoordLetOp}</div></div>` +
+      `<div class="dag akkoordletop" style="border:2px solid #D9822B;background:#FFF4E5;border-radius:12px"><h2 style="color:#8A4A00">${t.akkoordLetOpKop || GT.nl.akkoordLetOpKop}</h2><div class="info" style="color:#5A3A1A;font-size:16px;line-height:1.55">${zonderSlot(t.akkoordLetOp || GT.nl.akkoordLetOp)}</div></div>` +
       `<div class="dag akkoord"><h2>🌿 ${t.akkoordKop}</h2>` +
       /* kamers (27-09-2026 k, tekst goedgekeurd door Bart): warmere inleiding; groepen houden hun eigen tekst */
-      (gastIsGroep() || isCamperPlek(gastData.kamer) || !t.akkoordKamer ? `<div class="info" style="color:var(--pine);font-size:15px;line-height:1.6">${t.akkoordIntro}</div>`
+      (gastIsGroep() || isCamperPlek(gastData.kamer) || !t.akkoordKamer ? `<div class="info" style="color:var(--pine);font-size:15px;line-height:1.6">${zonderSlot(t.akkoordIntro)}</div>`
         : `<div class="info" style="color:var(--pine);font-size:16px;line-height:1.6;font-weight:600">${t.akkoordKamer[0]}</div><div class="info" style="color:var(--pine);font-size:15px;line-height:1.6;margin-top:6px">${t.akkoordKamer[1]}</div>`) + `</div>` +
       gastInfoHtml() +
       `<div class="dag akkoord" id="akkoordOnder">${gastIsGroep() ? `<div class="info" style="color:var(--pine);font-size:14px;margin-bottom:10px">${t.akkoordOnder}</div>` : ""}<div class="vink"><button data-gakkoord="1" class="aan groot">${t.akkoordKnop}</button></div></div>`;
@@ -6844,6 +6895,52 @@ function tijdlijnBlok(vandaag, morgen){
     (morgenOpen ? `<div class="morgenlijst">` + (mg.length ? mg.join("") : `<p class="leeg">Geen check-ins of check-outs</p>`) + `</div>` : "");
   return el;
 }
+/* 01-11-2026 a (Bart: "heel veel Spaanse mensen met dezelfde naam ... dan weet ik soms niet wie wie is"): korte naam in de kalender
+   is de voornaam plus de eerste letter van de achternaam ("Francisco Moya Castro" wordt "Francisco M."). Tussenvoegsels tellen niet
+   mee, ook niet met een hoofdletter ("Annet van der Veen" en "Annet Van Der Veen" worden "Annet V.", "Juan de la Cruz" wordt
+   "Juan C."), losse voorletters ook niet ("John F. Kennedy" wordt "John K."). Vier of meer naamdelen (Spaans: twee voornamen en twee
+   achternamen) geeft de letter van het op één na laatste deel: "Francisco Javier Moya Castro" wordt "Francisco M.". Twee mensen in
+   één naam ("Lars en Dewi", "John & Esther", "Maarten, Cindy ..."), haakjes of cijfers: zoals vroeger alleen het eerste woord.
+   Review 01-11: "e" en "y" zijn alleen "en" als ze klein staan (of de hele naam in hoofdletters), anders een voorletter. */
+const KAL_TUSSEN = new Set(["van","de","der","den","het","'t","te","ten","ter","in","op","aan","bij","uit","voor","onder","over","del","della","delle","dei","degli","di","da","das","do","dos","du","des","la","las","le","les","lo","los","von","vom","zu","zum","zur","vd","v.d.","v.","d'","l'"]);
+const KAL_SAMEN = new Set(["en","y","e","and","und","et","&","+","/"]);
+function kalKortNaam(naam){
+  const n = String(naam || "").trim();
+  const w = n.split(/\s+/).filter(Boolean);
+  const eerste = (w[0] || "").replace(/[,;:]+$/, "");
+  if(w.length < 2 || /[(),&\/+\d]/.test(n)) return eerste;
+  const hoofd = n === n.toUpperCase() && n !== n.toLowerCase();
+  const delen = [];
+  for(const x of w.slice(1)){
+    const k = x.replace(/[’`]/g, "'"), kl = k.toLowerCase();
+    if((k === kl || hoofd) && KAL_SAMEN.has(kl)){ if(!delen.length) return eerste; continue; }
+    if(KAL_TUSSEN.has(kl)) continue;
+    if(/^\p{L}\.?$/u.test(k)) continue; /* losse voorletter: "F.", "E" */
+    delen.push(k);
+  }
+  if(!delen.length) return eerste;
+  const ach = delen.length >= 3 ? delen[delen.length - 2] : delen[0];
+  /* d'Ancona, l'Estrange: de letter na de apostrof */
+  const rest = /^[dl]'./i.test(ach) ? ach.slice(2) : ach;
+  const letter = (rest.match(/\p{L}/u) || [])[0];
+  return letter ? `${eerste} ${letter.toLocaleUpperCase("nl")}.` : eerste;
+}
+/* past ook "Francisco M." niet, dan wordt de voornaam korter en blijft de letter staan ("Fran… M."), anders valt juist het verschil weg.
+   Gemeten met de echte letter (10px, vet 600 zoals de naam in de balk); lukt meten niet, dan 6px per letter. */
+let kalMeet = null;
+function kalBreedte(t){
+  try {
+    if(!kalMeet){ kalMeet = document.createElement("canvas").getContext("2d"); kalMeet.font = `600 10px ${getComputedStyle(document.body).fontFamily}`; }
+    return kalMeet.measureText(t).width;
+  } catch(e){ return String(t).length * 6; }
+}
+function kalPas(kort, maxW){
+  const m = String(kort || "").match(/^(.+) (\S\.)$/);
+  if(!m || kalBreedte(kort) <= maxW) return kort;
+  const vn = [...m[1]];
+  for(let n = vn.length - 1; n >= 1; n--){ const t = `${vn.slice(0, n).join("")}… ${m[2]}`; if(n === 1 || kalBreedte(t) <= maxW) return t; }
+  return kort;
+}
 function kalenderBlok(vandaag){
   const el = document.createElement("div"); el.className = "blok kal2";
   /* één strook van een week terug tot een half jaar vooruit; scrolt van links naar rechts, de namen van kamers en plekken blijven links staan */
@@ -6906,9 +7003,11 @@ function kalenderBlok(vandaag){
       const soort = b.dicht ? "d" : eigenRij ? "x" : heleFinca ? "g" : (kamer ? (b.bron === "dicht" ? "k fam" : "k") : b.gestald ? "gs" : "c");
       const sleutel = b.dicht ? `data-agdicht="${vrij(b.id)}"` : eigenRij ? `data-age="${vrij(b.id)}"` : kamer ? `data-agk="${vrij(b.nr)}"` : `data-agc="${vrij(b.id)}"`;
       const naam = b.dicht ? `Dicht${b.naam ? " · " + b.naam : ""}` : eigenRij ? (b.naam || "Naam onbekend") : kamer ? (kNaam(b) || "Naam onbekend") : b.gestald ? `${b.naam} · gestald` : b.naam;
-      /* past de hele naam niet voor de volgende balk, dan alleen de voornaam (ongeveer 6px per letter) */
+      /* past de hele naam niet voor de volgende balk, dan korter (ongeveer 6px per letter). Sinds 01-11-2026 a (Bart: veel gasten
+         met dezelfde voornaam, "Francisco" en "Francisco"): voornaam plus de eerste letter van de achternaam, "Francisco M." */
+      const persoon = b.dicht ? "" : eigenRij ? (b.naam || "") : kamer ? (kNaam(b) || "") : (b.naam || "");
       let tekst = (heleFinca ? "Hele finca · " : "") + naam;
-      if(maxW && tekst.length * 6 > maxW) tekst = String(naam).trim().split(/\s+/)[0] || tekst;
+      if(maxW && tekst.length * 6 > maxW) tekst = (persoon ? kalPas(kalKortNaam(persoon), maxW) : "") || String(naam).trim().split(/\s+/)[0] || tekst;
       return `<b class="${klas} ${soort}${b.uit <= vandaag ? " weg" : ""}" ${sleutel}>${label ? `<i${maxW ? ` style="max-width:${maxW}px"` : ""}>${vrij(tekst)}</i>` : ""}</b>`;
     };
     /* eerst de boekingen van deze rij eruit halen, dan per dag alleen die paar vergelijken (190 dagen x 16 rijen) */
@@ -7398,7 +7497,7 @@ function tekenNu(){
   /* fase 2 (29-09-2026 b): extra's-aanvragen staan in de Inbox (Berichten), niet meer in Let op */
   /* bankoverschrijving bij afronden (tot 23-10-2026 d: Tikkie): blijft staan tot hij binnen is (Bart, 25-09-2026) */
   bonnen.filter(x => Number(x.tikkie) > 0 && !x.tikkie_binnen).sort((a,b) => String(a.datum).localeCompare(String(b.datum))).forEach(x =>
-    letAdd(`Bankoverschrijving <b>${eur(Number(x.tikkie))}</b> van <b>${vrij(x.gast) || vrij(x.plek)}</b> (${vrij(x.plek)}), afgerond ${kort(String(x.datum).slice(0,10))}: nog niet binnen<button data-tikbinnen="${vrij(x.id)}">Binnen</button>`, "vandaag")); /* Bart 25-09-2026: een Tikkie blijft zichtbaar in Let op tot hij binnen is */
+    letAdd(`${x.rekening ? vrij(REK_NAAM[x.rekening]) : "Bankoverschrijving"} <b>${eur(Number(x.tikkie))}</b> van <b>${vrij(x.gast) || vrij(x.plek)}</b> (${vrij(x.plek)}), afgerond ${kort(String(x.datum).slice(0,10))}: nog niet binnen<button data-tikbinnen="${vrij(x.id)}">Binnen</button>`, "vandaag")); /* Bart 25-09-2026: een Tikkie blijft zichtbaar in Let op tot hij binnen is */
   /* 19-10-2026 a (Bart): elke dag de prullenbakken van de camperplaats legen. Afvinken geldt alleen voor vandaag
      (de datum zit in de sleutel) en op elk apparaat (let_weg in instellingen); de volgende dag staat hij er weer */
   letPush(`<b>Prullenbakken</b> camperplaats legen`, ["weg","prullenbakken",vandaag], "vandaag");
@@ -7736,7 +7835,7 @@ function tekenNu(){
   bak.querySelectorAll("[data-agedaan]").forEach(kn => kn.onclick = () => aanvraagGedaan(kn.dataset.agedaan));
   bak.querySelectorAll("[data-tikbinnen]").forEach(kn => kn.onclick = async () => {
     const x = bonnen.find(y => String(y.id) === kn.dataset.tikbinnen); if(!x) return;
-    if(!confirm(`Bankoverschrijving van ${eur(Number(x.tikkie))} van ${x.gast || x.plek} is binnen?`)) return;
+    if(!confirm(`${x.rekening ? REK_NAAM[x.rekening] : "Bankoverschrijving"} van ${eur(Number(x.tikkie))} van ${x.gast || x.plek} is binnen?`)) return; /* review 01-11 e */
     const nu = new Date().toISOString();
     const { error } = await db.from("bonnen").update({ tikkie_binnen: nu }).eq("id", x.id);
     if(error){ alert("Opslaan mislukt: " + error.message); return; }
@@ -8715,6 +8814,8 @@ function tekenMeer(){
   /* 29-10-2026 e: slot op Geld */
   meerZet("mpGeldSlot", geldSlotAan() ? "Staat aan: Geld en Exporteren vragen de code van de digitale kluis. Daarna 5 minuten open; bij het wegzetten van de app meteen weer op slot." : "Staat uit: Geld is open voor wie ingelogd is.");
   meerZet("meerGeldSlot", geldSlotAan() ? "Uitzetten" : "Aanzetten");
+  /* 01-11-2026 g: welke knoppen er bij afrekenen staan */
+  { const aan = bankKnoppen().filter(x => x.aan); meerZet("mpBetaalKnoppen", "Contant" + (aan.length ? aan.map(x => ", " + bankLabel(x)).join("") : ", Bankoverschrijving")); }
   /* 29-10-2026 c: aankondiging ook voor wie die dag vertrekt */
   meerZet("mpAankVertrek", aankVertrekAan() ? "Staat aan: wie op de dag zelf vertrekt, ziet de aankondiging ook, met de uitnodiging om een nacht langer te blijven, en staat in de lijst om een WhatsApp te sturen." : "Staat uit: alleen wie die nacht nog blijft, ziet de aankondiging.");
   meerZet("meerAankVertrek", aankVertrekAan() ? "Uitzetten" : "Aanzetten");
@@ -8791,6 +8892,36 @@ function openMeer(){
   meerToon("menu");
 }
 /* poortcode en wifi (tabel instellingen); gasten krijgen ze alleen via hun link (gast_ontbijt) */
+/* 01-11-2026 g (Bart): Meer > Geld > Betaalwijzen bij afrekenen */
+function openBetaalKnoppen(){
+  bankKnoppen().forEach((k, i) => { document.getElementById("bkAan" + (i + 1)).checked = k.aan; document.getElementById("bkNaam" + (i + 1)).value = k.naam; document.getElementById("bkRek" + (i + 1)).value = k.rek; });
+  document.getElementById("bkErr").textContent = "";
+  document.getElementById("betaalKnoppen").showModal();
+}
+document.getElementById("bkSluit").onclick = () => document.getElementById("betaalKnoppen").close();
+document.getElementById("bkOk").onclick = async () => {
+  const err = document.getElementById("bkErr"), knop = document.getElementById("bkOk");
+  const nieuw = BANK_STANDAARD.map((s, i) => ({ code: s.code, aan: document.getElementById("bkAan" + (i + 1)).checked,
+    naam: document.getElementById("bkNaam" + (i + 1)).value.trim(), rek: document.getElementById("bkRek" + (i + 1)).value.trim() }));
+  if(nieuw.some(x => x.aan && !x.naam)){ err.textContent = "Geef elke knop die aan staat een naam."; return; }
+  if(nieuw.some(x => x.naam.length > 20 || x.rek.length > 20)){ err.textContent = "Naam en rekening zijn hooguit 20 tekens."; return; }
+  if(nieuw.some(x => /[<>*"]/.test(x.naam + x.rek))){ err.textContent = "Gebruik geen < > * of \" in de naam of de rekening."; return; }
+  /* review g: deze woorden zijn al vaste keuzes (ook bij de afspraken van groepen) */
+  if(nieuw.some(x => ["contant", "overgemaakt", "bankoverschrijving"].includes(x.naam.toLowerCase()))){ err.textContent = "Contant, Overgemaakt en Bankoverschrijving zijn al vaste namen. Kies een andere naam."; return; }
+  if(nieuw[0].aan && nieuw[1].aan && nieuw[0].naam.toLowerCase() === nieuw[1].naam.toLowerCase()){ err.textContent = "Geef de twee knoppen een verschillende naam."; return; }
+  /* een lege naam bij een knop die uit staat: dan de oude naam bewaren (die heet zo op oude bonnen) */
+  nieuw.forEach((x, i) => { if(!x.naam) x.naam = bankKnoppen()[i].naam; });
+  if(knop.disabled) return;
+  knop.disabled = true; err.textContent = "Bezig…";
+  const waarde = JSON.stringify(nieuw);
+  const { error } = await db.from("instellingen").upsert({ sleutel:"betaal_knoppen", waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  knop.disabled = false;
+  if(error){ err.textContent = "Opslaan mislukt: " + error.message; return; }
+  instellingen.betaal_knoppen = waarde;
+  document.getElementById("betaalKnoppen").close();
+  if(modus === "nu") tekenNu();
+  openMeer(); meerToon("geld");
+};
 function openPoortWifi(){
   document.getElementById("pwPoort").value = String(instellingen.poortcode || "");
   document.getElementById("pwNetwerk").value = String(instellingen.wifi_netwerk || "");
@@ -10034,31 +10165,55 @@ function toonDetail(b){
    heet het nog "tikkie"); geeft {contant, tikkie} of null bij Annuleren */
 const bedragLees = t => { const x = String(t == null ? "" : t).trim().replace(/\s/g, "").replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", "."); if(x === "") return 0; const n = Number(x); return isFinite(n) ? Math.round(n * 100) / 100 : NaN; };
 const bedragVeld = n => (Math.round(n * 100) / 100).toFixed(2).replace(".", ",");
-function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, titel){
+function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, titel, opties){
   return new Promise(klaar => {
     const d = document.getElementById("betaalDlg"), c = document.getElementById("bwContant"), t = document.getElementById("bwTikkie"), err = document.getElementById("bwErr");
-    /* bedieningsconcept fase 5 (29-09-2026 b), sinds 23-10-2026 h: het afrekenscherm toont de rekening en de keuze Contant of Bankoverschrijving */
+    /* bedieningsconcept fase 5 (29-09-2026 b), sinds 23-10-2026 h: het afrekenscherm toont de rekening en de keuze Contant of Bankoverschrijving;
+       sinds 01-11-2026 e (Bart): Contant, Tikkie (ING) of Mollie (Sabadell), en een knop Rekening aanpassen */
     document.getElementById("bwTitel").textContent = titel || "Afrekenen";
     document.getElementById("bwWie").innerHTML = `<b>${vrij(wie)}</b>`;
-    document.getElementById("bwRegels").innerHTML = (regels || []).map(r => `<div class="regel"><span>${r.naam === "Korting" ? vrij(r.naam) : `${r.aantal}× ${vrij(r.naam)}`}</span><b>${eur(Number(r.prijs) * r.aantal)}</b></div>`).join("") + `<div class="regel tot"><span>Totaal</span><b>${eur(totaal)}</b></div>`;
+    document.getElementById("bwRegels").innerHTML = (regels || []).map(r => `<div class="regel"><span>${r.naam === "Korting" ? vrij(r.naam) : `${r.aantal}× ${vrij(r.naam)}`}</span><b>${eur(Number(r.prijs) * r.aantal)}</b></div>`)
+      .join("") + `<div class="regel tot"><span>Totaal</span><b>${eur(totaal)}</b></div>`;
     const voor = Math.min(Math.max(0, Number(alContant) || 0), totaal);
     document.getElementById("bwUitleg").textContent = (voor ? `Al eerder contant ontvangen: ${eur(voor)}. ` : "") + (uitleg || "");
     document.getElementById("bwOk").textContent = knopTekst || "Afrekenen";
+    const aanpas = document.getElementById("bwAanpassen"); aanpas.hidden = !(opties && opties.aanpassen);
+    /* 01-11-2026 g: de bankknoppen volgens Meer > Geld > Betaalwijzen; staan ze allebei uit, dan één knop Bankoverschrijving */
+    const kn = bankKnoppen(), aanK = kn.filter(x => x.aan), vulKnop = (el, k) => { el.hidden = !k.aan; el.innerHTML = `${vrij(k.naam)}${k.rek ? `<small>${vrij(k.rek)}</small>` : ""}`; };
+    vulKnop(document.getElementById("bwAlIng"), kn[0]); vulKnop(document.getElementById("bwAlSab"), kn[1]);
+    vulKnop(document.getElementById("bwDeelIng"), kn[0]); vulKnop(document.getElementById("bwDeelSab"), kn[1]);
+    document.getElementById("bwAlBank").hidden = aanK.length > 0;
+    const namenOf = aanK.length ? aanK.map(x => x.naam).join(" of ") : "bankoverschrijving";
+    document.getElementById("bwBankUitleg").textContent = aanK.length ? `${aanK.map(x => x.naam).join(" en ")} ${aanK.length === 1 ? "blijft" : "blijven"} in Let op staan tot je op Binnen tikt.` : "Een bankoverschrijving blijft in Let op staan tot je op Binnen tikt.";
+    document.getElementById("bwDeelsKnop").textContent = `Deels contant, rest per ${namenOf}`;
+    document.getElementById("bwRestLabel").textContent = `Rest per ${namenOf} €`;
+    document.getElementById("bwRestUitleg").textContent = `Vul het contante bedrag in; de rest rekent de app als ${namenOf}.${aanK.length > 1 ? " Kies hierboven welke." : ""}`;
+    document.querySelector("#bwDeels .bwrek").hidden = aanK.length < 2;
     c.value = bedragVeld(voor || totaal); t.value = voor && totaal - voor > 0.005 ? bedragVeld(totaal - voor) : ""; err.textContent = "";
-    /* 23-10-2026 h (Bart): één tik op Contant of Bankoverschrijving; deels contant achter de link (open als er al eerder iets contant kwam) */
+    /* 23-10-2026 h (Bart): één tik op een betaalwijze; deels contant achter de link (open als er al eerder iets contant kwam) */
     const deels = document.getElementById("bwDeels"), deelsKnop = document.getElementById("bwDeelsKnop");
     /* review 23-10 h: is deels contant open, dan zijn de snelle knoppen weg (anders slaan ze iets anders op dan er staat) */
     const snel = document.getElementById("bwSnel");
     const toonDeels = aan => { deels.hidden = !aan; deelsKnop.hidden = aan; snel.hidden = aan; };
     toonDeels(!!voor);
     deelsKnop.onclick = () => { toonDeels(true); c.focus(); c.select(); };
+    /* 01-11-2026 e: bij deels contant kies je ook voor de rest de rekening; nog niets gekozen bij openen */
+    let deelRek = (opties && opties.rekening) || (aanK.length === 1 ? aanK[0].code : null); /* één knop aan: die is het */
+    const di = document.getElementById("bwDeelIng"), ds = document.getElementById("bwDeelSab");
+    const zetRek = r => { deelRek = r; di.setAttribute("aria-pressed", String(r === "ing")); ds.setAttribute("aria-pressed", String(r === "sabadell")); err.textContent = ""; };
+    zetRek(deelRek);
+    di.onclick = () => zetRek("ing"); ds.onclick = () => zetRek("sabadell");
     let gedaan = false;
     const einde = uit => { if(gedaan) return; gedaan = true; if(d.open){ d.addEventListener("close", () => klaar(uit), { once:true }); d.close(); } else klaar(uit); };
     d.onclose = () => einde(null); /* review 24-10 b: sluiten zonder cancel (tweede Escape) telt als Annuleren */
+    aanpas.onclick = () => einde({ aanpassen: true });
     /* review 23-10 h: afronden op centen, zoals bij Bankoverschrijving (anders kan er 3,3000000000000003 in de database komen) */
-    document.getElementById("bwAlContant").onclick = () => einde({ contant: Math.round(totaal * 100) / 100, tikkie: 0 });
-    /* wat al eerder contant binnen was, blijft contant; de rest per bankoverschrijving */
-    document.getElementById("bwAlBank").onclick = () => einde({ contant: voor, tikkie: Math.round((totaal - voor) * 100) / 100 });
+    document.getElementById("bwAlContant").onclick = () => einde({ contant: Math.round(totaal * 100) / 100, tikkie: 0, rekening: null });
+    /* wat al eerder contant binnen was, blijft contant; de rest per Tikkie (ING) of Mollie (Sabadell) */
+    const perBank = rek => () => einde({ contant: voor, tikkie: Math.round((totaal - voor) * 100) / 100, rekening: totaal - voor > 0.005 ? rek : null });
+    document.getElementById("bwAlIng").onclick = perBank("ing");
+    document.getElementById("bwAlSab").onclick = perBank("sabadell");
+    document.getElementById("bwAlBank").onclick = perBank(null);
     t.oninput = () => { const x = bedragLees(t.value); if(isFinite(x)) c.value = bedragVeld(Math.max(0, totaal - x)); err.textContent = ""; };
     c.oninput = () => { const x = bedragLees(c.value); if(isFinite(x)){ const rest = Math.max(0, totaal - x); t.value = rest ? bedragVeld(rest) : ""; } err.textContent = ""; };
     document.getElementById("bwSluit").onclick = () => einde(null);
@@ -10066,8 +10221,9 @@ function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, tit
     document.getElementById("bwOk").onclick = () => {
       const ct = bedragLees(c.value), tk = bedragLees(t.value);
       if(!isFinite(ct) || !isFinite(tk) || ct < 0 || tk < 0){ err.textContent = "Vul geldige bedragen in (bijvoorbeeld 40,00)."; return; }
-      if(Math.abs(ct + tk - totaal) > 0.005){ err.textContent = `Contant en bankoverschrijving samen is ${eur(ct + tk)}, maar het totaal is ${eur(totaal)}.`; return; }
-      einde({ contant: ct, tikkie: tk });
+      if(Math.abs(ct + tk - totaal) > 0.005){ err.textContent = `Contant en ${namenOf} samen is ${eur(ct + tk)}, maar het totaal is ${eur(totaal)}.`; /* review g */ return; }
+      if(tk > 0.005 && !deelRek && aanK.length > 1){ err.textContent = `Kies of de rest per ${aanK.map(bankLabel).join(" of per ")} komt.`; return; }
+      einde({ contant: ct, tikkie: tk, rekening: tk > 0.005 ? deelRek : null });
     };
     d.showModal();
     /* review 23-10 h: niets geselecteerd bij openen, zodat Enter niet meteen Contant kiest */
@@ -10076,8 +10232,38 @@ function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, tit
 }
 /* 23-10-2026 h (Bart): de knop Deel contant ontvangen en zijn invulvenster zijn weg; deels contant zit nu in het afrekenscherm.
    Een eerder bewaard al_contant (alleen bij al afgerekende gasten) blijft gewoon op de rekening staan. */
+/* 01-11-2026 e (Bart): het bankdeel heet naar de rekening: Tikkie (ING) of Mollie (Sabadell); oude bonnen en afspraken zonder rekening: bankoverschrijving */
+/* 01-11-2026 g (Bart: "Tikkie en Mollie instelbaar"): twee knoppen voor betalen per bank, elk met een vaste code in de database (ing,
+   sabadell) en een naam en rekening die je zelf instelt (instelling betaal_knoppen, JSON). Standaard die van Finca KaYu. */
+const BANK_STANDAARD = [{ code:"ing", naam:"Tikkie", rek:"ING", aan:true }, { code:"sabadell", naam:"Mollie", rek:"Sabadell", aan:true }];
+function bankKnoppen(){
+  let v = null; try { v = JSON.parse(instellingen.betaal_knoppen || "null"); } catch(e){ v = null; }
+  return BANK_STANDAARD.map(s => { const x = (Array.isArray(v) ? v.find(y => y && y.code === s.code) : null) || {};
+    /* review g: alleen tekst en echt aan/uit; te lang wordt afgekapt (de app slaat hooguit 20 tekens op) */
+    const naam = (typeof x.naam === "string" ? x.naam.trim().slice(0, 20) : "") || s.naam, rek = typeof x.rek === "string" ? x.rek.trim().slice(0, 20) : s.rek;
+    return { code: s.code, naam, rek, aan: typeof x.aan === "boolean" ? x.aan : s.aan }; });
+}
+const bankLabel = k => k.rek ? `${k.naam} (${k.rek})` : k.naam;
+/* naam bij een code, ook als die knop nu uit staat (oude bonnen) */
+const REK_NAAM = new Proxy({}, { get: (t, code) => { const k = bankKnoppen().find(x => x.code === code); return k ? bankLabel(k) : undefined; } });
+/* 01-11-2026 e (Bart): vanuit Afrekenen de rekening van deze gast openen (dezelfde als via de bar); "Klaar, naar afrekenen" brengt je terug
+   naar Afrekenen (true), gewoon sluiten niet (false) */
+function rekeningAanpassen(k, b){
+  return new Promise(klaar => {
+    const dlg = document.getElementById(k ? "kamerbon" : "bar"), knop = document.getElementById(k ? "kNaarAf" : "barNaarAf");
+    /* de gewone Klaar/Sluiten-knop is dan weg: één duidelijke knop terug (Esc of terug sluit zonder af te rekenen) */
+    const gewoon = document.getElementById(k ? "kSluit" : "barKlaar");
+    let terug = false;
+    knop.hidden = false; gewoon.hidden = true;
+    /* review 01-11 e: eerst wachten tot alle tikken en toevoegingen in de database staan, anders klopt het totaal in Afrekenen niet */
+    knop.onclick = async () => { terug = true; knop.disabled = true; try { await (k ? kamerBezig : barBezig); } catch(e){} knop.disabled = false; dlg.close(); };
+    dlg.addEventListener("close", () => { knop.hidden = true; gewoon.hidden = false; knop.onclick = null; klaar(terug); }, { once:true });
+    if(k) openKamerbon(kNaam(k), (k.kamer.match(/^Kamer (\d)$/) || [])[1], [], k.nr); else openBar(b);
+  });
+}
+const rekNaam = r => REK_NAAM[r] || "bankoverschrijving";
 const betaalTekst = x => x && (x.contant != null || x.tikkie != null)
-  ? [Number(x.contant) ? `${eur(Number(x.contant))} contant` : "", Number(x.tikkie) ? `${eur(Number(x.tikkie))} per bankoverschrijving` : ""].filter(Boolean).join(" · ") || "€ 0,00"
+  ? [Number(x.contant) ? `${eur(Number(x.contant))} contant` : "", Number(x.tikkie) ? `${eur(Number(x.tikkie))} per ${rekNaam(x.rekening)}` : ""].filter(Boolean).join(" · ") || "€ 0,00"
   : "";
 /* afronden: bevestigen, de bon bewaren zoals hij nu is, en de gast op Betaald zetten */
 let afrondBezig = false;
@@ -10307,7 +10493,7 @@ async function checkOutStart(k, b){
   } finally { checkOutBezig = false; }
 }
 
-async function bonAfronden(k, b, alleenBewaren){
+async function bonAfronden(k, b, alleenBewaren, naAanpassen){
   if(afrondBezig) return;
   afrondBezig = true;
   try {
@@ -10330,14 +10516,22 @@ async function bonAfronden(k, b, alleenBewaren){
     /* beveiliging: vertrekt de gast nog niet, dan eerst een aparte waarschuwing (22-09-2026, na een verkeerde kamer) */
     const vertrekDatum = kamer ? k.uit : b.uit;
     const nogDagen = vertrekDatum ? dagenTot(vertrekDatum) : 0;
-    if(nogDagen > 0){
+    if(nogDagen > 0 && !naAanpassen){ /* 01-11-2026 e: na Rekening aanpassen niet nog een keer vragen */
       const wieTekst = `${naam || label}${naam ? ` (${label})` : ""}`;
       const dagTekst = nogDagen === 1 ? "morgen" : `${DG[parse(vertrekDatum).getDay()]} ${kort(vertrekDatum)}, over ${nogDagen} dagen`;
       if(!confirm(`LET OP: ${wieTekst} vertrekt pas ${dagTekst}, niet vandaag.\n\nWeet je zeker dat je de juiste gast hebt? Tik op Annuleren als je twijfelt.`)) return;
     }
     const wijze = await betaalwijzeVraag(totaal, `${naam || label}${naam ? ` · ${label}` : ""}`, alleenBewaren ? "Bon bewaren" : "Afrekenen",
       alleenBewaren ? "De bon wordt bewaard bij Afgeronde bonnen." : "Na je keuze staat de check-out op geregeld, ziet de gast \"Betaald\" op zijn pagina en is de bar voor deze gast dicht.",
-      kamer ? kAlContant(k) : (b.alContant || 0), regels, alleenBewaren ? "Bon bewaren" : "Afrekenen");
+      kamer ? kAlContant(k) : (b.alContant || 0), regels, alleenBewaren ? "Bon bewaren" : "Afrekenen", { aanpassen: !alleenBewaren });
+    /* 01-11-2026 e (Bart): Rekening aanpassen opent de rekening van deze gast; met "Klaar, naar afrekenen" kom je hier terug, met het nieuwe totaal */
+    if(wijze && wijze.aanpassen){
+      const verder = await rekeningAanpassen(k, b);
+      if(!verder) return;
+      /* review 01-11 e: met await, anders gaat het slot (finally) al open terwijl de tweede ronde nog loopt (kans op een dubbele bon) */
+      afrondBezig = false;
+      return await bonAfronden(k, b, alleenBewaren, true);
+    }
     if(!wijze) return;
     /* eerst de gast op betaald, daarna pas de bon bewaren: zo ontstaat er nooit een bon zonder afgeronde gast */
     if(!staatBetaald){
@@ -10348,14 +10542,14 @@ async function bonAfronden(k, b, alleenBewaren){
                   plek: label, gast: naam || null,
                   aankomst: kamer ? k.in : b.in, vertrek: kamer ? k.uit : b.uit,
                   regels: regels.map(r => ({ naam:r.naam, prijs:Number(r.prijs), aantal:r.aantal })),
-                  totaal, contant: wijze.contant, tikkie: wijze.tikkie,
+                  totaal, contant: wijze.contant, tikkie: wijze.tikkie, rekening: wijze.tikkie > 0 ? (wijze.rekening || null) : null, /* 01-11-2026 e */
                   tekst: (kamer ? kamerbonTekst("nl", false, { naam, kamer: label, regels, totaal })
                                 : overzichtTekst(b, "nl", false)) + `\n\nBetaald: ${betaalTekst(wijze)}` };
     const { error } = await db.from("bonnen").insert(rij);
     await haal();
     alert(error
       ? `De gast staat op Betaald, maar de bon bewaren lukte niet: ${error.message}`
-      : `Afgerond op ${eur(totaal)} (${betaalTekst(wijze)}). De bon is bewaard; je vindt hem terug via Exporteren, onder Afgeronde bonnen.${wijze.tikkie ? `\n\nDe bankoverschrijving van ${eur(wijze.tikkie)} staat in Let op tot je op Binnen tikt.` : ""}`);
+      : `Afgerond op ${eur(totaal)} (${betaalTekst(wijze)}). De bon is bewaard; je vindt hem terug via Exporteren, onder Afgeronde bonnen.${wijze.tikkie ? `\n\n${wijze.rekening ? "De " + rekNaam(wijze.rekening) : "De bankoverschrijving"} van ${eur(wijze.tikkie)} staat in Let op tot je op Binnen tikt.` : ""}`);
   } finally { afrondBezig = false; }
 }
 
@@ -10364,6 +10558,17 @@ async function bonAfronden(k, b, alleenBewaren){
 function afsprakenBonTekst(naam, kamer, regels, totaal, wijze, datum){
   const r = regels.map(x => `${x.aantal}× ${x.naam} à ${eur(x.prijs)} = ${eur(x.aantal * x.prijs)}`);
   return [`Finca KaYu · Afspraken ${naam}`, `${kamer} · ${kort(datum)}`, "", ...r, "", `Totaal ${eur(totaal)}`, `Betaald bij inchecken, ${wijze}`].join("\n");
+}
+/* 01-11-2026 g (review): wat er bij de afspraken van een groep is getypt. Eerst de precieze naam; anders de langste naam (minstens
+   drie tekens) die erin staat; anders het begin (drie letters), maar alleen als dat bij één keuze past. Twijfel = niets ({}), zodat
+   geld nooit bij de verkeerde rekening of als contant terechtkomt. knoppen = de betaalknoppen die aan staan. */
+function afsprakenKeuze(antwoord, knoppen){
+  const ant = String(antwoord).trim().toLowerCase();
+  const keuzes = [{ n:"contant", wijze:"contant", rek:null }, ...knoppen.map(k => ({ n: k.naam.toLowerCase(), wijze:"overgemaakt", rek: k.code })), { n:"overgemaakt", wijze:"overgemaakt", rek:null }];
+  const erin = keuzes.filter(x => x.n.length >= 3 && ant.includes(x.n)).sort((a, b) => b.n.length - a.n.length);
+  const begin = keuzes.filter(x => ant.length >= 3 && ant.startsWith(x.n.slice(0, 3)));
+  const gekozen = keuzes.find(x => x.n === ant) || (erin.length && (erin.length === 1 || erin[0].n.length > erin[1].n.length) ? erin[0] : null) || (!erin.length && begin.length === 1 ? begin[0] : null);
+  return gekozen ? { wijze: gekozen.wijze, rek: gekozen.rek } : { wijze: null, rek: null };
 }
 async function afsprakenAfrekenen(k, alleenBewaren){
   if(afrondBezig) return;
@@ -10377,10 +10582,12 @@ async function afsprakenAfrekenen(k, alleenBewaren){
     if(al && !alleenBewaren){ alert("De afspraken staan al op betaald."); return; }
     if(alleenBewaren && bonnen.some(x => x.nr === k.nr && x.soort === "afspraken")){ alert("Er is al een afsprakenbon bewaard voor deze groep."); return; }
     const naam = kNaam(k) || k.kamer;
-    const antwoord = prompt(`Afspraken van ${naam}: ${eur(totaal)} ${alleenBewaren ? "als betaald bewaren" : "betaald"}?\n\nTyp "contant" of "overgemaakt" om te bevestigen. Annuleren = niets doen.`, "contant");
+    const antwoord = prompt(`Afspraken van ${naam}: ${eur(totaal)} ${alleenBewaren ? "als betaald bewaren" : "betaald"}?\n\nTyp ${["\"contant\"", ...bankKnoppen().filter(k => k.aan).map(k => `"${k.naam.toLowerCase()}"${k.rek ? ` (${k.rek})` : ""}`)].join(", ")} of "overgemaakt" om te bevestigen. Annuleren = niets doen.`, "contant");
     if(antwoord === null) return;
-    const wijze = /over/i.test(antwoord) ? "overgemaakt" : /cont/i.test(antwoord) ? "contant" : null;
-    if(!wijze){ alert("Niet bewaard: typ contant of overgemaakt."); return; }
+    /* 01-11-2026 e: ook Tikkie (ING) of Mollie (Sabadell); "overgemaakt" blijft kunnen (rekening onbekend) */
+    /* 01-11-2026 g: de namen uit Meer > Geld > Betaalwijzen (standaard tikkie en mollie), zie afsprakenKeuze */
+    const { rek, wijze } = afsprakenKeuze(antwoord, bankKnoppen().filter(k => k.aan));
+    if(!wijze){ alert(`Niet bewaard: typ ${["contant", ...bankKnoppen().filter(k => k.aan).map(k => k.naam.toLowerCase())].join(", ")} of overgemaakt.`); return; }
     /* eerst het vinkje, dan pas de bon: nooit een bon zonder betaalde afspraken */
     if(!al){ const ok = await kamerVink(k, "afspraken_betaald", true); if(ok === false) return; }
     const datum = iso(new Date());
@@ -10389,12 +10596,13 @@ async function afsprakenAfrekenen(k, alleenBewaren){
     const rij = { nr: k.nr, boeking_id: null, soort: "afspraken", plek: k.kamer, gast: naam, aankomst: k.in, vertrek: k.uit, datum,
                   regels: regels.map(r => ({ naam:r.naam, prijs:Number(r.prijs), aantal:r.aantal })), totaal,
                   contant: wijze === "contant" ? totaal : 0, tikkie: wijze === "overgemaakt" ? totaal : 0, tikkie_binnen: wijze === "overgemaakt" ? new Date().toISOString() : null,
-                  tekst: afsprakenBonTekst(naam, k.kamer, regels, totaal, wijze, datum) };
+                  rekening: wijze === "overgemaakt" ? rek : null, /* 01-11-2026 e */
+                  tekst: afsprakenBonTekst(naam, k.kamer, regels, totaal, rek ? "overgemaakt, " + rekNaam(rek) : wijze, datum) };
     const { error } = await db.from("bonnen").insert(rij);
     await haal();
     alert(error
       ? `De afspraken staan op betaald, maar de bon bewaren lukte niet: ${error.message}`
-      : `Afspraken betaald, ${wijze}: ${eur(totaal)}. De bon is bewaard; je vindt hem via Exporteren, onder Afgeronde bonnen.`);
+      : `Afspraken betaald, ${rek ? rekNaam(rek) : wijze}: ${eur(totaal)}. De bon is bewaard; je vindt hem via Exporteren, onder Afgeronde bonnen.`);
   } finally { afrondBezig = false; }
 }
 
@@ -10834,22 +11042,29 @@ async function regelStap(rij, stap, teken){
   else rij.aantal = data.aantal;
   teken();
 }
-async function barVoegToe(naam, prijs){
-  if(!barBoeking) return;
-  const rij = { boeking_id:barBoeking.id, naam, prijs:Number(prijs), aantal:1, soort:"camper",
-                plek:barBoeking.plek, gast:barBoeking.naam, datum:barBoeking.uit, bron:"app", auto:false };
+/* review 01-11 e: ook toevoegen (fooi, overnachting, korting, iets anders) in de wachtrij, zodat "Klaar, naar afrekenen" erop kan wachten.
+   barVoegToeNu doet het echte toevoegen; binnen de wachtrij (barZet) wordt die direct gebruikt, anders wacht de wachtrij op zichzelf. */
+async function barVoegToeNu(bk, naam, prijs){
+  const rij = { boeking_id:bk.id, naam, prijs:Number(prijs), aantal:1, soort:"camper",
+                plek:bk.plek, gast:bk.naam, datum:bk.uit, bron:"app", auto:false };
   const { data, error } = await db.from("consumpties").insert(rij).select().single();
   if(error){ alert("Opslaan mislukt: " + error.message); await haal(); return; }
   consumpties.push(data); tekenBar();
 }
+function barVoegToe(naam, prijs){
+  if(!barBoeking) return barBezig;
+  const bk = barBoeking;
+  barBezig = barBezig.then(() => barVoegToeNu(bk, naam, prijs)).catch(e => { alert("Opslaan mislukt: " + (e && e.message || e)); });
+  return barBezig;
+}
 function barZet(naam, prijs, stap){
   if(!barBoeking) return barBezig;
-  const id = barBoeking.id;
+  const bk = barBoeking, id = bk.id;
   barBezig = barBezig.then(async () => {
     const rijen = barRijen(id).filter(c => c.naam === naam && Number(c.prijs) === Number(prijs));
     if(stap > 0){
       const eigen = rijen.find(c => !vanDeGast(c));
-      if(!eigen) return barVoegToe(naam, prijs);
+      if(!eigen) return barVoegToeNu(bk, naam, prijs);
       return regelStap(eigen, 1, tekenBar);
     }
     /* eraf halen: eerst van onze eigen regels, pas daarna van wat de gast zelf aantikte */
@@ -11834,6 +12049,7 @@ if(NIEUW){
     if(w === "voorraadaan"){ voorraadWissel(); return; } /* 30-10-2026 l */
     if(w === "aankvertrek"){ aankVertrekWissel(); return; } /* 29-10-2026 c */
     if(w === "geldslot"){ geldSlotWissel(); return; } /* 29-10-2026 e */
+    if(w === "betaalknoppen"){ openBetaalKnoppen(); return; } /* 01-11-2026 g */
     if(w === "herinneringtekst"){ openHerinneringTekst(); return; }
     if(w === "gastteksten"){ openGastTeksten(); return; } /* 25-10-2026 d */
     document.getElementById("meer2").close();
@@ -12263,7 +12479,14 @@ function cfApp(m){
     afspr: bn.filter(x => x.soort === "afspraken").reduce((t,x) => t + Number(x.totaal || 0), 0),
     /* 25-10-2026 g (Bart): "Hoe er betaald is" telt ook de afspraken van groepen mee, zelfde verdeling als Exporteren (bonVerdeling) */
     contant: bn.reduce((t,x) => t + bonVerdeling(x).contant, 0),
-    tikkie: bn.reduce((t,x) => t + bonVerdeling(x).tikkie, 0) };
+    tikkie: bn.reduce((t,x) => t + bonVerdeling(x).tikkie, 0),
+    /* 01-11-2026 e (Bart): het bankdeel per rekening; zonder rekening = oude bon, afspraken van groepen of terugbetaling */
+    ing: bn.reduce((t,x) => { const v = bonVerdeling(x); return t + (v.rek === "ing" ? v.tikkie : 0); }, 0),
+    sabadell: bn.reduce((t,x) => { const v = bonVerdeling(x); return t + (v.rek === "sabadell" ? v.tikkie : 0); }, 0) };
+  r.bankOnbekend = Math.round((r.tikkie - r.ing - r.sabadell) * 100) / 100;
+  /* review i: oude bonnen zonder contant of bank (zoals bij de kas) tellen nergens mee; wel benoemen */
+  const zonder = bn.filter(x => !bonVerdeling(x).bekend);
+  r.zonderN = zonder.length; r.zonderSom = Math.round(zonder.reduce((t,x) => t + Number(x.totaal || 0), 0) * 100) / 100;
   r.totaal = r.campers + r.bar + r.overn + r.fooi + r.korting + r.afspr;
   return r;
 }
@@ -12312,9 +12535,17 @@ function tekenCijfers(){
     if(!kasVeld.value.trim() || !isFinite(n) || n < 0){ fout.textContent = "Vul het getelde bedrag in, bijvoorbeeld 450 of 1.234,50."; return; }
     kasOk.disabled = true;
     const waarde = JSON.stringify({ bedrag: Math.round(n * 100) / 100, tijd: new Date().toISOString() });
+    /* 01-11-2026 e (Bart): de vorige telling blijft bewaard (kas_vorige), zodat de app kan uitrekenen wat er tussen twee tellingen contant uit ging */
+    /* review 01-11 e: een tweede telling op dezelfde dag is een verbetering (tikfout); dan blijft de telling daarvoor de vorige */
+    const kgNu = kasGeteld(), verbeteren = !!kgNu && iso(new Date(kgNu.tijd)) === iso(new Date());
+    const vorige = kgNu && !verbeteren ? instellingen.kas_saldo : null;
+    if(vorige){
+      const { error: ev } = await db.from("instellingen").upsert({ sleutel:"kas_vorige", waarde: vorige, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+      if(ev){ kasOk.disabled = false; fout.textContent = "Opslaan lukte niet: " + ev.message; return; }
+    }
     const { error } = await db.from("instellingen").upsert({ sleutel:"kas_saldo", waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
     if(error){ kasOk.disabled = false; fout.textContent = "Opslaan lukte niet: " + error.message; return; }
-    instellingen.kas_saldo = waarde; cfKasOpen = false; tekenCijfers();
+    instellingen.kas_saldo = waarde; if(vorige) instellingen.kas_vorige = vorige; cfKasOpen = false; tekenCijfers();
   };
   const ok = document.getElementById("cfBankOk"), veld = document.getElementById("cfBankVeld");
   if(veld) veld.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); ok.click(); } });
@@ -12369,14 +12600,90 @@ async function cfBetaalToevoegen(){
   cfBetaalMelding = nog > 14 ? `Opgeslagen. Twee weken vóór ${kort(d.value)} staat "${wat}" hier bovenaan.` : `Opgeslagen.`;
   tekenCijfers();
 }
-function cfHtml(){
-  const cfg = cfJson("cockpit") || {}, bank = cfJson("bank_saldo");
-  const vandaag = iso(new Date()), m = vandaag.slice(0, 7), jaar = vandaag.slice(0, 4), kw = cfKw(m);
+/* 01-11-2026 i (Bart: "als ik oktober wil zien, dat ik dan kan swipen tussen de maanden"): de maandkaart van Cijfers voor één maand.
+   Pijltjes ‹ › en vegen op de kaart; niet verder dan de huidige maand en hooguit 12 maanden terug (review i: de kosten per maand worden
+   400 dagen terug geladen, en de maandoverzicht-pdf gaat ook 12 maanden terug). De rest van Cijfers (kas, belasting,
+   kamers per maand) blijft bij nu. Opnieuw openen begint weer bij de huidige maand (cfMaand = null). */
+let cfMaand = null;
+const cfMaandSchuif = (m, n) => { const d = new Date(Number(m.slice(0, 4)), Number(m.slice(5)) - 1 + n, 15, 12); return iso(d).slice(0, 7); };
+const cfMaandMin = mNu => cfMaandSchuif(mNu, -12);
+function cfKaartMaand(){ const mNu = iso(new Date()).slice(0, 7); return !cfMaand || cfMaand > mNu ? mNu : cfMaand < cfMaandMin(mNu) ? cfMaandMin(mNu) : cfMaand; }
+function cfMaandKaart(m){
+  const cfg = cfJson("cockpit") || {}, mNu = iso(new Date()).slice(0, 7);
   const omzet = cfOmzet(cfData, Array.isArray(cfg.uitzonderingen) ? cfg.uitzonderingen.map(String) : []);
   const som = (l, k) => l.reduce((t, x) => t + x[k], 0);
   const maandOmzet = omzet.filter(x => x.datum.slice(0, 7) === m);
   const app = cfApp(m);
   const maandNaam = MND[Number(m.slice(5)) - 1], Maand = maandNaam[0].toUpperCase() + maandNaam.slice(1);
+  const terug = cfMaandSchuif(m, -1) >= cfMaandMin(mNu), vooruit = m < mNu;
+  let h = `<div class="cf-kaart cf-maandkaart" id="cfMaandKaart" data-m="${m}"><div class="cf-maandkop">` +
+    `<button type="button" class="cf-pijl" data-cfmaand="-1" aria-label="Vorige maand"${terug ? "" : " disabled"}>‹</button>` +
+    `<h4>${Maand}${m.slice(0, 4) !== mNu.slice(0, 4) ? " " + m.slice(0, 4) : ""}</h4>` +
+    `<button type="button" class="cf-pijl" data-cfmaand="1" aria-label="Volgende maand"${vooruit ? "" : " disabled"}>›</button></div>` +
+    `<p class="cf-klein cf-maanduitleg">Alle verblijven met vertrek in ${maandNaam}.${vooruit ? ` <button type="button" class="cf-link" data-cfmaand="nu">Naar ${MND[Number(mNu.slice(5)) - 1]}</button>` : ""}</p>` +
+    `<div class="cf-label">Binnen</div>`;
+  h += `<div class="cf-r"><span>Kamers (MyTourist)<em>${maandOmzet.length} ${maandOmzet.length === 1 ? "factuur" : "facturen"}</em></span><b>${cfEur(som(maandOmzet, "t"))}</b></div>`;
+  ["Eigen website", "Booking.com", "Airbnb", "Rechtstreeks", "Overig kanaal", "Losse facturen"].forEach(k => { const l = maandOmzet.filter(x => x.kanaal === k);
+    if(l.length || k === "Eigen website" || k === "Booking.com" || k === "Airbnb") h += `<div class="cf-r cf-sub"><span>${k}</span><b>${cfEur(som(l, "t"))}</b></div>`; });
+  h += `<div class="cf-r"><span>Campers, bar en ontbijt (app)</span><b>${cfEur(app.totaal)}</b></div>`;
+  h += `<div class="cf-r cf-sub"><span>Campers (${app.n} ${app.n === 1 ? "boeking" : "boekingen"})</span><b>${cfEur(app.campers)}</b></div>`;
+  h += `<div class="cf-r cf-sub"><span>Bar, ontbijt en extra's</span><b>${cfEur(app.bar)}</b></div>`;
+  if(app.overn) h += `<div class="cf-r cf-sub"><span>Kamers contant</span><b>${cfEur(app.overn)}</b></div>`;
+  if(app.afspr) h += `<div class="cf-r cf-sub"><span>Afspraken groepen</span><b>${cfEur(app.afspr)}</b></div>`;
+  if(app.fooi) h += `<div class="cf-r cf-sub"><span>Fooi</span><b>${cfEur(app.fooi)}</b></div>`;
+  if(app.korting) h += `<div class="cf-r cf-sub"><span>Korting</span><b>${cfEur(app.korting)}</b></div>`;
+  h += `<div class="cf-r tot"><span>Samen binnen</span><b>${cfEur(som(maandOmzet, "t") + app.totaal)}</b></div>`;
+  /* uit: de inkoopbonnen uit de app (sinds 17-10-2026 c) en de vaste lasten */
+  const ink = cfInkoopVan(cfData.inkoop, d => d.slice(0, 7) === m);
+  h += `<div class="cf-label">Uit</div>`;
+  h += !ink ? `<div class="cf-r"><span>Inkoop (bonnen in de app)</span><b class="leeg">nog niet beschikbaar</b></div>`
+    : !ink.n ? `<div class="cf-r"><span>Inkoop (bonnen in de app)</span><b class="leeg">nog niets vastgelegd</b></div>`
+    : `<div class="cf-r"><span>Inkoop (bonnen in de app)<em>${ink.n} ${ink.n === 1 ? "bon" : "bonnen"}${ink.zonder ? `, waarvan ${ink.zonder} zonder bedrag` : ""}; bedragen met IVA</em></span><b>${cfEur(ink.som)}</b></div>`;
+  /* 24-10-2026 d: kosten per maand (Meer > Geld > Kosten) */
+  const kosM = kostenVan(m);
+  if(kosM.length) h += `<div class="cf-r"><span>Kosten per maand (app)<em>${kosM.map(k => `${cfEsc(k.soort)} ${cfEur(Number(k.bedrag || 0))}`).join(", ")}</em></span><b>${cfEur(kostenMaandTotaal(m))}</b></div>`;
+  const vl = cfObj(cfg.vaste_lasten), vlB = vl && vl.bedrag != null ? cfGetal(vl.bedrag) : null;
+  if(vlB != null)
+    h += `<div class="cf-r"><span>Vaste lasten${vl.uitleg ? `<em>${cfEsc(vl.uitleg)}</em>` : ""}</span><b>${cfEur(vlB)}</b></div>`;
+  h += ink && ink.n
+    ? `<div class="cf-r tot"><span>Wat er overblijft<em>binnen min inkoop${kosM.length ? ", kosten per maand" : ""}${vlB != null ? " en vaste lasten" : ""}${kosM.length && vlB != null ? " (staat de poets in allebei, dan telt hij dubbel)" : ""}. Staat nog niet alle inkoop van ${maandNaam} in de app${ink.zonder ? ", of hebben bonnen geen bedrag" : ""}, dan is dit te hoog.</em></span><b>${cfEur(Math.round((som(maandOmzet, "t") + app.totaal - ink.som - kostenMaandTotaal(m) - (vlB == null ? 0 : vlB)) * 100) / 100)}</b></div>`
+    : `<div class="cf-ind">Wat er overblijft volgt zodra de inkoop van ${maandNaam} erin staat.</div>`;
+  /* review i: alleen bij de huidige maand; de bon krijgt anders de datum van vandaag terwijl je naar een andere maand kijkt */
+  if(m === mNu) h += `<button class="cf-knop" id="cfNaarInkoop">Inkoopbon vastleggen</button>`;
+  h += `<div class="cf-label">Hoe er betaald is</div><div class="cf-r"><span>Gefactureerd via MyTourist (bank en platforms)</span><b>${cfEur(som(maandOmzet, "t"))}</b></div>`;
+  h += `<div class="cf-r"><span>In de app afgerekend, contant</span><b>${cfEur(app.contant)}</b></div>`;
+  /* 01-11-2026 e (Bart): per rekening, zodat je ziet wat er via de app op de ING (Tikkie) en de Sabadell (Mollie) binnenkwam */
+  /* 01-11-2026 g: namen volgens Meer > Geld > Betaalwijzen; een knop die uit staat alleen als er die maand toch iets op stond */
+  bankKnoppen().forEach(k => { if(k.aan || Math.abs(app[k.code]) >= 0.005) h += `<div class="cf-r"><span>In de app afgerekend, ${cfEsc(bankLabel(k))}</span><b>${cfEur(app[k.code])}</b></div>`; });
+  if(Math.abs(app.bankOnbekend) >= 0.005) h += `<div class="cf-r"><span>In de app afgerekend, bank (rekening onbekend)<em>oude bonnen zonder rekening, afspraken van groepen of terugbetalingen; bij een kamer- of camperbon kies je de rekening alsnog via Exporteren, Betaalwijze wijzigen</em></span><b>${cfEur(app.bankOnbekend)}</b></div>`;
+  if(app.zonderN) h += `<div class="cf-r"><span>In de app afgerekend, betaalwijze onbekend<em>${app.zonderN} oude ${app.zonderN === 1 ? "bon" : "bonnen"} zonder contant of bank</em></span><b>${cfEur(app.zonderSom)}</b></div>`;
+  h += `<p class="cf-klein">Afgerekend telt op de dag van afrekenen; gasten die nog niet hebben afgerekend staan er nog niet in.</p></div>`;
+  return h;
+}
+/* naar een andere maand: alleen de maandkaart opnieuw, zodat de rest (en wat je daar typt) blijft staan */
+function cfMaandNaar(w){
+  const el = document.getElementById("cfMaandKaart"); if(!el || !cfData) return;
+  /* review i: stappen vanaf de maand die op het scherm staat (ook als het intussen middernacht en een nieuwe maand is) */
+  const mNu = iso(new Date()).slice(0, 7), getekend = el.dataset.m || cfKaartMaand();
+  const doel = w === "nu" ? mNu : cfMaandSchuif(getekend, Number(w));
+  if(doel > mNu || doel < cfMaandMin(mNu) || doel === getekend) return;
+  cfMaand = doel === mNu ? null : doel;
+  el.outerHTML = cfMaandKaartVeilig(cfKaartMaand());
+  const naarInk = document.getElementById("cfNaarInkoop"); if(naarInk) naarInk.onclick = () => openInkoop();
+}
+/* review i: lukt een maand niet, dan een melding met de weg terug naar de huidige maand (en de rest van Cijfers blijft werken) */
+function cfMaandKaartVeilig(m){
+  try { return cfMaandKaart(m); }
+  catch(e){ const mNu = iso(new Date()).slice(0, 7);
+    return `<div class="cf-kaart cf-maandkaart" id="cfMaandKaart" data-m="${m}"><p class="ci-uitleg ci-let">${cfEsc(MND[Number(m.slice(5)) - 1] || m)} kon niet worden getoond (${cfEsc(e.message || e)}).</p>` +
+      (m !== mNu ? `<button type="button" class="cf-knop" data-cfmaand="nu">Naar ${MND[Number(mNu.slice(5)) - 1]}</button>` : "") + `</div>`; }
+}
+function cfHtml(){
+  const cfg = cfJson("cockpit") || {}, bank = cfJson("bank_saldo");
+  const vandaag = iso(new Date()), m = vandaag.slice(0, 7), jaar = vandaag.slice(0, 4), kw = cfKw(m);
+  const omzet = cfOmzet(cfData, Array.isArray(cfg.uitzonderingen) ? cfg.uitzonderingen.map(String) : []);
+  const som = (l, k) => l.reduce((t, x) => t + x[k], 0);
+  const maandNaam = MND[Number(m.slice(5)) - 1]; /* de maandkaart zelf: cfMaandKaart (01-11-2026 i) */
   const datumKort = d => kort(d) + (d.slice(0, 4) !== jaar ? " " + d.slice(0, 4) : "");
   let h = "";
   const opg = cfOpgehaald(cfData.klaar);
@@ -12418,48 +12725,29 @@ function cfHtml(){
       const d = new Date(kt.tijd), wanneer = `${DG[d.getDay()].slice(0, 2)} ${kort(iso(d))} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
       h += `<div class="cf-label" style="margin-top:16px">In de kas</div><div class="cf-groot">${cfEur(kt.bedrag)}</div>` +
         `<p class="cf-klein">Zelf geteld op ${cfEsc(wanneer)}.${Math.abs(sinds) >= 0.005 ? ` Sindsdien contant afgerekend in de app: ${cfEur(Math.round(sinds * 100) / 100)}.` : " Sindsdien niets contant afgerekend in de app."}</p>`;
+      /* 01-11-2026 e (Bart): de rekensom tussen de vorige en deze telling: vorige telling plus contant binnen via de app min nu geteld
+         is wat er contant uit ging (boodschappen, betalingen, zelf meegenomen). Contant binnen = bonnen gemaakt tussen de twee tellingen. */
+      const kv = kasVorige();
+      if(kv && new Date(kv.tijd) < new Date(kt.tijd)){
+        const tussen = bonnen.filter(x => x.gemaakt && new Date(x.gemaakt) > new Date(kv.tijd) && new Date(x.gemaakt) <= new Date(kt.tijd)).reduce((t, x) => t + bonVerdeling(x).contant, 0);
+        const eruit = Math.round((kv.bedrag + tussen - kt.bedrag) * 100) / 100, dv = new Date(kv.tijd);
+        h += `<div class="cf-r" style="margin-top:8px"><span>Vorige telling<em>${cfEsc(`${DG[dv.getDay()].slice(0, 2)} ${kort(iso(dv))}`)}</em></span><b>${cfEur(kv.bedrag)}</b></div>` +
+          `<div class="cf-r"><span>Daarna contant binnen via de app</span><b>+ ${cfEur(Math.round(tussen * 100) / 100)}</b></div>` +
+          `<div class="cf-r"><span>Nu geteld</span><b>− ${cfEur(kt.bedrag)}</b></div>` +
+          `<div class="cf-r tot"><span>${eruit >= 0 ? "Contant uitgegeven of uit de kas gehaald" : "Meer in de kas dan verwacht"}<em>${eruit >= 0 ? "tussen de twee tellingen" : "bijgelegd, of contant ontvangen buiten de app om"}</em></span><b>${cfEur(Math.abs(eruit))}</b></div>`;
+      }
     } else {
       h += `<div class="cf-label" style="margin-top:16px">In de kas</div><div class="cf-groot">${cfEur(Math.round((kas.contant - kas.kostenTot) * 100) / 100)}</div>` +
         `<p class="cf-klein">Sinds ${cfEsc(kort(ks))} ${ks.slice(0, 4)}: contant afgerekend ${cfEur(kas.contant)} − kosten per maand ${cfEur(kas.kostenTot)}. Wat je er zelf uit haalt of bijlegt, weet de app niet.` +
         ` Met de bankoverschrijvingen erbij (${cfEur(kas.bank)}), zoals bij Exporteren: ${cfEur(kas.saldo)}.${kas.zonder ? ` ${kas.zonder} oude ${kas.zonder === 1 ? "bon telt" : "bonnen tellen"} niet mee (contant of bank onbekend).` : ""}</p>`;
     }
     h += cfKasOpen
-      ? `<div class="cf-bank"><input id="cfKasVeld" inputmode="decimal" placeholder="Geteld in euro" aria-label="Geteld bedrag in de kas in euro"><button id="cfKasOk">Opslaan</button></div><p class="ci-uitleg ci-let" id="cfKasFout" aria-live="polite"></p>`
+      ? `<div class="cf-bank"><input id="cfKasVeld" inputmode="decimal" placeholder="Geteld in euro" aria-label="Geteld bedrag in de kas in euro"><button id="cfKasOk">Opslaan</button></div><p class="ci-uitleg ci-let" id="cfKasFout" aria-live="polite"></p>` +
+        /* review 01-11 e: vandaag al geteld, dan is dit een verbetering */
+        (kasGeteld() && iso(new Date(kasGeteld().tijd)) === iso(new Date()) ? `<p class="cf-klein">Vandaag al geteld. Een nieuw bedrag verbetert die telling; de telling daarvoor blijft de vorige.</p>` : "")
       : `<button class="cf-knop" id="cfKasOpen">Kas bijwerken</button>`; }
   h += `</div>`;
-  /* deze maand */
-  h += `<div class="cf-kaart"><h4>${Maand}<em>alle verblijven met vertrek in ${maandNaam}</em></h4><div class="cf-label">Binnen</div>`;
-  h += `<div class="cf-r"><span>Kamers (MyTourist)<em>${maandOmzet.length} ${maandOmzet.length === 1 ? "factuur" : "facturen"}</em></span><b>${cfEur(som(maandOmzet, "t"))}</b></div>`;
-  ["Eigen website", "Booking.com", "Airbnb", "Rechtstreeks", "Overig kanaal", "Losse facturen"].forEach(k => { const l = maandOmzet.filter(x => x.kanaal === k);
-    if(l.length || k === "Eigen website" || k === "Booking.com" || k === "Airbnb") h += `<div class="cf-r cf-sub"><span>${k}</span><b>${cfEur(som(l, "t"))}</b></div>`; });
-  h += `<div class="cf-r"><span>Campers, bar en ontbijt (app)</span><b>${cfEur(app.totaal)}</b></div>`;
-  h += `<div class="cf-r cf-sub"><span>Campers (${app.n} ${app.n === 1 ? "boeking" : "boekingen"})</span><b>${cfEur(app.campers)}</b></div>`;
-  h += `<div class="cf-r cf-sub"><span>Bar, ontbijt en extra's</span><b>${cfEur(app.bar)}</b></div>`;
-  if(app.overn) h += `<div class="cf-r cf-sub"><span>Kamers contant</span><b>${cfEur(app.overn)}</b></div>`;
-  if(app.afspr) h += `<div class="cf-r cf-sub"><span>Afspraken groepen</span><b>${cfEur(app.afspr)}</b></div>`;
-  if(app.fooi) h += `<div class="cf-r cf-sub"><span>Fooi</span><b>${cfEur(app.fooi)}</b></div>`;
-  if(app.korting) h += `<div class="cf-r cf-sub"><span>Korting</span><b>${cfEur(app.korting)}</b></div>`;
-  h += `<div class="cf-r tot"><span>Samen binnen</span><b>${cfEur(som(maandOmzet, "t") + app.totaal)}</b></div>`;
-  /* uit: de inkoopbonnen uit de app (sinds 17-10-2026 c) en de vaste lasten */
-  const ink = cfInkoopVan(cfData.inkoop, d => d.slice(0, 7) === m);
-  h += `<div class="cf-label">Uit</div>`;
-  h += !ink ? `<div class="cf-r"><span>Inkoop (bonnen in de app)</span><b class="leeg">nog niet beschikbaar</b></div>`
-    : !ink.n ? `<div class="cf-r"><span>Inkoop (bonnen in de app)</span><b class="leeg">nog niets vastgelegd</b></div>`
-    : `<div class="cf-r"><span>Inkoop (bonnen in de app)<em>${ink.n} ${ink.n === 1 ? "bon" : "bonnen"}${ink.zonder ? `, waarvan ${ink.zonder} zonder bedrag` : ""}; bedragen met IVA</em></span><b>${cfEur(ink.som)}</b></div>`;
-  /* 24-10-2026 d: kosten per maand (Meer > Geld > Kosten) */
-  const kosM = kostenVan(m);
-  if(kosM.length) h += `<div class="cf-r"><span>Kosten per maand (app)<em>${kosM.map(k => `${cfEsc(k.soort)} ${cfEur(Number(k.bedrag || 0))}`).join(", ")}</em></span><b>${cfEur(kostenMaandTotaal(m))}</b></div>`;
-  const vl = cfObj(cfg.vaste_lasten), vlB = vl && vl.bedrag != null ? cfGetal(vl.bedrag) : null;
-  if(vlB != null)
-    h += `<div class="cf-r"><span>Vaste lasten${vl.uitleg ? `<em>${cfEsc(vl.uitleg)}</em>` : ""}</span><b>${cfEur(vlB)}</b></div>`;
-  h += ink && ink.n
-    ? `<div class="cf-r tot"><span>Wat er overblijft<em>binnen min inkoop${kosM.length ? ", kosten per maand" : ""}${vlB != null ? " en vaste lasten" : ""}${kosM.length && vlB != null ? " (staat de poets in allebei, dan telt hij dubbel)" : ""}. Staat nog niet alle inkoop van ${maandNaam} in de app${ink.zonder ? ", of hebben bonnen geen bedrag" : ""}, dan is dit te hoog.</em></span><b>${cfEur(Math.round((som(maandOmzet, "t") + app.totaal - ink.som - kostenMaandTotaal(m) - (vlB == null ? 0 : vlB)) * 100) / 100)}</b></div>`
-    : `<div class="cf-ind">Wat er overblijft volgt zodra de inkoop van ${maandNaam} erin staat.</div>`;
-  h += `<button class="cf-knop" id="cfNaarInkoop">Inkoopbon vastleggen</button>`;
-  h += `<div class="cf-label">Hoe er betaald is</div><div class="cf-r"><span>Gefactureerd via MyTourist (bank en platforms)</span><b>${cfEur(som(maandOmzet, "t"))}</b></div>`;
-  h += `<div class="cf-r"><span>In de app afgerekend, contant</span><b>${cfEur(app.contant)}</b></div>`;
-  h += `<div class="cf-r"><span>In de app afgerekend, per bankoverschrijving</span><b>${cfEur(app.tikkie)}</b></div>`;
-  h += `<p class="cf-klein">Afgerekend telt op de dag van afrekenen; gasten die nog niet hebben afgerekend staan er nog niet in.</p></div>`;
+  h += cfMaandKaartVeilig(cfKaartMaand());
   /* belasting van dit kwartaal */
   const bl = cfBelasting(omzet, jaar, kw, cfg, cfData.inkoop), kos = cfKostenTekst(bl.ink), ivaT = cfIvaTekst(bl);
   h += `<div class="cf-kaart"><h4>Belasting ${kw}e kwartaal<em>indicatie</em></h4>`;
@@ -12631,7 +12919,9 @@ function cfUitdraaiBlokken(mu){
   binnen.push(rij("Samen binnen", cfEur(totM + app.totaal), "tot"));
   bl.push(twee(binnen));
   bl.push({ t: "h2", s: "Hoe er betaald is" });
-  bl.push(twee([rij("Gefactureerd via MyTourist (bank en platforms)", cfEur(totM)), rij("In de app afgerekend, contant", cfEur(app.contant)), rij("In de app afgerekend, per bankoverschrijving", cfEur(app.tikkie))]));
+  bl.push(twee([rij("Gefactureerd via MyTourist (bank en platforms)", cfEur(totM)), rij("In de app afgerekend, contant", cfEur(app.contant)), ...bankKnoppen().filter(k => k.aan || Math.abs(app[k.code]) >= 0.005).map(k => rij("In de app afgerekend, " + bankLabel(k), cfEur(app[k.code]))),
+    ...(Math.abs(app.bankOnbekend) >= 0.005 ? [rij("In de app afgerekend, bank (rekening onbekend)", cfEur(app.bankOnbekend))] : []),
+    ...(app.zonderN ? [rij(`In de app afgerekend, betaalwijze onbekend (${app.zonderN} oude ${app.zonderN === 1 ? "bon" : "bonnen"})`, cfEur(app.zonderSom))] : [])])); /* review i */ /* 01-11-2026 e */
   bl.push({ t: "p", klein: true, s: "Afgerekend telt op de dag van afrekenen. De kas staat niet in dit overzicht (die vul je zelf in bij Cijfers, Kas bijwerken)." });
   bl.push({ t: "h2", s: "Uit" });
   if(!ink) bl.push({ t: "p", s: "Inkoopbonnen: nog niet beschikbaar." });
@@ -12807,16 +13097,26 @@ async function openGv(){
 }
 document.getElementById("gvPeriode").onchange = () => gvTeken();
 document.getElementById("gvDicht").onclick = () => document.getElementById("gv2").close();
-async function openCijfers(){
-  if(!geldOpen()){ geldVraagCode(() => openCijfers()); return; } /* 29-10-2026 e */
+async function openCijfers(houdMaand){
+  if(!geldOpen()){ geldVraagCode(() => openCijfers(houdMaand)); return; } /* 29-10-2026 e */
   geldVerleng();
   const dlg = document.getElementById("cijfers2");
-  cfFout = ""; cfData = null; cfBankOpen = false; cfKasOpen = false; cfBetaalOpen = false; cfBetaalMelding = ""; tekenCijfers(); /* review e: formulier en melding niet laten staan */
+  cfFout = ""; cfData = null; cfBankOpen = false; cfKasOpen = false; cfBetaalOpen = false; cfBetaalMelding = ""; if(houdMaand !== true) cfMaand = null; tekenCijfers(); /* 01-11-2026 i: weer de huidige maand (review i: niet na het sluiten van Inkoop) */ /* review e: formulier en melding niet laten staan */
   if(!dlg.open) dlg.showModal();
   try { cfData = await haalCijfers(); } catch(e){ cfFout = e.message || String(e); }
   tekenCijfers();
 }
 document.getElementById("cijfersDicht").onclick = () => document.getElementById("cijfers2").close();
+/* 01-11-2026 i: pijltjes en vegen op de maandkaart (via de vaste bak, omdat de kaart zelf opnieuw getekend wordt) */
+{ const bak = document.getElementById("cijfersInhoud"); let veeg = null;
+  bak.addEventListener("click", e => { const kn = e.target.closest("[data-cfmaand]"); if(kn && !kn.disabled) cfMaandNaar(kn.dataset.cfmaand); });
+  /* review i: ingezoomd (twee vingers) schuif je over de pagina, dan geen andere maand */
+  bak.addEventListener("touchstart", e => { const t = e.touches[0], zoom = window.visualViewport ? window.visualViewport.scale : 1;
+    veeg = e.touches.length === 1 && zoom < 1.05 && e.target.closest("#cfMaandKaart") ? { x: t.clientX, y: t.clientY } : null; }, { passive:true });
+  bak.addEventListener("touchend", e => { if(!veeg) return; const t = e.changedTouches[0], dx = t.clientX - veeg.x, dy = t.clientY - veeg.y; veeg = null;
+    /* duidelijk opzij (minstens 60 pixels en veel meer opzij dan omhoog of omlaag); naar rechts vegen = vorige maand, zoals een bladzijde terug */
+    if(Math.abs(dx) >= 60 && Math.abs(dx) > 2 * Math.abs(dy)) cfMaandNaar(dx > 0 ? "-1" : "1"); }, { passive:true });
+  bak.addEventListener("touchcancel", () => { veeg = null; }, { passive:true }); }
 
 /* ---------- inkoopbon vastleggen (administratie-cockpit stap 3, sinds 17-10-2026 c) ----------
    Een foto (of pdf) van een inkoopbon of -factuur, met de datum en als je wilt het bedrag en de winkel. Twee pagina's: twee foto's.
@@ -13176,7 +13476,7 @@ async function openInkoop(){
 /* niet sluiten tijdens het bewaren. Een foto die nog niet bewaard is, blijft klaarstaan voor de volgende keer (tot de app ververst).
    Na het sluiten het scherm Cijfers bijwerken als dat openstaat. */
 function ibMagDicht(){ return !ibBezig; }
-function ibNaSluiten(){ const c = ibEl("cijfers2"); if(c && c.open) openCijfers(); }
+function ibNaSluiten(){ const c = ibEl("cijfers2"); if(c && c.open) openCijfers(true); } /* review i: de gekozen maand blijft */
 ibEl("inkoopDicht").onclick = () => { if(!ibMagDicht()) return; ibEl("inkoop2").close(); ibNaSluiten(); };
 ibEl("inkoop2").addEventListener("cancel", e => { if(!ibMagDicht()) e.preventDefault(); else setTimeout(ibNaSluiten, 0); });
 ibEl("ibCamera").onchange = e => { const l = [...e.target.files]; e.target.value = ""; ibVoegToe(l); };
@@ -13260,6 +13560,8 @@ function tekenBalans(){
    Alle bonnen (sinds g ook de afspraken van groepen, Bart 25-10) min de kosten per maand; Cijfers toont de afspraken apart op een eigen regel. */
 let expInkoop = null; /* inkoopbonnen (datum, bedrag), apart opgehaald bij het openen van Exporteren */
 /* 30-10-2026 h: zelf geteld bedrag in de kas (instellingen kas_saldo, JSON: bedrag en tijd); null als het er niet (goed) staat */
+/* 01-11-2026 e: de telling daarvoor (kas_vorige), voor de rekensom tussen twee tellingen */
+const kasVorige = () => { try { const v = JSON.parse(instellingen.kas_vorige || "null"); return v && isFinite(Number(v.bedrag)) && !isNaN(new Date(v.tijd)) ? { bedrag: Number(v.bedrag), tijd: v.tijd } : null; } catch(e){ return null; } };
 const kasGeteld = () => { try { const v = JSON.parse(instellingen.kas_saldo || "null"); return v && isFinite(Number(v.bedrag)) && !isNaN(new Date(v.tijd)) ? { bedrag: Number(v.bedrag), tijd: v.tijd } : null; } catch(e){ return null; } };
 const kasStart = () => /^\d{4}-\d{2}-\d{2}$/.test(String(instellingen.kas_start || "")) ? String(instellingen.kas_start) : "2026-10-01";
 /* begin (jjjj-mm) en eind (jjjj-mm) van een gekozen periode; alles = geen grens */
@@ -13270,7 +13572,7 @@ function periodeGrens(keuze){
 /* 25-10-2026 g: verdeling contant/bank van een bon; een afsprakenbon van vóór versie g heeft die velden niet, maar de bontekst
    eindigt op "Betaald bij inchecken, contant" of "..., overgemaakt" en daar halen we hem uit */
 function bonVerdeling(x){
-  if(x.contant != null || x.tikkie != null) return { contant: Number(x.contant || 0), tikkie: Number(x.tikkie || 0), binnen: !!x.tikkie_binnen, bekend: true };
+  if(x.contant != null || x.tikkie != null) return { contant: Number(x.contant || 0), tikkie: Number(x.tikkie || 0), binnen: !!x.tikkie_binnen, bekend: true, rek: x.rekening || null };
   if(x.soort === "afspraken"){
     const m = /Betaald bij inchecken, (contant|overgemaakt)\s*$/.exec(String(x.tekst || ""));
     if(m) return { contant: m[1] === "contant" ? Number(x.totaal || 0) : 0, tikkie: m[1] === "overgemaakt" ? Number(x.totaal || 0) : 0, binnen: true, bekend: true };
@@ -13343,10 +13645,14 @@ function betaalwijzeBalans(keuze){
   const met = lijst.filter(x => x.v.bekend), zonder = lijst.filter(x => !x.v.bekend);
   const ct = met.reduce((t,x) => t + x.v.contant, 0), tk = met.reduce((t,x) => t + x.v.tikkie, 0);
   const open = met.filter(x => x.v.tikkie > 0 && !x.v.binnen).reduce((t,x) => t + x.v.tikkie, 0);
+  /* 01-11-2026 e (Bart): het bankdeel per rekening, elk met wat nog niet binnen is */
+  const perRek = rek => { const l = met.filter(x => (x.v.rek || null) === rek); return { som: l.reduce((t,x) => t + x.v.tikkie, 0), open: l.filter(x => x.v.tikkie > 0 && !x.v.binnen).reduce((t,x) => t + x.v.tikkie, 0) }; };
+  const ing = perRek("ing"), sab = perRek("sabadell"), onb = perRek(null);
+  const bankRij = (naam, x, altijd) => (altijd || Math.abs(x.som) >= 0.005) ? `<div><span>${naam}${x.open ? `<em>waarvan ${eur(x.open)} nog niet binnen</em>` : ""}</span><b>${eur(x.som)}</b></div>` : "";
   const zt = zonder.reduce((t,x) => t + Number(x.totaal || 0), 0);
   return `<p class="kop" style="margin-top:14px">Afgerekend, per betaalwijze<em>afgeronde bonnen van kamers, campers en afspraken van groepen</em></p>` +
     `<div><span>Contant<em>hoort in de kas</em></span><b>${eur(ct)}</b></div>` +
-    `<div><span>Bankoverschrijving${open ? `<em>waarvan ${eur(open)} nog niet binnen</em>` : ""}</span><b>${eur(tk)}</b></div>` +
+    bankKnoppen().map(k => bankRij(vrij(bankLabel(k)), k.code === "ing" ? ing : sab, k.aan)).join("") + bankRij("Bank, rekening onbekend", onb, false) +
     (zonder.length ? `<div><span>Zonder verdeling<em>${zonder.length} ${zonder.length === 1 ? "bon" : "bonnen"} van vóór 25-09-2026</em></span><b>${eur(zt)}</b></div>` : "");
 }
 /* afgeronde bonnen: bewaard op het moment van afrekenen, altijd terug te lezen en te kopiëren */
@@ -13386,16 +13692,18 @@ async function bonBetaalwijzeWijzig(id){
     `Nu: ${betaalTekst(x) || "zonder verdeling"}. Kies hoe er echt betaald is; de bon en de bedragen blijven gelijk.`, 0, regels, "Betaalwijze wijzigen");
   if(!wijze) return;
   const hadVerdeling = x.contant != null || x.tikkie != null;
-  if(hadVerdeling && Math.abs(Number(wijze.contant || 0) - Number(x.contant || 0)) < 0.005 && Math.abs(Number(wijze.tikkie || 0) - Number(x.tikkie || 0)) < 0.005) return;
+  /* 01-11-2026 e: ook alleen de rekening wijzigen (Tikkie in plaats van Mollie) telt als wijziging */
+  const nieuweRek = Number(wijze.tikkie) > 0 ? (wijze.rekening || null) : null;
+  if(hadVerdeling && Math.abs(Number(wijze.contant || 0) - Number(x.contant || 0)) < 0.005 && Math.abs(Number(wijze.tikkie || 0) - Number(x.tikkie || 0)) < 0.005 && (x.rekening || null) === nieuweRek) return;
   let binnen = x.tikkie_binnen || null;
-  if(Number(wijze.tikkie) > 0 && !binnen) binnen = confirm("Is de bankoverschrijving al binnen?") ? new Date().toISOString() : null;
+  if(Number(wijze.tikkie) > 0 && !binnen) binnen = confirm(`Is de ${rekNaam(nieuweRek)} al binnen?`) ? new Date().toISOString() : null;
   if(!(Number(wijze.tikkie) > 0)) binnen = null;
   const oud = betaalTekst(x) || "zonder verdeling", nieuwTekst = betaalTekst(wijze);
   /* de regel "Betaald:" wordt vervangen; eerdere wijzigingsregels blijven staan (review f: geschiedenis bewaren) */
   const tekst = String(x.tekst || "").replace(/\n\nBetaald: [^\n]*((\n\(betaalwijze gewijzigd[^\n]*\))*)$/, "$1") + `\n\nBetaald: ${nieuwTekst}\n(betaalwijze gewijzigd op ${kort(iso(new Date()))} ${iso(new Date()).slice(0, 4)}, was: ${oud})`;
-  const { error } = await db.from("bonnen").update({ contant: wijze.contant, tikkie: wijze.tikkie, tikkie_binnen: binnen, tekst }).eq("id", x.id);
+  const { error } = await db.from("bonnen").update({ contant: wijze.contant, tikkie: wijze.tikkie, tikkie_binnen: binnen, rekening: nieuweRek, tekst }).eq("id", x.id);
   if(error){ alert("Opslaan mislukt: " + error.message); return; }
-  x.contant = wijze.contant; x.tikkie = wijze.tikkie; x.tikkie_binnen = binnen; x.tekst = tekst;
+  x.contant = wijze.contant; x.tikkie = wijze.tikkie; x.tikkie_binnen = binnen; x.rekening = nieuweRek; x.tekst = tekst;
   tekenBalans(); if(typeof tekenNu === "function" && modus === "nu") tekenNu();
 }
 document.getElementById("expPeriode").onchange = tekenBalans;
@@ -14255,15 +14563,21 @@ const kamerLijst = () => kamerLive ? samenvoegen(kamerRijen()) : kamerRegels;
 function kamerTotaal(){
   return [...kamerVast(), ...kamerLijst()].reduce((s,c) => s + Number(c.prijs)*c.aantal, 0);
 }
-async function kamerVoegToe(naam, prijs){
+async function kamerVoegToe(naam, prijs, nu){
   const k = kamerNr ? kamerVoorNr(kamerNr) : null;
   const rij = { nr:kamerNr, boeking_id:null, naam, prijs:Number(prijs), aantal:1, soort:"kamer",
                 kamer: k ? k.kamer : "Kamer " + document.getElementById("kKamer").value,
                 gast: (k ? kNaam(k) : document.getElementById("kNaam").value.trim()) || null,
                 datum:iso(new Date()), bron:"app", auto:false };
-  const { data, error } = await db.from("consumpties").insert(rij).select().single();
-  if(error){ alert("Opslaan mislukt: " + error.message); await haal(); return; }
-  consumpties.push(data); tekenKamerbon();
+  /* review 01-11 e: in de wachtrij, zodat "Klaar, naar afrekenen" erop kan wachten; binnen de wachtrij (kamerZet) direct (nu = true) */
+  const doe = async () => {
+    const { data, error } = await db.from("consumpties").insert(rij).select().single();
+    if(error){ alert("Opslaan mislukt: " + error.message); await haal(); return; }
+    consumpties.push(data); tekenKamerbon();
+  };
+  if(nu) return doe();
+  kamerBezig = kamerBezig.then(doe).catch(e => { alert("Opslaan mislukt: " + (e && e.message || e)); });
+  return kamerBezig;
 }
 function kamerZet(naam, prijs, stap){
   if(!kamerLive || !kamerNr) return kamerBezig;
@@ -14271,7 +14585,7 @@ function kamerZet(naam, prijs, stap){
     const rijen = kamerRijen().filter(c => c.naam === naam && Number(c.prijs) === Number(prijs));
     if(stap > 0){
       const eigen = rijen.find(c => !vanDeGast(c));
-      if(!eigen) return kamerVoegToe(naam, prijs);
+      if(!eigen) return kamerVoegToe(naam, prijs, true);
       return regelStap(eigen, 1, tekenKamerbon);
     }
     const volgorde = [...rijen.filter(c => !vanDeGast(c)), ...rijen.filter(vanDeGast)];
