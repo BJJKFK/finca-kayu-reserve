@@ -64,6 +64,22 @@
 
   /* inlogscherm */
   #login,#nieuwww{max-width:360px;margin:0 auto;padding:60px 20px}
+  /* 03-11-2026 c: code van 4 cijfers bij het openen (dekt de hele app af) */
+  /* een venster (dialog) zodat het ook boven andere open vensters ligt; altijd schermvullend en ondoorzichtig */
+  dialog#pinScherm{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;border:0;border-radius:0;box-sizing:border-box;
+    background:#FAF9F5;padding:70px 20px 20px;overflow:auto;flex-direction:column;align-items:center;justify-content:flex-start}
+  dialog#pinScherm[open]{display:flex}
+  dialog#pinScherm::backdrop{background:#FAF9F5}
+  /* review 03-11-2026 c: zolang de code nodig is, is de rest van de app onzichtbaar en niet aan te tikken (ook als het slot heel even
+     dicht is of als er later een ander venster opengaat); bij wegleggen ook, zodat het overzicht van open apps geen gastnamen toont */
+  html.pindicht body > :not(#pinScherm), html.pinweg body > *{visibility:hidden !important}
+  html.pindicht, html.pinweg{background:#FAF9F5}
+  #pinScherm .merk img{width:150px;height:auto}
+  #pinScherm h2{font-size:20px;margin:18px 0 6px;text-align:center}
+  #pinScherm p{margin:0;text-align:center;color:var(--muted);font-size:14px;line-height:1.5;max-width:320px}
+  #pinVeld{margin:18px 0 6px;width:200px;text-align:center;font:inherit;font-size:34px;letter-spacing:18px;padding:10px 0 10px 18px;border:1px solid var(--line);border-radius:12px;background:var(--card,#fff);color:var(--pine)}
+  #pinMelding{min-height:20px;color:var(--rood);font-size:14px;margin-top:6px}
+  #pinScherm .pinlink{background:none;border:0;font:inherit;font-size:14px;color:var(--pine);text-decoration:underline;margin-top:22px;cursor:pointer}
   #login label,#nieuwww label{display:block;font-size:13px;color:var(--muted);margin:14px 0 5px}
   #login input,#nieuwww input{width:100%;padding:14px;border:1px solid var(--line);border-radius:9px;
     font:inherit;font-size:16px;background:var(--card);color:var(--pine)}
@@ -910,28 +926,6 @@
   .cf-bank button{border:1px solid var(--pine);background:var(--pine);color:#fff;border-radius:999px;padding:8px 16px;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
   .cf-bank select{flex:1;min-width:0;padding:9px 11px;border:1px solid var(--line);border-radius:10px;font:inherit;font-size:16px;background:#fff;color:var(--tekst)}
   /* 17-10-2026 c: inkoopbon vastleggen */
-  /* 26-10-2026 c: digitale kluis */
-  .kluisdlg h3{display:flex;align-items:center;gap:8px}
-  .kluiskop{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .kluisknopje{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;color:var(--tekst);cursor:pointer;margin-top:8px}
-  .kluisknopje .gi{width:16px;height:16px}
-  .kluiszoek{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 12px;margin:6px 0 10px}
-  .kluiszoek input{flex:1;border:0;background:none;font:inherit;font-size:15px;outline:none;min-width:0}
-  .kluiszoek .gi{color:var(--muted);width:18px;height:18px}
-  .kluismappen{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-  .kluismappen button{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 11px;font:inherit;font-size:13px;font-weight:600;color:var(--tekst);cursor:pointer}
-  .kluismappen button.aan{border:2px solid var(--accent);padding:5px 10px}
-  .kluislijst{display:flex;flex-direction:column;gap:8px}
-  .kluislijst button{display:flex;align-items:center;gap:12px;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font:inherit;color:var(--tekst);cursor:pointer}
-  .kluislijst button .gi{color:var(--accent);flex:0 0 22px}
-  .kluislijst button b{display:block;font-size:15px} .kluislijst button small{display:block;color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .kluislijst button span{min-width:0;flex:1}
-  .kluisbijlagen{display:flex;flex-direction:column;gap:6px;margin:4px 0 10px}
-  .kluisbijlagen div{display:flex;align-items:center;gap:8px;background:var(--bone);border:1px solid var(--line);border-radius:12px;padding:8px 10px;font-size:14px}
-  .kluisbijlagen div .gi{width:16px;height:16px;color:var(--accent)}
-  .kluisbijlagen div span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .kluisbijlagen div button{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font:inherit;font-size:12.5px;cursor:pointer}
-  .kluisdlg textarea{width:100%;box-sizing:border-box;font:inherit;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--card);resize:vertical}
   .ib-knoppen{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 10px}
   .ib-knop{position:relative;flex:1;min-width:140px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--pine);background:var(--pine);color:#fff;border-radius:12px;padding:14px 12px;font:inherit;font-size:15px;font-weight:600;cursor:pointer;overflow:hidden}
   .ib-knop.licht{background:var(--card);color:var(--pine)}
@@ -1571,6 +1565,16 @@
 </head>
 <body>
 
+<!-- 03-11-2026 c (Bart): "als ik de app open, een 4-cijferige code invoeren. Voor de rest in de app niks." -->
+<dialog id="pinScherm" aria-labelledby="pinKop">
+  <div class="merk"><img src="logo.png" alt="Finca KaYu" width="370" height="197"></div>
+  <h2 id="pinKop">Vul je code in</h2>
+  <p id="pinUitleg">4 cijfers</p>
+  <input id="pinVeld" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="Code van 4 cijfers">
+  <p id="pinMelding" aria-live="polite"></p>
+  <button type="button" class="pinlink" id="pinStop" hidden>Annuleren</button>
+  <button type="button" class="pinlink" id="pinVergeten">Code vergeten? Uitloggen</button>
+</dialog>
 <div id="login" style="display:none">
   <div class="merk"><img src="logo.png" alt="Finca KaYu" width="370" height="197"></div>
   <p class="sub">Planbord</p>
@@ -1686,10 +1690,7 @@
       <button id="pNext" aria-label="Maand verder">&rsaquo;</button>
     </div>
     <div id="poetsStrook"></div>
-    <!-- KaYu efficiëntieronde 2 (27-09-2026 i): aanstoten alleen als er iets onbevestigd is; beheerknoppen onder de planning -->
-    <div class="knoprij" id="pActies">
-      <button id="pAanstoot">Poets aanstoten</button>
-    </div>
+    <!-- 03-11-2026 a: Poets aanstoten is weg (het poetsteam bevestigt niet meer per dag) -->
     <p class="opfinca" id="pGezien"></p>
     <div id="poetsInhoud"></div>
     <div class="knoprij pbeheer">
@@ -1734,11 +1735,11 @@
     <!-- 24-10-2026 c (proefversie): alles wat voor Finca KaYu vastligt wordt een instelling; hier begint dat, alleen zichtbaar op kayu-proef -->
     <button class="meerrij meeronderwerp" data-meerpagina="instellingen" id="msInstellingenKnop" hidden><svg class="gi"><use href="#gi-gereedschap"/></svg><span><b>Instellingen</b><small id="msInstellingen"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
-    <!-- 26-10-2026 c (Bart): digitale kluis voor Bart en Loes, met een eigen code; alles versleuteld op de telefoon -->
     <div class="meerkaart">
-      <button class="meerrij" data-meer="kluis"><svg class="gi"><use href="#gi-kluis"/></svg><span><b>Digitale kluis</b><small>Alleen met code · paspoorten, polissen, contracten</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
-    </div>
-    <div class="meerkaart">
+      <!-- 03-11-2026 c (Bart): code van 4 cijfers bij het openen; standaard voor Finca KaYu aan, 5 minuten -->
+      <div class="meerinst"><span><b>Code bij openen</b><small id="mpPin"></small></span><button type="button" class="meerzet" data-meer="pinaan" id="meerPin"></button></div>
+      <button class="meerrij" data-meer="pinwijzig"><span><b>Code wijzigen</b><small>4 cijfers, voor Loes en jou dezelfde</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="pinminuten"><span><b>Opnieuw vragen na</b><small id="mpPinMin"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="bUit"><svg class="gi"><use href="#gi-uit"/></svg><span><b>Uitloggen</b></span></button>
     </div>
   </div>
@@ -1784,9 +1785,18 @@
     <h3>Schoonmaken</h3>
     <div class="meerkaart">
       <button class="meerrij" data-meer="poets"><span><b>Planning en poetsteam</b><small id="mpPoets"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <!-- 03-11-2026 a (Bart): wat het poetsteam heeft ingevuld, aanpassen en op Betaald zetten -->
+      <button class="meerrij" data-meer="poetsuren"><span><b>Gewerkte uren</b><small id="mpPoetsUren"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
+    <!-- 03-11-2026 a: zo staat de poetspagina voor het team; Finca KaYu: alle uitcheckdagen, personen en vrije regels aan, 31 dagen terug -->
     <div class="meerkaart">
       <button class="meerrij" data-meer="poetstarief"><span><b>Uurtarief van het poetsteam</b><small id="mpPoetsTarief"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="poetswas"><span><b>Bedrag voor de was</b><small id="mpPoetsWas"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="poetsmelding"><span><b>Melding bovenaan hun pagina</b><small id="mpPoetsMelding"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <div class="meerinst"><span><b>Alle uitcheckdagen tonen</b><small id="mpPoetsAlle"></small></span><button type="button" class="meerzet" data-meer="poetsalle" id="meerPoetsAlle"></button></div>
+      <div class="meerinst"><span><b>Aantal personen vragen</b><small id="mpPoetsPers"></small></span><button type="button" class="meerzet" data-meer="poetspers" id="meerPoetsPers"></button></div>
+      <div class="meerinst"><span><b>Vrije regels (+ Iets anders)</b><small id="mpPoetsVrij"></small></span><button type="button" class="meerzet" data-meer="poetsvrij" id="meerPoetsVrij"></button></div>
+      <button class="meerrij" data-meer="poetsterug"><span><b>Invullen tot hoeveel dagen terug</b><small id="mpPoetsTerug"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
   </section>
   <section class="meerpagina" data-pagina="gasten" hidden>
@@ -1799,6 +1809,10 @@
       <button class="meerrij" data-meer="bMededeling"><span><b id="meerMededeling">Bericht aan alle gasten</b><small id="mpMededeling"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="bAank"><span><b id="meerAank">Aankondiging</b><small id="mpAank"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <div class="meerinst"><span><b>Aankondiging ook voor wie die dag vertrekt</b><small id="mpAankVertrek"></small></span><button type="button" class="meerzet" data-meer="aankvertrek" id="meerAankVertrek"></button></div>
+    </div>
+    <!-- 03-11-2026 a: de oude agenda's per dag onder de weekkalender op Vandaag, standaard uit -->
+    <div class="meerkaart">
+      <div class="meerinst"><span><b>Agenda's per dag op Vandaag</b><small id="mpAgendasPerDag"></small></span><button type="button" class="meerzet" data-meer="agendasperdag" id="meerAgendasPerDag"></button></div>
     </div>
     <div class="meerkaart">
       <div class="meerinst"><span><b>Herinnering de dag voor vertrek</b><small id="mpHerinnering"></small></span><button type="button" class="meerzet" data-meer="herinnering" id="meerHerinnering"></button></div>
@@ -1861,8 +1875,6 @@
       <button class="meerrij" data-meer="cijfers"><span><b>Cijfers</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 30-10-2026 j: gasten en verkoop per maand, kwartaal of jaar -->
       <button class="meerrij" data-meer="gastenverkoop"><span><b>Gasten en verkoop</b><small>per maand, kwartaal of jaar</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
-      <!-- 29-10-2026 e: slot op Geld met de kluiscode, aan of uit -->
-      <div class="meerinst"><span><b>Slot op Geld</b><small id="mpGeldSlot"></small></span><button type="button" class="meerzet" data-meer="geldslot" id="meerGeldSlot"></button></div>
       <!-- 01-11-2026 g (Bart): Tikkie en Mollie zelf instellen -->
       <button class="meerrij" data-meer="betaalknoppen"><span><b>Betaalwijzen bij afrekenen</b><small id="mpBetaalKnoppen"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="naarPrijzen"><span><b>Producten en prijzen</b></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
@@ -1902,6 +1914,30 @@
 </div></dialog>
 <!-- 01-11-2026 g (Bart): de knoppen voor betalen per bank zelf instellen (naam, rekening, aan of uit) -->
 <!-- 02-11-2026 a (Bart): tijden van de broodjes -->
+<!-- 03-11-2026 a (Bart): gewerkte uren van het poetsteam; aanpassen, Betaald, geschiedenis -->
+<dialog id="poetsUrenDlg"><div class="dlg meerdlg">
+  <h3>Gewerkte uren poetsteam</h3>
+  <div id="guOpen" style="margin:0 0 10px"></div>
+  <div class="mnav"><button id="guPrev" aria-label="Maand terug">&lsaquo;</button><strong id="guTitel">—</strong><button id="guNext" aria-label="Maand verder">&rsaquo;</button></div>
+  <div id="guLijst"></div>
+  <div class="acts"><button id="guSluit">Sluiten</button></div>
+</div></dialog>
+<dialog id="poetsInvoerDlg"><div class="dlg">
+  <h3>Gewerkte uren aanpassen</h3>
+  <p class="leeg" id="piWie" style="margin:0 0 10px"></p>
+  <div class="bkblok">
+    <label class="bslabel" for="piDatum">Datum</label><input id="piDatum" type="date">
+    <label class="bslabel" for="piPersonen">Aantal personen</label><input id="piPersonen" type="text" inputmode="numeric" placeholder="leeg laten mag">
+    <label class="bslabel" for="piUren">Uren in totaal</label><input id="piUren" type="text" inputmode="decimal">
+    <label class="bslabel" for="piTarief">Uurtarief (€)</label><input id="piTarief" type="text" inputmode="decimal">
+  </div>
+  <div class="bkblok"><label class="bkaan"><input type="checkbox" id="piWas"> Was gedaan</label>
+    <label class="bslabel" for="piWasBedrag">Bedrag voor de was (€)</label><input id="piWasBedrag" type="text" inputmode="decimal"></div>
+  <div class="bkblok"><label class="bslabel" for="piExtra">Iets anders: per regel omschrijving; bedrag</label><textarea id="piExtra" rows="3" placeholder="zeep; 8,50"></textarea></div>
+  <div class="bkblok"><label class="bkaan"><input type="checkbox" id="piBetaald"> Betaald</label></div>
+  <div id="piErr" style="color:var(--rood, #b3261e);font-size:13px;min-height:18px;margin-top:6px"></div>
+  <div class="acts"><button id="piWeg">Weghalen</button><button id="piSluit">Annuleren</button><button class="go" id="piOk">Opslaan</button></div>
+</div></dialog>
 <dialog id="broodTijdenDlg"><div class="dlg">
   <h3>Tijden broodjes</h3>
   <p class="leeg" style="margin:0 0 10px">Gasten zien deze tijden op hun pagina en in het welkomstbericht, in hun eigen taal. Bestellen kan tot de besteltijd op de dag zelf.</p>
@@ -1956,48 +1992,6 @@
   <div id="cijfersInhoud"></div>
   <div class="acts"><button id="cijfersDicht">Sluiten</button></div>
 </div></dialog>
-<dialog id="kluis2"><div class="dlg meerdlg kluisdlg">
-  <!-- 26-10-2026 c (Bart): digitale kluis. Alles wordt op de telefoon versleuteld met de kluiscode (AES-GCM, sleutel uit de code met
-       PBKDF2); in de database en de opslagmap staat alleen onleesbare inhoud. Code kwijt = kluis kwijt (geen herstel). -->
-  <div id="kluisSlot">
-    <h3><svg class="gi"><use href="#gi-kluis"/></svg> Digitale kluis</h3>
-    <p class="leeg" id="kluisUitleg" style="margin:0 0 10px"></p>
-    <label class="ib-veld" id="kluisCodeVeld">Code<input id="kluisCode" type="password" autocomplete="off" placeholder="minimaal 6 tekens"></label>
-    <label class="ib-veld" id="kluisCode2Veld" hidden>Nog een keer<input id="kluisCode2" type="password" autocomplete="off"></label>
-    <button class="ib-knop" id="kluisOpen" style="width:100%">Openen</button>
-    <p class="ib-melding" id="kluisMelding" aria-live="polite"></p>
-    <p class="leeg" style="margin:10px 0 0;font-size:12.5px">Loes en jij gebruiken dezelfde code. Schrijf hem op en leg hem in de kast: zonder code kan niemand de kluis openen, ook wij niet, en er is geen "code vergeten". Liever een korte zin dan een kort woord.</p>
-  </div>
-  <div id="kluisBinnen" hidden>
-    <div class="kluiskop"><h3><svg class="gi"><use href="#gi-open"/></svg> Digitale kluis</h3><button type="button" class="kluisknopje" id="kluisDichtdoen"><svg class="gi"><use href="#gi-slot"/></svg> Op slot</button></div>
-    <div class="kluiszoek"><svg class="gi"><use href="#gi-zoek"/></svg><input id="kluisZoek" placeholder="Zoek: NIE, polis, school…" autocomplete="off"></div>
-    <div class="kluismappen" id="kluisMappen"></div>
-    <div id="kluisLijst" class="kluislijst"></div>
-    <button class="ib-knop" id="kluisNieuw" style="width:100%;margin-top:10px">+ Nieuw in de kluis</button>
-  </div>
-  <div id="kluisItem" hidden>
-    <button type="button" class="meerterug" id="kluisTerug"><svg class="gi"><use href="#gi-pijl"/></svg>Kluis</button>
-    <label class="ib-veld">Titel<input id="kiTitel" autocomplete="off" placeholder="bijvoorbeeld NIE Bart"></label>
-    <label class="ib-veld">Map<select id="kiMap"></select></label>
-    <label class="ib-veld">Tekst<textarea id="kiTekst" rows="5" placeholder="nummers, namen, telefoonnummers, waar het origineel ligt"></textarea></label>
-    <div class="ib-knoppen"><label class="ib-knop licht"><svg class="gi"><use href="#gi-paperclip"/></svg> Bijlage (foto of pdf)<input type="file" id="kiBestand" accept="image/*,application/pdf" multiple aria-label="Bijlage kiezen"></label></div>
-    <div id="kiBijlagen" class="kluisbijlagen"></div>
-    <button class="ib-knop" id="kiBewaar" style="width:100%">Bewaren</button>
-    <button type="button" class="kluisknopje" id="kiWeg" hidden><svg class="gi"><use href="#gi-prullenbak"/></svg> Uit de kluis halen</button>
-    <p class="ib-melding" id="kiMelding" aria-live="polite"></p>
-  </div>
-  <div class="acts"><button id="kluisDicht">Sluiten</button></div>
-</div></dialog>
-<!-- 29-10-2026 e (Bart): Geld (Meer > Geld en Exporteren) achter dezelfde code als de digitale kluis -->
-<dialog id="geldSlot"><div class="dlg meerdlg">
-  <h3><svg class="gi"><use href="#gi-slot"/></svg> Geld</h3>
-  <p class="leeg" style="margin:0 0 10px">Vul de code van de digitale kluis in. Daarna blijft Geld 5 minuten open.</p>
-  <label class="ib-veld">Code<input id="gsCode" type="password" autocomplete="off"></label>
-  <button class="ib-knop" id="gsOpen" style="width:100%">Openen</button>
-  <p class="ib-melding" id="gsMelding" aria-live="polite"></p>
-  <div class="acts"><button id="gsDicht">Annuleren</button></div>
-</div></dialog>
-<dialog id="kluisKijk"><div class="dlg meerdlg"><h3 id="kluisKijkNaam"></h3><div id="kluisKijkInhoud"></div><div class="acts"><button id="kluisKijkDicht">Sluiten</button></div></div></dialog>
 <dialog id="inkoop2"><div class="dlg meerdlg">
   <h3>Inkoopbon vastleggen</h3>
   <p class="cf-klein" style="margin:0 0 10px;font-size:13.5px">Maak een foto van de bon of de factuur. Twee pagina's? Maak dan twee foto's. Bedrag en winkel mag je leeg laten.</p>
@@ -2597,7 +2591,7 @@ function proefZaad(){
     { sleutel:"eenheden_accommodaties", waarde:"Kamer 1, Kamer 2, Kamer 3, Kamer 4, Kamer 5" }, { sleutel:"eenheden_plekken", waarde:"Pitch 1 t/m 10, noodplekken Pitch bocht en Boven 1 t/m 4" }
   ].map(x => Object.assign({ bijgewerkt:nu }, x));
   return { boekingen, mt_kamers, kamer_vinkjes, gast_links, producten, consumpties, ontbijt, bonnen, poets_dagen, instellingen,
-    poets_links:[], aankondigingen:[], aanmeldingen:[], aanvragen:[], tips:[], broodjes:[], eigen_plekken:[], camper_aanvragen:[],
+    poets_links:[], poets_uren:[], poets_uren_log:[], aankondigingen:[], aanmeldingen:[], aanvragen:[], tips:[], broodjes:[], eigen_plekken:[], camper_aanvragen:[],
     checkin_status:[], checkin_personen:[], taken:[], boodschappen:[], inkoop_bonnen:[], mt_boekingen:[], mt_facturen:[], mt_ophaalrondes:[], ses_log:[], gegevens_opruimlog:[] };
 }
 function proefDb(){
@@ -2608,7 +2602,7 @@ function proefDb(){
   const bewaar = () => { try { localStorage.setItem(SLEUTEL, JSON.stringify(D)); } catch(e){ if(!bewaarFout){ bewaarFout = true; alert("Opslaan in de browser lukte niet (opslag vol of privévenster); na herladen is dit weg."); } } };
   const rijen = t => D[t] || (D[t] = []);
   const SLEUTELS = { boekingen:["id"], kamer_vinkjes:["nr"], gast_links:["nr"], instellingen:["sleutel"], checkin_status:["nr"], ontbijt:["nr","datum"], consumpties:["id"], bonnen:["id"],
-    producten:["naam"], poets_dagen:["datum"], poets_links:["id"], broodjes:["id"], aanvragen:["id"], tips:["id"], aankondigingen:["id"], aanmeldingen:["id"], eigen_plekken:["id"], camper_aanvragen:["id"], taken:["id"], boodschappen:["id"], inkoop_bonnen:["id"], gast_teksten:["soort","taal"] };
+    producten:["naam"], poets_dagen:["datum"], poets_links:["id"], poets_uren:["id"], poets_uren_log:["id"], broodjes:["id"], aanvragen:["id"], tips:["id"], aankondigingen:["id"], aanmeldingen:["id"], eigen_plekken:["id"], camper_aanvragen:["id"], taken:["id"], boodschappen:["id"], inkoop_bonnen:["id"], gast_teksten:["soort","taal"] };
   const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : "proef-" + Math.random().toString(36).slice(2));
   const kopie = x => JSON.parse(JSON.stringify(x));
   const past = (r, f) => f.every(([op, kol, w]) => {
@@ -2710,11 +2704,10 @@ const db = PROEF ? proefDb() : !TESTVERSIE ? echteDb : (() => {
   const LEES_RPC = new Set(["gast_ontbijt", "poets_lijst", "gast_checkin_lees", "camper_aanvraag_lees", "gast_samen_links", "gast_verleng_info", "gast_teksten_lees"]);
   return {
     /* uitzondering (26-09-2026): het afvinken van de documentcontrole in checkin_status moet op de testversie getest kunnen worden */
-    /* 26-10-2026 c: de digitale kluis mag ook op de testversie echt schrijven (zelfde kluis als de echte app; Bart wil hem daar proberen) */
-    from: tabel => { const q = echteDb.from(tabel); if(tabel === "kluis") return q; return { select: (...a) => q.select(...a), insert: geblokkeerd, update: tabel === "checkin_status" ? (...a) => q.update(...a) : geblokkeerd, upsert: geblokkeerd, delete: geblokkeerd }; },
+    from: tabel => { const q = echteDb.from(tabel); return { select: (...a) => q.select(...a), insert: geblokkeerd, update: tabel === "checkin_status" ? (...a) => q.update(...a) : geblokkeerd, upsert: geblokkeerd, delete: geblokkeerd }; },
     rpc: (naam, ...a) => LEES_RPC.has(naam) ? echteDb.rpc(naam, ...a) : geblokkeerd(),
     /* 17-10-2026 c: foto's van inkoopbonnen alleen bekijken, niet toevoegen of weghalen */
-    storage: { from: map => { const s = echteDb.storage.from(map); if(map === "kluis") return s; return { upload: geblokkeerd, remove: geblokkeerd, createSignedUrls: (...a) => s.createSignedUrls(...a), download: (...a) => s.download(...a) }; } },
+    storage: { from: map => { const s = echteDb.storage.from(map); return { upload: geblokkeerd, remove: geblokkeerd, createSignedUrls: (...a) => s.createSignedUrls(...a), download: (...a) => s.download(...a) }; } },
     auth: echteDb.auth, channel: (...a) => echteDb.channel(...a), removeChannel: (...a) => echteDb.removeChannel(...a)
   };
 })();
@@ -2759,6 +2752,9 @@ const vouwKop = (g, kop, aan, regels) =>
   `<div class="bsgroep bvg" data-bvg="${vouwVeilig(g)}"><span>${barVouw.has(g) ? "\u25be" : "\u25b8"} ${vouwVeilig(kop)}</span>` +
   `<b class="${aan ? "aan" : ""}">${aan ? aan + "\u00d7" : regels}</b></div>`;
 const vouwWissel = (g, opnieuw) => { if(barVouw.has(g)) barVouw.delete(g); else barVouw.add(g); opnieuw(); };
+let poetsUren = []; /* 03-11-2026 a: gewerkte uren van het poetsteam (tabel poets_uren) */
+let poetsWeg = []; /* review 03-11-2026 a: weggehaalde regels (poets_uren_log, actie weg), voor de Inbox en de geschiedenis per maand */
+const poetsWegGezien = () => new Set(String(instellingen.poets_weg_gezien || "").split(",").map(x => x.trim()).filter(Boolean));
 let boekingen = [], producten = [], consumpties = [], vinkjes = {}, ontbijt = [], gastLinks = {}, poetsDagen = {}, poetsLinks = [], aankondigingen = [], aanmeldingen = [], instellingen = {}, aanvragen = [], tips = [], bonnen = [], broodjes = [], camperAanvragen = [], laadFout = "";
 /* 17-10-2026 c: syncMag = alle bronnen voor het ontbijt op de rekening zijn goed opgehaald; appLaadFout = boekingen, consumpties of bonnen niet geladen (Cijfers en het maandoverzicht kloppen dan niet) */
 let syncMag = false, appLaadFout = "nog niet geladen";
@@ -2861,7 +2857,7 @@ async function start(){
   /* terug uit de mail "wachtwoord vergeten": eerst een nieuw wachtwoord kiezen */
   if(/type=recovery/.test(location.hash) || new URLSearchParams(location.search).get("nieuwww") === "1"){ toon("nieuwww"); return; }
   const { data:{ session } } = await db.auth.getSession();
-  if(session) await naarApp_(); else toon("login");
+  if(session) await naarApp_(); else { toon("login"); if(pinGeblokkeerd()) document.getElementById("lErr").textContent = "5 keer een foute code. Log opnieuw in met je wachtwoord."; }
 }
 /* wachtwoord vergeten: Supabase mailt een link naar dit adres; de app opent dan het scherm hierboven */
 document.getElementById("lVergeten").onclick = async () => {
@@ -2885,7 +2881,7 @@ document.getElementById("nwGo").onclick = async () => {
   err.textContent = "";
   history.replaceState(null, "", location.pathname);
   verberg("nieuwww");
-  await naarApp_();
+  await naarApp_(true); /* review 03-11-2026 c: net een nieuw wachtwoord gekozen, dan geen code nodig */
 };
 
 /* eigen beginscherm-icoon voor gast- en poetspagina: start_url is de eigen link */
@@ -2896,10 +2892,14 @@ function eigenManifest(kort_, lang_){
   const t = document.querySelector('meta[name="apple-mobile-web-app-title"]'); if(t) t.content = kort_;
 }
 
-/* ---------- poetspagina (Spaans): uitchecks bevestigen, tijd en opmerking ---------- */
-let poetsCode = "", poetsData = null, poetsStatusUi = {}, poetsMaandEs = null;
-const poetsUrenOpen = new Set(); /* voorbije poetsdagen waarvan het team de uren wil wijzigen */
-const POETS_TIJDEN = ["09:00","10:00","10:30","11:00","11:30","12:00","13:00"];
+/* ---------- poetspagina (Spaans) ----------
+   03-11-2026 a (Bart): de poets ziet alle uitcheckdagen ter info (eerst afstemmen met Loes, melding bovenaan), en vult na het poetsen
+   met de knop "Hemos terminado de limpiar" in: datum, personen, uren in totaal, uurtarief (standaard uit Meer, zelf aan te passen),
+   de was met bedrag en vrije regels met bedrag. Tot Bart op Betaald tikt, blijft het te wijzigen of weg te halen. Vamos / No podemos
+   en de tijd per dag zijn weg (Bart: "mag weg"). Database: poets_lijst, poets_invoer_zet, poets_invoer_weg
+   (database/03-11-2026-a-poetsuren.sql). Melding bovenaan: tekst van Bart (03-11-2026). */
+let poetsCode = "", poetsData = null, poetsMaandEs = null, poetsForm = null, poetsOk = "";
+const POETS_MELDING_ES = "Aquí veis todas las salidas. Antes de venir a limpiar, hablad siempre primero con Loes.";
 async function startPoets(code){
   poetsCode = code; document.title = "Finca KaYu – limpieza";
   toon("gast");
@@ -2910,12 +2910,11 @@ async function startPoets(code){
   setInterval(poetsVerversen, 60000);
   document.addEventListener("visibilitychange", poetsVerversen);
 }
-/* niet verversen zolang er iets onbewaard is: cursor in een veld, getypte tekst of uren, of een gekozen maar nog niet bewaarde keuze */
+/* niet verversen zolang er iets onbewaard is: het formulier staat open, of de cursor staat in een veld */
 function poetsBezig(){
   const bak = document.getElementById("gastInhoud"), a = document.activeElement;
   if(a && bak.contains(a) && a.matches("input, textarea")) return true;
-  if([...bak.querySelectorAll("[data-po], [data-pu]")].some(el => el.value !== el.defaultValue)) return true;
-  return Object.keys(poetsStatusUi).length > 0;
+  return !!poetsForm;
 }
 let poetsVerversLoopt = false;
 async function poetsVerversen(){
@@ -2933,7 +2932,6 @@ function poetsStrookEs(vandaag){
   const van = new Date(poetsMaandEs.getFullYear(), poetsMaandEs.getMonth(), 1, 12), tot = new Date(poetsMaandEs.getFullYear(), poetsMaandEs.getMonth() + 1, 0, 12);
   const N = tot.getDate(), dagen = Array.from({ length:N }, (_, i) => iso(new Date(van.getFullYear(), van.getMonth(), i + 1, 12)));
   const perDag = {}; (poetsData.dagen || []).forEach(p => perDag[p.datum] = p);
-  const kleur = (p, ds) => { const st = (poetsStatusUi[ds] || {}).status || p.status; return st === "komt" ? "groen" : st === "kan_niet" ? "rood" : "grijs"; };
   let h = `<div class="pstrook"><div class="psscroll" data-psscroll="1"><div class="psbinnen" style="--n:${N}"><div class="psr pskop"><span class="n"></span>` + dagen.map(d => { const dd = parse(d); return `<span class="${d === vandaag ? "nu" : ""}${dd.getDay() === 0 || dd.getDay() === 6 ? " wk" : ""}" data-psd="${d}">${POETS_DG_KORT_ES[dd.getDay()]}<br>${dd.getDate()}</span>`; }).join("") + `</div>`;
   let aantal = 0;
   KAMERS5.forEach(k => {
@@ -2941,117 +2939,163 @@ function poetsStrookEs(vandaag){
       const p = perDag[d]; const alle = p && (p.bar || (p.kamers||[]).length === 5);
       const vrij = p && (alle || (p.kamers||[]).includes(k));
       if(!vrij) return `<span class="ps${d === vandaag ? " nu" : ""}"></span>`;
-      aantal++; const haast = (p.haast||[]).includes(k), kl = kleur(p, d);
-      return `<span class="ps b ${kl}${haast ? " haast" : ""}${d === vandaag ? " nu" : ""}" data-pnaar="${d}"></span>`;
+      aantal++; const haast = (p.haast||[]).includes(k);
+      return `<span class="ps b grijs${haast ? " haast" : ""}${d === vandaag ? " nu" : ""}" data-pnaar="${d}"></span>`;
     }).join("") + `</div>`;
   });
-  h += `</div></div><div class="pslegenda"><span><i class="grijs"></i>sin confirmar</span><span><i class="groen"></i>venís</span><span><i class="rood"></i>no podéis</span><span><i class="stip"></i>entran nuevos el mismo día</span>${aantal ? "<span>tocad un día para ir a ese día</span>" : "<span>No hay salidas este mes</span>"}</div></div>`;
+  h += `</div></div><div class="pslegenda"><span><i class="grijs"></i>salida</span><span><i class="stip"></i>entran nuevos el mismo día</span>${aantal ? "<span>tocad un día para ir a ese día</span>" : "<span>No hay salidas este mes</span>"}</div></div>`;
   return h;
 }
 const esKamers = p => p.bar || (p.kamers||[]).length === 5 ? "Todas las habitaciones" + (p.bar ? " + bar (grupo)" : "")
-  : (p.kamers||[]).length === 1 ? "Habitación " + p.kamers[0].replace("Kamer ", "") : "Habitaciones " + p.kamers.map(k => k.replace("Kamer ", "")).join(", ");
+  : (p.kamers||[]).map(k => "habitación " + k.replace("Kamer ", "")).join(", ");
+const eurEs = n => (Math.round(Number(n) * 100) / 100).toFixed(2).replace(".", ",") + " €";
+const urenEs = u => String(Number(u)).replace(".", ",") + " h";
+const getalEs = t => { const s = String(t == null ? "" : t).trim().replace(",", "."); if(s === "") return null; const n = Number(s); return isFinite(n) ? n : NaN; };
+const getalTekst = n => n == null || n === "" ? "" : String(n).replace(".", ",");
+const poetsTariefEs = () => { const t = getalEs(poetsData && poetsData.tarief); return t != null && t > 0 ? t : 14; };
+/* het totaal van één invoer: uren x tarief + de was (als aangevinkt) + de vrije regels; zelfde som als de database */
+/* afronden op centen zoals de database (round(numeric, 2)); toPrecision vangt rekenfoutjes als 0,5 × 2,01 = 1,00499... op */
+const rond2 = x => Math.round(Number((Number(x) * 100).toPrecision(12))) / 100;
+const poetsTotaal = f => { const u = getalEs(f.uren), t = getalEs(f.tarief), w = f.was ? getalEs(f.was_bedrag) : 0;
+  const ex = (f.extra || []).reduce((s, e) => s + (getalEs(e.bedrag) || 0), 0);
+  return rond2((u > 0 ? u : 0) * (t >= 0 ? t : 0) + (w > 0 ? w : 0) + ex); };
+const poetsInvoerTekst = (e, euro, uren) => [e.personen ? `${e.personen} ${e.personen === 1 ? "persona" : "personas"}` : "", `${uren(e.uren)} × ${euro(e.tarief)}`,
+  e.was ? `colada ${e.was_bedrag != null ? euro(e.was_bedrag) : ""}`.trim() : "", ...(e.extra || []).map(x => `${x.omschrijving} ${euro(x.bedrag)}`)].filter(Boolean).join(" · ");
+function poetsFormNieuw(){
+  const w = getalEs(poetsData.was_bedrag);
+  poetsForm = { id:null, datum: poetsData.vandaag, personen:null, uren:"", tarief: getalTekst(poetsTariefEs()), was:false, was_bedrag: w != null && w >= 0 ? getalTekst(w) : "", extra:[], fout:"" };
+}
+function poetsFormVan(e){
+  const w = getalEs(poetsData.was_bedrag);
+  poetsForm = { id:e.id, datum:e.datum, personen:e.personen || null, uren:getalTekst(e.uren), tarief:getalTekst(e.tarief), was:!!e.was,
+    was_bedrag: e.was_bedrag != null ? getalTekst(e.was_bedrag) : (w != null && w >= 0 ? getalTekst(w) : ""), extra:(e.extra || []).map(x => ({ omschrijving:x.omschrijving, bedrag:getalTekst(x.bedrag) })), fout:"", origDatum:e.datum };
+}
+/* wat er getypt is meenemen voordat het scherm opnieuw getekend wordt */
+function poetsFormLees(){
+  const bak = document.getElementById("gastInhoud"); if(!poetsForm || !bak) return;
+  const v = sel => { const el = bak.querySelector(sel); return el ? el.value : undefined; };
+  if(v("[data-pf=datum]") !== undefined) poetsForm.datum = v("[data-pf=datum]");
+  if(v("[data-pf=uren]") !== undefined) poetsForm.uren = v("[data-pf=uren]");
+  if(v("[data-pf=tarief]") !== undefined) poetsForm.tarief = v("[data-pf=tarief]");
+  if(v("[data-pf=wasbedrag]") !== undefined) poetsForm.was_bedrag = v("[data-pf=wasbedrag]");
+  const was = bak.querySelector("[data-pf=was]"); if(was) poetsForm.was = was.checked;
+  poetsForm.extra = [...bak.querySelectorAll("[data-pfextra]")].map(r => ({ omschrijving: r.querySelector("[data-pfoms]").value, bedrag: r.querySelector("[data-pfbedrag]").value }));
+}
+function poetsFormHtml(){
+  const f = poetsForm, d = poetsData, terug = Number(d.dagen_terug) > 0 ? Number(d.dagen_terug) : 31;
+  const min = iso(new Date(parse(d.vandaag).getTime() - terug * 864e5));
+  const minDatum = f.origDatum && f.origDatum < min ? f.origDatum : min;
+  const veld = "font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--pine)";
+  const esc = t => String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+  return `<div class="dag" id="poetsForm"><h2>${f.id ? "Cambiar lo apuntado" : "Hemos terminado de limpiar"}</h2>` +
+    `<div class="info" style="margin-top:6px">Fecha</div><div class="vink"><input data-pf="datum" type="date" min="${minDatum}" max="${d.vandaag}" value="${esc(f.datum)}" style="${veld}"></div>` +
+    (d.personen !== false ? `<div class="info" style="margin-top:8px">Personas</div><div class="vink">` + [1,2,3,4,5].map(n => `<button data-pfpers="${n}" class="${f.personen === n ? "aan" : ""}">${n}</button>`).join("") + `</div>` : "") +
+    `<div class="info" style="margin-top:8px">Horas en total (todas las personas juntas)</div><div class="vink" style="align-items:center"><input data-pf="uren" type="text" inputmode="decimal" placeholder="p. ej. 3,5" value="${esc(f.uren)}" style="width:100px;${veld}"><span class="leeg" style="align-self:center">horas</span></div>` +
+    `<div class="info" style="margin-top:8px">Precio por hora</div><div class="vink" style="align-items:center"><input data-pf="tarief" type="text" inputmode="decimal" value="${esc(f.tarief)}" style="width:100px;${veld}"><span class="leeg" style="align-self:center">€</span></div>` +
+    `<label class="vink" style="margin-top:10px;align-items:center;gap:8px"><input data-pf="was" type="checkbox"${f.was ? " checked" : ""} style="width:22px;height:22px"> Hemos hecho la colada</label>` +
+    (f.was ? `<div class="vink" style="align-items:center"><span class="leeg" style="align-self:center">Importe de la colada</span><input data-pf="wasbedrag" type="text" inputmode="decimal" value="${esc(f.was_bedrag)}" style="width:100px;${veld}"><span class="leeg" style="align-self:center">€</span></div>` : "") +
+    (f.extra || []).map((x, i) => `<div class="vink" data-pfextra="${i}" style="align-items:center"><input data-pfoms="1" type="text" maxlength="120" placeholder="Descripción" value="${esc(x.omschrijving)}" style="flex:1;min-width:0;${veld}"><input data-pfbedrag="1" type="text" inputmode="decimal" placeholder="Importe" value="${esc(x.bedrag)}" style="width:90px;${veld}"><button data-pfweg="${i}" aria-label="Quitar">×</button></div>`).join("") +
+    (d.vrije_regels !== false && (f.extra || []).length < 10 ? `<div class="vink"><button data-pfplus="1">+ Otra cosa</button></div>` : "") +
+    `<div class="info" style="margin-top:10px;font-size:16px;color:var(--pine)"><b>Total: <span data-pftotaal="1">${eurEs(poetsTotaal(f))}</span></b></div>` +
+    (f.fout ? `<div class="status fout">${f.fout}</div>` : "") +
+    `<div class="vink" style="margin-top:8px"><button data-pfbewaar="1" class="aan">Guardar</button><button data-pfstop="1">Cancelar</button></div></div>`;
+}
+function poetsFormFout(f){
+  const d = poetsData, terug = Number(d.dagen_terug) > 0 ? Number(d.dagen_terug) : 31;
+  const min = iso(new Date(parse(d.vandaag).getTime() - terug * 864e5));
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(f.datum || "")) return "Elegid la fecha.";
+  if(f.datum > d.vandaag) return "La fecha no puede ser después de hoy.";
+  if(f.datum < min && f.datum !== f.origDatum) return `Como mucho ${terug} días atrás.`;
+  const u = getalEs(f.uren); if(u == null || !(u > 0) || u > 100) return "Rellenad las horas (por ejemplo 3,5).";
+  const t = getalEs(f.tarief); if(t == null || !(t >= 0) || t > 500) return "Rellenad el precio por hora.";
+  if(f.was){ const w = getalEs(f.was_bedrag); if(w != null && !(w >= 0 && w <= 1000)) return "Revisad el importe de la colada."; }
+  /* review: een leeg bedrag (null) telt als niet ingevuld; null >= 0 is in JS waar */
+  if((f.extra || []).some(x => !String(x.omschrijving || "").trim() || getalEs(x.bedrag) == null || !(getalEs(x.bedrag) >= 0) || getalEs(x.bedrag) > 1000)) return "Rellenad la descripción y el importe de cada otra cosa.";
+  return "";
+}
+async function poetsFormBewaar(){
+  poetsFormLees(); const f = poetsForm; if(!f || f.bezig) return;
+  f.fout = poetsFormFout(f); if(f.fout){ tekenPoets(); return; }
+  f.bezig = true;
+  const w = getalEs(f.was_bedrag);
+  let r; try { r = await db.rpc("poets_invoer_zet", { p_code: poetsCode, p_id: f.id, p_datum: f.datum, p_personen: f.personen, p_uren: getalEs(f.uren),
+    p_tarief: getalEs(f.tarief), p_was: !!f.was, p_was_bedrag: f.was && w != null ? w : null,
+    p_extra: (f.extra || []).map(x => ({ omschrijving: String(x.omschrijving).trim(), bedrag: getalEs(x.bedrag) })) }); } catch(e){ r = { error: e }; }
+  f.bezig = false;
+  if(!r || r.error || !r.data || r.data.fout){
+    const code = r && r.data && r.data.fout;
+    f.fout = code === "betaald" ? "Esto ya está pagado; ya no se puede cambiar." : code === "te oud" ? "Esta fecha es demasiado antigua." : "No se pudo guardar, inténtalo de nuevo.";
+    tekenPoets(); return; }
+  poetsForm = null; poetsOk = "Guardado ✓ Bart y Loes lo ven ahora.";
+  try { const l = await db.rpc("poets_lijst", { p_code: poetsCode }); if(l.data && !l.data.fout) poetsData = l.data; } catch(e){}
+  tekenPoets();
+  setTimeout(() => { poetsOk = ""; if(!poetsForm) tekenPoets(); }, 4000);
+}
 function tekenPoets(){
   const bak = document.getElementById("gastInhoud");
   if(!poetsData || poetsData.fout){ bak.innerHTML = `<h1>Limpieza Finca KaYu</h1><p class="melding">Este enlace no funciona. Escribid a Bart o Loes: +34 722 162 962</p>`; return; }
   const vandaag = poetsData.vandaag;
   if(!poetsMaandEs) poetsMaandEs = new Date(parse(vandaag).getFullYear(), parse(vandaag).getMonth(), 1);
   const van = iso(poetsMaandEs), tot = iso(new Date(poetsMaandEs.getFullYear(), poetsMaandEs.getMonth()+1, 0, 12));
-  let h = `<div class="gkop"><div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span><div class="pwie"><b>Limpieza</b><span>Hola ${poetsData.naam}</span></div></div></div>` +
-    `<details class="puitleg"><summary>¿Cómo funciona?</summary><p>Aquí veis qué habitaciones quedan libres y cuándo. Por cada día: confirmad si venís, a qué hora, y dejad un comentario si hace falta. Los huéspedes salen antes de las 10:00 y los nuevos entran a las 15:00. Lo que guardéis aquí lo ven Bart y Loes al momento.</p></details>`;
+  const esc = t => String(t == null ? "" : t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  let h = `<div class="gkop"><div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span><div class="pwie"><b>Limpieza</b><span>Hola ${esc(poetsData.naam)}</span></div></div></div>` +
+    `<p class="melding" id="poetsMeldingTop">${esc(poetsData.melding || POETS_MELDING_ES)}</p>` +
+    `<details class="puitleg"><summary>¿Cómo funciona?</summary><p>Aquí veis todas las salidas, para planificar. Cuando hayáis terminado de limpiar, tocad «Hemos terminado de limpiar» y apuntad la fecha, las personas, las horas y lo demás. Bart y Loes lo ven al momento. Mientras no esté pagado, lo podéis cambiar o borrar.</p></details>`;
+  if(poetsOk) h += `<div class="melding goed" style="margin:8px 0">${poetsOk}</div>`;
+  h += poetsForm ? poetsFormHtml() : `<div class="vink" style="margin:10px 0"><button data-pfnieuw="1" class="aan" style="width:100%;font-size:17px;padding:14px">Hemos terminado de limpiar</button></div>`;
+  /* wat ze hebben ingevuld: open (te wijzigen) en de laatste betaalde */
+  const invoer = poetsData.invoer || [];
+  if(invoer.length){
+    const open = invoer.filter(e => !e.betaald_op), openTot = open.reduce((s, e) => s + Number(e.totaal || 0), 0);
+    h += `<div class="dag"><h2>Lo que habéis apuntado</h2>${open.length ? `<div class="info" style="font-size:15px;color:var(--pine)"><b>Pendiente de pago: ${eurEs(openTot)}</b></div>` : ""}` +
+      invoer.map(e => `<div class="pinv" data-pinv="${esc(e.id)}" style="border-top:1px solid var(--line);padding:8px 0;margin-top:6px">` +
+        `<div><b>${hoofdletter(datumEs(e.datum))}</b> · <b>${eurEs(e.totaal)}</b>${e.door ? ` <span class="leeg">(${esc(e.door)})</span>` : ""}</div>` +
+        `<div class="info">${esc(poetsInvoerTekst(e, eurEs, urenEs))}</div>` +
+        (e.betaald_op ? `<div class="info"><span class="tag kamer">Pagado</span> el ${new Intl.DateTimeFormat("es-ES", { timeZone:"Europe/Madrid", day:"numeric", month:"long" }).format(new Date(e.betaald_op))}</div>`
+          : `<div class="vink" style="align-items:center"><span class="tag optie">Pendiente</span><button data-pfwijzig="${esc(e.id)}">Cambiar</button><button data-pfdel="${esc(e.id)}">Borrar</button></div>`) +
+        `</div>`).join("") + `</div>`;
+  }
+  /* de uitcheckdagen, alleen ter info voor de planning */
   const dagen = (poetsData.dagen || []).filter(p => p.datum >= van && p.datum <= tot);
-  /* strook van twee weken (H1 t/m H5), zelfde als in de app van Bart: kleur = status, stipje = dezelfde dag weer bezet */
+  h += `<h2 style="margin:16px 0 8px">Salidas (para planificar)</h2>`;
   h += `<div class="mnav pnav"><button data-pm="-1" aria-label="Mes anterior">&lsaquo;</button><strong>${POETS_MND_ES[poetsMaandEs.getMonth()]} ${poetsMaandEs.getFullYear()}</strong><button data-pm="1" aria-label="Mes siguiente">&rsaquo;</button></div>`;
   h += poetsStrookEs(vandaag);
   if(!dagen.length) h += `<p class="melding">No hay salidas previstas en este mes.</p>`;
-  /* gewerkte uren: in te vullen op de dag zelf en tot twee weken erna; voorbije dagen staan er alleen nog voor de uren */
-  /* uurtarief komt mee uit de database (instelling poets_uurtarief); het team ziet uren én bedrag */
-  const tarief = (() => { const t = Number(String(poetsData.tarief || "").replace(",", ".")); return isFinite(t) && t > 0 ? t : 14; })();
-  const eurEs = n => Number(n).toFixed(2).replace(".", ",") + " €";
-  const urenEs = u => String(Number(u)).replace(".", ",") + " h";
-  const urenVeld = (p, st) => { const u = st.uren !== undefined ? st.uren : (p.uren == null ? "" : String(p.uren).replace(".", ","));
-    return `<div class="info" style="margin-top:8px">Horas trabajadas este día (rellenad cuando hayáis terminado) · ${eurEs(tarief)} la hora${p.uren != null ? ` · guardado: ${urenEs(p.uren)} = ${eurEs(Number(p.uren) * tarief)}` : ""}</div>` +
-      `<div class="vink" style="align-items:center"><input data-pu="1" type="text" inputmode="decimal" placeholder="p. ej. 3,5" value="${u.replace(/"/g, "&quot;")}" style="width:90px;font:inherit;font-size:16px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--pine)"><span class="leeg" style="align-self:center">horas</span><b data-pubedrag="1" style="align-self:center;color:var(--pine)">${liveBedrag(u)}</b></div>`; };
-  /* rekent tijdens het typen mee: 3,5 → "= 49,00 €" */
-  const liveBedrag = txt => { const t = String(txt || "").trim().replace(",", "."); if(t === "") return ""; const n = Number(t); return isFinite(n) && n >= 0 && n <= 24 ? "= " + eurEs(n * tarief) : "?"; };
-  const voorbijDagen = dagen.filter(p => p.datum < vandaag && (p.status === "komt" || p.uren != null)), komende = dagen.filter(p => p.datum >= vandaag);
-  /* KaYu efficiëntieronde 3 (27-09-2026 i): de komende poetsdagen eerst; voorbije dagen daaronder, alleen volledig als er nog uren
-     ontbreken (of als je ze wilt wijzigen); dagen met uren staan als korte regel met Cambiar */
-  let pasadoHtml = "";
-  const faltan = voorbijDagen.filter(p => p.uren == null || poetsUrenOpen.has(p.datum) || poetsStatusUi[p.datum]);
-  const hechos = voorbijDagen.filter(p => !faltan.includes(p));
-  if(voorbijDagen.length){
-    pasadoHtml += `<h2 style="margin:14px 0 8px">Días pasados: horas trabajadas</h2>`;
-    faltan.forEach(p => {
-      const st = poetsStatusUi[p.datum] || {};
-      pasadoHtml += `<div class="dag" data-datum="${p.datum}"><h2>${hoofdletter(datumEs(p.datum))}</h2>` +
-        `<div class="info" style="font-size:15px;color:var(--pine)"><b>${esKamers(p)}</b></div>` +
-        urenVeld(p, st) + `<div class="vink"><button data-pbewaar="1" class="aan">Guardar</button></div>` +
-        `<div class="status ${st.melding === "fout" ? "fout" : ""}">${st.melding === "ok" ? "Guardado ✓" : st.melding === "fout" ? "No se pudo guardar, inténtalo de nuevo" : ""}</div></div>`;
-    });
-    hechos.forEach(p => { pasadoHtml += `<div class="dag pcompact" data-datum="${p.datum}"><div class="vink" style="align-items:center;justify-content:space-between;margin:0"><span>${hoofdletter(datumEs(p.datum))}: <b>${urenEs(p.uren)} · ${eurEs(Number(p.uren) * tarief)}</b></span><button data-purenopen="${p.datum}">Cambiar</button></div></div>`; });
-    if(komende.length) h += `<h2 style="margin:6px 0 8px">Próximas salidas</h2>`;
-  }
-  komende.forEach(p => {
-    const nieuw = p.status === "open" && (Date.now() - new Date(p.nieuw_sinds).getTime()) < 5*864e5;
-    const st = poetsStatusUi[p.datum] || {};
-    const status = st.status || p.status, tijd = st.tijd !== undefined ? st.tijd : (p.tijd || null), opm = st.opm !== undefined ? st.opm : (p.opmerking_poets || "");
-    h += `<div class="dag ${p.datum === vandaag ? "" : ""}" data-datum="${p.datum}">` +
-      `<h2>${hoofdletter(datumEs(p.datum))}${nieuw ? `<span class="tag optie" style="margin-left:8px">NUEVO</span>` : ""}${p.datum === vandaag ? `<span class="tag kamer" style="margin-left:8px">hoy</span>` : ""}</h2>` +
+  dagen.forEach(p => {
+    h += `<div class="dag" data-datum="${p.datum}"><h2>${hoofdletter(datumEs(p.datum))}${p.datum === vandaag ? `<span class="tag kamer" style="margin-left:8px">hoy</span>` : ""}</h2>` +
       `<div class="info" style="font-size:15px;color:var(--pine)"><b>${esKamers(p)}</b></div>` +
       ((p.haast||[]).length ? `<div class="info">⚠️ El mismo día entran huéspedes nuevos: ${p.haast.map(k => "habitación " + k.replace("Kamer ", "")).join(", ")}. Mejor empezar antes de las 13:00.</div>` : "") +
-      (status === "komt" && tijd && tijd > "13:00" && (p.haast||[]).length ? `<div class="melding">⚠️ A las ${tijd} es tarde para ese día, entran huéspedes nuevos. Si no podéis antes, dejad un comentario.</div>` : "") +
-      (p.opmerking_finca_es || p.opmerking_finca ? `<div class="melding">Nota de Bart y Loes: ${p.opmerking_finca_es || p.opmerking_finca}</div>` : "") +
-      `<div class="vink" style="margin-top:10px"><button data-ps="komt" class="${status === "komt" ? "aan" : ""}">${status === "komt" ? "✓ " : ""}Vamos</button><button data-ps="kan_niet" class="${status === "kan_niet" ? "aan nee" : ""}">${status === "kan_niet" ? "✓ " : ""}No podemos</button></div>` +
-      (status === "komt" ? `<div class="info" style="margin-top:8px">¿A qué hora?</div><div class="vink">` + POETS_TIJDEN.map(x => `<button data-pt="${x}" class="${tijd === x ? "aan" : ""}">${x}</button>`).join("") + `</div>` : "") +
-      (status === "komt" && p.datum === vandaag ? urenVeld(p, st) : "") +
-      `<textarea data-po="1" placeholder="Comentario (opcional)" style="margin-top:8px;width:100%;min-height:54px;font:inherit;font-size:14px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--pine)">${opm.replace(/</g,"&lt;")}</textarea>` +
-      `<div class="vink"><button data-pbewaar="1" class="aan">Guardar</button></div>` +
-      `<div class="status ${st.melding === "fout" ? "fout" : ""}">${st.melding === "ok" ? "Guardado ✓" : st.melding === "fout" ? "No se pudo guardar, inténtalo de nuevo" : (p.bijgewerkt_poets ? `Guardado por ${p.door || ""} el ${kort(p.bijgewerkt_poets.slice(0,10))}` : "")}</div>` +
-      `</div>`;
+      (p.opmerking_finca_es || p.opmerking_finca ? `<div class="melding">Nota de Bart y Loes: ${esc(p.opmerking_finca_es || p.opmerking_finca)}</div>` : "") + `</div>`;
   });
-  h += pasadoHtml;
-  /* maandtotaal voor het team: alle uren van deze maand tegen het uurtarief */
-  const totUren = dagen.reduce((s, p) => s + (p.uren != null ? Number(p.uren) : 0), 0);
-  h += `<div class="dag"><h2>Horas de ${POETS_MND_ES[poetsMaandEs.getMonth()]}</h2><div class="info" style="font-size:15px;color:var(--pine)"><b>${totUren ? `${urenEs(totUren)} · ${eurEs(totUren * tarief)}` : "todavía no habéis apuntado horas"}</b></div><div class="info">${eurEs(tarief)} la hora. Apuntad las horas el mismo día o en las dos semanas siguientes.</div></div>`;
   h += `<p class="slot">¿Dudas? WhatsApp o llamada: +34 722 162 962</p>`;
   bak.innerHTML = h;
   { const st = bak.querySelector(".pstrook"); if(st) psScrollNaarVandaag(st, vandaag); }
-  bak.querySelectorAll("[data-pm]").forEach(kn => kn.onclick = () => { poetsMaandEs.setMonth(poetsMaandEs.getMonth() + Number(kn.dataset.pm)); tekenPoets(); });
-  bak.querySelectorAll("[data-purenopen]").forEach(kn => kn.onclick = () => { poetsUrenOpen.add(kn.dataset.purenopen); tekenPoets(); });
-  bak.querySelectorAll("[data-pu]").forEach(el => el.oninput = () => { const b = el.closest(".dag").querySelector("[data-pubedrag]"); if(b) b.textContent = liveBedrag(el.value); });
+  bak.querySelectorAll("[data-pm]").forEach(kn => kn.onclick = () => { poetsFormLees(); poetsMaandEs.setMonth(poetsMaandEs.getMonth() + Number(kn.dataset.pm)); tekenPoets(); });
   bak.querySelectorAll("[data-pnaar]").forEach(r => r.onclick = () => {
-    const d = r.dataset.pnaar, dd = parse(d);
-    if(dd.getMonth() !== poetsMaandEs.getMonth() || dd.getFullYear() !== poetsMaandEs.getFullYear()){ poetsMaandEs = new Date(dd.getFullYear(), dd.getMonth(), 1); tekenPoets(); }
-    const kaart = document.querySelector(`#gastInhoud .dag[data-datum="${d}"]`);
+    const kaart = document.querySelector(`#gastInhoud .dag[data-datum="${r.dataset.pnaar}"]`);
     if(kaart){ kaart.style.scrollMarginTop = "8px"; kaart.scrollIntoView({ behavior:"smooth", block:"start" }); kaart.style.transition = "box-shadow .3s"; kaart.style.boxShadow = "0 0 0 2px var(--pine)"; setTimeout(() => { kaart.style.boxShadow = ""; }, 1200); }
   });
-  const dagVan = kn => kn.closest(".dag").dataset.datum;
-  const leesOpm = kn => { const el = kn.closest(".dag").querySelector("[data-po]"); return el ? el.value : ""; };
-  const leesUren = kn => { const el = kn.closest(".dag").querySelector("[data-pu]"); return el ? el.value : undefined; };
-  const bewaarUi = (d, extra) => { const u = leesUrenVan(d); poetsStatusUi[d] = Object.assign({}, poetsStatusUi[d], extra, u === undefined ? {} : { uren: u }); };
-  const leesUrenVan = d => { const el = bak.querySelector(`.dag[data-datum="${d}"] [data-pu]`); return el ? el.value : undefined; };
-  bak.querySelectorAll("[data-ps]").forEach(kn => kn.onclick = () => { const d = dagVan(kn); bewaarUi(d, { status: kn.dataset.ps, opm: leesOpm(kn) }); tekenPoets(); });
-  bak.querySelectorAll("[data-pt]").forEach(kn => kn.onclick = () => { const d = dagVan(kn); const st = poetsStatusUi[d] || {}; const huidig = st.tijd !== undefined ? st.tijd : (poetsData.dagen.find(x => x.datum === d).tijd || null); bewaarUi(d, { tijd: huidig === kn.dataset.pt ? null : kn.dataset.pt, opm: leesOpm(kn) }); tekenPoets(); });
-  bak.querySelectorAll("[data-pbewaar]").forEach(kn => kn.onclick = async () => {
-    const d = dagVan(kn); const p = poetsData.dagen.find(x => x.datum === d); const st = poetsStatusUi[d] || {};
-    const voorbij = d < vandaag, opm = leesOpm(kn), urenTxt = leesUren(kn);
-    /* uren: leeg = niets, anders een getal tussen 0 en 24 (komma of punt) */
-    let uren; if(urenTxt !== undefined){ const t = urenTxt.trim().replace(",", "."); uren = t === "" ? null : Number(t);
-      if(uren !== null && (!isFinite(uren) || uren < 0 || uren > 24)){ poetsStatusUi[d] = Object.assign({}, st, { melding:"fout", opm, uren: urenTxt }); tekenPoets(); return; } }
-    if(!voorbij){
-      const status = st.status || p.status; if(status === "open"){ poetsStatusUi[d] = Object.assign({}, st, { melding:"fout", opm, uren: urenTxt }); tekenPoets(); return; }
-      const tijd = st.tijd !== undefined ? st.tijd : (p.tijd || null);
-      const { data, error } = await db.rpc("poets_zet", { p_code: poetsCode, p_datum: d, p_status: status, p_tijd: status === "komt" ? tijd : null, p_opmerking: opm });
-      if(error || !data || data.fout){ poetsStatusUi[d] = Object.assign({}, st, { melding:"fout", opm, uren: urenTxt }); tekenPoets(); return; }
-    }
-    if(uren !== undefined && uren !== (p.uren == null ? null : Number(p.uren))){
-      const { data, error } = await db.rpc("poets_uren_zet", { p_code: poetsCode, p_datum: d, p_uren: uren });
-      if(error || !data || data.fout){ poetsStatusUi[d] = Object.assign({}, st, { melding:"fout", opm, uren: urenTxt }); tekenPoets(); return; }
-    }
-    try { const r = await db.rpc("poets_lijst", { p_code: poetsCode }); if(r.data && !r.data.fout) poetsData = r.data; } catch(e){}
-    poetsStatusUi[d] = { melding:"ok" }; tekenPoets();
-    setTimeout(() => { if(poetsStatusUi[d] && poetsStatusUi[d].melding === "ok"){ delete poetsStatusUi[d]; tekenPoets(); } }, 3000);
+  const nb = bak.querySelector("[data-pfnieuw]"); if(nb) nb.onclick = () => { poetsOk = ""; poetsFormNieuw(); tekenPoets(); const fe = document.getElementById("poetsForm"); if(fe) fe.scrollIntoView({ block:"start" }); };
+  bak.querySelectorAll("[data-pfwijzig]").forEach(kn => kn.onclick = () => { const e = (poetsData.invoer || []).find(x => x.id === kn.dataset.pfwijzig); if(!e) return; poetsOk = ""; poetsFormVan(e); tekenPoets(); const fe = document.getElementById("poetsForm"); if(fe) fe.scrollIntoView({ block:"start" }); });
+  bak.querySelectorAll("[data-pfdel]").forEach(kn => kn.onclick = async () => {
+    const e = (poetsData.invoer || []).find(x => x.id === kn.dataset.pfdel); if(!e) return;
+    if(!confirm(`¿Borrar lo apuntado del ${datumEs(e.datum)} (${eurEs(e.totaal)})?`)) return;
+    let r; try { r = await db.rpc("poets_invoer_weg", { p_code: poetsCode, p_id: e.id }); } catch(err){ r = { error: err }; }
+    if(!r || r.error || !r.data || r.data.fout){ alert(r && r.data && r.data.fout === "betaald" ? "Esto ya está pagado; ya no se puede borrar." : "No se pudo borrar, inténtalo de nuevo."); }
+    try { const l = await db.rpc("poets_lijst", { p_code: poetsCode }); if(l.data && !l.data.fout) poetsData = l.data; } catch(err){}
+    tekenPoets();
   });
+  if(poetsForm){
+    const herteken = fn => () => { poetsFormLees(); fn(); tekenPoets(); };
+    bak.querySelectorAll("[data-pfpers]").forEach(kn => kn.onclick = herteken(() => { const n = Number(kn.dataset.pfpers); poetsForm.personen = poetsForm.personen === n ? null : n; }));
+    const was = bak.querySelector("[data-pf=was]"); if(was) was.onchange = herteken(() => {});
+    const plus = bak.querySelector("[data-pfplus]"); if(plus) plus.onclick = herteken(() => { poetsForm.extra.push({ omschrijving:"", bedrag:"" }); });
+    bak.querySelectorAll("[data-pfweg]").forEach(kn => kn.onclick = herteken(() => { poetsForm.extra.splice(Number(kn.dataset.pfweg), 1); }));
+    const stop = bak.querySelector("[data-pfstop]"); if(stop) stop.onclick = () => { poetsForm = null; tekenPoets(); };
+    const bew = bak.querySelector("[data-pfbewaar]"); if(bew) bew.onclick = poetsFormBewaar;
+    /* het totaal rekent mee tijdens het typen */
+    bak.querySelectorAll("#poetsForm input").forEach(el => el.addEventListener("input", () => { poetsFormLees(); const t = bak.querySelector("[data-pftotaal]"); if(t) t.textContent = eurEs(poetsTotaal(poetsForm)); }));
+  }
 }
 
 /* ---------- gastpagina: startpagina per gast (honesty bar, ontbijt, rekening, info, contact) via persoonlijke link ---------- */
@@ -4073,7 +4117,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "02-11-2026 c";
+const VERSIE = "03-11-2026 c";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -5390,7 +5434,12 @@ async function gastBevestig(datum){
   setTimeout(() => { if(gastStatus[datum] === "ok"){ delete gastStatus[datum]; tekenGast(); } }, 2500);
   tekenGast();
 }
-async function naarApp_(){
+async function naarApp_(naWachtwoord){
+  if(naWachtwoord) opslag("l", o => o.removeItem("kayu_pin_blok"));
+  /* review 03-11-2026 c: 5 keer een foute code = alleen nog inloggen met het wachtwoord, ook als uitloggen niet lukte (geen verbinding) */
+  if(!naWachtwoord && pinGeblokkeerd()){ try { await db.auth.signOut(); } catch(e){}
+    verberg("app"); toon("login"); document.getElementById("lErr").textContent = "5 keer een foute code. Log opnieuw in met je wachtwoord."; return; }
+  pinBijStart(naWachtwoord); /* 03-11-2026 c: eerst het slot, dan pas de app */
   verberg("login"); toon("app");
   await haal();
   /* 23-10-2026 c: een melding van de database haalt niet meer meteen alles op, maar één keer na 800 ms rust
@@ -5408,6 +5457,8 @@ async function naarApp_(){
         () => haalStraks())
     .on("postgres_changes", { event:"*", schema:"public", table:"poets_dagen" },
         () => haalStraks())
+    .on("postgres_changes", { event:"*", schema:"public", table:"poets_uren" },
+        () => haalStraks()) /* 03-11-2026 a: nieuwe of gewijzigde uren meteen in de berichten */
     .on("postgres_changes", { event:"*", schema:"public", table:"taken" },
         async () => { await haalTaken(); })
     .on("postgres_changes", { event:"*", schema:"public", table:"boodschappen" },
@@ -5442,7 +5493,7 @@ document.getElementById("lGo").onclick = async () => {
   });
   if(error){ err.textContent = "Inloggen mislukt. Controleer e-mail en wachtwoord."; return; }
   err.textContent = "";
-  await naarApp_();
+  await naarApp_(true); /* 03-11-2026 c: met het wachtwoord ingelogd, dan geen code nodig */
 };
 document.getElementById("lPas").addEventListener("keydown", e => {
   if(e.key === "Enter") document.getElementById("lGo").click();
@@ -5457,7 +5508,7 @@ document.getElementById("bUit").onclick = async () => {
 let haalNr = 0;
 async function haal(){
   const mijn = ++haalNr, takenVoor = takenStand;
-  const [bk, pr, co, kv, ob, gl, pd, pl, ak, am, ins, av, tp, bn, br, ep, ca, kd, ko, gt, tk] = await Promise.all([
+  const [bk, pr, co, kv, ob, gl, pd, pl, ak, am, ins, av, tp, bn, br, ep, ca, kd, ko, gt, tk, pu, pw] = await Promise.all([
     alleRijen(() => db.from("boekingen").select("*", { count:"exact" }).order("aankomst").order("id")),
     db.from("producten").select("*").order("volgorde"),
     alleRijen(() => db.from("consumpties").select("*", { count:"exact" }).order("datum").order("id")),
@@ -5478,12 +5529,14 @@ async function haal(){
     db.from("kamer_dicht").select("*").gte("tot", iso(new Date(Date.now() - 30*864e5))).order("van"),
     db.from("kosten").select("*").gte("maand", iso(new Date(Date.now() - 400*864e5)).slice(0, 7) + "-01").order("maand").order("soort"),
     db.from("gast_teksten").select("*"), /* 25-10-2026 d: de handleiding zoals Bart hem heeft aangepast */
-    db.from("taken").select("*") /* 29-10-2026 a: To do met datum staat ook bij Let op */
+    db.from("taken").select("*"), /* 29-10-2026 a: To do met datum staat ook bij Let op */
+    db.from("poets_uren").select("*").gte("datum", iso(new Date(Date.now() - 400*864e5))).order("datum"), /* 03-11-2026 a: gewerkte uren poets */
+    db.from("poets_uren_log").select("*").eq("actie", "weg").gte("tijd", new Date(Date.now() - 400*864e5).toISOString()).order("tijd") /* review 03-11-2026 a: weggehaalde regels */
   ]);
   if(mijn !== haalNr) return;
   if(bk.error){ console.error(bk.error); syncMag = false; appLaadFout = laadFout = "boekingen: " + bk.error.message; try { tekenNu(); } catch(e){} return; }
   /* een tabel die niet gelezen kan worden (bijvoorbeeld door ontbrekende rechten) mag nooit stil blijven: dat zie je bovenaan het startscherm */
-  laadFout = [["producten", pr], ["consumpties", co], ["kamer_vinkjes", kv], ["ontbijt", ob], ["gast_links", gl], ["poets_dagen", pd], ["poets_links", pl], ["aankondigingen", ak], ["aanmeldingen", am], ["instellingen", ins], ["aanvragen", av], ["tips", tp], ["bonnen", bn], ["broodjes", br], ["eigen_plekken", ep], ["camper_aanvragen", ca], ["kamer_dicht", kd], ["kosten", ko], ["gast_teksten", gt], ["taken", tk]]
+  laadFout = [["producten", pr], ["consumpties", co], ["kamer_vinkjes", kv], ["ontbijt", ob], ["gast_links", gl], ["poets_dagen", pd], ["poets_links", pl], ["aankondigingen", ak], ["aanmeldingen", am], ["instellingen", ins], ["aanvragen", av], ["tips", tp], ["bonnen", bn], ["broodjes", br], ["eigen_plekken", ep], ["camper_aanvragen", ca], ["kamer_dicht", kd], ["kosten", ko], ["gast_teksten", gt], ["taken", tk], ["poets_uren", pu]]
     .filter(([, r]) => r.error).map(([n, r]) => `${n}: ${r.error.message}`).join(" · ");
   appLaadFout = [["consumpties", co], ["bonnen", bn]].filter(([, r]) => r.error).map(([n, r]) => `${n}: ${r.error.message}`).join(" · ");
   /* het ontbijt op de rekening alleen bijwerken als alles waar het van afhangt goed is opgehaald (ook de kamervinkjes:
@@ -5505,10 +5558,15 @@ async function haal(){
   poetsLinks = pl.data || [];
   aankondigingen = ak.data || []; aanmeldingen = am.data || [];
   instellingen = {}; (ins.data || []).forEach(i => instellingen[i.sleutel] = i.waarde);
+  instellingenGeladen = instellingenGeladen || !ins.error;
+  if(!ins.error) pinNaLaden(); /* 03-11-2026 c: code bij openen aan of uit, gekozen of nog niet */
   aanvragen = av.data || []; tips = tp.data || []; bonnen = bn.data || []; broodjes = br.data || [];
   eigen = (ep.data || []).map(naarEigen);
   kosten = ko.data || [];
   /* 25-10-2026 d: bij een leesfout de vorige lijst houden (de vaste tekst blijft dan staan) */
+  if(!pu.error) poetsUren = pu.data || []; /* 03-11-2026 a */
+  if(!pw.error) poetsWeg = pw.data || []; else laadFout = [laadFout, "poets_uren_log: " + pw.error.message].filter(Boolean).join(" · ");
+  if(document.getElementById("poetsUrenDlg").open) tekenPoetsUren(); /* review: open venster ververst mee */
   if(!gt.error){ gastTeksten = {}; (gt.data || []).forEach(r => gastTeksten[gtSleutel(r.soort, r.taal)] = { regels: Array.isArray(r.regels) ? r.regels : [], nog_vertalen: Array.isArray(r.nog_vertalen) ? r.nog_vertalen : [], bijgewerkt: r.bijgewerkt }); }
   /* 24-10-2026 f: dichtgezette kamers mét gastenpagina horen bij kamers (zie mengKamers); bij een leesfout de oude lijst houden (review f) */
   if(!tk.error && takenVoor === takenStand){ taken = (tk.data || []).sort((x, y) => String(x.gemaakt || "").localeCompare(String(y.gemaakt || ""))); if(document.getElementById("taken").open) tekenTaken(); }
@@ -5790,27 +5848,10 @@ async function syncPoets(){
   if(veranderd){ const { data } = await db.from("poets_dagen").select("*").gte("datum", iso(new Date(Date.now() - 7*864e5))); poetsDagen = {}; (data||[]).forEach(p => poetsDagen[p.datum] = p); }
 }
 const poetsKamersTekst = p => p.bar || (p.kamers||[]).length === 5 ? "alle kamers" + (p.bar ? " + bar" : "") : (p.kamers||[]).join(", ");
-/* delen met de poets: jij kiest welke dagen en welke kamers zij te zien krijgen */
-const DEEL_WEKEN = 6;
-const deelGrens = () => iso(new Date(Date.now() + DEEL_WEKEN*7*864e5));
-const gedeeldeKamers = p => (p.kamers_gedeeld && p.kamers_gedeeld.length ? p.kamers_gedeeld : (p.kamers || []));
-const deelGewijzigd = p => !!p.gedeeld && JSON.stringify([...(p.kamers_gedeeld||[])].sort()) !== JSON.stringify([...(p.kamers||[])].sort());
-async function poetsDeelZet(datum, velden){
-  const p = poetsDagen[datum]; if(!p) return;
-  const oud = { gedeeld:p.gedeeld, kamers_gedeeld:p.kamers_gedeeld };
-  Object.assign(p, velden);
-  if(poetsBlokOpen) tekenPoetsTab();
-  const { error } = await db.from("poets_dagen").update(Object.assign({ bijgewerkt:new Date().toISOString() }, velden)).eq("datum", datum);
-  if(error){ Object.assign(p, oud); alert("Opslaan mislukt: " + error.message); if(poetsBlokOpen) tekenPoetsTab(); }
-}
-const poetsStatus = p => !p ? "" : p.status === "komt" ? `komt${p.tijd ? " om " + p.tijd : ""}${p.door ? " (" + p.door + ")" : ""}` : p.status === "kan_niet" ? `kan niet${p.door ? " (" + p.door + ")" : ""}` : "nog niet gereageerd";
 const POETS_DAG_ES = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
 const POETS_MND_ES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 const datumEs = d => `${POETS_DAG_ES[parse(d).getDay()]} ${parse(d).getDate()} de ${POETS_MND_ES[parse(d).getMonth()]}`;
 const hoofdletter = t => t ? t.charAt(0).toUpperCase() + t.slice(1) : t;
-const poetsAanstootTekst = lijst => ["Hola 😊", "", lijst.length === 1 ? "Hay una salida nueva en Finca KaYu:" : "Hay salidas nuevas en Finca KaYu:",
-  ...lijst.map(p => { const k = gedeeldeKamers(p), alles = p.bar && k.length >= (p.kamers||[]).length; return `• ${datumEs(p.datum)}: ${alles || k.length === 5 ? "todas las habitaciones" + (alles ? " + bar" : "") : k.map(x => x.replace("Kamer ", "habitación ")).join(", ")}`; }),
-  "", "¿Podéis? Mirad vuestro enlace y confirmad ahí. ¡Gracias!", "Bart y Loes"].join("\n");
 const gastLink = k => gastLinkVan(k.nr);
 const kamerLabel = k =>
   `<span class="tag kamer">${k.kamer === "Complete Finca" ? "hele finca" : "kamer"}</span>` +
@@ -6678,18 +6719,16 @@ function tekenAgendas(bak, vandaag, morgen){
 let poetsBlokOpen = false;
 try { poetsBlokOpen = localStorage.getItem("kayu_poets_open") === "1"; } catch(e){}
 const bewaarPoetsOpen = () => { try { localStorage.setItem("kayu_poets_open", poetsBlokOpen ? "1" : "0"); } catch(e){} };
+/* 03-11-2026 a: de kop van Schoonmaken en Meer: nieuw ingevulde uren, wat nog open staat, of de volgende uitcheck */
 function poetsStatusTekst(vandaag){
-  const eind14 = iso(new Date(Date.now() + 14*864e5));
-  const komend = Object.values(poetsDagen).filter(p => p.datum >= vandaag && p.datum <= eind14 && (p.kamers||[]).length);
-  const open = komend.filter(p => p.gedeeld && gedeeldeKamers(p).length && p.status === "open").length;
-  const nietGedeeld = komend.filter(p => !p.gedeeld).length;
-  const nieuw = Object.values(poetsDagen).filter(p => p.datum >= vandaag && p.gedeeld && p.bijgewerkt_poets && !p.gezien_finca).length;
+  const nieuw = poetsUren.filter(u => !u.gezien_finca).length;
+  const open = poetsUren.filter(u => !u.betaald_op).reduce((t, u) => t + Number(u.totaal || 0), 0);
   const delen = [];
-  if(nieuw) delen.push(`${nieuw} nieuwe reactie${nieuw === 1 ? "" : "s"}`);
-  if(nietGedeeld) delen.push(`${nietGedeeld} niet gedeeld`);
-  if(open) delen.push(`${open} onbevestigd`);
+  if(nieuw) delen.push(`${nieuw} nieuw ingevuld`);
+  if(open) delen.push(`${eur(open)} open`);
   if(delen.length) return delen.join(" · ");
-  return komend.length ? "alles bevestigd" : "geen uitchecks in twee weken";
+  const volgende = Object.values(poetsDagen).filter(p => p.datum >= vandaag && (p.kamers||[]).length).map(p => p.datum).sort()[0];
+  return volgende ? `volgende uitcheck ${DG[parse(volgende).getDay()].slice(0,2)} ${kort(volgende)}` : "geen uitchecks bekend";
 }
 const poetsParkeer = () => {
   const pv = document.getElementById("poetsView"), holder = document.getElementById("poetsHolder");
@@ -6899,8 +6938,8 @@ function tijdlijnBlok(vandaag, morgen){
         rij("euro", "", `Afrekenen · ${vrij(b.plek)} · ${vrij(b.naam)}`, "vertrekt morgen", b.betaald ? "Betaald, geregeld" : `${eur(open)} open${b.alContant ? ` (al ${eur(b.alContant)} contant)` : ""}`, b.betaald ? "groen" : "rood", `data-agc="${vrij(b.id)}"`, b.betaald ? null : directCamper(b)); });
     }
     const p = poetsDagen[dag];
-    if(p && (p.kamers || []).length){ const st = p.status === "komt" ? `Bevestigd${p.tijd ? " " + vrij(p.tijd) : ""}${p.door ? " · " + vrij(p.door) : ""}` : p.status === "kan_niet" ? "Poets kan niet" : p.gedeeld ? "Nog niet bevestigd" : "Nog niet gedeeld";
-      rij("bezem", "", "Poets", p.kamers.map(x => String(x).replace("Kamer ", "K")).join(", ") + (p.bar ? " · bar" : ""), st, p.status === "komt" ? "groen" : "oranje", `data-naarpoets="1"`, null); }
+    /* 03-11-2026 a (Bart): geen bevestiging meer door de poets (die stemt af met Loes); de regel is alleen ter info */
+    if(p && (p.kamers || []).length) rij("bezem", "", "Poets", p.kamers.map(x => String(x).replace("Kamer ", "K")).join(", ") + (p.bar ? " · bar" : ""), "Uitcheck, afstemmen met Loes", "grijs", `data-naarpoets="1"`, null);
     /* 08-10-2026 a: tussentijds schoonmaken bij kamergasten van 4 nachten of meer (zie tussenSchoonDatum).
        13-10-2026 c (Bart: "bij Vandaag heb ik hem gemist"): deze regels staan bovenaan Vandaag, direct onder de rode herinneringen. */
     const tsVoor = r.length;
@@ -7453,22 +7492,10 @@ function tekenNu(){
     let_[groep].push(html + (vink ? `<button class="letvink" data-letvink="${vink.join("|")}" title="Afvinken">✓</button>` : ""));
   };
   const letAdd = (html, groep = "vandaag") => let_[groep].push(html);
-  { const eind14 = iso(new Date(Date.now() + 14*864e5));
-    const pd = Object.values(poetsDagen).filter(p => p.datum >= vandaag && p.gedeeld && gedeeldeKamers(p).length);
-    const naar = t => `<span data-naarpoets="1">${t} <span class="letbekijk">Bekijk ›</span></span>`;
+  /* 03-11-2026 a (Bart: "poets nog niet bevestigd mag weg"): de poets ziet alle uitcheckdagen en stemt af met Loes; wat ze invullen
+     komt in de berichten. In Let op alleen nog als er geen poetslinks zijn. */
+  { const naar = t => `<span data-naarpoets="1">${t} <span class="letbekijk">Bekijk ›</span></span>`;
     if(!poetsLinks.length) letPush(naar("Poets: nog geen poetslinks aangemaakt"), ["weg","poetslinks"], "later");
-    const ngDagen = Object.values(poetsDagen).filter(p => p.datum >= vandaag && p.datum <= eind14 && (p.kamers||[]).length && !p.gedeeld).map(p => p.datum).sort();
-    const nietGedeeld = ngDagen.length;
-    if(nietGedeeld) letPush(naar(`Poets: <b>${nietGedeeld} ${nietGedeeld === 1 ? "dag" : "dagen"} nog niet gedeeld</b>${dagenTot(ngDagen[0]) <= 2 ? `, de eerste al ${wanneerKort(ngDagen[0])}` : " in de komende twee weken"}`), ["weg","poetsdelen",nietGedeeld], dagenTot(ngDagen[0]) <= 2 ? "vandaag" : "later");
-    /* nog niet bevestigd telt pas als de dag dichtbij is; een gewone bevestiging is geen actie */
-    /* 29-09-2026 d: de poets van vandaag heeft een eigen regel op Vandaag ("Nog niet bevestigd"); hier alleen morgen */
-    const pKortL = pd.filter(p => p.status === "open" && dagenTot(p.datum) <= 1 && p.datum !== vandaag).sort((a, b) => a.datum.localeCompare(b.datum)), pKort = pKortL.length;
-    if(pKort) letPush(naar(`Poets: <b>${pKort === 1 ? wanneerKort(pKortL[0].datum) : "vandaag en morgen"} nog niet bevestigd</b>, even navragen`), ["weg","poets",0,pKort], "vandaag");
-    /* een reactie met een opmerking van het poetsteam moet je lezen */
-    pd.filter(p => p.bijgewerkt_poets && !p.gezien_finca && p.status !== "kan_niet" && String(p.opmerking_poets || "").trim()).forEach(p =>
-      letPush(naar(`Poets schrijft bij ${DG[parse(p.datum).getDay()]} ${kort(p.datum)}: ${poetsOpm(p)}`), ["weg","poetsopm",p.datum,String(p.opmerking_poets||"").length], "vandaag"));
-    pd.filter(p => p.status === "kan_niet").forEach(p => letPush(naar(`Poets <b>kan niet</b> op ${DG[parse(p.datum).getDay()]} ${kort(p.datum)} (${poetsKamersTekst(p)})${p.opmerking_poets ? `: ${poetsOpm(p)}` : ""}, regel iets anders`), ["weg","poetsnee",p.datum,(p.kamers||[]).join("-"),String(p.opmerking_poets||"").length], dagenTot(p.datum) <= 2 ? "nu" : "vandaag"));
-    pd.filter(p => p.status === "komt" && p.tijd && p.tijd > "13:00" && (p.haast||[]).length).forEach(p => letPush(naar(`Poets komt pas om ${p.tijd} op ${DG[parse(p.datum).getDay()]} ${kort(p.datum)}, terwijl ${p.haast.join(", ")} dezelfde dag weer bezet is`), ["weg","poetslaat",p.datum,p.tijd], "vandaag"));
   }
   /* Bedieningsconcept fase 1 (29-09-2026 a): een gast die vandaag in- of uitcheckt heeft een eigen regel in Vandaag met de volgende stap als knop;
      die staat dus niet ook nog in Let op. Let op houdt alleen wat geen eigen regel heeft. */
@@ -7659,19 +7686,8 @@ function tekenNu(){
       if(!(open > 0) || kVink(k, "betaald")) return;
       teDoen.push(kRegel(k, `Vertrokken ${kort(k.uit)} · nog niet afgerekend · ${eur(open - kAlContant(k))}${kAlContant(k) ? ` (al ${eur(kAlContant(k))} contant)` : ""}`, ["bon"]));
     });
-    /* back-up: herinnering als de laatste langer dan een week geleden is */
-    {
-      const laatst = instellingen.laatste_backup || "";
-      const tijd = laatst ? new Date(laatst).getTime() : NaN;
-      const oud = !isFinite(tijd) || (Date.now() - tijd) > 7*864e5;
-      if(oud){
-        const r = document.createElement("div"); r.className = "gast";
-        r.innerHTML = `<div class="kop"><b>Back-up van alle gegevens</b></div>` +
-          `<div class="info">${isFinite(tijd) ? "Laatste back-up: " + kort(laatst.slice(0,10)) : "Er is nog nooit een back-up gemaakt"}</div>` +
-          `<div class="vink"><button data-naarbackup="1">Back-up maken</button></div>`;
-        teDoen.push(r);
-      }
-    }
+    /* 03-11-2026 a (Bart: "staat op de verkeerde plek"): geen back-upherinnering meer op Vandaag. Supabase maakt elke dag zelf een
+       kopie (Pro, 7 dagen); de knop met de datum van de laatste kopie staat bij Meer > Geld > Exporteren en back-up. */
     if(teDoen.length){
       const el = document.createElement("div"); el.className = "blok";
       el.innerHTML = `<h2>Nog te doen<b>${teDoen.length}</b></h2>`;
@@ -7698,9 +7714,8 @@ function tekenNu(){
   let schoonEl = null;
   if(NIEUW && schoon.length){
     /* 20-10-2026 d (Bart): per kamer één korte regel met een rond vinkje, zonder gastnamen; komt bovenaan het blok Schoonmaken */
-    const pv = poetsDagen[vandaag] && poetsDagen[vandaag].gedeeld ? poetsDagen[vandaag] : null;
     schoonEl = document.createElement("div"); schoonEl.className = "schoonlijst";
-    schoonEl.innerHTML = (pv ? `<p class="schoonvandaag">Vandaag · poets ${poetsStatus(pv)}</p>` : "") + schoon.map(sch => {
+    schoonEl.innerHTML = schoon.map(sch => {
       const wanneer = sch.volgende ? "<b>vandaag weer bezet</b>" : sch.later ? `leeg tot ${kort(sch.later.in)}` : "daarna leeg";
       const nr = sch.k.nr + "|" + sch.naam, klaar = kVink({ nr }, "schoon");
       return `<div class="schoonrij"><span><b>${vrij(sch.naam)}</b> · ${wanneer}</span>` +
@@ -7709,7 +7724,7 @@ function tekenNu(){
   }
   if(!NIEUW && (schoon.length || kWeg.length)){
     const el = document.createElement("div"); el.className = "blok";
-    el.innerHTML = `<h2>Schoonmaken<b>${schoon.length} ${schoon.length===1?"kamer":"kamers"}${poetsDagen[vandaag] && poetsDagen[vandaag].gedeeld ? " · poets " + poetsStatus(poetsDagen[vandaag]) : ""}</b></h2>`;
+    el.innerHTML = `<h2>Schoonmaken<b>${schoon.length} ${schoon.length===1?"kamer":"kamers"}</b></h2>`;
     schoon.forEach(sch => {
       const r = document.createElement("div"); r.className = "gast";
       const wanneer = sch.volgende
@@ -7843,7 +7858,7 @@ function tekenNu(){
     oud.innerHTML = `<h2 class="klap" data-agoudtoggle="1">Agenda's per dag<b>${agendaOudOpen ? "inklappen" : "openen"}</b></h2>`;
     const inhoud = document.createElement("div"); if(!agendaOudOpen) inhoud.style.display = "none";
     [...bak.querySelectorAll("[data-agscroll]")].map(e => e.closest(".blok")).concat([...bak.querySelectorAll(".ruil")]).forEach(e => { if(e) inhoud.appendChild(e); });
-    oud.appendChild(inhoud); bak.appendChild(oud);
+    oud.appendChild(inhoud); if(agendasPerDag()) bak.appendChild(oud); /* 03-11-2026 a (Bart: "gebruik ik nooit"): standaard uit, Meer > Gasten */
     const pb = document.getElementById("poetsBlok"); if(pb){ if(schoonEl) pb.insertBefore(schoonEl, pb.children[1] || null); bak.appendChild(pb); }
     const tlEl = tijdlijnBlok(vandaag, morgen);
     /* 29-09-2026 d (controleronde): "Alles geregeld voor vandaag" alleen als er in Vandaag ook echt niets meer openstaat;
@@ -7853,7 +7868,7 @@ function tekenNu(){
       const h = letEl.querySelector("h2"); if(h) h.innerHTML = `Geen bijzonderheden`;
       letEl.classList.add("neutraal");
     }
-    [oud, kalenderBlok(vandaag), obBlok, obVandaagEl, broodjesEl, tlEl, letEl].filter(Boolean).forEach(e => bak.prepend(e));
+    [agendasPerDag() ? oud : null, kalenderBlok(vandaag), obBlok, obVandaagEl, broodjesEl, tlEl, letEl].filter(Boolean).forEach(e => bak.prepend(e));
     const box = bak.querySelector("[data-kalscrollbox]");
     if(box){
       const kolom = 44, naarDag = (n, zacht) => box.scrollTo({ left: Math.max(0, n * kolom - 6), behavior: zacht ? "smooth" : "auto" });
@@ -7939,7 +7954,6 @@ function tekenNu(){
     if(gelukt === false){ if(voor) vinkjes[k.nr] = voor; else delete vinkjes[k.nr]; }
     tekenNu();
   });
-  vertaalPoetsOpmerkingen(() => { if(modus === "nu") tekenNu(); });
   bak.querySelectorAll("[data-otoggle]").forEach(el => el.onclick = () => { ontbijtBlokOpen = !ontbijtBlokOpen; tekenNu(); });
   bak.querySelectorAll("[data-campob]").forEach(el => el.onclick = e => { e.stopPropagation(); campersOntbijtWissel(); });
   bak.querySelectorAll("[data-naarmeer]").forEach(el => {
@@ -8124,7 +8138,6 @@ function bindRest(bak, morgen){
     uit.id = "klinkuit-" + String(nr).replace(/[^a-zA-Z0-9_-]/g, "");
     await gastenpaginaOpen(nr, uit.id);
   });
-  bak.querySelectorAll("[data-naarbackup]").forEach(kn => kn.onclick = () => document.getElementById("bExporteren").click());
   bak.querySelectorAll("[data-kbon]").forEach(kn => kn.onclick = () => {
     const k = kamerVoorNr(kn.dataset.kbon); if(!k) return;
     openKamerbon(kNaam(k), (k.kamer.match(/^Kamer (\d)$/) || [])[1], [...ontbijtRegels(k.nr), ...kamerBarRegels(k.nr)], k.nr);
@@ -8180,58 +8193,29 @@ async function vertaal(tekst, van, naar){
   return null;
 }
 const vertaalBezig = new Set();
-async function vertaalPoetsOpmerkingen(herteken){
-  const lijst = Object.values(poetsDagen).filter(p => p.opmerking_poets && !p.opmerking_poets_nl && !vertaalBezig.has(p.datum));
-  if(!lijst.length) return;
-  let klaar = false;
-  for(const p of lijst){
-    vertaalBezig.add(p.datum);
-    const nl = await vertaal(p.opmerking_poets, "es", "nl");
-    vertaalBezig.delete(p.datum);
-    if(nl){ p.opmerking_poets_nl = nl; klaar = true;
-      await db.from("poets_dagen").update({ opmerking_poets_nl: nl }).eq("datum", p.datum).eq("opmerking_poets", p.opmerking_poets); }
-  }
-  if(klaar && herteken) herteken();
-}
-const poetsOpm = p => p.opmerking_poets ? `"${p.opmerking_poets}"${p.opmerking_poets_nl && p.opmerking_poets_nl.toLowerCase() !== p.opmerking_poets.toLowerCase() ? ` (${p.opmerking_poets_nl})` : ""}` : "";
 
-/* ---------- tabblad Poets: maandoverzicht, zelfde lijst als het poetsteam ziet ---------- */
+/* ---------- tabblad Poets: maandoverzicht, zelfde uitcheckdagen als het poetsteam ziet ----------
+   03-11-2026 a (Bart): het poetsteam ziet alle uitcheckdagen (melding: eerst afstemmen met Loes) en vult na het poetsen zelf de uren in.
+   Delen per dag, Vamos / No podemos, "nog niet bevestigd" en Poets aanstoten zijn weg. Per dag blijft de opmerking voor de poets. */
 let poetsMaand = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-const poetsStatusTag = p => p.status === "komt" ? `<span class="st komt">komt${p.tijd ? " om " + p.tijd : ""}</span>`
-  : p.status === "kan_niet" ? `<span class="st nee">kan niet</span>` : `<span class="st open">nog niet bevestigd</span>`;
-/* uurtarief van het poetsteam: in Instellingen (poets_uurtarief), te wijzigen via de knop onder de maand */
+/* uurtarief van het poetsteam: in Instellingen (poets_uurtarief), het voorstel op hun pagina; zij mogen het per keer aanpassen */
 const poetsTarief = () => { const t = Number(String(instellingen.poets_uurtarief || "").replace(",", ".")); return isFinite(t) && t > 0 ? t : 14; };
 const urenTekst = u => String(Number(u)).replace(".", ",") + " uur";
-const pAanpas = new Set(); /* poetsdagen waarvan de deelknoppen open staan */
+/* één invoer van het poetsteam in het Nederlands: "2 personen · 6 uur × € 14,00 · was € 10,00 · zeep € 8,50" */
+const poetsInvoerNl = u => [u.personen ? `${u.personen} ${u.personen === 1 ? "persoon" : "personen"}` : "", `${urenTekst(u.uren)} × ${eur(u.tarief)}`,
+  u.was ? `was${u.was_bedrag != null ? " " + eur(u.was_bedrag) : ""}` : "", ...(u.extra || []).map(x => `${vrij(x.omschrijving)} ${eur(x.bedrag)}`)].filter(Boolean).join(" · ");
 function poetsRij(p, vandaag){
   const r = document.createElement("div"); r.className = "pdag"; r.dataset.pdatum = p.datum;
   const dg = parse(p.datum);
-  const reactie = p.bijgewerkt_poets && !p.gezien_finca;
-  const laat = p.status === "komt" && p.tijd && p.tijd > "13:00" && (p.haast||[]).length;
   const info = [
-    p.uren != null ? `<b>${urenTekst(p.uren)} · ${eur(Number(p.uren) * poetsTarief())}</b>` : "",
-    p.door && (p.opmerking_poets || p.status !== "open") ? `${p.door}${p.opmerking_poets ? `: ${poetsOpm(p)}` : ""}` : "",
+    poetsKamersTekst(p),
     (p.haast||[]).length ? `zelfde dag weer bezet: ${p.haast.join(", ")}` : "",
-    p.bar ? "groep vertrekt, bar ook" : "",
-    laat ? `<b>let op: pas om ${p.tijd}, terwijl er dezelfde dag nieuwe gasten komen</b>` : ""
+    p.bar ? "groep vertrekt, bar ook" : ""
   ].filter(Boolean).join(" · ");
-  const teVer = p.datum > deelGrens() || p.datum < vandaag;
-  const gew = deelGewijzigd(p);
-  const gek = gedeeldeKamers(p);
-  const rustig = p.gedeeld && !gew && p.status !== "kan_niet" && !pAanpas.has(p.datum);
-  r.innerHTML = `<div class="kop"><b>${DG[dg.getDay()].slice(0,2)} ${kort(p.datum)}${p.datum === vandaag ? `<span class="st nieuw">vandaag</span>` : ""}${p.gedeeld ? `<span class="st gedeeld">gedeeld</span>` : ""}${p.gedeeld ? poetsStatusTag(p) : ""}${reactie ? `<span class="st nieuw">nieuw</span>` : ""}</b><em>${p.gedeeld ? (gedeeldeKamers(p).join(", ") || "niets") : poetsKamersTekst(p)}</em></div>` +
-    (info && p.gedeeld ? `<div class="info">${info}</div>` : "") +
-    (gew ? `<div class="melding">Gedeeld, maar er is iets veranderd. Zij zien nu: ${gek.join(", ") || "niets"}.</div>` : "") +
-    (p.gedeeld && p.opmerking_finca ? `<div class="info">Jullie opmerking: ${p.opmerking_finca}${p.opmerking_finca_es ? `<br>Zij zien: ${p.opmerking_finca_es}` : `<br><b>Niet vertaald, zij zien het Nederlands</b>`}</div>` : "") +
-    /* KaYu efficiëntieronde 2 (27-09-2026 i): gedeeld en niets aan de hand: status tonen, knoppen pas na Aanpassen */
-    (rustig ? `<div class="vink">${reactie ? `<button data-pgezien="${p.datum}">Gezien</button>` : ""}<button data-paanpas="${p.datum}">Aanpassen</button></div>` :
-    (teVer && !p.gedeeld
-      ? `<div class="info">Delen kan vanaf ${DEEL_WEKEN} weken voor deze datum</div>`
-      : `<div class="vink"><span class="leeg" style="align-self:center;margin-right:2px">Delen:</span>` +
-        (p.kamers||[]).map(k => `<button data-pkamer="${p.datum}|${k}" class="${gek.includes(k) ? "aan" : ""}">${k.replace("Kamer ", "K")}</button>`).join("") +
-        `<button data-pdeel="${p.datum}" class="${p.gedeeld ? "aan" : ""}">${p.gedeeld ? "✓ Gedeeld" : "Delen"}</button>` +
-        (gew ? `<button data-pbij="${p.datum}">Bijwerken</button>` : "") + `</div>`) +
-    (p.gedeeld ? `<div class="vink">${reactie ? `<button data-pgezien="${p.datum}">Gezien</button>` : ""}<button data-popm="${p.datum}">${p.opmerking_finca ? "Opmerking wijzigen" : "Opmerking voor poets"}</button>${pAanpas.has(p.datum) ? `<button data-paanpas="${p.datum}">Klaar</button>` : ""}</div>` : ""));
+  r.innerHTML = `<div class="kop"><b>${DG[dg.getDay()].slice(0,2)} ${kort(p.datum)}${p.datum === vandaag ? `<span class="st nieuw">vandaag</span>` : ""}</b></div>` +
+    `<div class="info">${info}</div>` +
+    (p.opmerking_finca ? `<div class="info">Jullie opmerking: ${vrij(p.opmerking_finca)}${p.opmerking_finca_es ? `<br>Zij zien: ${vrij(p.opmerking_finca_es)}` : `<br><b>Niet vertaald, zij zien het Nederlands</b>`}</div>` : "") +
+    (p.datum >= vandaag ? `<div class="vink"><button data-popm="${p.datum}">${p.opmerking_finca ? "Opmerking wijzigen" : "Opmerking voor poets"}</button></div>` : "");
   return r;
 }
 /* de strook in beeld zetten: in de huidige maand bij vandaag (een dag ervoor zichtbaar), anders bij de 1e */
@@ -8240,18 +8224,17 @@ function psScrollNaarVandaag(el, vandaag){
   const kop = box.querySelector(`.pskop [data-psd="${vandaag}"]`);
   box.scrollLeft = kop ? Math.max(0, kop.offsetLeft - 30 - 30) : 0;
 }
-/* strook boven het poetsblok: de gekozen maand, alleen kamers, alleen uitcheckdagen, kleur = status bij het poetsteam */
+/* strook boven het poetsblok: de gekozen maand, alleen kamers, alleen uitcheckdagen */
 function tekenPoetsStrook(vandaag){
   const el = document.getElementById("poetsStrook"); if(!el) return;
   /* de strook volgt de gekozen maand (zelfde maand als de lijst eronder) en scrolt van links naar rechts; in de huidige maand begint hij bij vandaag */
   const van = new Date(poetsMaand.getFullYear(), poetsMaand.getMonth(), 1, 12), tot = new Date(poetsMaand.getFullYear(), poetsMaand.getMonth() + 1, 0, 12);
   const N = tot.getDate(), dagen = Array.from({ length:N }, (_, i) => iso(new Date(van.getFullYear(), van.getMonth(), i + 1, 12)));
-  const kleurVan = p => !p || !p.gedeeld ? "grijs" : p.status === "komt" ? "groen" : p.status === "kan_niet" ? "rood" : "oranje";
   const uitcheck = (kamer, d) => {
     const p = poetsDagen[d];
     if(p && (p.kamers || []).length) return p.kamers.includes(kamer) ? p : null;
     /* nog niet gesynchroniseerd: rechtstreeks uit de kamerboekingen kijken */
-    return kamers.some(k => k.uit === d && (k.kamer === kamer || k.kamer === "Complete Finca")) ? { gedeeld:false, status:"open", kamers:[kamer], haast:[] } : null;
+    return kamers.some(k => k.uit === d && (k.kamer === kamer || k.kamer === "Complete Finca")) ? { kamers:[kamer], haast:[] } : null;
   };
   let h = `<div class="psscroll" data-psscroll="1"><div class="psbinnen" style="--n:${N}"><div class="psr pskop"><span class="n"></span>` + dagen.map(d => { const dd = parse(d); return `<span class="${d === vandaag ? "nu" : ""}${dd.getDay() === 0 || dd.getDay() === 6 ? " wk" : ""}" data-psd="${d}">${DG[dd.getDay()].slice(0,2)}<br>${dd.getDate()}</span>`; }).join("") + `</div>`;
   let aantal = 0;
@@ -8262,11 +8245,10 @@ function tekenPoetsStrook(vandaag){
       if(!p) return `<span class="ps${d === vandaag ? " nu" : ""}"></span>`;
       aantal++;
       const haast = (p.haast || []).includes(kamer);
-      const kl = kleurVan(p);
-      return `<span class="ps b ${kl}${haast ? " haast" : ""}${d === vandaag ? " nu" : ""}" data-psdag="${d}" title="${kamer} uit op ${kort(d)}: ${kl === "grijs" ? "nog niet gedeeld" : kl === "oranje" ? "gedeeld, nog niet bevestigd" : kl === "groen" ? "bevestigd" : "poets kan niet"}${haast ? ", dezelfde dag weer bezet" : ""}"></span>`;
+      return `<span class="ps b grijs${haast ? " haast" : ""}${d === vandaag ? " nu" : ""}" data-psdag="${d}" title="${kamer} uit op ${kort(d)}${haast ? ", dezelfde dag weer bezet" : ""}"></span>`;
     }).join("") + `</div>`;
   });
-  h += `</div></div><div class="pslegenda"><span><i class="grijs"></i>nog niet gedeeld</span><span><i class="oranje"></i>gedeeld, nog niet bevestigd</span><span><i class="groen"></i>bevestigd</span><span><i class="rood"></i>kan niet</span><span><i class="stip"></i>zelfde dag weer bezet</span>${aantal ? "" : `<span>Geen uitchecks in ${MND[van.getMonth()]}</span>`}</div>`;
+  h += `</div></div><div class="pslegenda"><span><i class="grijs"></i>uitcheck</span><span><i class="stip"></i>zelfde dag weer bezet</span>${aantal ? "" : `<span>Geen uitchecks in ${MND[van.getMonth()]}</span>`}</div>`;
   el.className = "pstrook"; el.innerHTML = h;
   psScrollNaarVandaag(el, vandaag);
   el.querySelectorAll("[data-psdag]").forEach(c => c.onclick = () => {
@@ -8281,11 +8263,7 @@ function tekenPoetsTab(){
   const vandaag = iso(new Date());
   document.getElementById("pTitle").textContent = MND[poetsMaand.getMonth()] + " " + poetsMaand.getFullYear();
   const van = iso(poetsMaand), tot = iso(new Date(poetsMaand.getFullYear(), poetsMaand.getMonth()+1, 0, 12));
-  const lijst = Object.values(poetsDagen).filter(p => p.datum >= van && p.datum <= tot && ((p.kamers||[]).length || p.gedeeld)).sort((a,b) => a.datum.localeCompare(b.datum));
-  const eind14 = iso(new Date(Date.now() + 14*864e5));
-  const open = Object.values(poetsDagen).filter(p => p.datum >= vandaag && p.datum <= eind14 && p.gedeeld && gedeeldeKamers(p).length && p.status === "open").length;
-  document.getElementById("pAanstoot").textContent = open ? `Poets aanstoten (${open})` : "Poets aanstoten";
-  document.getElementById("pActies").style.display = open ? "" : "none";
+  const lijst = Object.values(poetsDagen).filter(p => p.datum >= van && p.datum <= tot && (p.kamers||[]).length).sort((a,b) => a.datum.localeCompare(b.datum));
   const stEl = document.getElementById("poetsStatus"); if(stEl) stEl.textContent = (NIEUW ? "poets: " : "") + poetsStatusTekst(vandaag);
   document.getElementById("pGezien").textContent = poetsLinks.length
     ? poetsLinks.map(l => `${l.naam}: ${l.laatst_gezien ? "laatst gekeken " + kort(l.laatst_gezien.slice(0,10)) : "nog nooit geopend"}`).join(" · ")
@@ -8293,21 +8271,60 @@ function tekenPoetsTab(){
   tekenPoetsStrook(vandaag);
   const bak = document.getElementById("poetsInhoud"); bak.innerHTML = "";
   const el = document.createElement("div"); el.className = "blok";
-  if(!lijst.length) el.innerHTML = `<p class="leeg">${tot < vandaag ? "Geen poetsdagen bewaard voor deze maand" : "Geen uitchecks bekend in deze maand"}</p>`;
-  lijst.forEach(p => el.appendChild(poetsRij(p, vandaag)));
-  /* gewerkte uren van het team deze maand, tegen het uurtarief */
-  const totUren = lijst.reduce((s, p) => s + (p.uren != null ? Number(p.uren) : 0), 0);
+  /* gewerkte uren van het team deze maand (03-11-2026 a: uit poets_uren) */
+  const mUren = poetsUren.filter(u => u.datum >= van && u.datum <= tot);
+  const mTot = mUren.reduce((s, u) => s + Number(u.totaal || 0), 0), mOpen = mUren.filter(u => !u.betaald_op).reduce((s, u) => s + Number(u.totaal || 0), 0);
   const tot_ = document.createElement("div"); tot_.className = "pdag";
-  tot_.innerHTML = `<div class="kop"><b>Uren poetsteam ${MND[poetsMaand.getMonth()]}</b><em>${totUren ? `${urenTekst(totUren)} · ${eur(totUren * poetsTarief())}` : "nog niets ingevuld"}</em></div>` +
-    `<div class="vink"><button data-ptarief="1">${eur(poetsTarief())} per uur · wijzigen</button></div>`;
+  tot_.innerHTML = `<div class="kop"><b>Gewerkte uren ${MND[poetsMaand.getMonth()]}</b><em>${mUren.length ? `${eur(mTot)}${mOpen ? ` · ${eur(mOpen)} open` : " · betaald"}` : "nog niets ingevuld"}</em></div>` +
+    `<div class="vink"><button data-pgewerkt="1">Gewerkte uren bekijken</button></div>`;
   el.appendChild(tot_);
+  if(!lijst.length){ const leeg = document.createElement("p"); leeg.className = "leeg"; leeg.textContent = tot < vandaag ? "Geen uitcheckdagen bewaard voor deze maand" : "Geen uitchecks bekend in deze maand"; el.appendChild(leeg); }
+  lijst.forEach(p => el.appendChild(poetsRij(p, vandaag)));
   bak.appendChild(el);
   bindPoets(bak, tekenPoetsTab);
-  vertaalPoetsOpmerkingen(() => { if(poetsBlokOpen) tekenPoetsTab(); });
+}
+/* 03-11-2026 a: instellingen van de poetspagina (Meer > Schoonmaken); standaard Finca KaYu: alles aan, 31 dagen terug */
+const POETS_MELDING_NL = "Hier staan alle uitcheckdagen. Stem altijd eerst even af met Loes voordat jullie komen poetsen.";
+const poetsAan = sleutel => (instellingen[sleutel] || "aan") !== "uit";
+const poetsWasBedrag = () => { const w = String(instellingen.poets_was_bedrag || "").trim(); if(w === "") return null; const n = Number(w.replace(",", ".")); return isFinite(n) && n >= 0 ? n : null; };
+const poetsDagenTerug = () => { const w = String(instellingen.poets_dagen_terug || "").trim(); return /^[0-9]{1,3}$/.test(w) && Number(w) >= 1 && Number(w) <= 366 ? Number(w) : 31; };
+async function poetsInstelling(sleutel, waarde){
+  const oud = instellingen[sleutel]; instellingen[sleutel] = waarde; tekenMeer();
+  const { error } = await db.from("instellingen").upsert({ sleutel, waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(error){ instellingen[sleutel] = oud; tekenMeer(); alert("Opslaan mislukt: " + error.message); return false; }
+  return true;
+}
+async function poetsSchakel(sleutel){
+  const nieuw = poetsAan(sleutel) ? "uit" : "aan";
+  if(sleutel === "poets_alle_dagen" && nieuw === "uit" && !confirm("Alleen nog de dagen die je eerder met Delen hebt gedeeld? Delen per dag kan niet meer in de app; die dagen blijven dus zoals ze nu zijn.")) return;
+  await poetsInstelling(sleutel, nieuw);
+}
+async function wijzigPoetsWas(){
+  const t = prompt("Bedrag voor de was per keer, in euro (bijvoorbeeld 10). Dit staat ingevuld als ze Was gedaan aanvinken; zij kunnen het aanpassen. Leeg laten: zij vullen het zelf in.", poetsWasBedrag() != null ? String(poetsWasBedrag()).replace(".", ",") : "");
+  if(t === null) return;
+  const w = t.trim(); if(w === ""){ await poetsInstelling("poets_was_bedrag", ""); return; }
+  const n = Number(w.replace(",", ".")); if(!isFinite(n) || n < 0 || n > 1000){ alert("Dat is geen bedrag."); return; }
+  await poetsInstelling("poets_was_bedrag", String(n));
+}
+async function wijzigPoetsMelding(){
+  const t = prompt("Melding bovenaan de pagina van het poetsteam. Typ gewoon Nederlands; de app vertaalt het naar het Spaans:", instellingen.poets_melding || POETS_MELDING_NL);
+  if(t === null) return;
+  const nl = t.trim();
+  if(!nl || nl === POETS_MELDING_NL){ await poetsInstelling("poets_melding", ""); await poetsInstelling("poets_melding_es", ""); return; } /* terug naar de vaste tekst */
+  const es = await vertaal(nl, "nl", "es");
+  if(!es){ alert("Vertalen lukte nu niet. Er is niets veranderd; probeer het zo nog eens."); return; }
+  if(await poetsInstelling("poets_melding", nl)) await poetsInstelling("poets_melding_es", es);
+  alert("Bewaard. Zij zien: " + es);
+}
+async function wijzigPoetsTerug(){
+  const t = prompt("Tot hoeveel dagen terug mag het poetsteam een dag invullen? (1 tot 366; Finca KaYu: 31). Wat nog niet betaald is, blijft altijd te wijzigen.", String(poetsDagenTerug()));
+  if(t === null) return;
+  const w = t.trim(); if(!/^[0-9]{1,3}$/.test(w) || Number(w) < 1 || Number(w) > 366){ alert("Vul een aantal dagen in, van 1 tot 366."); return; }
+  await poetsInstelling("poets_dagen_terug", String(Number(w)));
 }
 /* 20-10-2026 f: ook vanuit Meer, Schoonmaken (zelfde vraag, zelfde opslag) */
 async function wijzigPoetsTarief(herteken){
-  const t = prompt("Uurtarief van het poetsteam in euro (bijvoorbeeld 14 of 14,50):", String(poetsTarief()).replace(".", ","));
+  const t = prompt("Uurtarief van het poetsteam in euro (bijvoorbeeld 14 of 14,50). Dit staat standaard ingevuld op hun pagina; zij kunnen het per keer aanpassen:", String(poetsTarief()).replace(".", ","));
   if(t === null) return;
   const n = Number(t.trim().replace(",", ".")); if(!isFinite(n) || n <= 0){ alert("Dat is geen bedrag."); return; }
   const oud = instellingen.poets_uurtarief; instellingen.poets_uurtarief = String(n);
@@ -8315,35 +8332,7 @@ async function wijzigPoetsTarief(herteken){
   if(error){ instellingen.poets_uurtarief = oud; alert("Opslaan mislukt: " + error.message); } herteken();
 }
 function bindPoets(bak, herteken){
-  bak.querySelectorAll("[data-paanpas]").forEach(kn => kn.onclick = () => { const d = kn.dataset.paanpas; if(pAanpas.has(d)) pAanpas.delete(d); else pAanpas.add(d); herteken(); });
-  bak.querySelectorAll("[data-ptarief]").forEach(kn => kn.onclick = () => wijzigPoetsTarief(herteken));
-  bak.querySelectorAll("[data-pkamer]").forEach(kn => kn.onclick = () => {
-    const i = kn.dataset.pkamer.indexOf("|");
-    const datum = kn.dataset.pkamer.slice(0, i), kamer = kn.dataset.pkamer.slice(i + 1);
-    const p = poetsDagen[datum]; if(!p) return;
-    const nu = gedeeldeKamers(p);
-    const nieuw = nu.includes(kamer) ? nu.filter(x => x !== kamer) : [...(p.kamers||[]).filter(x => nu.includes(x) || x === kamer)];
-    poetsDeelZet(datum, { kamers_gedeeld: nieuw, gedeeld: p.gedeeld && nieuw.length > 0 });
-  });
-  bak.querySelectorAll("[data-pdeel]").forEach(kn => kn.onclick = () => {
-    const p = poetsDagen[kn.dataset.pdeel]; if(!p) return;
-    if(p.gedeeld){
-      if(!confirm("Deze dag niet meer delen met de poets?")) return;
-      poetsDeelZet(p.datum, { gedeeld: false });
-      return;
-    }
-    const kamers = gedeeldeKamers(p);
-    if(!kamers.length){ alert("Kies eerst welke kamers je wilt laten poetsen."); return; }
-    poetsDeelZet(p.datum, { gedeeld: true, kamers_gedeeld: kamers });
-  });
-  bak.querySelectorAll("[data-pbij]").forEach(kn => kn.onclick = () => {
-    const p = poetsDagen[kn.dataset.pbij]; if(!p) return;
-    poetsDeelZet(p.datum, { kamers_gedeeld: [...(p.kamers||[])] });
-  });
-  bak.querySelectorAll("[data-pgezien]").forEach(kn => kn.onclick = async () => {
-    const { error } = await db.from("poets_dagen").update({ gezien_finca: new Date().toISOString() }).eq("datum", kn.dataset.pgezien);
-    if(error) alert("Opslaan mislukt: " + error.message); else { if(poetsDagen[kn.dataset.pgezien]) poetsDagen[kn.dataset.pgezien].gezien_finca = new Date().toISOString(); herteken(); }
-  });
+  bak.querySelectorAll("[data-pgewerkt]").forEach(kn => kn.onclick = () => openPoetsUren(poetsMaand));
   bak.querySelectorAll("[data-popm]").forEach(kn => kn.onclick = async () => {
     const p = poetsDagen[kn.dataset.popm]; if(!p) return;
     const t = prompt(`Opmerking voor de poets op ${kort(p.datum)}. Typ gewoon Nederlands, korte zinnen; de app vertaalt het naar het Spaans:`, p.opmerking_finca || "");
@@ -8353,6 +8342,122 @@ function bindPoets(bak, herteken){
     const { error } = await db.from("poets_dagen").update({ opmerking_finca: nl, opmerking_finca_es: es, bijgewerkt: new Date().toISOString() }).eq("datum", p.datum);
     if(error) alert("Opslaan mislukt: " + error.message); else { p.opmerking_finca = nl; p.opmerking_finca_es = es; herteken(); }
   });
+}
+/* ---------- 03-11-2026 a: Meer > Schoonmaken > Gewerkte uren ----------
+   Alles wat het poetsteam heeft ingevuld, per maand: datum, wie, personen, uren x tarief, was, vrije regels, totaal, wanneer ingevuld,
+   open of betaald. Bart kan alles aanpassen (de database rekent het totaal opnieuw uit en schrijft het in het logboek), met één knop
+   alles wat open staat op Betaald zetten, en per regel de geschiedenis zien (poets_uren_log). */
+let guMaand = new Date(new Date().getFullYear(), new Date().getMonth(), 1), guBezig = false; const guGeschOpen = new Set();
+function openPoetsUren(maand){
+  if(maand) guMaand = new Date(maand.getFullYear(), maand.getMonth(), 1);
+  tekenPoetsUren();
+  const d = document.getElementById("poetsUrenDlg"); if(!d.open) d.showModal();
+}
+function tekenPoetsUren(){
+  const van = iso(guMaand), tot = iso(new Date(guMaand.getFullYear(), guMaand.getMonth()+1, 0, 12));
+  document.getElementById("guTitel").textContent = MND[guMaand.getMonth()] + " " + guMaand.getFullYear();
+  const alleOpen = poetsUren.filter(u => !u.betaald_op), openTot = alleOpen.reduce((s, u) => s + Number(u.totaal || 0), 0);
+  document.getElementById("guOpen").innerHTML = alleOpen.length
+    ? `<b>Open: ${eur(openTot)}</b> (${alleOpen.length} ${alleOpen.length === 1 ? "keer" : "keer"})<div class="vink"><button class="go" data-pubetaald="1">Alles op Betaald</button></div>`
+    : `<span class="leeg">Alles is betaald.</span>`;
+  const lijst = poetsUren.filter(u => u.datum >= van && u.datum <= tot).sort((a, b) => b.datum.localeCompare(a.datum) || String(b.gemaakt).localeCompare(String(a.gemaakt)));
+  const tijd = t => { if(!t) return ""; const d = new Date(t); return isNaN(d) ? "" : `${kort(iso(d))} ${d.toTimeString().slice(0,5)}`; };
+  document.getElementById("guLijst").innerHTML = (lijst.length ? lijst.map(u => `<div class="pdag" data-puid="${vrij(u.id)}">` +
+      `<div class="kop"><b>${DG[parse(u.datum).getDay()].slice(0,2)} ${kort(u.datum)} · ${vrij(u.door || "poetsteam")}</b><em>${eur(u.totaal)}</em></div>` +
+      `<div class="info">${poetsInvoerNl(u)}</div>` +
+      `<div class="info">ingevuld ${tijd(u.gemaakt)}${u.gewijzigd && Math.abs(new Date(u.gewijzigd) - new Date(u.gemaakt)) > 60000 ? ` · gewijzigd ${tijd(u.gewijzigd)}` : ""} · ${u.betaald_op ? `<b>betaald ${tijd(u.betaald_op)}</b>` : "<b>open</b>"}</div>` +
+      `<div class="vink"><button data-puaanpas="${vrij(u.id)}">Aanpassen</button><button data-pugesch="${vrij(u.id)}">Geschiedenis</button></div><div data-pugeschuit="${vrij(u.id)}"></div></div>`).join("")
+    : `<p class="leeg">Nog niets ingevuld in ${MND[guMaand.getMonth()]}.</p>`) +
+    (lijst.length ? `<p style="margin:10px 0 0;font-size:14px;color:var(--pine)">Totaal ${MND[guMaand.getMonth()]}: <b>${eur(lijst.reduce((s, u) => s + Number(u.totaal || 0), 0))}</b></p>` : "") +
+    /* review 03-11-2026 a: wat in deze maand is weggehaald, blijft hier te zien (uit het logboek) */
+    ((w => w.length ? `<div class="info" style="margin-top:12px"><b>Weggehaald</b>` + w.map(r => `<div>${tijd(r.tijd)} · ${vrij(r.door === "poets" ? (r.door_naam || "poetsteam") : (r.door_naam || "app"))}: ${DG[parse(r.oud.datum).getDay()].slice(0,2)} ${kort(r.oud.datum)} · ${poetsInvoerNl(r.oud)} = ${eur(r.oud.totaal)}</div>`).join("") + `</div>` : "")
+      (poetsWeg.filter(r => r.oud && r.oud.datum >= van && r.oud.datum <= tot)));
+  const bak = document.getElementById("poetsUrenDlg");
+  bak.querySelectorAll("[data-puaanpas]").forEach(kn => kn.onclick = () => openPoetsInvoer(kn.dataset.puaanpas));
+  bak.querySelectorAll("[data-pugesch]").forEach(kn => kn.onclick = () => { const id = kn.dataset.pugesch; if(guGeschOpen.has(id)) guGeschOpen.delete(id); else guGeschOpen.add(id); toonPoetsGeschiedenis(id); });
+  guGeschOpen.forEach(id => { if(bak.querySelector(`[data-pugeschuit="${CSS.escape(id)}"]`)) toonPoetsGeschiedenis(id); }); /* review 2: open blijft open na verversen */
+  const bt = bak.querySelector("[data-pubetaald]"); if(bt) bt.onclick = poetsAllesBetaald;
+}
+async function poetsAllesBetaald(){
+  const open = poetsUren.filter(u => !u.betaald_op); if(!open.length || guBezig) return;
+  const totaal = open.reduce((s, u) => s + Number(u.totaal || 0), 0);
+  if(!confirm(`Alles wat open staat (${open.length} keer, ${eur(totaal)}) op Betaald zetten? Daarna kan het poetsteam die regels niet meer wijzigen.`)) return;
+  guBezig = true; const nu = new Date().toISOString();
+  const { data, error } = await db.from("poets_uren").update({ betaald_op: nu, gezien_finca: nu }).in("id", open.map(u => u.id)).is("betaald_op", null).select();
+  guBezig = false;
+  if(error){ alert("Opslaan mislukt: " + error.message); return; }
+  /* review: alleen bijwerken wat de database echt op betaald zette, met de bedragen zoals ze nu in de database staan */
+  const gezet = data || [];
+  gezet.forEach(r => { const u = poetsUren.find(x => x.id === r.id); if(u) Object.assign(u, r); });
+  const echt = gezet.reduce((s, r) => s + Number(r.totaal || 0), 0);
+  if(gezet.length !== open.length || Math.abs(echt - totaal) > 0.004)
+    { alert(`Let op: er is net iets veranderd. Op betaald gezet: ${gezet.length} keer, samen ${eur(echt)} (gevraagd was ${open.length} keer, ${eur(totaal)}). Kijk de lijst even na.`); haalStraks(300); }
+  tekenPoetsUren(); tekenMeer(); if(modus === "nu") tekenNu();
+}
+async function toonPoetsGeschiedenis(id){
+  const uit = document.querySelector(`#poetsUrenDlg [data-pugeschuit="${CSS.escape(id)}"]`); if(!uit) return;
+  if(uit.innerHTML){ uit.innerHTML = ""; return; }
+  uit.innerHTML = `<p class="leeg">Ophalen…</p>`;
+  const { data, error } = await db.from("poets_uren_log").select("*").eq("uren_id", id).order("tijd");
+  if(error){ uit.innerHTML = `<p class="leeg">Ophalen mislukt: ${vrij(error.message)}</p>`; return; }
+  const kort_ = j => j ? `${j.datum ? kort(j.datum) + " · " : ""}${poetsInvoerNl(j)} = ${eur(j.totaal)}` : "";
+  const wie = r => r.door === "poets" ? (r.door_naam || "poetsteam") : r.door === "app" ? (r.door_naam || "app") : "systeem";
+  uit.innerHTML = (data || []).length ? `<div class="info" style="margin-top:6px">` + data.map(r => {
+      const t = new Date(r.tijd), wanneer = `${kort(iso(t))} ${t.toTimeString().slice(0,5)}`;
+      const wat = r.actie === "nieuw" ? `ingevuld: ${kort_(r.nieuw)}` : r.actie === "weg" ? `weggehaald: ${kort_(r.oud)}` : r.actie === "betaald" ? "op betaald gezet"
+        : r.actie === "niet betaald" ? "betaald teruggezet" : `gewijzigd van ${kort_(r.oud)} naar ${kort_(r.nieuw)}` +
+          (r.oud && r.nieuw && !r.oud.betaald_op && r.nieuw.betaald_op ? ", en op betaald gezet" : r.oud && r.nieuw && r.oud.betaald_op && !r.nieuw.betaald_op ? ", en betaald teruggezet" : "");
+      return `<div>${wanneer} · ${vrij(wie(r))}: ${wat}</div>`; }).join("") + `</div>` : `<p class="leeg">Nog geen geschiedenis.</p>`;
+}
+/* aanpassen door Bart: zelfde velden als het poetsteam, plus betaald aan of uit en weghalen */
+let piId = null, piGewijzigd = null; /* review 2: de stand bij het openen; realtime ververst poetsUren intussen al */
+function openPoetsInvoer(id){
+  const u = poetsUren.find(x => x.id === id); if(!u) return; piId = id; piGewijzigd = u.gewijzigd;
+  const g = n => n == null ? "" : String(n).replace(".", ",");
+  kel("piDatum").value = u.datum; kel("piPersonen").value = u.personen || ""; kel("piUren").value = g(u.uren); kel("piTarief").value = g(u.tarief);
+  kel("piWas").checked = !!u.was; kel("piWasBedrag").value = g(u.was_bedrag);
+  kel("piExtra").value = (u.extra || []).map(x => `${x.omschrijving}; ${g(x.bedrag)}`).join("\n");
+  kel("piBetaald").checked = !!u.betaald_op; kel("piWie").textContent = `Ingevuld door ${u.door || "poetsteam"}.`;
+  kel("piErr").textContent = "";
+  const d = kel("poetsInvoerDlg"); if(!d.open) d.showModal();
+}
+const piWeggehaald = () => { alert("Deze regel is net weggehaald (door het poetsteam of op een ander toestel). Er is niets opgeslagen; je ziet hem bij die maand onder Weggehaald in Gewerkte uren."); kel("poetsInvoerDlg").close(); tekenPoetsUren(); };
+async function bewaarPoetsInvoer(){
+  const u = poetsUren.find(x => x.id === piId); if(!u){ piWeggehaald(); return; }
+  const err = kel("piErr"), knop = kel("piOk"); if(knop.disabled) return;
+  const getal = t => { const s = String(t || "").trim().replace(",", "."); return s === "" ? null : Number(s); };
+  const datum = kel("piDatum").value, personen = getal(kel("piPersonen").value), uren = getal(kel("piUren").value), tarief = getal(kel("piTarief").value);
+  const was = kel("piWas").checked, wasB = getal(kel("piWasBedrag").value);
+  const extra = []; let extraFout = false;
+  kel("piExtra").value.split("\n").map(r => r.trim()).filter(Boolean).forEach(r => { const i = r.lastIndexOf(";"); const oms = i > 0 ? r.slice(0, i).trim() : ""; const b = i > 0 ? getal(r.slice(i + 1)) : null;
+    if(!oms || b == null || !isFinite(b) || b < 0 || b > 1000 || oms.length > 120) extraFout = true; else extra.push({ omschrijving: oms, bedrag: b }); });
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(datum)){ err.textContent = "Kies een datum."; return; }
+  if(personen != null && !(Number.isInteger(personen) && personen >= 1 && personen <= 20)){ err.textContent = "Aantal personen: een getal van 1 tot 20, of leeg."; return; }
+  if(!(uren > 0 && uren <= 100)){ err.textContent = "Vul de uren in (meer dan 0)."; return; }
+  if(!(tarief >= 0 && tarief <= 500)){ err.textContent = "Vul het uurtarief in."; return; }
+  if(wasB != null && !(wasB >= 0 && wasB <= 1000)){ err.textContent = "Het bedrag voor de was klopt niet."; return; }
+  if(extraFout || extra.length > 10){ err.textContent = "Vrije regels: per regel een omschrijving, een puntkomma en een bedrag, bijvoorbeeld: zeep; 8,50 (hooguit 10 regels)."; return; }
+  const nu = new Date().toISOString();
+  /* het totaal rekent de database zelf uit (trigger poets_uren_reken); hier dezelfde som, zodat het scherm meteen klopt */
+  const totaal = rond2(uren * tarief + (was ? (wasB || 0) : 0) + extra.reduce((t, x) => t + x.bedrag, 0));
+  const velden = { datum, personen, uren, tarief, was, was_bedrag: wasB, extra, totaal, betaald_op: kel("piBetaald").checked ? (u.betaald_op || nu) : null, gezien_finca: u.gezien_finca || nu };
+  knop.disabled = true; err.textContent = "Bezig…";
+  const { data, error } = await db.from("poets_uren").update(velden).eq("id", u.id).eq("gewijzigd", piGewijzigd).select();
+  knop.disabled = false;
+  if(error){ err.textContent = "Opslaan mislukt: " + error.message; return; }
+  /* review 03-11-2026 a: het poetsteam heeft de regel net gewijzigd (of weggehaald): niet stil overschrijven */
+  if(!data || !data.length){ err.textContent = "Het poetsteam heeft deze regel net gewijzigd of weggehaald. Er is niets opgeslagen; sluit het venster en open hem opnieuw om te zien wat er nu staat."; haalStraks(300); return; }
+  Object.assign(u, (data && data[0]) || velden); piGewijzigd = u.gewijzigd;
+  kel("poetsInvoerDlg").close(); tekenPoetsUren(); tekenMeer(); if(modus === "nu") tekenNu();
+}
+async function weghalenPoetsInvoer(){
+  const u = poetsUren.find(x => x.id === piId); if(!u){ piWeggehaald(); return; }
+  if(!confirm(`Deze regel van ${u.door || "het poetsteam"} (${kort(u.datum)}, ${eur(u.totaal)}) weghalen? Hij blijft zichtbaar in de geschiedenis.`)) return;
+  const { error } = await db.from("poets_uren").delete().eq("id", u.id);
+  if(error){ kel("piErr").textContent = "Weghalen mislukt: " + error.message; return; }
+  poetsUren = poetsUren.filter(x => x.id !== u.id);
+  kel("poetsInvoerDlg").close(); tekenPoetsUren(); tekenMeer(); if(modus === "nu") tekenNu();
+  haalStraks(300); /* review: de weggehaalde regel komt uit het logboek in de geschiedenis van de maand */
 }
 /* ---------- aankondiging (paella-avond of iets anders) met aanmeldingen ---------- */
 function nuMelding(html, klasse){
@@ -8603,6 +8708,18 @@ function inboxItems(){
     info.push({ id:"t" + t.id, nr:t.nr, naam:t.gast, plek:t.plek, wanneer:tijdTekst(t.gemaakt),
       wat:`<b>${idee ? "Ontbijtidee" : "Tip"}</b>: "${tekst.replace(/</g, "&lt;")}"${t.tekst_nl && t.tekst_nl.toLowerCase() !== (t.tekst || "").toLowerCase() ? `<br><span style="color:var(--muted)">${String(t.tekst_nl).replace(/^Ontbijtidee:\s*/i, "").replace(/</g, "&lt;")}</span>` : ""}`,
       knoppen:`<button data-tgezien="${vrij(t.id)}">Gezien</button>` }); });
+  /* 03-11-2026 a (Bart: "dan moet ik een berichtje in mijn berichtenbox krijgen dat er iets is ingevuld"): uren van het poetsteam */
+  poetsUren.filter(u => !u.gezien_finca).sort((a, b) => String(a.gewijzigd || a.gemaakt).localeCompare(String(b.gewijzigd || b.gemaakt))).forEach(u => {
+    const gewijzigd = u.gewijzigd && u.gemaakt && Math.abs(new Date(u.gewijzigd) - new Date(u.gemaakt)) > 60000;
+    antwoord.push({ id:"pu" + u.id, nr:"", naam:u.door || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(u.gewijzigd || u.gemaakt),
+      wat:`<b>${gewijzigd ? "Uren gewijzigd" : "Uren ingevuld"}</b>: ${DG[parse(u.datum).getDay()].slice(0,2)} ${kort(u.datum)} · ${poetsInvoerNl(u)} = ${eur(u.totaal)}`,
+      knoppen:`<button class="hoofd" data-pugezien="${vrij(u.id)}">Gezien</button><button data-puaanpas2="${vrij(u.id)}">Aanpassen</button>`, geenWa:true });
+  });
+  /* review 03-11-2026 a: ook als het poetsteam iets weghaalt, tot Bart op Gezien tikt (instelling poets_weg_gezien: de ids van de geziene logregels) */
+  { const gezien = poetsWegGezien();
+    poetsWeg.filter(w => w.door === "poets" && w.oud && !gezien.has(String(w.id))).forEach(w => antwoord.push({ id:"pw" + w.id, nr:"", naam:w.door_naam || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(w.tijd),
+      wat:`<b>Uren weggehaald</b>: ${DG[parse(w.oud.datum).getDay()].slice(0,2)} ${kort(w.oud.datum)} · ${poetsInvoerNl(w.oud)} = ${eur(w.oud.totaal)}`,
+      knoppen:`<button class="hoofd" data-pwgezien="${vrij(w.id)}">Gezien</button>`, geenWa:true })); }
   /* versie h: camper heeft het aanvraagformulier ingevuld; de boeking staat er al (met automatisch gekozen plek, alleen intern) */
   camperAanvragen.filter(a => a.ingevuld_op && !a.gezien).forEach(a => {
     const b = boekingen.find(x => String(x.id) === String(a.boeking_id));
@@ -8650,6 +8767,14 @@ function tekenInbox(){
   bak.querySelectorAll("[data-agezien]").forEach(kn => kn.onclick = async () => { const v = aanvragen.find(x => x.id === kn.dataset.agezien); if(!v) return; v.gezien = true; tekenNu(); await db.from("aanvragen").update({ gezien: true }).eq("id", v.id); });
   bak.querySelectorAll("[data-tgezien]").forEach(kn => kn.onclick = async () => { const t = tips.find(x => x.id === kn.dataset.tgezien); if(!t) return; t.gezien = true; tekenNu(); await db.from("tips").update({ gezien: true }).eq("id", t.id); });
   bak.querySelectorAll("[data-oaanvraag]").forEach(kn => kn.onclick = () => ontbijtAanvraagAntwoord(kn.dataset.oaanvraag));
+  bak.querySelectorAll("[data-pugezien]").forEach(kn => kn.onclick = async () => { const u = poetsUren.find(x => x.id === kn.dataset.pugezien); if(!u) return;
+    const nu = new Date().toISOString(); u.gezien_finca = nu; tekenNu();
+    const { error } = await db.from("poets_uren").update({ gezien_finca: nu }).eq("id", u.id); if(error){ u.gezien_finca = null; tekenNu(); alert("Opslaan mislukt: " + error.message); } });
+  bak.querySelectorAll("[data-puaanpas2]").forEach(kn => kn.onclick = () => openPoetsInvoer(kn.dataset.puaanpas2));
+  bak.querySelectorAll("[data-pwgezien]").forEach(kn => kn.onclick = async () => {
+    /* alleen ids bewaren die nog in de geladen lijst staan, zodat de instelling niet blijft groeien */
+    const g = poetsWegGezien(); g.add(kn.dataset.pwgezien); const nog = new Set(poetsWeg.map(w => String(w.id)));
+    await poetsInstelling("poets_weg_gezien", [...g].filter(x => nog.has(x)).join(",")); tekenNu(); });
   bak.querySelectorAll("[data-cagezien]").forEach(kn => kn.onclick = async () => { const a = camperAanvragen.find(x => String(x.id) === kn.dataset.cagezien); if(!a) return; a.gezien = true; tekenNu();
     const { error } = await db.from("camper_aanvragen").update({ gezien: true }).eq("id", a.id); if(error) alert("Opslaan mislukt: " + error.message); });
   bak.querySelectorAll("[data-cabekijk]").forEach(kn => kn.onclick = () => { const a = camperAanvragen.find(x => String(x.id) === kn.dataset.cabekijk); const b = a && boekingen.find(x => String(x.id) === String(a.boeking_id)); if(b) toonDetail(b); });
@@ -8768,10 +8893,10 @@ function tekenKosten(){
   document.getElementById("kostenMaandKop").textContent = `${MND[d.getMonth()]} ${d.getFullYear()}`;
   const rijen = kostenVan(m);
   /* poetsuren uit Schoonmaken ter vergelijking (geen kostenregel, alleen informatie) */
-  const uren = Object.values(poetsDagen).filter(p => String(p.datum).slice(0, 7) === m && p.uren != null).reduce((t, p) => t + Number(p.uren), 0);
+  const pu = poetsUren.filter(u => String(u.datum).slice(0, 7) === m), uren = pu.reduce((t, u) => t + Number(u.uren || 0), 0), puTot = pu.reduce((t, u) => t + Number(u.totaal || 0), 0);
   lijst.innerHTML = (rijen.length ? rijen.map(k => `<button class="meerrij" data-meer="kostenRegel" data-kostenid="${vrij(k.id)}"><span><b>${vrij(k.soort)}</b>${k.omschrijving ? `<small>${vrij(k.omschrijving)}</small>` : ""}</span><b style="margin-right:8px">${eur(Number(k.bedrag || 0))}</b><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>`).join("")
     : `<div class="meerinst"><span><small>Nog geen kosten voor deze maand</small></span></div>`) +
-    `<div class="meerinst"><span><b>Totaal</b>${uren ? `<small>Poetsuren uit Schoonmaken: ${urenTekst(uren)} · ${eur(uren * poetsTarief())}</small>` : ""}</span><b>${eur(kostenMaandTotaal(m))}</b></div>`;
+    `<div class="meerinst"><span><b>Totaal</b>${pu.length ? `<small>Gewerkte uren poetsteam: ${urenTekst(uren)} · ${eur(puTot)}</small>` : ""}</span><b>${eur(kostenMaandTotaal(m))}</b></div>`;
 }
 async function kostenActie(w, knop){
   const d = kostenMaand || new Date();
@@ -8864,9 +8989,12 @@ function tekenMeer(){
   /* 23-10-2026 e: herinnering de dag voor vertrek */
   meerZet("mpBarGesch", barGeschAan() ? "Knop Geschiedenis bar staat in de barvensters. Het logboek loopt altijd." : "Knop verborgen. Het logboek loopt gewoon door.");
   meerZet("meerBarGesch", barGeschAan() ? "Verbergen" : "Tonen");
-  /* 29-10-2026 e: slot op Geld */
-  meerZet("mpGeldSlot", geldSlotAan() ? "Staat aan: Geld en Exporteren vragen de code van de digitale kluis. Daarna 5 minuten open; bij het wegzetten van de app meteen weer op slot." : "Staat uit: Geld is open voor wie ingelogd is.");
-  meerZet("meerGeldSlot", geldSlotAan() ? "Uitzetten" : "Aanzetten");
+  /* 03-11-2026 c: code bij openen */
+  meerZet("mpPin", pinAan() ? (pinBlob() ? `Aan: de app vraagt 4 cijfers bij het openen` : "Aan, nog geen code gekozen") : "Uit: de app opent zonder code");
+  meerZet("meerPin", pinAan() ? "Uitzetten" : "Aanzetten");
+  meerZet("mpPinMin", `${pinMinuten()} ${pinMinuten() === 1 ? "minuut" : "minuten"} nadat je de app hebt weggelegd`);
+  meerZet("mpAgendasPerDag", agendasPerDag() ? "Staan ingeklapt onder de weekkalender." : "Uit. Wie er komt en gaat zie je in de weekkalender en in Kalender.");
+  meerZet("meerAgendasPerDag", agendasPerDag() ? "Uitzetten" : "Aanzetten");
   /* 01-11-2026 g: welke knoppen er bij afrekenen staan */
   { const aan = bankKnoppen().filter(x => x.aan); meerZet("mpBetaalKnoppen", "Contant" + (aan.length ? aan.map(x => ", " + bankLabel(x)).join("") : ", Bankoverschrijving")); }
   /* 29-10-2026 c: aankondiging ook voor wie die dag vertrekt */
@@ -8897,7 +9025,19 @@ function tekenMeer(){
   /* schoonmaken */
   const poets = poetsStatusTekst(vandaag);
   meerZet("mpPoets", "Poets: " + poets);
-  meerZet("mpPoetsTarief", `${eur(poetsTarief())} per uur`);
+  meerZet("mpPoetsTarief", `${eur(poetsTarief())} per uur, staat zo ingevuld; zij mogen het aanpassen`);
+  /* 03-11-2026 a */
+  { const open = poetsUren.filter(u => !u.betaald_op), nieuw = poetsUren.filter(u => !u.gezien_finca).length;
+    meerZet("mpPoetsUren", open.length ? `${eur(open.reduce((t, u) => t + Number(u.totaal || 0), 0))} open${nieuw ? ` · ${nieuw} nieuw` : ""}` : "Niets open"); }
+  meerZet("mpPoetsWas", poetsWasBedrag() != null ? `${eur(poetsWasBedrag())} per keer, staat zo ingevuld; zij mogen het aanpassen` : "Nog geen bedrag: zij vullen het zelf in");
+  meerZet("mpPoetsMelding", meerKort(instellingen.poets_melding || POETS_MELDING_NL, 70));
+  meerZet("mpPoetsAlle", poetsAan("poets_alle_dagen") ? "Aan: het poetsteam ziet alle uitcheckdagen" : "Uit: zij zien alleen de dagen die jij eerder hebt gedeeld");
+  meerZet("meerPoetsAlle", poetsAan("poets_alle_dagen") ? "Uitzetten" : "Aanzetten");
+  meerZet("mpPoetsPers", poetsAan("poets_personen") ? "Aan" : "Uit");
+  meerZet("meerPoetsPers", poetsAan("poets_personen") ? "Uitzetten" : "Aanzetten");
+  meerZet("mpPoetsVrij", poetsAan("poets_vrije_regels") ? "Aan: zij kunnen iets anders met een bedrag toevoegen" : "Uit");
+  meerZet("meerPoetsVrij", poetsAan("poets_vrije_regels") ? "Uitzetten" : "Aanzetten");
+  meerZet("mpPoetsTerug", `${poetsDagenTerug()} dagen; wat niet betaald is, blijft te wijzigen`);
   /* gasten */
   const md = mededelingActief(), a = aankActief();
   meerZet("mpMededeling", md ? "Staat aan: " + meerKort(md, 70) : "Staat uit");
@@ -8929,9 +9069,6 @@ function tekenMeer(){
   }
 }
 function meerToon(naam){
-  /* 29-10-2026 e: de pagina's van Geld alleen met de kluiscode */
-  if(GELD_PAGINAS.includes(naam) && !geldOpen()){ geldVraagCode(() => meerToon(naam)); return; }
-  if(GELD_PAGINAS.includes(naam)) geldVerleng();
   document.querySelectorAll("#meer2 [data-pagina]").forEach(el => el.hidden = el.dataset.pagina !== naam);
   const dlg = document.querySelector("#meer2 .dlg"); if(dlg) dlg.scrollTop = 0;
   /* geen zwarte focusrand op de eerste regel (het venster zet de focus vanzelf op de eerste knop); de focus gaat naar de kop
@@ -8957,6 +9094,13 @@ function openBroodTijden(){
   document.getElementById("broodTijdenDlg").showModal();
 }
 document.getElementById("btSluit").onclick = () => document.getElementById("broodTijdenDlg").close();
+/* 03-11-2026 a: gewerkte uren poetsteam */
+document.getElementById("guSluit").onclick = () => { guGeschOpen.clear(); document.getElementById("poetsUrenDlg").close(); };
+document.getElementById("guPrev").onclick = () => { guMaand = new Date(guMaand.getFullYear(), guMaand.getMonth() - 1, 1); tekenPoetsUren(); };
+document.getElementById("guNext").onclick = () => { guMaand = new Date(guMaand.getFullYear(), guMaand.getMonth() + 1, 1); tekenPoetsUren(); };
+document.getElementById("piSluit").onclick = () => document.getElementById("poetsInvoerDlg").close();
+document.getElementById("piOk").onclick = bewaarPoetsInvoer;
+document.getElementById("piWeg").onclick = weghalenPoetsInvoer;
 document.getElementById("btOk").onclick = async () => {
   const err = document.getElementById("btErr"), knop = document.getElementById("btOk");
   const w = { ophalen_van: document.getElementById("btVan").value.trim(), ophalen_tot: document.getElementById("btTot").value.trim(),
@@ -9801,14 +9945,6 @@ function poetsMelding(html, klasse){
 }
 document.getElementById("pPrev").onclick = () => { poetsMaand.setMonth(poetsMaand.getMonth()-1); tekenPoetsTab(); };
 document.getElementById("pNext").onclick = () => { poetsMaand.setMonth(poetsMaand.getMonth()+1); tekenPoetsTab(); };
-document.getElementById("pAanstoot").onclick = async () => {
-  const vandaag = iso(new Date()), eind14 = iso(new Date(Date.now() + 14*864e5));
-  const open = Object.values(poetsDagen).filter(p => p.datum >= vandaag && p.datum <= eind14 && p.gedeeld && gedeeldeKamers(p).length && p.status === "open").sort((a,b) => a.datum.localeCompare(b.datum));
-  if(!open.length){ poetsMelding("Alles in de komende twee weken is al bevestigd, niets om aan te stoten.", "gelukt"); return; }
-  const tekst = poetsAanstootTekst(open);
-  const ok = await kopieer(tekst);
-  poetsMelding(ok ? "Spaans berichtje gekopieerd. Plak het in de WhatsApp van het poetsteam." : `Kopiëren lukte niet, kopieer zelf:<textarea readonly style="margin-top:6px;width:100%;min-height:120px">${tekst}</textarea>`, ok ? "gelukt" : "waarschuw");
-};
 document.getElementById("pLinks").onclick = () => {
   const m = poetsMelding((poetsLinks.length ? poetsLinks.map(l => `<div style="margin-bottom:6px"><b>${l.naam}</b>${l.laatst_gezien ? ` · laatst gekeken ${kort(l.laatst_gezien.slice(0,10))}` : " · nog nooit geopend"}<br><button data-plkopie="${l.code}" style="margin-top:4px">Link van ${l.naam} kopiëren</button></div>`).join("") : "") +
     `<button data-plnieuw="1" style="margin-top:4px">Nieuwe poetslink maken</button>`, "gelukt");
@@ -9825,15 +9961,16 @@ document.getElementById("pLinks").onclick = () => {
   };
 };
 document.getElementById("pExport").onclick = () => {
+  /* 03-11-2026 a: de gewerkte uren van de maand (poets_uren), één regel per keer dat het poetsteam iets invulde */
   const van = iso(poetsMaand), tot = iso(new Date(poetsMaand.getFullYear(), poetsMaand.getMonth()+1, 0, 12));
-  const lijst = Object.values(poetsDagen).filter(p => p.datum >= van && p.datum <= tot && p.gedeeld && gedeeldeKamers(p).length).sort((a,b) => a.datum.localeCompare(b.datum));
-  const q = t => `"${String(t ?? "").replace(/"/g, '""')}"`;
-  const kop = "Datum;Dag;Kamers;Bar;Zelfde dag weer bezet;Status;Tijd;Door;Uren;Bedrag;Opmerking poets;Opmerking finca";
-  const st = p => p.status === "komt" ? "komt" : p.status === "kan_niet" ? "kan niet" : "nog niet bevestigd";
-  const tarief = poetsTarief();
-  const regels = lijst.map(p => [p.datum, DG[parse(p.datum).getDay()], (p.kamers||[]).join(", "), p.bar ? "ja" : "", (p.haast||[]).join(", "), st(p), p.tijd || "", p.door || "", p.uren != null ? String(Number(p.uren)).replace(".", ",") : "", p.uren != null ? (Number(p.uren) * tarief).toFixed(2).replace(".", ",") : "", p.opmerking_poets || "", p.opmerking_finca || ""].map(q).join(";"));
-  const totU = lijst.reduce((s, p) => s + (p.uren != null ? Number(p.uren) : 0), 0);
-  regels.push(["Totaal", "", "", "", "", "", "", "", String(totU).replace(".", ","), (totU * tarief).toFixed(2).replace(".", ","), `uurtarief ${String(tarief).replace(".", ",")}`, ""].map(q).join(";"));
+  const lijst = poetsUren.filter(u => u.datum >= van && u.datum <= tot).sort((a, b) => a.datum.localeCompare(b.datum));
+  const q = t => `"${String(t ?? "").replace(/"/g, '""')}"`, g = n => n == null ? "" : Number(n).toFixed(2).replace(".", ",");
+  const lokaal = (t, metTijd) => { if(!t) return ""; const d = new Date(t); return isNaN(d) ? "" : iso(d) + (metTijd ? " " + d.toTimeString().slice(0, 5) : ""); }; /* Spaanse tijd, niet UTC */
+  const kop = "Datum;Dag;Door;Personen;Uren;Uurtarief;Was;Bedrag was;Overig;Totaal;Ingevuld op;Betaald op";
+  const regels = lijst.map(u => [u.datum, DG[parse(u.datum).getDay()], u.door || "", u.personen || "", String(Number(u.uren)).replace(".", ","), g(u.tarief),
+    u.was ? "ja" : "", u.was ? g(u.was_bedrag) : "", (u.extra || []).map(x => `${x.omschrijving} ${g(x.bedrag)}`).join(" / "), g(u.totaal),
+    lokaal(u.gemaakt, true), lokaal(u.betaald_op, false)].map(q).join(";"));
+  regels.push(["Totaal", "", "", "", "", "", "", "", "", g(lijst.reduce((s, u) => s + Number(u.totaal || 0), 0)), "", ""].map(q).join(";"));
   download(`poets-${van.slice(0,7)}.csv`, [kop, ...regels].join("\n"));
 };
 
@@ -12136,6 +12273,12 @@ if(NIEUW){
     if(MEER_OPPAGINA.includes(w)){ document.getElementById(w).click(); return; }
     /* uurtarief: de vraag komt over Meer heen; daarna toont de pagina meteen het nieuwe bedrag (review f) */
     if(w === "poetstarief"){ wijzigPoetsTarief(() => { tekenMeer(); if(modus === "nu") tekenNu(); }); return; }
+    /* 03-11-2026 a: poetspagina instellen en de gewerkte uren */
+    if(w === "poetsuren"){ openPoetsUren(); return; }
+    if(w === "poetswas"){ wijzigPoetsWas(); return; }
+    if(w === "poetsmelding"){ wijzigPoetsMelding(); return; }
+    if(w === "poetsterug"){ wijzigPoetsTerug(); return; }
+    if(w === "poetsalle" || w === "poetspers" || w === "poetsvrij"){ poetsSchakel({ poetsalle:"poets_alle_dagen", poetspers:"poets_personen", poetsvrij:"poets_vrije_regels" }[w]); return; }
     if(w === "verlengmax"){ wijzigVerlengMax(); return; }
     if(w === "verlengwie"){ wijzigVerlengWie(); return; }
     if(w === "plekindeling"){ wijzigPlekIndeling(); return; }
@@ -12143,13 +12286,15 @@ if(NIEUW){
     if(w.startsWith("inst")){ wijzigBedrijfsinstelling(w); return; }
     if(w.startsWith("kosten")){ kostenActie(w, kn); return; }
     if(w === "obvandaag"){ obVandaagWissel(); return; }
-    if(w === "kluis"){ document.getElementById("meer2").close(); kluisOpenen(); return; }
     if(w === "herinnering"){ herinneringWissel(); return; }
     if(w === "bargesch"){ barGeschWissel(); return; }
     if(w === "todoletop"){ todoLetOpWissel(); return; } /* 29-10-2026 a */
     if(w === "voorraadaan"){ voorraadWissel(); return; } /* 30-10-2026 l */
     if(w === "aankvertrek"){ aankVertrekWissel(); return; } /* 29-10-2026 c */
-    if(w === "geldslot"){ geldSlotWissel(); return; } /* 29-10-2026 e */
+    if(w === "pinaan"){ pinSchakel(); return; } /* 03-11-2026 c */
+    if(w === "pinwijzig"){ pinToon("wijzig"); return; }
+    if(w === "pinminuten"){ pinZetMinuten(); return; }
+    if(w === "agendasperdag"){ agendasPerDagWissel(); return; } /* 03-11-2026 a */
     if(w === "betaalknoppen"){ openBetaalKnoppen(); return; } /* 01-11-2026 g */
     if(w === "broodtijden"){ openBroodTijden(); return; } /* 02-11-2026 a */
     if(w === "herinneringtekst"){ openHerinneringTekst(); return; }
@@ -13188,8 +13333,6 @@ function gvTeken(){
   bak.innerHTML = h;
 }
 async function openGv(){
-  if(!geldOpen()){ geldVraagCode(() => openGv()); return; }
-  geldVerleng();
   const dlg = document.getElementById("gv2");
   gvFout = ""; if(!cfData) gvTeken();
   gvPeriodes(); gvTeken();
@@ -13200,8 +13343,6 @@ async function openGv(){
 document.getElementById("gvPeriode").onchange = () => gvTeken();
 document.getElementById("gvDicht").onclick = () => document.getElementById("gv2").close();
 async function openCijfers(houdMaand){
-  if(!geldOpen()){ geldVraagCode(() => openCijfers(houdMaand)); return; } /* 29-10-2026 e */
-  geldVerleng();
   const dlg = document.getElementById("cijfers2");
   cfFout = ""; cfData = null; cfBankOpen = false; cfKasOpen = false; cfBetaalOpen = false; cfBetaalMelding = ""; if(houdMaand !== true) cfMaand = null; tekenCijfers(); /* 01-11-2026 i: weer de huidige maand (review i: niet na het sluiten van Inkoop) */ /* review e: formulier en melding niet laten staan */
   if(!dlg.open) dlg.showModal();
@@ -13226,227 +13367,186 @@ document.getElementById("cijfersDicht").onclick = () => document.getElementById(
    Foto's worden eerst verkleind (lange kant hooguit 2000 pixels), zodat de opslag niet volloopt. Geen kas: die blijft buiten de app.
    Weghalen kan alleen op de dag zelf (een verkeerde foto); daarna blijft een bon staan. */
 
-/* ---------- digitale kluis (26-10-2026 c, wens Bart: één plek voor paspoortkopieën, polissen, contracten, NIE, met een eigen code
-   voor Bart en Loes). Versleuteling op de telefoon: sleutel = PBKDF2(code, zout, 310.000 x SHA-256) -> AES-GCM 256. In de tabel
-   `kluis` staat één rij soort 'sleutel' (zout + versleutelde controletekst) en per item een rij soort 'item' met versleutelde JSON
-   {titel, map, tekst, bijlagen:[{pad, naam, soort, iv}]}. Bijlagen staan versleuteld (bytes) in de opslagmap `kluis`.
-   De sleutel blijft alleen in het geheugen van de app en gaat na 5 minuten niets doen, bij sluiten en bij "Op slot" weg. */
-const KLUIS_MAPPEN = ["Identiteit", "Verzekeringen", "Wonen", "Kinderen", "Finca", "Codes", "Overig"];
-const KLUIS_CONTROLE = "Finca KaYu kluis", KLUIS_MAP = "kluis", KLUIS_MAX = 10 * 1024 * 1024, KLUIS_STIL = 5 * 60 * 1000;
-let kluisSleutel = null, kluisItems = [], kluisZout = null, kluisMapKeuze = "", kluisHuidig = null, kluisBijlagenNieuw = [], kluisTimer = null;
+/* ---------- 03-11-2026 c (Bart): code van 4 cijfers bij het openen van de app ----------
+   "Als ik de app open, een 4-cijferige code invoeren. Voor de rest in de app niks." Het slot op Geld (29-10-2026 e, met de code van de
+   digitale kluis) en de kluis zelf zijn weg. Alleen de app van Bart en Loes; gastenpagina, check-in en poetspagina vragen niets.
+   - Instellingen: app_code_aan (aan/uit; geen rij = uit, voor Finca KaYu op aan gezet bij de livegang), app_code (JSON: zout, iv,
+     inhoud: de controletekst versleuteld met een sleutel uit de code, PBKDF2 310.000 x SHA-256 -> AES-GCM; de code zelf staat nergens),
+     app_code_minuten (na hoeveel minuten op de achtergrond opnieuw vragen, 1 tot 120, standaard 5).
+   - Bij elke keer openen en na die minuten op de achtergrond: het codescherm dekt alles af. Een kopie van de code-gegevens staat op
+     het toestel (localStorage kayu_pin), zodat het slot er ook meteen is als het internet traag of weg is.
+   - 5 keer fout: uitloggen. Inloggen met het wachtwoord opent de app zonder code (dat is de sterkere controle); daarna kun je in
+     Meer een nieuwe code kiezen.
+   Eerlijk: dit is een slot op het scherm (tegen wie je telefoon pakt), geen versleuteling van de gegevens. */
+const PIN_CONTROLE = "Finca KaYu app", PIN_MAX_FOUT = 5;
 const kb64 = b => { const u = new Uint8Array(b); let t = ""; for(let i = 0; i < u.length; i += 0x8000) t += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(t); };
 const kvan64 = t => Uint8Array.from(atob(t), c => c.charCodeAt(0));
 const kel = id => document.getElementById(id);
-function kluisMeld(id, t, soort){ const m = kel(id); m.textContent = t; m.className = "ib-melding" + (soort ? " " + soort : ""); }
-async function kluisSleutelVan(code, zout){
+async function codeSleutelVan(code, zout){
   const basis = await crypto.subtle.importKey("raw", new TextEncoder().encode(code.normalize("NFC")), "PBKDF2", false, ["deriveKey"]);
   return crypto.subtle.deriveKey({ name:"PBKDF2", salt: zout, iterations: 310000, hash:"SHA-256" }, basis, { name:"AES-GCM", length:256 }, false, ["encrypt", "decrypt"]);
 }
-async function kluisVersleutel(bytes){ const iv = crypto.getRandomValues(new Uint8Array(12)); const uit = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, kluisSleutel, bytes); return { iv: kb64(iv), inhoud: kb64(uit) }; }
-async function kluisOntsleutel(iv, inhoud){ return crypto.subtle.decrypt({ name:"AES-GCM", iv: kvan64(iv) }, kluisSleutel, typeof inhoud === "string" ? kvan64(inhoud) : inhoud); } /* review c: bijlagen als bytes, zonder base64-omweg */
-const kluisTekstIn = async obj => kluisVersleutel(new TextEncoder().encode(JSON.stringify(obj)));
-const kluisTekstUit = async (iv, inhoud) => JSON.parse(new TextDecoder().decode(await kluisOntsleutel(iv, inhoud)));
-function kluisTik(){ clearTimeout(kluisTimer); if(kluisSleutel) kluisTimer = setTimeout(() => { if(!kel("kluisItem").hidden){ kluisTik(); return; } /* review c: nooit op slot met een open formulier (tekst zou verloren gaan) */ kluisOpSlot("Na 5 minuten niets doen gaat de kluis vanzelf op slot."); }, KLUIS_STIL); }
-function kluisOpSlot(melding){
-  kluisSleutel = null; kluisItems = []; kluisHuidig = null; kluisBijlagenNieuw = []; clearTimeout(kluisTimer);
-  kel("kluisBinnen").hidden = true; kel("kluisItem").hidden = true; kel("kluisSlot").hidden = false; kel("kluisCode").value = ""; kel("kluisCode2").value = "";
-  kel("kluisLijst").innerHTML = ""; kel("kluisMappen").innerHTML = ""; kel("kluisZoek").value = ""; kel("kiTitel").value = ""; kel("kiTekst").value = ""; kel("kiBijlagen").innerHTML = ""; /* review c: geen klaartekst achterlaten */
-  kluisMeld("kluisMelding", melding || "");
-  if(kluisZout){ kel("kluisCode2Veld").hidden = true; kel("kluisOpen").textContent = "Openen"; kel("kluisUitleg").textContent = "Vul de code van de kluis in."; } /* na de eerste keer: gewoon openen */
+const opslag = (soort, f) => { try { return f(soort === "s" ? sessionStorage : localStorage); } catch(e){ return null; } };
+const pinAan = () => (instellingen.app_code_aan || "uit") === "aan";
+const pinMinuten = () => { const w = String(instellingen.app_code_minuten || "").trim(); return /^[0-9]{1,3}$/.test(w) && Number(w) >= 1 && Number(w) <= 120 ? Number(w) : 5; };
+const pinBlob = () => { try { const j = JSON.parse(instellingen.app_code || "null"); return j && j.zout && j.iv && j.inhoud ? j : null; } catch(e){ return null; } };
+const pinCache = () => opslag("l", o => { const j = JSON.parse(o.getItem("kayu_pin") || "null"); return j && j.blob && j.blob.zout ? j : null; });
+let pinOpen = false, pinModus = "", pinEerste = "", pinBezig = false, instellingenGeladen = false, pinFoutMem = 0, pinWegMem = 0;
+const pinIsDicht = () => kel("pinScherm").open;
+const pinNodig = () => pinModus === "invoer" || pinModus === "kies"; /* zonder code kom je er niet in (bij wijzigen wel: Annuleren) */
+const pinGeblokkeerd = () => opslag("l", o => o.getItem("kayu_pin_blok")) === "1";
+const echteShowModal = HTMLDialogElement.prototype.showModal;
+/* review 03-11-2026 c: gaat er een ander venster open terwijl de code nodig is, dan komt het slot er meteen weer bovenop */
+HTMLDialogElement.prototype.showModal = function(){
+  echteShowModal.call(this);
+  const p = kel("pinScherm");
+  if(this !== p && p && p.open && pinNodig()){ p.close(); echteShowModal.call(p); setTimeout(() => kel("pinVeld").focus(), 0); }
+};
+function pinToon(modus){
+  pinModus = modus; pinEerste = "";
+  const tekst = { invoer:["Vul je code in", "4 cijfers"], kies:["Kies je code", "Kies 4 cijfers. Loes en jij gebruiken dezelfde code. Schrijf hem ergens op."],
+    aanzetten:["Kies je code", "Kies 4 cijfers. Loes en jij gebruiken dezelfde code. Schrijf hem ergens op."],
+    wijzig:["Nieuwe code", "Kies 4 nieuwe cijfers. Loes gebruikt daarna ook deze code."] }[modus];
+  kel("pinKop").textContent = tekst[0]; kel("pinUitleg").textContent = tekst[1]; kel("pinMelding").textContent = "";
+  const nodig = modus === "invoer" || modus === "kies";
+  kel("pinStop").hidden = nodig; kel("pinVergeten").hidden = !nodig;
+  kel("pinVergeten").textContent = modus === "invoer" ? "Code vergeten? Uitloggen" : "Uitloggen";
+  kel("pinVeld").value = "";
+  if(nodig){
+    /* review: het slot geldt pas weer als de code is ingevuld (ook na herladen of in een ander tabblad) */
+    pinOpen = false; opslag("s", o => o.removeItem("kayu_pin_open"));
+    document.documentElement.classList.add("pindicht");
+  }
+  /* als laatste geopend venster ligt het boven alles wat al open stond (dat blijft gewoon staan, met wat er is ingevuld) */
+  const d = kel("pinScherm"); if(d.open) d.close(); echteShowModal.call(d);
+  setTimeout(() => kel("pinVeld").focus(), 50);
 }
-async function kluisOpenen(){
-  const d = kel("kluis2"); kluisOpSlot("");
-  const { data, error } = await db.from("kluis").select("id,soort,zout,iv,inhoud").eq("soort", "sleutel").limit(1);
-  if(error){ alert("De kluis kon niet geopend worden: " + error.message); return; }
-  const eerste = !data || !data.length; kluisZout = eerste ? null : data[0];
-  kel("kluisCode2Veld").hidden = !eerste; kel("kluisOpen").textContent = eerste ? "Code instellen en openen" : "Openen";
-  kel("kluisUitleg").textContent = eerste ? "Er is nog geen kluis. Kies een code van minimaal 6 tekens; die gebruiken Loes en jij allebei." : "Vul de code van de kluis in.";
-  if(!d.open) d.showModal(); kel("kluisCode").focus();
+function pinSluit(){ pinModus = ""; document.documentElement.classList.remove("pindicht"); const d = kel("pinScherm"); if(d.open) d.close(); kel("pinVeld").value = ""; }
+function pinOntgrendeld(){
+  pinOpen = true; pinFoutMem = 0; opslag("s", o => o.setItem("kayu_pin_open", "1")); opslag("l", o => o.removeItem("kayu_pin_fout")); pinSluit();
 }
-async function kluisProbeer(){
-  const code = kel("kluisCode").value, code2 = kel("kluisCode2").value, eerste = !kluisZout;
-  if(code.length < 6){ kluisMeld("kluisMelding", "De code moet minimaal 6 tekens zijn.", "fout"); return; }
-  if(eerste && code !== code2){ kluisMeld("kluisMelding", "De twee codes zijn niet gelijk.", "fout"); return; }
-  kel("kluisOpen").disabled = true; kluisMeld("kluisMelding", "Even geduld…");
-  try {
-    if(eerste){
-      const zout = crypto.getRandomValues(new Uint8Array(16));
-      kluisSleutel = await kluisSleutelVan(code, zout);
-      const c = await kluisVersleutel(new TextEncoder().encode(KLUIS_CONTROLE));
-      const { data, error } = await db.from("kluis").insert({ soort:"sleutel", zout: kb64(zout), iv: c.iv, inhoud: c.inhoud }).select("id,soort,zout,iv,inhoud");
-      if(error) throw new Error(/duplicate|unique/i.test(error.message) ? "Iemand anders heeft net een code ingesteld. Sluit de kluis en open hem opnieuw." : error.message);
-      kluisZout = data && data[0] ? data[0] : { zout: kb64(zout), iv: c.iv, inhoud: c.inhoud };
-    } else {
-      kluisSleutel = await kluisSleutelVan(code, kvan64(kluisZout.zout));
-      let goed = false;
-      try { goed = new TextDecoder().decode(await kluisOntsleutel(kluisZout.iv, kluisZout.inhoud)) === KLUIS_CONTROLE; } catch(e){ goed = false; }
-      if(!goed){ kluisSleutel = null; kluisMeld("kluisMelding", "De code klopt niet.", "fout"); return; }
-    }
-    await kluisLaad();
-    kel("kluisSlot").hidden = true; kel("kluisBinnen").hidden = false; kel("kluisCode").value = ""; kel("kluisCode2").value = "";
-    kluisTik();
-  } catch(e){ kluisSleutel = null; kluisMeld("kluisMelding", "Mislukt: " + (e && e.message || e), "fout"); }
-  finally { kel("kluisOpen").disabled = false; }
+function pinBewaarCache(){ const b = pinBlob(); if(pinAan() && b) opslag("l", o => o.setItem("kayu_pin", JSON.stringify({ blob: b, minuten: pinMinuten() }))); else opslag("l", o => o.removeItem("kayu_pin")); }
+/* hoe lang de app weg was; klok teruggezet (negatief) of onbekend telt als te lang (review) */
+const pinWegTeLang = (weg, minuten) => { if(!weg) return true; const d = Date.now() - weg; return d < 0 || d >= (minuten || 5) * 60000; };
+const pinWeg = () => Number(opslag("s", o => o.getItem("kayu_weg")) || 0) || pinWegMem; /* geheugen als sessionStorage niet werkt */
+/* bij het openen van de app (vóór het ophalen): staat er een code op dit toestel, dan meteen het slot */
+function pinBijStart(naWachtwoord){
+  if(naWachtwoord){ pinOntgrendeld(); return; }
+  const c = pinCache(); if(!c){ return; }
+  /* opnieuw laden kort na het wegleggen (bijvoorbeeld een nieuwe versie): geen nieuwe vraag */
+  const open = opslag("s", o => o.getItem("kayu_pin_open")) === "1", weg = pinWeg();
+  /* nacontrole: meteen wissen, zodat een kopie in een nieuw tabblad (window.open) er niet op kan leunen; elke pagehide schrijft hem opnieuw */
+  opslag("s", o => o.removeItem("kayu_weg"));
+  if(open && !pinWegTeLang(weg, c.minuten)){ pinOpen = true; return; }
+  pinToon("invoer");
 }
-/* ---------- 29-10-2026 e (Bart): Geld achter de kluiscode ----------
-   Meer > Geld (en Kosten per maand), Cijfers en Exporteren vragen de code van de digitale kluis. De app controleert de code op dezelfde
-   manier als de kluis (sleutel uit de code, de controletekst moet te ontsleutelen zijn); de code zelf wordt nergens bewaard. Daarna blijft
-   Geld 5 minuten open (elke keer dat je Geld opent, begint die tijd opnieuw), en meteen op slot zodra de app op de achtergrond gaat.
-   Eerlijk: dit is een slot op het scherm, geen versleuteling; de cijfers staan gewoon in de database voor wie ingelogd is.
-   Is er nog geen kluiscode, dan is Geld gewoon open. Aan/uit: instelling geld_slot (standaard aan), op de pagina Geld zelf. */
-const GELD_PAGINAS = ["geld", "kosten"], GELD_OPEN = 5 * 60 * 1000;
-let geldOpenTot = 0, geldNa = null, geldControle = null;
-const geldSlotAan = () => (instellingen.geld_slot || "aan") !== "uit";
-const geldOpen = () => !geldSlotAan() || Date.now() < geldOpenTot || !!kluisSleutel;
-const geldVerleng = () => { if(Date.now() < geldOpenTot) geldOpenTot = Date.now() + GELD_OPEN; };
-/* review e: bij wegzetten ook wat al open staat dicht (Cijfers, Exporteren, de pagina's Geld en Kosten); Inkoop niet, want een foto maken
-   zet de app ook even weg en dan zou het ingevulde verloren gaan */
+/* na het ophalen van de instellingen: aan of uit, code gekozen of nog niet */
+function pinNaLaden(){
+  if(!instellingenGeladen) return; /* niets weten: zoals het op dit toestel stond */
+  pinBewaarCache();
+  if(!pinAan()){ if(pinIsDicht() && pinNodig()) pinSluit(); pinOpen = true; return; }
+  if(pinOpen || pinIsDicht()) return;
+  pinToon(pinBlob() ? "invoer" : "kies");
+}
+/* het moment van wegleggen alleen bijhouden als dit de ontgrendelde app is (niet de gastenpagina, de poetspagina of een app op slot) */
+const pinIsApp = () => kel("app").style.display !== "none";
+function pinWegZet(){ if(!pinIsApp() || !pinOpen) return; pinWegMem = Date.now(); opslag("s", o => o.setItem("kayu_weg", String(pinWegMem))); }
 document.addEventListener("visibilitychange", () => {
-  if(document.visibilityState !== "hidden" || !geldSlotAan()) return;
-  geldOpenTot = 0; kel("gsCode").value = "";
-  ["cijfers2", "exporteren", "gv2"].forEach(id => { const d = kel(id); if(d && d.open) d.close(); });
-  const m = kel("meer2"), pag = m && m.open && [...m.querySelectorAll("[data-pagina]")].find(x => !x.hidden);
-  if(pag && GELD_PAGINAS.includes(pag.dataset.pagina)) meerToon("menu");
+  const c = pinCache();
+  if(document.visibilityState === "hidden"){ pinWegZet(); if(c && pinIsApp()) document.documentElement.classList.add("pinweg"); return; }
+  const weg = pinWeg();
+  if(pinIsApp() && c && pinOpen && pinWegTeLang(weg, c.minuten)) pinToon("invoer");
+  /* terug: het moment van wegleggen weer leeg, zodat een kopie (ander tabblad) of later herladen er niet op kan leunen */
+  pinWegMem = 0; opslag("s", o => o.removeItem("kayu_weg"));
+  document.documentElement.classList.remove("pinweg");
 });
-async function geldVraagCode(na){
-  const { data, error } = await db.from("kluis").select("zout,iv,inhoud").eq("soort", "sleutel").limit(1);
-  if(error){ alert("Geld kon niet geopend worden: " + error.message); return; }
-  if(!data || !data.length){ geldOpenTot = Date.now() + GELD_OPEN; na(); return; } /* nog geen kluiscode: geen slot mogelijk */
-  geldControle = data[0]; geldNa = na;
-  kel("gsCode").value = ""; kluisMeld("gsMelding", "");
-  const d = kel("geldSlot"); if(!d.open) d.showModal(); kel("gsCode").focus();
-}
-async function geldProbeer(){
-  if(kel("gsOpen").disabled) return; /* review e: niet twee controles tegelijk (Enter meerdere keren) */
-  const code = kel("gsCode").value; if(!code || !geldControle) return;
-  kel("gsOpen").disabled = true; kluisMeld("gsMelding", "Even geduld…");
-  let goed = false;
+window.addEventListener("pagehide", pinWegZet);
+/* review: het slot kan niet weg met de terugknop of Escape; gaat het toch dicht, dan meteen weer open */
+kel("pinScherm").addEventListener("cancel", e => { if(pinNodig()) e.preventDefault(); });
+kel("pinScherm").addEventListener("close", () => {
+  const d = kel("pinScherm");
+  if(d.open) return; /* al weer geopend (opnieuw bovenop gezet) */
+  if(pinNodig()){ echteShowModal.call(d); setTimeout(() => kel("pinVeld").focus(), 0); return; }
+  pinModus = ""; /* wijzigen of aanzetten afgebroken (Annuleren of Escape) */
+  document.documentElement.classList.remove("pindicht");
+});
+async function pinVoerIn(){
+  const v = kel("pinVeld").value.replace(/\D/g, "").slice(0, 4); kel("pinVeld").value = v;
+  if(v.length < 4 || pinBezig) return;
+  const m = kel("pinMelding");
+  if(pinModus === "invoer"){
+    const c = pinBlob() || (pinCache() || {}).blob;
+    if(!c){ kel("pinVeld").value = ""; m.textContent = "De code kon niet worden opgehaald. Controleer de verbinding en probeer het opnieuw."; haal(); return; } /* review: nooit open zonder controle */
+    pinBezig = true; m.textContent = "Even geduld…"; let goed = false;
+    try { const k = await codeSleutelVan(v, kvan64(c.zout)); goed = new TextDecoder().decode(await crypto.subtle.decrypt({ name:"AES-GCM", iv: kvan64(c.iv) }, k, kvan64(c.inhoud))) === PIN_CONTROLE; }
+    catch(e){ goed = false; }
+    pinBezig = false; kel("pinVeld").value = "";
+    if(goed){ pinOntgrendeld(); return; }
+    const fout = Math.max(pinFoutMem, Number(opslag("l", o => o.getItem("kayu_pin_fout")) || 0) || 0) + 1;
+    pinFoutMem = fout; opslag("l", o => o.setItem("kayu_pin_fout", String(fout)));
+    if(fout >= PIN_MAX_FOUT){ m.textContent = "5 keer een foute code. Log opnieuw in met je wachtwoord.";
+      opslag("l", o => { o.setItem("kayu_pin_blok", "1"); o.removeItem("kayu_pin_fout"); }); await pinUitloggen(); return; }
+    m.textContent = `De code klopt niet. Nog ${PIN_MAX_FOUT - fout} ${PIN_MAX_FOUT - fout === 1 ? "poging" : "pogingen"}.`; kel("pinVeld").focus(); return;
+  }
+  /* kiezen, aanzetten of wijzigen: twee keer dezelfde 4 cijfers */
+  const opnieuw = pinModus === "wijzig" ? "Kies 4 nieuwe cijfers." : "Kies 4 cijfers.";
+  if(!pinEerste){ pinEerste = v; kel("pinVeld").value = ""; kel("pinUitleg").textContent = "Nog een keer dezelfde 4 cijfers."; m.textContent = ""; kel("pinVeld").focus(); return; }
+  if(v !== pinEerste){ pinEerste = ""; kel("pinVeld").value = ""; kel("pinUitleg").textContent = opnieuw; m.textContent = "De twee codes waren niet gelijk. Begin opnieuw."; kel("pinVeld").focus(); return; }
+  pinBezig = true; m.textContent = "Even geduld…";
   try {
-    const sleutel = await kluisSleutelVan(code, kvan64(geldControle.zout));
-    const uit = await crypto.subtle.decrypt({ name:"AES-GCM", iv: kvan64(geldControle.iv) }, sleutel, kvan64(geldControle.inhoud));
-    goed = new TextDecoder().decode(uit) === KLUIS_CONTROLE;
-  } catch(e){ goed = false; }
-  finally { kel("gsOpen").disabled = false; kel("gsCode").value = ""; }
-  if(!goed){ kluisMeld("gsMelding", "De code klopt niet.", "fout"); kel("gsCode").focus(); return; }
-  geldOpenTot = Date.now() + GELD_OPEN;
-  kel("geldSlot").close(); kluisMeld("gsMelding", "");
-  const na = geldNa; geldNa = null; if(na) na();
-}
-kel("gsOpen").onclick = geldProbeer;
-kel("gsCode").onkeydown = e => { if(e.key === "Enter"){ e.preventDefault(); geldProbeer(); } };
-kel("gsDicht").onclick = () => { geldNa = null; kel("geldSlot").close(); };
-kel("geldSlot").addEventListener("close", () => { kel("gsCode").value = ""; });
-async function geldSlotWissel(){
-  const nieuw = geldSlotAan() ? "uit" : "aan";
-  if(nieuw === "uit" && !confirm("Slot op Geld uitzetten? Dan kan iedereen die de app open ziet, de cijfers en de kas zien.")) return;
-  instellingen.geld_slot = nieuw; if(nieuw === "aan") geldOpenTot = Date.now() + GELD_OPEN; tekenMeer();
-  const { error } = await db.from("instellingen").upsert({ sleutel:"geld_slot", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
-  if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
-}
-async function kluisLaad(){
-  const { data, error } = await db.from("kluis").select("id,iv,inhoud,gewijzigd").eq("soort", "item").order("gewijzigd", { ascending:false });
-  if(error) throw new Error(error.message);
-  kluisItems = [];
-  for(const r of data || []){ try { const o = await kluisTekstUit(r.iv, r.inhoud); kluisItems.push({ id: r.id, gewijzigd: r.gewijzigd, ...o }); } catch(e){ kluisItems.push({ id: r.id, titel: "(onleesbaar met deze code)", map: "Overig", tekst: "", bijlagen: [], kapot: true }); } }
-  kluisTekenLijst();
-}
-function kluisTekenLijst(){
-  const zoek = (kel("kluisZoek").value || "").trim().toLowerCase();
-  const tel = m => kluisItems.filter(x => x.map === m).length;
-  kel("kluisMappen").innerHTML = [`<button type="button" data-kmap="" class="${kluisMapKeuze ? "" : "aan"}">Alles (${kluisItems.length})</button>`]
-    .concat(KLUIS_MAPPEN.filter(m => tel(m)).map(m => `<button type="button" data-kmap="${m}" class="${kluisMapKeuze === m ? "aan" : ""}">${m} (${tel(m)})</button>`)).join("");
-  const lijst = kluisItems.filter(x => (!kluisMapKeuze || x.map === kluisMapKeuze) && (!zoek || `${x.titel} ${x.tekst} ${(x.bijlagen || []).map(b => b.naam).join(" ")}`.toLowerCase().includes(zoek)));
-  kel("kluisLijst").innerHTML = lijst.length ? lijst.map(x => `<button type="button" data-kitem="${x.id}">${gIcoon(x.bijlagen && x.bijlagen.length ? "paperclip" : "bon")}<span><b>${vrij(x.titel || "(zonder titel)")}</b><small>${vrij(x.map || "Overig")}${x.tekst ? " · " + vrij(String(x.tekst).split("\n")[0]) : ""}${x.bijlagen && x.bijlagen.length ? ` · ${x.bijlagen.length} ${x.bijlagen.length === 1 ? "bijlage" : "bijlagen"}` : ""}</small></span></button>`).join("")
-    : `<p class="leeg">${kluisItems.length ? "Niets gevonden." : "De kluis is nog leeg. Tik op + Nieuw in de kluis."}</p>`;
-}
-function kluisToonItem(x){
-  kluisHuidig = x ? Object.assign({}, x, { bijlagen: (x.bijlagen || []).slice(), weg: [] }) : null; kluisBijlagenNieuw = [];
-  kel("kluisBinnen").hidden = true; kel("kluisItem").hidden = false;
-  kel("kiTitel").value = x ? x.titel || "" : ""; kel("kiTekst").value = x ? x.tekst || "" : "";
-  kel("kiMap").innerHTML = KLUIS_MAPPEN.map(m => `<option${(x ? x.map : (kluisMapKeuze || "Overig")) === m ? " selected" : ""}>${m}</option>`).join("");
-  kel("kiWeg").hidden = !x; kluisMeld("kiMelding", ""); kel("kiBestand").value = "";
-  kluisTekenBijlagen();
-  if(!x) kel("kiTitel").focus();
-}
-function kluisTekenBijlagen(){
-  const oud = kluisHuidig && kluisHuidig.bijlagen ? kluisHuidig.bijlagen : [];
-  kel("kiBijlagen").innerHTML = oud.map((b, i) => `<div>${gIcoon("paperclip")}<span>${vrij(b.naam)}</span><button type="button" data-kbopen="${i}">Bekijken</button><button type="button" data-kbweg="${i}">Weg</button></div>`).join("")
-    + kluisBijlagenNieuw.map((f, i) => `<div>${gIcoon("paperclip")}<span>${vrij(f.name)} (nieuw)</span><button type="button" data-kbnieuwweg="${i}">Weg</button></div>`).join("");
-}
-async function kluisBijlageOpen(b){
-  kluisTik();
-  const { data, error } = await db.storage.from(KLUIS_MAP).download(b.pad);
-  if(error){ alert("Bijlage ophalen mislukt: " + error.message); return; }
-  try {
-    const bytes = await kluisOntsleutel(b.iv, await data.arrayBuffer());
-    const soort = b.soort || "application/octet-stream", url = URL.createObjectURL(new Blob([bytes], { type: soort }));
-    /* review c: in de app zelf tonen (een nieuw tabblad werkt niet in een geïnstalleerde app op de iPhone) */
-    const v = kel("kluisKijk"), bak = kel("kluisKijkInhoud"); kel("kluisKijkNaam").textContent = b.naam || "";
-    bak.innerHTML = /^image\//.test(soort) ? `<img src="${url}" alt="${vrij(b.naam)}" style="max-width:100%;max-height:70vh;display:block;margin:0 auto;border-radius:10px">`
-      : `<iframe src="${url}" title="${vrij(b.naam)}" style="width:100%;height:70vh;border:0;border-radius:10px;background:#fff"></iframe>`;
-    v.onclose = () => { bak.innerHTML = ""; URL.revokeObjectURL(url); };
-    v.showModal();
-  } catch(e){ alert("Bijlage kon niet ontsleuteld worden: " + (e && e.message || e)); }
-}
-async function kluisBewaar(){
-  kluisTik();
-  const titel = kel("kiTitel").value.trim(), map = kel("kiMap").value, tekst = kel("kiTekst").value;
-  if(!titel){ kluisMeld("kiMelding", "Geef het een titel.", "fout"); return; }
-  kel("kiBewaar").disabled = true; kluisMeld("kiMelding", "Bewaren…");
-  try {
-    const id = kluisHuidig ? kluisHuidig.id : crypto.randomUUID();
-    const bijlagen = (kluisHuidig && kluisHuidig.bijlagen ? kluisHuidig.bijlagen : []).slice();
-    for(const f of kluisBijlagenNieuw){
-      const klein = await ibVerklein(f);
-      if(klein.size > KLUIS_MAX) throw new Error(`${f.name} is te groot (hooguit 10 MB).`);
-      const v = await kluisVersleutel(await klein.arrayBuffer());
-      const pad = `${id}/${crypto.randomUUID()}.bin`;
-      const { error } = await db.storage.from(KLUIS_MAP).upload(pad, new Blob([kvan64(v.inhoud)], { type:"application/octet-stream" }), { contentType:"application/octet-stream", upsert:false });
-      if(error) throw new Error("Bijlage opslaan mislukt: " + error.message);
-      bijlagen.push({ pad, naam: f.name, soort: klein.type || f.type, iv: v.iv });
+    const zout = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+    const k = await codeSleutelVan(v, zout);
+    const inhoud = await crypto.subtle.encrypt({ name:"AES-GCM", iv }, k, new TextEncoder().encode(PIN_CONTROLE));
+    const waarde = JSON.stringify({ zout: kb64(zout), iv: kb64(iv), inhoud: kb64(inhoud) }), nu = new Date().toISOString();
+    /* eerste keer: alleen toevoegen (bestaat er net al een code van een ander toestel, dan die invullen); wijzigen: overschrijven */
+    const toevoegen = pinModus === "kies" || (pinModus === "aanzetten" && !pinBlob());
+    const { error } = toevoegen ? await db.from("instellingen").insert({ sleutel:"app_code", waarde, bijgewerkt: nu })
+      : await db.from("instellingen").upsert({ sleutel:"app_code", waarde, bijgewerkt: nu }, { onConflict:"sleutel" });
+    pinBezig = false;
+    if(error){
+      if(toevoegen && /duplicate|unique|23505/i.test(error.message + " " + (error.code || ""))){ await haal(); pinToon("invoer"); kel("pinMelding").textContent = "Op een ander toestel is net een code gekozen. Vul die code in."; return; }
+      m.textContent = "Opslaan mislukt: " + error.message; pinEerste = ""; kel("pinVeld").value = ""; kel("pinUitleg").textContent = opnieuw; return;
     }
-    const v = await kluisTekstIn({ titel, map, tekst, bijlagen });
-    const rij = { id, soort:"item", iv: v.iv, inhoud: v.inhoud, bijlagen: bijlagen.map(b => b.pad), gewijzigd: new Date().toISOString() };
-    const { error } = await db.from("kluis").upsert(rij, { onConflict:"id" });
-    if(error){ const nieuw = bijlagen.slice((kluisHuidig && kluisHuidig.bijlagen ? kluisHuidig.bijlagen.length : 0)).map(b => b.pad); if(nieuw.length) await db.storage.from(KLUIS_MAP).remove(nieuw); throw new Error(error.message); } /* review c: geen wezen in de opslag */
-    /* weggehaalde bijlagen ook uit de opslag */
-    if(kluisHuidig && kluisHuidig.weg && kluisHuidig.weg.length){ const r = await db.storage.from(KLUIS_MAP).remove(kluisHuidig.weg); if(r && r.error) alert("Bewaard, maar een oude bijlage kon niet uit de opslag worden gehaald: " + r.error.message); }
-    await kluisLaad(); kel("kluisItem").hidden = true; kel("kluisBinnen").hidden = false;
-  } catch(e){ kluisMeld("kiMelding", String(e && e.message || e), "fout"); }
-  finally { kel("kiBewaar").disabled = false; }
+    instellingen.app_code = waarde;
+    const was = pinModus;
+    if(was === "aanzetten" && !(await pinInstelling("app_code_aan", "aan"))){ pinEerste = ""; kel("pinVeld").value = ""; m.textContent = "De code is bewaard, maar aanzetten lukte niet. Probeer het in Meer nog eens."; return; }
+    pinBewaarCache(); pinOntgrendeld(); tekenMeer();
+    if(was === "wijzig") alert("De nieuwe code is bewaard. Vertel hem ook aan Loes.");
+    if(was === "aanzetten") alert("De code staat aan. Vertel hem ook aan Loes.");
+  } catch(e){ pinBezig = false; m.textContent = "Mislukt: " + (e && e.message || e); pinEerste = ""; kel("pinVeld").value = ""; }
 }
-async function kluisWeg(){
-  if(!kluisHuidig || !confirm(`"${kluisHuidig.titel}" uit de kluis halen? Dit kan niet ongedaan worden gemaakt.`)) return;
-  const paden = (kluisHuidig.bijlagen || []).map(b => b.pad);
-  const { error } = await db.from("kluis").delete().eq("id", kluisHuidig.id);
-  if(error){ alert("Weghalen mislukt: " + error.message); return; }
-  if(paden.length){ const r = await db.storage.from(KLUIS_MAP).remove(paden); if(r && r.error) alert("De regel is weg, maar een bijlage kon niet uit de opslag worden gehaald: " + r.error.message); }
-  await kluisLaad(); kel("kluisItem").hidden = true; kel("kluisBinnen").hidden = false;
+async function pinUitloggen(){ opslag("s", o => { o.removeItem("kayu_pin_open"); o.removeItem("kayu_weg"); }); try { await db.auth.signOut(); } catch(e){} location.reload(); }
+kel("pinVeld").addEventListener("input", pinVoerIn);
+kel("pinVergeten").onclick = () => { if(confirm("Uitloggen? Daarna log je in met je e-mailadres en wachtwoord, en kun je in Meer een nieuwe code kiezen.")) pinUitloggen(); };
+kel("pinStop").onclick = () => { pinSluit(); };
+async function pinSchakel(){
+  if(pinAan()){
+    if(!confirm("Code bij openen uitzetten? Dan opent de app zonder code, ook als iemand anders je telefoon pakt.")) return;
+    if(await pinInstelling("app_code_aan", "uit")) pinBewaarCache(); return;
+  }
+  /* review: nog geen code, dan eerst kiezen en pas daarna aanzetten (Annuleren laat alles uit) */
+  if(!pinBlob()){ pinToon("aanzetten"); return; }
+  if(await pinInstelling("app_code_aan", "aan")) pinBewaarCache();
 }
-{
-  const d = kel("kluis2");
-  kel("kluisOpen").onclick = kluisProbeer;
-  kel("kluisCode").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); if(kel("kluisCode2Veld").hidden) kluisProbeer(); else kel("kluisCode2").focus(); } });
-  kel("kluisCode2").addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); kluisProbeer(); } });
-  kel("kluisDichtdoen").onclick = () => kluisOpSlot("De kluis is op slot.");
-  kel("kluisDicht").onclick = () => { kluisOpSlot(""); d.close(); };
-  d.addEventListener("close", () => kluisOpSlot(""));
-  kel("kluisZoek").oninput = () => { kluisTik(); kluisTekenLijst(); };
-  kel("kluisMappen").onclick = e => { const b = e.target.closest("[data-kmap]"); if(!b) return; kluisMapKeuze = b.dataset.kmap; kluisTik(); kluisTekenLijst(); };
-  kel("kluisLijst").onclick = e => { const b = e.target.closest("[data-kitem]"); if(!b) return; const x = kluisItems.find(i => i.id === b.dataset.kitem); if(x) kluisToonItem(x); kluisTik(); };
-  kel("kluisNieuw").onclick = () => { kluisTik(); kluisToonItem(null); };
-  kel("kluisTerug").onclick = () => { kluisTik(); kel("kluisItem").hidden = true; kel("kluisBinnen").hidden = false; kluisTekenLijst(); };
-  kel("kiBestand").onchange = () => { kluisTik(); kluisBijlagenNieuw.push(...[...kel("kiBestand").files]); kel("kiBestand").value = ""; kluisTekenBijlagen(); };
-  kel("kiBijlagen").onclick = e => {
-    const o = e.target.closest("[data-kbopen]"), w = e.target.closest("[data-kbweg]"), n = e.target.closest("[data-kbnieuwweg]");
-    if(o){ kluisBijlageOpen(kluisHuidig.bijlagen[Number(o.dataset.kbopen)]); }
-    else if(w){ const b = kluisHuidig.bijlagen.splice(Number(w.dataset.kbweg), 1)[0]; kluisHuidig.weg.push(b.pad); kluisTekenBijlagen(); }
-    else if(n){ kluisBijlagenNieuw.splice(Number(n.dataset.kbnieuwweg), 1); kluisTekenBijlagen(); }
-  };
-  kel("kiBewaar").onclick = kluisBewaar;
-  kel("kiWeg").onclick = kluisWeg;
-  kel("kluisKijkDicht").onclick = () => kel("kluisKijk").close();
-  d.addEventListener("pointerdown", kluisTik); d.addEventListener("input", kluisTik); d.addEventListener("keydown", kluisTik);
+async function pinZetMinuten(){
+  const t = prompt("Hoeveel minuten nadat je de app hebt weggelegd vraagt hij de code opnieuw? (1 tot 120; Finca KaYu: 5)", String(pinMinuten()));
+  if(t === null) return;
+  const w = t.trim(); if(!/^[0-9]{1,3}$/.test(w) || Number(w) < 1 || Number(w) > 120){ alert("Vul een aantal minuten in, van 1 tot 120."); return; }
+  if(await pinInstelling("app_code_minuten", String(Number(w)))) pinBewaarCache();
+}
+async function pinInstelling(sleutel, waarde){
+  const oud = instellingen[sleutel]; instellingen[sleutel] = waarde; tekenMeer();
+  const { error } = await db.from("instellingen").upsert({ sleutel, waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(error){ instellingen[sleutel] = oud; tekenMeer(); alert("Opslaan mislukt: " + error.message); return false; }
+  return true;
+}
+/* 03-11-2026 a (Bart: agenda's per dag "gebruik ik nooit"): standaard uit; aan te zetten in Meer > Gasten */
+const agendasPerDag = () => (instellingen.agendas_per_dag || "uit") === "aan";
+async function agendasPerDagWissel(){
+  const nieuw = agendasPerDag() ? "uit" : "aan";
+  instellingen.agendas_per_dag = nieuw; tekenMeer(); if(modus === "nu") tekenNu();
+  const { error } = await db.from("instellingen").upsert({ sleutel:"agendas_per_dag", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
 }
 const IB_MAP = "inkoopbonnen", IB_MAX = 10 * 1024 * 1024;
 const IB_SOORT = { "image/jpeg":"jpg", "image/png":"png", "image/webp":"webp", "image/heic":"heic", "image/heif":"heif", "application/pdf":"pdf" };
@@ -13810,7 +13910,7 @@ async function bonBetaalwijzeWijzig(id){
 }
 document.getElementById("expPeriode").onchange = tekenBalans;
 /* back-up: alle tabellen in één bestand, zodat de gegevens ook buiten de database bestaan */
-const BACKUP_TABELLEN = ["boekingen","consumpties","ontbijt","kamer_vinkjes","gast_links","producten","aankondigingen","aanmeldingen","aanvragen","tips","boodschappen","taken","poets_dagen","poets_links","instellingen","bonnen","broodjes","inkoop_bonnen"];
+const BACKUP_TABELLEN = ["boekingen","consumpties","ontbijt","kamer_vinkjes","gast_links","producten","aankondigingen","aanmeldingen","aanvragen","tips","boodschappen","taken","poets_dagen","poets_links","instellingen","bonnen","broodjes","inkoop_bonnen","poets_uren","poets_uren_log"]; /* 03-11-2026 a: gewerkte uren poetsteam */
 /* de primaire sleutel per tabel (nagekeken 17-10-2026): een vaste volgorde, zodat het ophalen in stukken niets dubbel geeft of overslaat */
 const BACKUP_SLEUTEL = { kamer_vinkjes:"nr", gast_links:"nr", poets_dagen:"datum", poets_links:"code", instellingen:"sleutel" };
 document.getElementById("bBackup").onclick = async () => {
@@ -13849,11 +13949,12 @@ document.getElementById("bBackup").onclick = async () => {
   knop.disabled = false;
 };
 document.getElementById("bExporteren").onclick = () => {
-  if(!geldOpen()){ geldVraagCode(() => document.getElementById("bExporteren").click()); return; } /* 29-10-2026 e */
-  geldVerleng();
   vulPeriodes();
   expInkoop = null; expInkoopHaal(); /* 25-10-2026 f: inkoopbonnen voor het blok Eruit */
   tekenBalans();
+  /* 03-11-2026 a: datum van de laatste eigen kopie bij de knop (de herinnering op Vandaag is weg) */
+  { const l = instellingen.laatste_backup || "", t = l ? new Date(l).getTime() : NaN, u = document.getElementById("backupUit");
+    if(u && !document.getElementById("bBackup").disabled) u.textContent = "Alle gegevens in één bestand, bewaar hem op je laptop · " + (isFinite(t) ? "laatste: " + kort(iso(new Date(t))) : "nog nooit gemaakt"); }
   document.getElementById("exporteren").showModal();
 };
 document.getElementById("expDicht").onclick = () =>
