@@ -1831,7 +1831,7 @@
     </div>
     <div class="meerkaart">
       <div class="meerinst"><span><b>Herinnering de dag voor vertrek</b><small id="mpHerinnering"></small></span><button type="button" class="meerzet" data-meer="herinnering" id="meerHerinnering"></button></div>
-      <button class="meerrij" data-meer="herinneringtekst"><span><b>Tekst van de herinnering</b><small id="mpHerinneringTekst"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="herinneringtekst"><span><b>Tekst over de rekening in de herinnering</b><small id="mpHerinneringTekst"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
     <div class="meerkaart">
       <button class="meerrij" data-meer="poortwifi"><span><b>Poortcode en wifi</b><small id="mpPoort"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
@@ -2127,8 +2127,8 @@
   <div id="puStatus" class="leeg" style="margin:10px 0 0"></div>
 </div></dialog>
 <dialog id="herinneringDlg"><div class="dlg">
-  <h3>Tekst van de herinnering</h3>
-  <p class="leeg" style="margin:0 0 10px">Dit bericht stuur je de dag voor vertrek aan wie nog iets open heeft staan. Schrijf het in het Nederlands: de app vertaalt het vanzelf in de taal van de gast. Laat {naam} en {bedrag} staan: daar vult de app de naam van de gast en het bedrag dat open staat in (met het €-teken erbij).</p>
+  <h3>Tekst over de rekening in de herinnering</h3>
+  <p class="leeg" style="margin:0 0 10px">Dit stuk staat in de herinnering van de dag voor vertrek als er nog iets open staat. Wat gasten moeten weten voor het uitchecken, staat er vanzelf boven. Schrijf het in het Nederlands: de app vertaalt het vanzelf in de taal van de gast. Laat {bedrag} staan: daar vult de app het bedrag in dat open staat (met het €-teken erbij).</p>
   <label for="hrTekst">Tekst</label>
   <textarea id="hrTekst" rows="7" maxlength="450"></textarea>
   <p class="err" id="hrErr"></p>
@@ -4141,7 +4141,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "04-11-2026 c";
+const VERSIE = "04-11-2026 e";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -7176,17 +7176,22 @@ function tijdlijnBlok(vandaag, morgen){
      Campers: morgen of overmorgen, tot ze hebben ingecheckt. Kamers (01-10-2026 a): de dag ervoor, tot het warme check-inbericht
      ("Morgen is het zover") gestuurd is. Op de aankomstdag zelf neemt de gewone check-in-regel het over. */
   const komtOp = d => d === morgen ? "komt morgen" : `komt ${DG[parse(d).getDay()]} ${kort(d)}`;
-  const herinner = [
+  const herinnerAlles = [
     ...boekingen.filter(b => herinnerCamper(b))
       .map(b => ({ in:b.in, volg:"b" + b.plek, html:item("chat", "", `Check-inlink sturen · ${vrij(b.plek)} · ${vrij(b.naam || "naam onbekend")}`, komtOp(b.in), "Check-in nog niet ingevuld", "rood", `data-agc="${vrij(b.id)}"`, directCamper(b), false) })),
     ...kamers.filter(k => herinnerKamer(k))
       .map(k => ({ in:k.in, volg:"a" + k.kamer, html:item("chat", "", `Check-inbericht sturen · ${vrij(k.kamer)} · ${vrij(kNaam(k) || "naam onbekend")}`, komtOp(k.in), "Check-in nog niet ingevuld", "rood", `data-agk="${vrij(k.nr)}"`, directKamer(k), false) })),
-    /* 23-10-2026 e (Bart): de dag voor vertrek een herinnering sturen (rekening, liefst contant), tot hij verstuurd is */
+    /* 23-10-2026 e (Bart): de dag voor vertrek een herinnering sturen (rekening, liefst contant), tot hij verstuurd is;
+       sinds 04-11-2026 e ook zonder iets open (wat ze moeten weten voor het uitchecken) */
     ...boekingen.filter(b => herinneringNodigCamper(b, morgen) && !herinneringGestuurdCamper(b))
-      .map(b => ({ in:morgen, volg:"d" + b.plek, html:item("chat", "", `Herinnering sturen · ${vrij(b.plek)} · ${vrij(b.naam || "naam onbekend")}`, "vertrekt morgen", `${eur(herinneringBedragCamper(b))} open`, "oranje", `data-agc="${vrij(b.id)}"`, { soort:"herinnering", tekst:"Herinnering", taal: taalNaam(b.id) }, false) })),
+      .map(b => ({ in:morgen, volg:"d" + b.plek, vertrek:true, html:item("chat", "", `Herinnering sturen · ${vrij(b.plek)} · ${vrij(b.naam || "naam onbekend")}`, "vertrekt morgen", herinneringOpenCamper(b) ? `${eur(herinneringBedragCamper(b))} open` : "", "oranje", `data-agc="${vrij(b.id)}"`, { soort:"herinnering", tekst:"Herinnering", taal: taalNaam(b.id) }, false) })),
     ...kamers.filter(k => herinneringNodigKamer(k, morgen) && !herinneringGestuurdKamer(k))
-      .map(k => ({ in:morgen, volg:"c" + k.kamer, html:item("chat", "", `Herinnering sturen · ${vrij(k.kamer)} · ${vrij(kNaam(k) || "naam onbekend")}`, "vertrekt morgen", `${eur(herinneringBedragKamer(k))} open`, "oranje", `data-agk="${vrij(k.nr)}"`, { soort:"herinnering", tekst:"Herinnering", taal: taalNaam(samenTaalNr(k)) }, false) }))
-  ].sort((x, y) => x.in.localeCompare(y.in) || x.volg.localeCompare(y.volg)).map(x => x.html);
+      .map(k => ({ in:morgen, volg:"c" + k.kamer, vertrek:true, html:item("chat", "", `Herinnering sturen · ${vrij(k.kamer)} · ${vrij(kNaam(k) || "naam onbekend")}`, "vertrekt morgen", herinneringOpenKamer(k) ? `${eur(herinneringBedragKamer(k))} open` : "", "oranje", `data-agk="${vrij(k.nr)}"`, { soort:"herinnering", tekst:"Herinnering", taal: taalNaam(samenTaalNr(k)) }, false) }))
+  ].sort((x, y) => x.in.localeCompare(y.in) || x.volg.localeCompare(y.volg));
+  /* 04-11-2026 e: de herinnering vertrek gaat nu naar iedereen die morgen vertrekt; die regels komen onder tussentijds schoonmaken
+     (Bart 13-10-2026 c: dat staat bovenaan, direct onder de rode herinneringen), boven de check-ins en check-outs */
+  const herinner = herinnerAlles.filter(x => !x.vertrek).map(x => x.html), herinnerVertrek = herinnerAlles.filter(x => x.vertrek).map(x => x.html);
+  const nTs = (i => i < 0 ? vd.length : i)(vd.findIndex(h => !/data-tsdatum=/.test(h)));
   /* Morgen in één regel: aantal check-ins, check-outs, ontbijten en brood; tik om uit te klappen */
   const mIn = boekingen.filter(b => !b.gestald && b.in === morgen).length + kamers.filter(k => k.in === morgen).length;
   const mUit = boekingen.filter(b => !b.gestald && b.uit === morgen).length + kamers.filter(k => k.uit === morgen).length;
@@ -7203,7 +7208,7 @@ function tijdlijnBlok(vandaag, morgen){
     .sort((a, b) => a.kamer.localeCompare(b.kamer))
     .map(k => `<span class="tsmorgen">🧹 ${vrij(k.kamer)} · ${vrij(kNaam(k) || "naam onbekend")}: tussentijds schoonmaken</span>`).join("");
   if(nBr) mDelen.push(`${nBr} brood`); if(pM && (pM.kamers || []).length) mDelen.push("poets");
-  el.innerHTML = `<h2>Vandaag<b>${DG[parse(vandaag).getDay()]} ${kort(vandaag)}</b></h2>` + herinner.join("") + (vd.length ? vd.join("") : `<p class="leeg">Geen check-ins of check-outs</p>`) +
+  el.innerHTML = `<h2>Vandaag<b>${DG[parse(vandaag).getDay()]} ${kort(vandaag)}</b></h2>` + herinner.join("") + (vd.length ? [...vd.slice(0, nTs), ...herinnerVertrek, ...vd.slice(nTs)].join("") : herinnerVertrek.join("") + `<p class="leeg">Geen check-ins of check-outs</p>`) +
     `<div class="tl morgenkort" data-morgentoggle="1"><div class="tlic">${gi2("cal")}</div><div class="tlb"><b>Morgen</b><span>${DG[parse(morgen).getDay()]} ${kort(morgen)} · ${mDelen.join(" · ")}</span>${tsMorgen}</div>${gi2("pijl")}</div>` +
     (morgenOpen ? `<div class="morgenlijst">` + (mg.length ? mg.join("") : `<p class="leeg">Geen check-ins of check-outs</p>`) + `</div>` : "");
   return el;
@@ -9242,7 +9247,7 @@ function tekenMeer(){
   meerZet("meerVoorraad", voorraadAan() ? "Uitzetten" : "Aanzetten");
   { const n = producten.filter(p => isBarProduct(p) && p.voorraad_tijd).length, l = voorraadLaag().length;
     meerZet("mpVoorraadStand", !n ? "Nog niet geteld" : l ? `${l} bijna op` : `${n} ${n === 1 ? "product" : "producten"} geteld`); }
-  meerZet("mpHerinnering", herinneringAan() ? "Staat aan: de dag voor vertrek staat bij Vandaag wie nog een herinnering moet krijgen (als er nog iets open staat)." : "Staat uit.");
+  meerZet("mpHerinnering", herinneringAan() ? "Staat aan: de dag voor vertrek staat bij Vandaag een herinnering voor wie morgen vertrekt, met wat ze moeten weten voor het uitchecken en wat er nog open staat." : "Staat uit.");
   meerZet("meerHerinnering", herinneringAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpHerinneringTekst", herinneringEigen() ? (herinneringMist().length ? "Eigen tekst, nog niet in alle talen vertaald" : "Eigen tekst, in alle talen") : "Vaste tekst, in de taal van de gast");
   const po = producten.find(x => x.naam === "Ontbijt"), pk = producten.find(x => x.naam === "Ontbijt kind");
@@ -9766,7 +9771,7 @@ document.getElementById("puStandaard").onclick = async () => {
 /* 23-10-2026 e: herinnering de dag voor vertrek, aan/uit en eigen tekst (Meer, Gasten); zelfde werkwijze als de uitleg van de KaYu-plank */
 async function herinneringWissel(){
   const nieuw = herinneringAan() ? "uit" : "aan";
-  if(!confirm(nieuw === "aan" ? "Aanzetten? De dag voor vertrek staat dan bij Vandaag wie nog een herinnering moet krijgen (alleen als er nog iets open staat)."
+  if(!confirm(nieuw === "aan" ? "Aanzetten? De dag voor vertrek staat dan bij Vandaag een herinnering voor wie morgen vertrekt (uitchecken, en wat er nog open staat)."
     : "Uitzetten? Dan staat de herinnering niet meer bij Vandaag en niet meer bij de stappen van een gast.")) return;
   instellingen.herinnering_vertrek = nieuw; tekenMeer(); if(modus === "nu") tekenNu();
   const { error } = await db.from("instellingen").upsert({ sleutel:"herinnering_vertrek", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
@@ -10317,19 +10322,24 @@ function stuurKeuze(opt){
   d.showModal();
   if(d.contains(document.activeElement)) document.activeElement.blur();
 }
-/* 23-10-2026 e (Bart): herinnering de dag voor vertrek (tekst B, goedgekeurd 23-10), voor kamers en campers die morgen vertrekken,
+/* 04-11-2026 e (Bart): naar iedereen die morgen vertrekt, met wat ze moeten weten voor het uitchecken; zie herinneringNodigCamper.
+   Hieronder de oorspronkelijke uitleg (23-10); "nog niet betaald en iets open" geldt sinds e alleen nog voor de hele finca en familie.
+   23-10-2026 e (Bart): herinnering de dag voor vertrek (tekst B, goedgekeurd 23-10), voor kamers en campers die morgen vertrekken,
    nog niet betaald hebben en iets open hebben staan. Aan/uit in Meer, Gasten (instelling herinnering_vertrek, standaard aan); de tekst
    is daar te wijzigen (herinnering_tekst, vertaald in herinnering_tekst_vertaald). {naam} en {bedrag} vult de app in. */
 const herinneringAan = () => (instellingen.herinnering_vertrek || "aan") === "aan";
 const herinneringEigen = () => String(instellingen.herinnering_tekst || "").trim();
 const herinneringVertaald = () => { try { const v = JSON.parse(instellingen.herinnering_tekst_vertaald || "{}"); return v && typeof v === "object" && !Array.isArray(v) ? v : {}; } catch(e){ return {}; } };
-const herinneringStandaard = () => TK("nl").herinneringVertrek("{naam}", "{bedrag}").join("\n");
-function herinneringTekst(taal, naam, bedrag){
+/* 04-11-2026 e (Bart): de eigen tekst in Meer is alleen het stuk over de rekening; de vaste tekst daarvan is de tweede regel van de
+   herinnering van een kamer (de eerste is wat ze moeten weten voor het uitchecken, de laatste de groet) */
+const herinneringStandaard = () => TK("nl").herinneringVertrek("{naam}", "{bedrag}", "kamer", null)[1];
+/* bedrag: "€ 12,00" als er iets open staat, anders leeg (dan geen zin over de rekening); soort: "kamer", "camper" of null */
+function herinneringTekst(taal, naam, bedrag, soort){
   const eigen = herinneringEigen(), v = herinneringVertaald();
-  const t = eigen ? (taal !== "nl" && typeof v[taal] === "string" && v[taal].trim() ? v[taal] : eigen)
-    : ((TK(taal) || TK("nl")).herinneringVertrek || TK("nl").herinneringVertrek)("{naam}", "{bedrag}").join("\n");
+  const e = eigen ? (taal !== "nl" && typeof v[taal] === "string" && v[taal].trim() ? v[taal] : eigen) : null;
+  const t = ((TK(taal) || TK("nl")).herinneringVertrek || TK("nl").herinneringVertrek)("{naam}", bedrag ? "{bedrag}" : "", soort || null, e).join("\n");
   /* review 23-10 e: de app zet zelf "€ " voor het bedrag; staat er "€ {bedrag}" of "{bedrag} €" (vertaling), dan niet twee keer */
-  return t.replace(/\s*\{naam\}/g, naam ? " " + naam : "").replace(/€\s*\{bedrag\}|\{bedrag\}\s*€/g, "{bedrag}").replace(/\{bedrag\}/g, bedrag);
+  return t.replace(/[ \t]*\{naam\}/g, naam ? " " + naam : "").replace(/^ +/gm, "").replace(/€\s*\{bedrag\}|\{bedrag\}\s*€/g, "{bedrag}").replace(/\{bedrag\}/g, bedrag);
 }
 /* review 23-10 e: op hele centen, zodat afrondingsresten (zoals 0,0000000001) niet als "nog open" tellen */
 const herinneringBedragCamper = b => Math.round((alles(b) - (b.alContant || 0)) * 100) / 100;
@@ -10339,13 +10349,20 @@ const herinneringGestuurdCamper = b => !!b.herinnering && b.herinnering === b.ui
 const herinneringGestuurdKamer = k => { const v = (vinkjes[k.nr] || {}).herinnering_vertrek; return typeof v === "string" && v === k.uit; };
 const herinneringMorgen = () => { const m = new Date(); m.setDate(m.getDate() + 1); return iso(m); };
 /* op Vandaag: wie morgen vertrekt, er al minstens een nacht is (niet wie vandaag pas komt: die krijgt eerst het welkom) en nog iets open heeft */
-const herinneringNodigCamper = (b, morgen) => herinneringAan() && !b.gestald && !DEMO(b.id) && b.uit === morgen && dagenTot(b.in) < 0 && !b.betaald && herinneringBedragCamper(b) > 0;
-const herinneringNodigKamer = (k, morgen) => herinneringAan() && !DEMO(k.nr) && k.uit === morgen && dagenTot(k.in) < 0 && !kVink(k, "betaald") && herinneringBedragKamer(k) > 0;
+/* 04-11-2026 e (Bart): campers en gewone kamers krijgen de herinnering altijd (wat ze moeten weten voor het uitchecken), ook als er niets
+   open staat; de hele finca en familie of vrienden (dichtgezette kamer) alleen als er iets open staat, met de tekst van 23-10 */
+const herinneringOpenCamper = b => !b.betaald && herinneringBedragCamper(b) > 0;
+const herinneringOpenKamer = k => !kVink(k, "betaald") && herinneringBedragKamer(k) > 0;
+const herinneringSoortKamer = k => /^Kamer [1-5]$/.test(k.kamer || "") && k.bron !== "dicht" && !isDichtNr(k.nr) ? "kamer" : null;
+/* review 04-11 e: niet wie al is uitgecheckt; bij samen geboekte kamers alleen de hoofdkamer (die krijgt de berichten), tenzij er in de
+   bijkamer zelf iets open staat */
+const herinneringNodigCamper = (b, morgen) => herinneringAan() && !b.gestald && !DEMO(b.id) && !b.uitgecheckt && b.uit === morgen && dagenTot(b.in) < 0;
+const herinneringNodigKamer = (k, morgen) => herinneringAan() && !DEMO(k.nr) && !kUitgecheckt(k) && k.uit === morgen && dagenTot(k.in) < 0 && (herinneringOpenKamer(k) || (!!herinneringSoortKamer(k) && !kIsBijkamer(k)));
 /* review 23-10 e: de taal staat als knopjes in het venster (zoals bij Overzicht sturen), zodat je hem daar nog kunt wisselen.
    Bewaard wordt de vertrekdatum waarvoor de herinnering is gestuurd. */
 function herinneringSturenCamper(b, na){
   const uit = b.uit, oud = b.herinnering || "";
-  stuurKeuze({ titel:"Herinnering vertrek", wie: b.naam || b.plek, taal: taalVan(b.id), tekstVoor: t => herinneringTekst(t, aanhef(b.naam), eur(herinneringBedragCamper(b))),
+  stuurKeuze({ titel:"Herinnering vertrek", wie: b.naam || b.plek, taal: taalVan(b.id), tekstVoor: t => herinneringTekst(t, aanhef(b.naam), herinneringOpenCamper(b) ? eur(herinneringBedragCamper(b)) : "", "camper"),
     waNr: waNummer(b.tel), email: b.email, onderwerp:"Finca KaYu",
     verstuurd: oud === uit, ontVink: async () => { const r = await camperVinkWeg(b, "herinnering", ""); if(r && na) na(); return r; }, /* 29-10-2026 g */
     zetVink: async () => {
@@ -10358,7 +10375,7 @@ function herinneringSturenCamper(b, na){
 }
 function herinneringSturenKamer(k, na){
   const uit = k.uit;
-  stuurKeuze({ titel:"Herinnering vertrek", wie: kNaam(k) || k.kamer, taal: taalVan(samenTaalNr(k)), tekstVoor: t => herinneringTekst(t, aanhef(kNaam(k)), eur(herinneringBedragKamer(k))),
+  stuurKeuze({ titel:"Herinnering vertrek", wie: kNaam(k) || k.kamer, taal: taalVan(samenTaalNr(k)), tekstVoor: t => herinneringTekst(t, aanhef(kNaam(k)), herinneringOpenKamer(k) ? eur(herinneringBedragKamer(k)) : "", herinneringSoortKamer(k)),
     waNr: kTelWa(k), onderwerp:"Finca KaYu",
     verstuurd: herinneringGestuurdKamer(k), ontVink: async () => { const r = await kamerVinkWeg(k, "herinnering_vertrek", null); if(r && na) na(); return r; }, /* 29-10-2026 g */
     zetVink: async () => { await kamerVink(k, "herinnering_vertrek", uit); if(na) na(); } });
@@ -10475,7 +10492,7 @@ function toonDetail(b){
       ? [pkRij(`data-cdcheckin="1"`, "Check-in", ci === "klaar" ? "Klaar ✓" : CI_LABEL[ci].replace("Check-in nog niet ingevuld", "Nog niet ingevuld"), ci === "klaar" ? "goed" : ci === "controleren" ? "actie" : ""), pkHuisregels(b.id) /* 01-11-2026 k */]
       : [pkRij(`data-cdvink="paspoort"`, "Paspoort", paT, paS), pkRij(`data-cdvink="bericht"`, "Welkomstbericht", weT, weS)] },
     { kop:"Vertrek", rijen:[
-      /* 23-10-2026 e: herinnering de dag voor vertrek (alleen zolang er iets open staat) */
+      /* 23-10-2026 e: herinnering de dag voor vertrek (sinds 04-11-2026 e ook zonder iets open, zie herinneringNodigCamper) */
       /* review 23-10 e: alleen de dag voor vertrek (zelfde regel als bij Vandaag: de tekst zegt "morgen"), of als hij voor deze vertrekdag al weg is */
       herinneringAan() && herinneringGestuurdCamper(b) ? (herinneringNodigCamper(b, herinneringMorgen()) ? pkRij(`data-cdherinnering="1"`, "Herinnering vertrek", "Verstuurd ✓", "goed") : pkVast("Herinnering vertrek", "Verstuurd ✓", "goed"))
         : herinneringNodigCamper(b, herinneringMorgen()) ? pkRij(`data-cdherinnering="1"`, "Herinnering vertrek", taalN) : "",
@@ -11284,7 +11301,7 @@ function toonKamerDetail(k){
     { kop:"Vóór aankomst", rijen: voorAank },
     { kop:"Aankomst", rijen: aank },
     { kop:"Vertrek", rijen:[
-      /* 23-10-2026 e: herinnering de dag voor vertrek (alleen zolang er iets open staat) */
+      /* 23-10-2026 e: herinnering de dag voor vertrek (sinds 04-11-2026 e ook zonder iets open, zie herinneringNodigCamper) */
       /* review 23-10 e: alleen de dag voor vertrek, of als hij voor deze vertrekdag al weg is; taal zoals bij Link van deze kamer */
       herinneringAan() && herinneringGestuurdKamer(k) ? (herinneringNodigKamer(k, herinneringMorgen()) ? rij(`data-kdherinnering="1"`, "Herinnering vertrek", "Verstuurd ✓", "goed") : vast("Herinnering vertrek", "Verstuurd ✓", "goed"))
         : herinneringNodigKamer(k, herinneringMorgen()) ? rij(`data-kdherinnering="1"`, "Herinnering vertrek", taalNaam(samenTaalNr(k))) : "",

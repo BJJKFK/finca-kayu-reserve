@@ -1772,7 +1772,12 @@ nl: {
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
   /* 23-10-2026 e (Bart): herinnering de dag voor vertrek (tekst B, Nederlands goedgekeurd 23-10) en bericht als zelf verlengen aan staat */
-  herinneringVertrek: (naam, bedrag) => [`Hoi${naam ? " " + naam : ""}, morgen is alweer je vertrekdag. Je rekening staat nu op ${bedrag}. Contant heeft onze voorkeur, dus kom je vandaag toevallig langs een geldautomaat, dan is dat fijn. Bankoverschrijving kan natuurlijk ook. Geniet nog van je laatste avond!`],
+  /* 04-11-2026 e (Bart): de dag voor vertrek naar iedereen die morgen vertrekt. soort "kamer" of "camper": wat ze moeten weten voor
+     het uitchecken (zinnen uit de kamer- en camperinfo), het bedrag alleen als er iets open staat. Zonder soort (hele finca,
+     familie of vrienden): de tekst van 23-10, alleen als er iets open staat. eigen: de eigen tekst over de rekening (Meer). */
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Je rekening staat nu op ${bedrag}. Contant heeft onze voorkeur, dus kom je vandaag toevallig langs een geldautomaat, dan is dat fijn. Bankoverschrijving kan natuurlijk ook.`) : "";
+    return !soort ? [`Hoi${naam ? " " + naam : ""}, morgen is alweer je vertrekdag.${b ? " " + b : ""} Geniet nog van je laatste avond!`]
+      : [`Hoi${naam ? " " + naam : ""}, morgen checken jullie helaas alweer uit. ${soort === "kamer" ? "Nog even ter info: graag uiterlijk om 10:00 uur uit de kamer, zodat wij hem op tijd schoon hebben voor de volgende gasten. Daarna ben je nog van harte welkom op het terrein. Laat de sleutel in de deur zitten en zet de kluis terug op 0000." : "Nog even ter info: uitchecken graag vóór 12:00 uur."}`, ...(b ? [b] : []), `Geniet nog van jullie laatste avond!`]; },
   verlengenAan: (naam, knop, link) => [`Hoi${naam ? " " + naam : ""}, goed nieuws: je kunt je verblijf nu zelf verlengen. Open je gastenpagina en tik op "${knop}". Je ziet meteen welke nachten nog vrij zijn en wat het kost.`, ...(link ? [link] : [])],
   /* 03-11-2026 e: Bart geeft een camper toestemming om zelf zijn datum aan te passen; de link opent meteen het scherm Datum aanpassen */
   datumAan: (naam, link, uiterlijk) => [`Hoi${naam ? " " + naam : ""}, je kunt je datum nu zelf aanpassen. Tik op de link, kies je nieuwe aankomst- en vertrekdag en bevestig. Je ziet meteen of het lukt. Dit kan tot en met ${uiterlijk}.`, ...(link ? [link] : [])],
@@ -2112,7 +2117,9 @@ en: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Hi${naam ? " " + naam : ""}, your departure day is already tomorrow. Your bill is currently ${bedrag}. We prefer cash, so if you happen to pass an ATM today, that would be great. Bank transfer is of course also possible. Enjoy your last evening!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Your bill is currently ${bedrag}. We prefer cash, so if you happen to pass an ATM today, that would be great. Bank transfer is of course also possible.`) : "";
+    return !soort ? [`Hi${naam ? " " + naam : ""}, your departure day is already tomorrow.${b ? " " + b : ""} Enjoy your last evening!`]
+      : [`Hi${naam ? " " + naam : ""}, unfortunately you are already checking out tomorrow. ${soort === "kamer" ? "Just so you know: please leave the room by 10:00 at the latest, so we can have it clean in time for the next guests. After that you are still very welcome on the grounds. Leave the key in the door and reset the safe to 0000." : "Just so you know: please check out before 12:00."}`, ...(b ? [b] : []), `Enjoy your last evening!`]; },
   verlengenAan: (naam, knop, link) => [`Hi${naam ? " " + naam : ""}, good news: you can now extend your stay yourself. Open your guest page and tap "${knop}". You will see straight away which nights are still available and what it costs.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Hi${naam ? " " + naam : ""}, you can now change your dates yourself. Tap the link, choose your new arrival and departure day and confirm. You'll see straight away whether it works. You can do this up to and including ${uiterlijk}.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -2451,7 +2458,9 @@ de: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Hallo${naam ? " " + naam : ""}, morgen ist schon euer Abreisetag. Eure Rechnung beträgt im Moment ${bedrag}. Wir bevorzugen Barzahlung. Kommt ihr heute zufällig an einem Geldautomaten vorbei, wäre das prima. Eine Überweisung ist natürlich auch möglich. Genießt euren letzten Abend!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Eure Rechnung beträgt im Moment ${bedrag}. Wir bevorzugen Barzahlung. Kommt ihr heute zufällig an einem Geldautomaten vorbei, wäre das prima. Eine Überweisung ist natürlich auch möglich.`) : "";
+    return !soort ? [`Hallo${naam ? " " + naam : ""}, morgen ist schon euer Abreisetag.${b ? " " + b : ""} Genießt euren letzten Abend!`]
+      : [`Hallo${naam ? " " + naam : ""}, morgen reist ihr leider schon wieder ab. ${soort === "kamer" ? "Kurz zur Info: Bitte spätestens um 10:00 Uhr aus dem Zimmer, damit wir es rechtzeitig für die nächsten Gäste sauber haben. Danach seid ihr auf dem Gelände weiterhin herzlich willkommen. Lasst den Schlüssel in der Tür stecken und stellt den Safe wieder auf 0000." : "Kurz zur Info: Abreise bitte vor 12:00 Uhr."}`, ...(b ? [b] : []), `Genießt euren letzten Abend!`]; },
   verlengenAan: (naam, knop, link) => [`Hallo${naam ? " " + naam : ""}, gute Nachricht: ihr könnt euren Aufenthalt jetzt selbst verlängern. Öffnet eure Gästeseite und tippt auf „${knop}“. Ihr seht sofort, welche Nächte noch frei sind und was es kostet.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Hallo${naam ? " " + naam : ""}, ihr könnt euer Datum jetzt selbst ändern. Tippt auf den Link, wählt euren neuen An- und Abreisetag und bestätigt. Ihr seht sofort, ob es klappt. Das geht bis einschließlich ${uiterlijk}.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -2790,7 +2799,9 @@ es: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Hola${naam ? " " + naam : ""}, mañana ya es vuestro día de salida. De momento, vuestra cuenta asciende a ${bedrag}. Preferimos el pago en efectivo, así que si hoy pasáis por casualidad por un cajero, genial. Por supuesto, también podéis pagar por transferencia bancaria. ¡Disfrutad de vuestra última noche!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `De momento, vuestra cuenta asciende a ${bedrag}. Preferimos el pago en efectivo, así que si hoy pasáis por casualidad por un cajero, genial. Por supuesto, también podéis pagar por transferencia bancaria.`) : "";
+    return !soort ? [`Hola${naam ? " " + naam : ""}, mañana ya es vuestro día de salida.${b ? " " + b : ""} ¡Disfrutad de vuestra última noche!`]
+      : [`Hola${naam ? " " + naam : ""}, por desgracia, mañana ya os vais. ${soort === "kamer" ? "Para que lo sepáis: por favor, dejad la habitación como muy tarde a las 10:00, para que podamos tenerla limpia a tiempo para los siguientes huéspedes. Después seguís siendo bienvenidos en la finca. Dejad la llave puesta en la puerta y volved a poner la caja fuerte en 0000." : "Para que lo sepáis: la salida es antes de las 12:00."}`, ...(b ? [b] : []), `¡Disfrutad de vuestra última noche!`]; },
   verlengenAan: (naam, knop, link) => [`Hola${naam ? " " + naam : ""}, buenas noticias: ahora podéis alargar vuestra estancia vosotros mismos. Abrid vuestra página de huéspedes y tocad «${knop}». Veréis enseguida qué noches siguen libres y cuánto cuesta.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Hola${naam ? " " + naam : ""}, ya podéis cambiar vosotros mismos las fechas. Pulsad el enlace, elegid vuestro nuevo día de llegada y de salida y confirmad. Veréis enseguida si es posible. Podéis hacerlo hasta el ${uiterlijk} inclusive.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -3128,7 +3139,9 @@ it: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Ciao${naam ? " " + naam : ""}, domani è già il vostro giorno di partenza. Il vostro conto al momento è di ${bedrag}. Preferiamo il pagamento in contanti, quindi se oggi passate per caso davanti a un bancomat, sarebbe perfetto. Naturalmente potete pagare anche con bonifico bancario. Godetevi l'ultima serata!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Il vostro conto al momento è di ${bedrag}. Preferiamo il pagamento in contanti, quindi se oggi passate per caso davanti a un bancomat, sarebbe perfetto. Naturalmente potete pagare anche con bonifico bancario.`) : "";
+    return !soort ? [`Ciao${naam ? " " + naam : ""}, domani è già il vostro giorno di partenza.${b ? " " + b : ""} Godetevi l'ultima serata!`]
+      : [`Ciao${naam ? " " + naam : ""}, purtroppo domani ripartite già. ${soort === "kamer" ? "Per vostra informazione: vi chiediamo di lasciare la camera entro le 10:00, così possiamo prepararla in tempo per i prossimi ospiti. Dopo siete ancora i benvenuti nella finca. Lasciate la chiave nella porta e rimettete la cassaforte su 0000." : "Per vostra informazione: la partenza è entro le 12:00."}`, ...(b ? [b] : []), `Godetevi l'ultima serata!`]; },
   verlengenAan: (naam, knop, link) => [`Ciao${naam ? " " + naam : ""}, buone notizie: ora potete prolungare il vostro soggiorno in autonomia. Aprite la vostra pagina ospiti e toccate "${knop}". Vedrete subito quali notti sono ancora libere e quanto costa.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Ciao${naam ? " " + naam : ""}, ora potete cambiare voi stessi le date. Toccate il link, scegliete il nuovo giorno di arrivo e di partenza e confermate. Vedrete subito se è possibile. Ultimo giorno utile: ${uiterlijk}.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -3466,7 +3479,9 @@ fr: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Bonjour${naam ? " " + naam : ""}, demain, c'est déjà votre jour de départ. Votre note s'élève actuellement à ${bedrag}. Nous préférons le paiement en espèces : si vous passez par hasard devant un distributeur aujourd'hui, ce serait parfait. Le virement bancaire est bien sûr aussi possible. Profitez bien de votre dernière soirée !`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Votre note s'élève actuellement à ${bedrag}. Nous préférons le paiement en espèces : si vous passez par hasard devant un distributeur aujourd'hui, ce serait parfait. Le virement bancaire est bien sûr aussi possible.`) : "";
+    return !soort ? [`Bonjour${naam ? " " + naam : ""}, demain, c'est déjà votre jour de départ.${b ? " " + b : ""} Profitez bien de votre dernière soirée !`]
+      : [`Bonjour${naam ? " " + naam : ""}, malheureusement, vous partez déjà demain. ${soort === "kamer" ? "Pour info : merci de libérer la chambre au plus tard à 10h00, pour que nous puissions la préparer à temps pour les hôtes suivants. Ensuite, vous êtes encore les bienvenus sur le domaine. Laissez la clé sur la porte et remettez le coffre sur 0000." : "Pour info : le départ se fait avant 12h00."}`, ...(b ? [b] : []), `Profitez bien de votre dernière soirée !`]; },
   verlengenAan: (naam, knop, link) => [`Bonjour${naam ? " " + naam : ""}, bonne nouvelle : vous pouvez maintenant prolonger votre séjour vous-mêmes. Ouvrez votre page d'accueil et appuyez sur « ${knop} ». Vous verrez tout de suite quelles nuits sont encore libres et ce que cela coûte.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Bonjour${naam ? " " + naam : ""}, vous pouvez maintenant modifier vous-mêmes vos dates. Appuyez sur le lien, choisissez votre nouveau jour d'arrivée et de départ, puis confirmez. Vous verrez tout de suite si c'est possible. Vous pouvez le faire jusqu'au ${uiterlijk} inclus.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -3804,7 +3819,9 @@ pt: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Olá${naam ? " " + naam : ""}, amanhã já é o vosso dia de partida. A vossa conta está neste momento em ${bedrag}. Preferimos pagamento em dinheiro, por isso, se hoje passarem por acaso por uma caixa multibanco, seria ótimo. Claro que também podem pagar por transferência bancária. Aproveitem a vossa última noite!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `A vossa conta está neste momento em ${bedrag}. Preferimos pagamento em dinheiro, por isso, se hoje passarem por acaso por uma caixa multibanco, seria ótimo. Claro que também podem pagar por transferência bancária.`) : "";
+    return !soort ? [`Olá${naam ? " " + naam : ""}, amanhã já é o vosso dia de partida.${b ? " " + b : ""} Aproveitem a vossa última noite!`]
+      : [`Olá${naam ? " " + naam : ""}, infelizmente, amanhã já vão embora. ${soort === "kamer" ? "Para vossa informação: pedimos que deixem o quarto no máximo às 10:00, para que o possamos ter limpo a tempo para os hóspedes seguintes. Depois disso continuam muito bem-vindos na propriedade. Deixem a chave na porta e voltem a pôr o cofre em 0000." : "Para vossa informação: a partida é antes das 12:00."}`, ...(b ? [b] : []), `Aproveitem a vossa última noite!`]; },
   verlengenAan: (naam, knop, link) => [`Olá${naam ? " " + naam : ""}, boas notícias: agora podem prolongar a vossa estadia vocês mesmos. Abram a vossa página de hóspedes e toquem em "${knop}". Vão ver logo que noites ainda estão livres e quanto custa.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Olá${naam ? " " + naam : ""}, já podem alterar vocês mesmos as datas. Toquem no link, escolham o novo dia de chegada e de partida e confirmem. Vão ver logo se é possível. Podem fazê-lo até ${uiterlijk}, inclusive.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -4141,7 +4158,9 @@ cs: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Dobrý den${naam ? " " + naam : ""}, zítra je už váš den odjezdu. Váš účet nyní činí ${bedrag}. Dáváme přednost platbě v hotovosti, takže pokud dnes náhodou půjdete kolem bankomatu, bylo by to skvělé. Samozřejmě můžete zaplatit i bankovním převodem. Užijte si poslední večer!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Váš účet nyní činí ${bedrag}. Dáváme přednost platbě v hotovosti, takže pokud dnes náhodou půjdete kolem bankomatu, bylo by to skvělé. Samozřejmě můžete zaplatit i bankovním převodem.`) : "";
+    return !soort ? [`Dobrý den${naam ? " " + naam : ""}, zítra je už váš den odjezdu.${b ? " " + b : ""} Užijte si poslední večer!`]
+      : [`Dobrý den${naam ? " " + naam : ""}, zítra už bohužel odjíždíte. ${soort === "kamer" ? "Jen pro informaci: pokoj prosím uvolněte nejpozději v 10:00, abychom ho stihli uklidit pro další hosty. Potom jste v areálu stále srdečně vítáni. Nechte klíč ve dveřích a vraťte trezor na 0000." : "Jen pro informaci: odjezd je do 12:00."}`, ...(b ? [b] : []), `Užijte si poslední večer!`]; },
   verlengenAan: (naam, knop, link) => [`Dobrý den${naam ? " " + naam : ""}, dobrá zpráva: nyní si můžete pobyt prodloužit sami. Otevřete svou stránku pro hosty a klepněte na „${knop}“. Hned uvidíte, které noci jsou ještě volné a kolik to stojí.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Dobrý den${naam ? " " + naam : ""}, termín si teď můžete změnit sami. Klepněte na odkaz, vyberte nový den příjezdu a odjezdu a potvrďte. Hned uvidíte, jestli to jde. Je to možné do ${uiterlijk} včetně.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -4480,7 +4499,9 @@ fi: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Hei${naam ? " " + naam : ""}, huomenna on jo lähtöpäivänne. Laskunne on nyt ${bedrag}. Toivomme ensisijaisesti käteismaksua, joten jos kuljette tänään sattumalta pankkiautomaatin ohi, se olisi mukavaa. Tilisiirto käy tietysti myös. Nauttikaa viimeisestä illastanne!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Laskunne on nyt ${bedrag}. Toivomme ensisijaisesti käteismaksua, joten jos kuljette tänään sattumalta pankkiautomaatin ohi, se olisi mukavaa. Tilisiirto käy tietysti myös.`) : "";
+    return !soort ? [`Hei${naam ? " " + naam : ""}, huomenna on jo lähtöpäivänne.${b ? " " + b : ""} Nauttikaa viimeisestä illastanne!`]
+      : [`Hei${naam ? " " + naam : ""}, huomenna lähdette valitettavasti jo. ${soort === "kamer" ? "Tiedoksi: luovuttakaa huone viimeistään klo 10:00, jotta ehdimme siivota sen ajoissa seuraaville vieraille. Sen jälkeen olette edelleen lämpimästi tervetulleita alueelle. Jättäkää avain oveen ja palauttakaa tallelokeron koodiksi 0000." : "Tiedoksi: lähtö ennen klo 12:00."}`, ...(b ? [b] : []), `Nauttikaa viimeisestä illastanne!`]; },
   verlengenAan: (naam, knop, link) => [`Hei${naam ? " " + naam : ""}, hyviä uutisia: voitte nyt pidentää oleskeluanne itse. Avatkaa vierassivunne ja napauttakaa "${knop}". Näette heti, mitkä yöt ovat vielä vapaina ja mitä se maksaa.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Hei${naam ? " " + naam : ""}, voitte nyt muuttaa päivämääriä itse. Napauttakaa linkkiä, valitkaa uusi saapumis- ja lähtöpäivä ja vahvistakaa. Näette heti, onnistuuko se. Tämä on mahdollista ${uiterlijk} asti.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -4820,7 +4841,9 @@ no: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Hei${naam ? " " + naam : ""}, i morgen er det allerede avreisedagen deres. Regningen deres er nå på ${bedrag}. Vi foretrekker kontant, så hvis dere tilfeldigvis kommer forbi en minibank i dag, er det fint. Bankoverføring går selvfølgelig også. Kos dere den siste kvelden!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Regningen deres er nå på ${bedrag}. Vi foretrekker kontant, så hvis dere tilfeldigvis kommer forbi en minibank i dag, er det fint. Bankoverføring går selvfølgelig også.`) : "";
+    return !soort ? [`Hei${naam ? " " + naam : ""}, i morgen er det allerede avreisedagen deres.${b ? " " + b : ""} Kos dere den siste kvelden!`]
+      : [`Hei${naam ? " " + naam : ""}, dessverre reiser dere allerede i morgen. ${soort === "kamer" ? "Bare til info: vi ber om at rommet er forlatt senest kl. 10:00, så vi rekker å gjøre det rent til de neste gjestene. Etterpå er dere fortsatt hjertelig velkomne på området. La nøkkelen sitte i døra og sett safen tilbake til 0000." : "Bare til info: avreise før kl. 12:00."}`, ...(b ? [b] : []), `Kos dere den siste kvelden!`]; },
   verlengenAan: (naam, knop, link) => [`Hei${naam ? " " + naam : ""}, gode nyheter: nå kan dere forlenge oppholdet selv. Åpne gjestesiden og trykk på «${knop}». Dere ser med en gang hvilke netter som fortsatt er ledige, og hva det koster.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Hei${naam ? " " + naam : ""}, nå kan dere endre datoene selv. Trykk på lenken, velg ny ankomst- og avreisedag og bekreft. Dere ser med en gang om det går. Dette kan dere gjøre til og med ${uiterlijk}.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
@@ -5158,7 +5181,9 @@ sv: {
     c.totDag, "",
     "☀️ Bart & Loes", "Finca KaYu 🌿"
   ],
-  herinneringVertrek: (naam, bedrag) => [`Hej${naam ? " " + naam : ""}, i morgon är det redan er avresedag. Notan är just nu på ${bedrag}. Vi föredrar kontant, så om ni råkar komma förbi en bankomat i dag är det toppen. Banköverföring går förstås också bra. Njut av er sista kväll!`],
+  herinneringVertrek: (naam, bedrag, soort, eigen) => { const b = bedrag ? (eigen != null ? eigen : `Notan är just nu på ${bedrag}. Vi föredrar kontant, så om ni råkar komma förbi en bankomat i dag är det toppen. Banköverföring går förstås också bra.`) : "";
+    return !soort ? [`Hej${naam ? " " + naam : ""}, i morgon är det redan er avresedag.${b ? " " + b : ""} Njut av er sista kväll!`]
+      : [`Hej${naam ? " " + naam : ""}, tyvärr åker ni redan i morgon. ${soort === "kamer" ? "Bara som info: lämna gärna rummet senast kl. 10:00, så att vi hinner städa det till nästa gäster. Därefter är ni fortfarande varmt välkomna på området. Låt nyckeln sitta i dörren och ställ tillbaka kassaskåpet på 0000." : "Bara som info: avresa före kl. 12:00."}`, ...(b ? [b] : []), `Njut av er sista kväll!`]; },
   verlengenAan: (naam, knop, link) => [`Hej${naam ? " " + naam : ""}, goda nyheter: nu kan ni förlänga vistelsen själva. Öppna gästsidan och tryck på ”${knop}”. Ni ser direkt vilka nätter som fortfarande är lediga och vad det kostar.`, ...(link ? [link] : [])],
   datumAan: (naam, link, uiterlijk) => [`Hej${naam ? " " + naam : ""}, nu kan ni ändra datum själva. Tryck på länken, välj ny ankomst- och avresedag och bekräfta. Ni ser direkt om det går. Det kan ni göra till och med den ${uiterlijk}.`, ...(link ? [link] : [])],
   bedankt: (naam, links) => [
