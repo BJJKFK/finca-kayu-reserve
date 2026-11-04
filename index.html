@@ -452,6 +452,9 @@
   .ontbg.broodrij button, #gast .dag .ontbg.broodrij button{width:auto;height:auto;min-width:0;padding:6px 13px;font-size:13px;font-weight:600}
   #gast .dag .ontbg b{min-width:26px;font-size:17px}
   #gast .vink button{font-size:14px;padding:9px 14px}
+  /* 03-11-2026 e: datum aanpassen */
+  #gast .gdlabel{display:block;font-size:13px;font-weight:600;margin:10px 0 4px}
+  #gast .datumaanpassen input[type=date]{display:block;width:100%;box-sizing:border-box;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:inherit;min-height:44px}
   #gast .status{font-size:13px;color:var(--moss);margin-top:8px;min-height:18px}
   #gast .melding.goed{background:#E6F0E4;color:#2F5A34;border-color:#CFE3CB}
   #gast .dag.aank{border-color:#D9B48F;background:#FFF8EE}
@@ -1375,7 +1378,9 @@
   html.nieuw .tijdlijn .tlactie, html.nieuw #gast .gtknop button.aan, html.nieuw .barknop, html.nieuw #gast .vink a.knop,
   html.nieuw #gast .barrij .stap.gstap button.plus, html.nieuw .naamvraag .nieuwnaam button, html.nieuw .inboxdlg .ibrij .knoppen .hoofd,
   html.nieuw .cf-bank button, html.nieuw .ib-knop:not(.licht), html.nieuw .hoofdactie button,
-  html.nieuw #gast .vink button.aan:not([data-gt]):not([data-pt]):not([data-ps]):not(.nee){background:#F0EEE6;border:1px solid #8F8B80;color:#141413}
+  html.nieuw #gast .vink button.aan:not([data-gt]):not([data-pt]):not([data-ps]):not([data-pfpers]):not(.nee){background:#F0EEE6;border:1px solid #8F8B80;color:#141413}
+  /* 04-11-2026 a (Bart: "De knoppen 12345 zijn niet in te drukken" op de poetspagina): het aantal personen is een keuze, dus de gekozen
+     knop blijft donker met witte cijfers (html.nieuw #gast .vink button.aan); de regel hierboven maakte hem grijs zoals de rest */
   /* 25-10-2026 a (Bart, schets D): de knop op een regel van Vandaag wit met een heel dun randje, zoals de knoppen in Claude; de grijze knop met donkere rand was te dominant */
   html.nieuw .tijdlijn .tlactie{background:#FFFFFF;border:1px solid #D9D4CB}
   /* 21-10-2026 c (Bart): de grote knoppen in de warme zandtint van de website en het logovakje (#FFF0E0) met een zandrand,
@@ -1828,6 +1833,12 @@
     <div class="meerkaart">
       <button class="meerrij" data-meer="verlengwie"><span><b>Zelf verlengen</b><small id="mpVerleng"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="verlengmax"><span><b>Zelf verlengen: maximaal aantal nachten</b><small id="mpVerlengMax"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+    </div>
+    <!-- 03-11-2026 e (Bart): campers passen zelf hun datum aan, via een link die jij stuurt (standaard) of allemaal -->
+    <div class="meerkaart">
+      <button class="meerrij" data-meer="datumwie"><span><b>Datum zelf aanpassen</b><small id="mpDatum"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="datumdagen"><span><b>Datum aanpassen: tot hoeveel dagen vóór aankomst</b><small id="mpDatumDagen"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="datumkeer"><span><b>Datum aanpassen: hoe vaak</b><small id="mpDatumKeer"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
     <div class="meerkaart">
       <button class="meerrij" data-meer="plekindeling"><span><b>Plekken van campers</b><small id="mpPlekIndeling"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
@@ -2540,7 +2551,7 @@ function proefZaad(){
   const nu = new Date().toISOString();
   const B = (id, plek, naam, inN, uitN, extra) => Object.assign({ id, plek, naam, aankomst:dag(inN), vertrek:dag(uitN), personen:2, telefoon:null, kenteken:null, medereizigers:null, dier:null, dier_aantal:0,
     stroom_dagen:[], betaald:false, notities:null, aangemaakt:nu, email:null, adres:null, merk:null, lengte:null, aankomsttijd:null, paspoort:false, bericht:false, betaalverzoek:false, gestald:false, bedankt:false,
-    ontbijt:null, al_contant:null, zelf_verlengd_van:null, mag_verlengen:false, plek_geschoven_van:null, herinnering_vertrek:null, overzicht_gestuurd:false, uitgecheckt:null }, extra || {});
+    ontbijt:null, al_contant:null, zelf_verlengd_van:null, mag_verlengen:false, plek_geschoven_van:null, mag_datum:false, datum_keer:0, datum_was:null, herinnering_vertrek:null, overzicht_gestuurd:false, uitgecheckt:null }, extra || {});
   const boekingen = [
     B("p1-anna", "Pitch 1", "Anna Bakker", -3, 0, { telefoon:"+31612000001", paspoort:true, bericht:true, stroom_dagen:[dag(-3), dag(-2), dag(-1)], merk:"Hymer", lengte:7.2, kenteken:"12-ABC-3", email:"anna@voorbeeld.nl" }),
     B("p2-klaus", "Pitch 2", "Klaus Weber", -2, 1, { telefoon:"+4917000000002", paspoort:true, bericht:true, stroom_dagen:[dag(-2), dag(-1), dag(0)], merk:"Knaus", lengte:6.5, kenteken:"B-KW 1234" }),
@@ -2588,6 +2599,7 @@ function proefZaad(){
   const poets_dagen = [{ datum:dag(0), kamers:["Kamer 1"], bar:false, haast:[], gedeeld:true, kamers_gedeeld:["Kamer 1"], status:"komt", tijd:"11:00", door:"Encarni", bijgewerkt_poets:nu, gezien_finca:true }];
   const instellingen = [
     { sleutel:"gast_verlengen", waarde:"per_gast" }, { sleutel:"gast_verlengen_max", waarde:"7" }, { sleutel:"plek_indeling", waarde:"vast" },
+    { sleutel:"gast_datum", waarde:"per_gast" }, { sleutel:"gast_datum_dagen", waarde:"2" }, { sleutel:"gast_datum_keer", waarde:"1" },
     { sleutel:"bedrijf_naam", waarde:"Finca KaYu" }, { sleutel:"bedrijf_plaats", waarde:"Coín, Spanje" }, { sleutel:"bedrijf_kleur", waarde:"#9E543E" },
     { sleutel:"campers_ses", waarde:"uit" }, { sleutel:"factuur_checkout", waarde:"uit" },
     { sleutel:"eenheden_accommodaties", waarde:"Kamer 1, Kamer 2, Kamer 3, Kamer 4, Kamer 5" }, { sleutel:"eenheden_plekken", waarde:"Pitch 1 t/m 10, noodplekken Pitch bocht en Boven 1 t/m 4" }
@@ -2703,7 +2715,7 @@ const echteDb = PROEF ? null : createClient(SUPABASE_URL, SUPABASE_KEY);
 const db = PROEF ? proefDb() : !TESTVERSIE ? echteDb : (() => {
   const geblokkeerd = () => { const r = Promise.resolve({ data:null, error:{ message:"Testversie: alleen kijken, er wordt niets opgeslagen" } });
     const p = new Proxy(r, { get(t, k){ if(k === "then" || k === "catch" || k === "finally") return t[k].bind(t); return () => p; } }); return p; };
-  const LEES_RPC = new Set(["gast_ontbijt", "poets_lijst", "gast_checkin_lees", "camper_aanvraag_lees", "gast_samen_links", "gast_verleng_info", "gast_teksten_lees"]);
+  const LEES_RPC = new Set(["gast_ontbijt", "poets_lijst", "gast_checkin_lees", "camper_aanvraag_lees", "gast_samen_links", "gast_verleng_info", "gast_teksten_lees", "gast_datum_info"]);
   return {
     /* uitzondering (26-09-2026): het afvinken van de documentcontrole in checkin_status moet op de testversie getest kunnen worden */
     from: tabel => { const q = echteDb.from(tabel); return { select: (...a) => q.select(...a), insert: geblokkeerd, update: tabel === "checkin_status" ? (...a) => q.update(...a) : geblokkeerd, upsert: geblokkeerd, delete: geblokkeerd }; },
@@ -2832,6 +2844,8 @@ const naarApp = r => ({ id:r.id, naam:r.naam, plek:r.plek, in:r.aankomst, uit:r.
   alContant:(r.al_contant == null ? 0 : Number(r.al_contant) || 0), zelfVerlengdVan:r.zelf_verlengd_van || null,
   /* 21-10-2026 c: alleen lezen (naarDb schrijft ze nooit terug): toestemming om zelf te verlengen en de plek van vóór het schuiven */
   magVerlengen:!!r.mag_verlengen, plekGeschovenVan:r.plek_geschoven_van || null,
+  /* 03-11-2026 e: datum zelf aanpassen (alleen lezen; naarDb schrijft ze nooit terug): toestemming, hoe vaak al, en de datums van vóór */
+  magDatum:!!r.mag_datum, datumKeer:Number(r.datum_keer) || 0, datumWas:(r.datum_was && typeof r.datum_was === "object" && r.datum_was.aankomst) ? r.datum_was : null,
   /* 23-10-2026 e: herinnering vertrek en overzicht verstuurd (alleen lezen; naarDb schrijft ze niet terug). herinnering is de
      vertrekdatum waarvoor hij is gestuurd (review 23-10 e): verlengt de gast, dan geldt hij niet meer en komt hij terug. */
   herinnering: typeof r.herinnering_vertrek === "string" ? r.herinnering_vertrek : "", overzichtGestuurd:!!r.overzicht_gestuurd,
@@ -4119,7 +4133,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "03-11-2026 g";
+const VERSIE = "04-11-2026 a";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -4290,6 +4304,192 @@ async function gastVerlengen(){
   }
   tekenGast();
 }
+/* 03-11-2026 e (Bart): campers passen zelf hun datum aan. Via de link van Bart (&datum=1) opent meteen dit scherm, ook vóór de check-in;
+   op de wachtpagina (en op de gastenpagina, als het dan nog kan) staat een knop. De database (gast_datum_info, gast_datum_zet) zegt of het
+   mag en controleert alles opnieuw: plek vrij, geen groep op de hele finca (dan "evenement"), op tijd. Teksten eerst in het Nederlands
+   goedgekeurd door Bart. */
+const DATUM_T = {
+  nl:{ knop:"Datum aanpassen?", kop:"Datum aanpassen", nu:(a, v, n) => `Je boeking nu: ${a} tot ${v} (${n} ${n === 1 ? "nacht" : "nachten"}).`,
+       uitleg:"Kies je nieuwe aankomst- en vertrekdag. We kijken meteen of er plek is.", aankomst:"Aankomst", vertrek:"Vertrek",
+       nachten:n => `${n} ${n === 1 ? "nacht" : "nachten"}`, bevestig:"Nieuwe datum bevestigen",
+       gelukt:(a, v) => `Gelukt! Je nieuwe datum: ${a} tot ${v}. We zien je graag dan.`,
+       evenement:"In deze periode is er een evenement op de finca. Neem even contact met ons op.",
+       bezet:"In deze periode is er geen plek vrij. Neem even contact met ons op.",
+       kanNiet:"Je datum aanpassen kan nu niet via deze pagina. Neem even contact met ons op.",
+       datums:d => `Kies een aankomst vanaf ${d} en een vertrek na je aankomst (hooguit 60 nachten).`,
+       zelfde:"Dit is al je datum. Kies een andere aankomst- of vertrekdag.",
+       app:"Stuur ons een WhatsApp", appTekst:(a, v) => `Hoi, ik wil mijn datum aanpassen naar ${a} tot ${v}.`, appKort:"Hoi, ik wil mijn datum aanpassen.", naarPagina:"Naar je gastenpagina" },
+  en:{ knop:"Change your dates?", kop:"Change dates", nu:(a, v, n) => `Your booking now: ${a} to ${v} (${n} ${n === 1 ? "night" : "nights"}).`,
+       uitleg:"Choose your new arrival and departure day. We'll check straight away whether there's space.", aankomst:"Arrival", vertrek:"Departure",
+       nachten:n => `${n} ${n === 1 ? "night" : "nights"}`, bevestig:"Confirm new dates",
+       gelukt:(a, v) => `Done! Your new dates: ${a} to ${v}. We look forward to seeing you then.`,
+       evenement:"There is an event at the finca during this period. Please get in touch with us.",
+       bezet:"There is no pitch available during this period. Please get in touch with us.",
+       kanNiet:"Changing your dates isn't possible via this page right now. Please get in touch with us.",
+       datums:d => `Choose an arrival from ${d} and a departure after your arrival (60 nights at most).`,
+       zelfde:"These are already your dates. Choose a different arrival or departure day.",
+       app:"Send us a WhatsApp", appTekst:(a, v) => `Hi, I would like to change my dates: ${a} to ${v}.`, appKort:"Hi, I would like to change my dates.", naarPagina:"To your guest page" },
+  de:{ knop:"Datum ändern?", kop:"Datum ändern", nu:(a, v, n) => `Eure Buchung jetzt: ${a} bis ${v} (${n} ${n === 1 ? "Nacht" : "Nächte"}).`,
+       uitleg:"Wählt euren neuen An- und Abreisetag. Wir schauen sofort, ob ein Platz frei ist.", aankomst:"Anreise", vertrek:"Abreise",
+       nachten:n => `${n} ${n === 1 ? "Nacht" : "Nächte"}`, bevestig:"Neues Datum bestätigen",
+       gelukt:(a, v) => `Geschafft! Euer neues Datum: ${a} bis ${v}. Wir freuen uns auf euch.`,
+       evenement:"In diesem Zeitraum findet auf der Finca eine Veranstaltung statt. Nehmt bitte kurz Kontakt mit uns auf.",
+       bezet:"In diesem Zeitraum ist kein Platz frei. Nehmt bitte kurz Kontakt mit uns auf.",
+       kanNiet:"Euer Datum lässt sich über diese Seite gerade nicht ändern. Nehmt bitte kurz Kontakt mit uns auf.",
+       datums:d => `Wählt eine Anreise ab ${d} und eine Abreise nach der Anreise (höchstens 60 Nächte).`,
+       zelfde:"Das ist schon euer Datum. Wählt einen anderen An- oder Abreisetag.",
+       app:"Schreibt uns auf WhatsApp", appTekst:(a, v) => `Hallo, wir möchten unser Datum ändern: ${a} bis ${v}.`, appKort:"Hallo, wir möchten unser Datum ändern.", naarPagina:"Zu eurer Gästeseite" },
+  es:{ knop:"¿Cambiar las fechas?", kop:"Cambiar las fechas", nu:(a, v, n) => `Vuestra reserva ahora: del ${a} al ${v} (${n} ${n === 1 ? "noche" : "noches"}).`,
+       uitleg:"Elegid vuestro nuevo día de llegada y de salida. Miramos enseguida si hay sitio.", aankomst:"Llegada", vertrek:"Salida",
+       nachten:n => `${n} ${n === 1 ? "noche" : "noches"}`, bevestig:"Confirmar las nuevas fechas",
+       gelukt:(a, v) => `¡Hecho! Vuestras nuevas fechas: del ${a} al ${v}. Os esperamos.`,
+       evenement:"En este periodo hay un evento en la finca. Poneos en contacto con nosotros, por favor.",
+       bezet:"En este periodo no hay ninguna parcela libre. Poneos en contacto con nosotros, por favor.",
+       kanNiet:"Ahora mismo no podéis cambiar las fechas a través de esta página. Poneos en contacto con nosotros, por favor.",
+       datums:d => `Elegid una llegada a partir del ${d} y una salida después de la llegada (como máximo 60 noches).`,
+       zelfde:"Estas ya son vuestras fechas. Elegid otro día de llegada o de salida.",
+       app:"Mandadnos un WhatsApp", appTekst:(a, v) => `Hola, queremos cambiar nuestras fechas: del ${a} al ${v}.`, appKort:"Hola, queremos cambiar nuestras fechas.", naarPagina:"A vuestra página de huéspedes" },
+  it:{ knop:"Cambiare le date?", kop:"Cambiare le date", nu:(a, v, n) => `La vostra prenotazione ora: da ${a} a ${v} (${n} ${n === 1 ? "notte" : "notti"}).`,
+       uitleg:"Scegliete il nuovo giorno di arrivo e di partenza. Controlliamo subito se c'è posto.", aankomst:"Arrivo", vertrek:"Partenza",
+       nachten:n => `${n} ${n === 1 ? "notte" : "notti"}`, bevestig:"Confermare le nuove date",
+       gelukt:(a, v) => `Fatto! Le vostre nuove date: da ${a} a ${v}. Vi aspettiamo.`,
+       evenement:"In questo periodo c'è un evento alla finca. Contattateci, per favore.",
+       bezet:"In questo periodo non c'è nessuna piazzola libera. Contattateci, per favore.",
+       kanNiet:"Al momento non potete cambiare le date tramite questa pagina. Contattateci, per favore.",
+       datums:d => `Scegliete un arrivo a partire da ${d} e una partenza dopo l'arrivo (al massimo 60 notti).`,
+       zelfde:"Queste sono già le vostre date. Scegliete un altro giorno di arrivo o di partenza.",
+       app:"Mandateci un WhatsApp", appTekst:(a, v) => `Ciao, vorremmo cambiare le nostre date: da ${a} a ${v}.`, appKort:"Ciao, vorremmo cambiare le nostre date.", naarPagina:"Alla vostra pagina ospiti" },
+  fr:{ knop:"Modifier vos dates ?", kop:"Modifier les dates", nu:(a, v, n) => `Votre réservation actuelle : du ${a} au ${v} (${n} ${n === 1 ? "nuit" : "nuits"}).`,
+       uitleg:"Choisissez votre nouveau jour d'arrivée et de départ. Nous vérifions tout de suite s'il y a de la place.", aankomst:"Arrivée", vertrek:"Départ",
+       nachten:n => `${n} ${n === 1 ? "nuit" : "nuits"}`, bevestig:"Confirmer les nouvelles dates",
+       gelukt:(a, v) => `C'est fait ! Vos nouvelles dates : du ${a} au ${v}. Au plaisir de vous accueillir.`,
+       evenement:"Un événement a lieu à la finca pendant cette période. Merci de nous contacter.",
+       bezet:"Aucun emplacement n'est libre pendant cette période. Merci de nous contacter.",
+       kanNiet:"Il n'est pas possible de modifier vos dates via cette page pour le moment. Merci de nous contacter.",
+       datums:d => `Choisissez une arrivée à partir du ${d} et un départ après votre arrivée (60 nuits maximum).`,
+       zelfde:"Ce sont déjà vos dates. Choisissez un autre jour d'arrivée ou de départ.",
+       app:"Envoyez-nous un WhatsApp", appTekst:(a, v) => `Bonjour, nous aimerions modifier nos dates : du ${a} au ${v}.`, appKort:"Bonjour, nous aimerions modifier nos dates.", naarPagina:"Vers votre page personnelle" },
+  pt:{ knop:"Alterar as datas?", kop:"Alterar as datas", nu:(a, v, n) => `A vossa reserva agora: de ${a} a ${v} (${n} ${n === 1 ? "noite" : "noites"}).`,
+       uitleg:"Escolham o novo dia de chegada e de partida. Vemos logo se há lugar.", aankomst:"Chegada", vertrek:"Partida",
+       nachten:n => `${n} ${n === 1 ? "noite" : "noites"}`, bevestig:"Confirmar as novas datas",
+       gelukt:(a, v) => `Feito! As vossas novas datas: de ${a} a ${v}. Até lá!`,
+       evenement:"Neste período há um evento na finca. Entrem em contacto connosco, por favor.",
+       bezet:"Neste período não há nenhum lugar livre. Entrem em contacto connosco, por favor.",
+       kanNiet:"Neste momento não é possível alterar as datas através desta página. Entrem em contacto connosco, por favor.",
+       datums:d => `Escolham uma chegada a partir de ${d} e uma partida depois da chegada (no máximo 60 noites).`,
+       zelfde:"Estas já são as vossas datas. Escolham outro dia de chegada ou de partida.",
+       app:"Enviem-nos um WhatsApp", appTekst:(a, v) => `Olá, queremos alterar as nossas datas: de ${a} a ${v}.`, appKort:"Olá, queremos alterar as nossas datas.", naarPagina:"Para a vossa página de hóspedes" },
+  cs:{ knop:"Změnit termín?", kop:"Změnit termín", nu:(a, v, n) => `Vaše rezervace teď: příjezd ${a}, odjezd ${v} (${n} ${n === 1 ? "noc" : n < 5 ? "noci" : "nocí"}).`,
+       uitleg:"Vyberte si nový den příjezdu a odjezdu. Hned se podíváme, jestli je volné místo.", aankomst:"Příjezd", vertrek:"Odjezd",
+       nachten:n => `${n} ${n === 1 ? "noc" : n < 5 ? "noci" : "nocí"}`, bevestig:"Potvrdit nový termín",
+       gelukt:(a, v) => `Hotovo! Váš nový termín: příjezd ${a}, odjezd ${v}. Těšíme se na vás.`,
+       evenement:"V tomto termínu je na fince akce. Ozvěte se nám prosím.",
+       bezet:"V tomto termínu není volné žádné místo. Ozvěte se nám prosím.",
+       kanNiet:"Termín teď přes tuto stránku změnit nejde. Ozvěte se nám prosím.",
+       datums:d => `Nejdřívější příjezd: ${d}. Odjezd po příjezdu (nejvýše 60 nocí).`,
+       zelfde:"To už je váš termín. Vyberte jiný den příjezdu nebo odjezdu.",
+       app:"Napište nám na WhatsApp", appTekst:(a, v) => `Dobrý den, rádi bychom změnili termín: příjezd ${a}, odjezd ${v}.`, appKort:"Dobrý den, rádi bychom změnili termín.", naarPagina:"Na vaši stránku pro hosty" },
+  fi:{ knop:"Muutatteko päivämääriä?", kop:"Päivämäärien muutos", nu:(a, v, n) => `Varauksenne nyt: saapuminen ${a}, lähtö ${v} (${n} ${n === 1 ? "yö" : "yötä"}).`,
+       uitleg:"Valitkaa uusi saapumis- ja lähtöpäivä. Katsomme heti, onko paikka vapaana.", aankomst:"Saapuminen", vertrek:"Lähtö",
+       nachten:n => `${n} ${n === 1 ? "yö" : "yötä"}`, bevestig:"Vahvistakaa uudet päivämäärät",
+       gelukt:(a, v) => `Valmista! Uudet päivämääränne: saapuminen ${a}, lähtö ${v}. Nähdään silloin!`,
+       evenement:"Tänä aikana fincalla on tapahtuma. Ottakaa meihin yhteyttä.",
+       bezet:"Tänä aikana vapaata paikkaa ei ole. Ottakaa meihin yhteyttä.",
+       kanNiet:"Päivämääriä ei voi nyt muuttaa tämän sivun kautta. Ottakaa meihin yhteyttä.",
+       datums:d => `Aikaisin mahdollinen saapuminen: ${d}. Lähtö saapumisen jälkeen (enintään 60 yötä).`,
+       zelfde:"Nämä ovat jo päivämääränne. Valitkaa toinen saapumis- tai lähtöpäivä.",
+       app:"Lähettäkää meille WhatsApp-viesti", appTekst:(a, v) => `Hei, haluaisimme muuttaa päivämääriämme: saapuminen ${a}, lähtö ${v}.`, appKort:"Hei, haluaisimme muuttaa päivämääriämme.", naarPagina:"Vierassivullenne" },
+  no:{ knop:"Endre datoene?", kop:"Endre datoene", nu:(a, v, n) => `Bestillingen deres nå: ${a} til ${v} (${n} ${n === 1 ? "natt" : "netter"}).`,
+       uitleg:"Velg ny ankomst- og avreisedag. Vi ser med en gang om det er ledig plass.", aankomst:"Ankomst", vertrek:"Avreise",
+       nachten:n => `${n} ${n === 1 ? "natt" : "netter"}`, bevestig:"Bekreft nye datoer",
+       gelukt:(a, v) => `Ferdig! De nye datoene deres: ${a} til ${v}. Vi gleder oss til å se dere.`,
+       evenement:"I denne perioden er det et arrangement på fincaen. Ta kontakt med oss.",
+       bezet:"I denne perioden er det ingen ledig plass. Ta kontakt med oss.",
+       kanNiet:"Dere kan ikke endre datoene via denne siden nå. Ta kontakt med oss.",
+       datums:d => `Velg en ankomst fra ${d} og en avreise etter ankomsten (høyst 60 netter).`,
+       zelfde:"Dette er allerede datoene deres. Velg en annen ankomst- eller avreisedag.",
+       app:"Send oss en WhatsApp-melding", appTekst:(a, v) => `Hei, vi vil gjerne endre datoene våre: ${a} til ${v}.`, appKort:"Hei, vi vil gjerne endre datoene våre.", naarPagina:"Til gjestesiden deres" },
+  sv:{ knop:"Ändra datum?", kop:"Ändra datum", nu:(a, v, n) => `Er bokning nu: ${a} till ${v} (${n} ${n === 1 ? "natt" : "nätter"}).`,
+       uitleg:"Välj ny ankomst- och avresedag. Vi ser direkt om det finns plats.", aankomst:"Ankomst", vertrek:"Avresa",
+       nachten:n => `${n} ${n === 1 ? "natt" : "nätter"}`, bevestig:"Bekräfta nya datum",
+       gelukt:(a, v) => `Klart! Era nya datum: ${a} till ${v}. Vi ser fram emot att träffa er.`,
+       evenement:"Under den här perioden är det ett evenemang på fincan. Kontakta oss gärna.",
+       bezet:"Under den här perioden finns ingen ledig plats. Kontakta oss gärna.",
+       kanNiet:"Ni kan inte ändra datum via den här sidan just nu. Kontakta oss gärna.",
+       datums:d => `Välj en ankomst från ${d} och en avresa efter ankomsten (högst 60 nätter).`,
+       zelfde:"Det här är redan era datum. Välj en annan ankomst- eller avresedag.",
+       app:"Skicka ett WhatsApp-meddelande till oss", appTekst:(a, v) => `Hej, vi vill gärna ändra våra datum: ${a} till ${v}.`, appKort:"Hej, vi vill gärna ändra våra datum.", naarPagina:"Till er gästsida" }
+};
+const datumT = () => DATUM_T[gastTaal] || DATUM_T.nl;
+let gastDatum = { info:null, status:null, aankomst:"", vertrek:"", tot:null };
+const nachtenTussen = (a, v) => Math.round((parse(v) - parse(a)) / 864e5);
+const datumLinkOpen = () => !kijkMee && new URLSearchParams(location.search).get("datum") === "1";
+async function gastDatumInfo(){
+  if(!gastData || gastData.fout || !isCamperPlek(gastData.kamer) || kijkMee){ gastDatum.info = null; return; }
+  try { const { data, error } = await db.rpc("gast_datum_info", { p_code: gastCode }); gastDatum.info = error ? null : data; } catch(e){ gastDatum.info = null; }
+}
+/* de knop (wachtpagina en gastenpagina): opent het scherm via de link met &datum=1, zodat herladen en terug gewoon werken */
+const datumKnopHtml = () => (!kijkMee && gastDatum.info && gastDatum.info.mag && gastDatum.status !== "ok")
+  ? `<div class="dag verleng"><div class="vink"><a class="knop" href="${MAP}?ontbijt=${encodeURIComponent(gastCode)}&datum=1">${gIcoon("cal")} ${vrij(datumT().knop)}</a></div></div>` : "";
+function tekenGastDatum(){
+  const t = GT[gastTaal] || GT.nl, d = datumT(), i = gastDatum.info, bak = document.getElementById("gastInhoud");
+  const talen = `<div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span><div class="gtaal">${gIcoon("bol")}<select data-gtaal="1" aria-label="Taal">` +
+    Object.keys(GT).map(l => `<option value="${l}"${l === gastTaal ? " selected" : ""}>${taalOptie(l)}</option>`).join("") + `</select></div></div>`;
+  const naar = `<div class="vink" style="margin-top:10px"><a class="knop" href="${MAP}?ontbijt=${encodeURIComponent(gastCode)}">${vrij(d.naarPagina)}</a></div>`;
+  /* zonder datums (mag niet): een kort appje zonder datums (review 03-11 e) */
+  const app = (a, v) => `<div class="vink" style="margin-top:10px"><a class="knop" href="https://wa.me/34722162962?text=${encodeURIComponent(a ? d.appTekst(verlengDatum(a), verlengDatum(v)) : d.appKort)}" target="_blank" rel="noopener">${vrij(d.app)}</a></div>`;
+  let h = `<div class="gkop">${talen}</div><div class="dag datumaanpassen" style="margin-top:14px"><h2>${gIcoon("cal")} ${vrij(d.kop)}</h2>`;
+  if(gastDatum.status === "ok"){
+    h += `<div class="melding goed">${vrij(d.gelukt(verlengDatum(gastData.van), verlengDatum(gastData.tot)))}</div>` + naar;
+  } else if(!i || !i.mag){
+    h += `<p style="margin:0 0 6px">${vrij(d.kanNiet)}</p>` + app() + naar;
+  } else {
+    const a = gastDatum.aankomst || i.aankomst, v = gastDatum.vertrek || i.vertrek;
+    const n = /^\d{4}-\d{2}-\d{2}$/.test(a) && /^\d{4}-\d{2}-\d{2}$/.test(v) ? nachtenTussen(a, v) : 0;
+    const vMax = /^\d{4}-\d{2}-\d{2}$/.test(a) ? plusDagen(a, Number(i.max_nachten) || 60) : "";
+    h += `<p style="margin:0 0 8px">${vrij(d.nu(verlengDatum(i.aankomst), verlengDatum(i.vertrek), nachtenTussen(i.aankomst, i.vertrek)))}</p>` +
+      `<div class="info" style="margin:0 0 10px">${vrij(d.uitleg)}</div>` +
+      `<label class="gdlabel" for="gdIn">${vrij(d.aankomst)}</label><input type="date" id="gdIn" min="${i.vanaf}" max="${i.tot}" value="${vrij(a)}">` +
+      `<label class="gdlabel" for="gdUit">${vrij(d.vertrek)}</label><input type="date" id="gdUit" min="${/^\d{4}-\d{2}-\d{2}$/.test(a) ? plusDagen(a, 1) : i.vanaf}" max="${vMax}" value="${vrij(v)}">` +
+      (n > 0 ? `<div class="info" style="margin:6px 0 0">${vrij(d.nachten(n))}</div>` : "");
+    const melding = { evenement:d.evenement, bezet:d.bezet, zelfde:d.zelfde, datums:d.datums(verlengDatum(i.vanaf)), fout:t.fout };
+    if(gastDatum.status && melding[gastDatum.status]) h += `<div class="melding" style="margin-top:10px">${vrij(melding[gastDatum.status])}</div>` +
+      (gastDatum.status === "evenement" || gastDatum.status === "bezet" ? app(a, v) : "");
+    h += `<div class="vink" style="margin-top:12px"><button data-gdbevestig="1" class="aan" style="width:100%;font-size:16px;padding:12px" ${gastDatum.status === "bezig" ? "disabled" : ""}>${vrij(d.bevestig)}</button></div>` + naar;
+  }
+  bak.innerHTML = h + `</div>`;
+  bak.querySelectorAll("[data-gtaal]").forEach(sel => sel.onchange = () => { gastTaal = sel.value; try{ localStorage.setItem("ontbijtTaal", gastTaal); }catch(e){} tekenGastDatum(); });
+  const gIn = document.getElementById("gdIn"), gUit = document.getElementById("gdUit");
+  if(gIn) gIn.onchange = () => {
+    /* de vertrekdag schuift mee met hetzelfde aantal nachten, zolang dat binnen de grenzen blijft */
+    const oudA = gastDatum.aankomst || i.aankomst, oudV = gastDatum.vertrek || i.vertrek, a = gIn.value;
+    gastDatum.aankomst = a;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(a)){ const n = Math.min(Number(i.max_nachten) || 60, Math.max(1, nachtenTussen(oudA, oudV) || 1)); gastDatum.vertrek = plusDagen(a, n); }
+    if(gastDatum.status !== "bezig") gastDatum.status = null; tekenGastDatum();
+  };
+  if(gUit) gUit.onchange = () => { gastDatum.vertrek = gUit.value; if(gastDatum.status !== "bezig") gastDatum.status = null; tekenGastDatum(); };
+  bak.querySelectorAll("[data-gdbevestig]").forEach(kn => kn.onclick = () => gastDatumZet());
+}
+async function gastDatumZet(){
+  const i = gastDatum.info; if(!i || !i.mag || gastDatum.status === "bezig") return;
+  const a = gastDatum.aankomst || i.aankomst, v = gastDatum.vertrek || i.vertrek;
+  const geldig = /^\d{4}-\d{2}-\d{2}$/.test(a) && /^\d{4}-\d{2}-\d{2}$/.test(v);
+  if(!geldig || a < i.vanaf || a > i.tot || v <= a || nachtenTussen(a, v) > (Number(i.max_nachten) || 60)){ gastDatum.status = "datums"; tekenGastDatum(); return; }
+  if(a === i.aankomst && v === i.vertrek){ gastDatum.status = "zelfde"; tekenGastDatum(); return; }
+  gastDatum.status = "bezig"; tekenGastDatum();
+  let data = null, error = null;
+  try { ({ data, error } = await db.rpc("gast_datum_zet", { p_code: gastCode, p_aankomst: a, p_vertrek: v })); } catch(e){ error = e; }
+  if(!error && data && data.ok){
+    try { gastData = await gastHaal(); } catch(e){ Object.assign(gastData, { van: a, tot: v }); }
+    Object.assign(gastDatum, { status:"ok", aankomst:"", vertrek:"" });
+  } else {
+    const f = data && data.fout;
+    gastDatum.status = ["evenement", "bezet", "datums", "zelfde"].includes(f) ? f : "fout";
+    /* mag het intussen niet meer (te laat, al gebruikt, toestemming uit)? Dan opnieuw vragen: het scherm zegt dan "neem contact op" */
+    if(["te_laat", "op", "geen_toestemming", "uit", "betaald", "noodplek", "geen_camper", "verlopen"].includes(f)){ await gastDatumInfo(); gastDatum.status = null; }
+  }
+  tekenGastDatum();
+}
 async function gastHaal(){
   const { data, error } = await db.rpc("gast_ontbijt", { p_code: gastCode });
   if(error) throw error;
@@ -4297,6 +4497,10 @@ async function gastHaal(){
   /* 21-10-2026 c: voor campers ook of ze zelf mogen verlengen (en hoeveel nachten de plek nog vrij is) */
   if(data && !data.fout && isCamperPlek(data.kamer)){
     try { const r = await db.rpc("gast_verleng_info", { p_code: gastCode }); gastVerleng.info = r.error ? null : r.data; } catch(e){ gastVerleng.info = null; }
+    /* 03-11-2026 e: en of ze zelf hun datum mogen aanpassen (alleen vóór aankomst) */
+    if(!kijkMee && data.van && data.vandaag && data.vandaag <= data.van){
+      try { const r = await db.rpc("gast_datum_info", { p_code: gastCode }); gastDatum.info = r.error ? null : r.data; } catch(e){ gastDatum.info = null; }
+    } else gastDatum.info = null;
   }
   return data;
 }
@@ -4331,6 +4535,13 @@ async function aanvraagOpen(code){
   catch(e){ return false; }
 }
 async function startGast(code){
+  /* 03-11-2026 e: de link van Bart om de datum aan te passen opent meteen dat scherm, ook als de check-in nog moet */
+  if(datumLinkOpen()){
+    gastCode = code; gastTaal = gastTaalKies(); document.title = "Finca KaYu"; toon("gast");
+    try { gastData = await gastHaal(); } catch(e){ gastData = { fout:"onbekend" }; }
+    if(gastData && gastData.taal && GT[gastData.taal]) gastTaal = gastData.taal;
+    if(gastData && !gastData.fout && isCamperPlek(gastData.kamer)){ tekenGastDatum(); return; }
+  }
   if(await checkinNodig(code)){ location.replace(MAP + "checkin.html?c=" + encodeURIComponent(code)); return; }
   if(await aanvraagOpen(code)){ location.replace(MAP + "checkin.html?c=" + encodeURIComponent(code) + "&aanvraag=1"); return; }
   gastCode = code; gastTaal = gastTaalKies(); gastVasteLijst = null; gastWieLaad();
@@ -4372,7 +4583,7 @@ function tekenGastWacht(){
     Object.keys(GT).map(l => `<option value="${l}"${l === gastTaal ? " selected" : ""}>${taalOptie(l)}</option>`).join("") + `</select></div></div>`;
   bak.innerHTML = `<div class="gkop">${talen}</div><div class="dag akkoord" style="margin-top:14px"><b style="display:block;font-size:16px;font-weight:600;margin-bottom:6px">${t.wachtKop}</b>` +
     `<p style="margin:0 0 12px">${gastCamperAkkoord() && !kijkMee && gastAkkoordGegeven() ? (t.wachtGelezen || GT.nl.wachtGelezen) + " " : ""}${t.wachtTekst(taalDatum(iso(g), gastTaal))}</p>` +
-    (route ? `<a class="groute" href="${route}" target="_blank" rel="noopener">${t.route}</a>` + routeStopHtml() : "") + `</div>`;
+    (route ? `<a class="groute" href="${route}" target="_blank" rel="noopener">${t.route}</a>` + routeStopHtml() : "") + `</div>` + datumKnopHtml();
   bak.querySelectorAll("[data-gtaal]").forEach(sel => sel.onchange = () => { gastTaal = sel.value; try{ localStorage.setItem("ontbijtTaal", gastTaal); }catch(e){} tekenGastWacht(); });
 }
 const gastDagen = () => { const l = []; if(!gastData || !gastData.van) return l;
@@ -4894,7 +5105,7 @@ function tekenGast(){
         welkomH = `<div class="dag"><h2>${t.welkom}</h2>` + morgenH + extrasH +
           `<div class="regel" data-gtab="rekening" style="cursor:pointer"><span>${t.startRek}</span><b>${eur(rek.totaal)}</b></div>` +
           `<div class="info" style="margin-top:10px">${t.barUitleg}</div><div class="vink"><button data-gtab="bar" class="aan">${t.tabs.bar} ›</button></div></div>`;
-        h += samenHtml() + thuisH + programmaH + herH + welkomH + verlengHtml() + deelHtml() + aankHtml();
+        h += samenHtml() + thuisH + programmaH + herH + welkomH + verlengHtml() + datumKnopHtml() + deelHtml() + aankHtml();
       } else {
         /* Start als vier tegels (op verzoek van Bart, 23-09-2026): ontbijt of broodjes, rekening met de honesty bar,
            extra's en omgeving; daaronder aankondiging, installatietip en als laatste de huisregels.
@@ -4928,7 +5139,7 @@ function tekenGast(){
         const omgTegel = tegel("omgeving", "bol", t.tabs.omgeving, `<div class="gtinfo">${tt.omg}</div>`,
           `<button data-gtab="omgeving">${BEZORG_KNOP[gastTaal] || BEZORG_KNOP.en}</button>`);
         /* 16-10-2026 a: bovenaan de links voor de andere kamers (alleen de hoofdboeker), onder de tegels de knop om de eigen link te delen */
-        h += samenHtml() + programmaH + aankomstKaart() + vergetenHtml() + `<div class="gtegels">` + ontTegel + rekTegel + extTegel + omgTegel + `</div>` + verlengHtml() + deelHtml() + aankHtml() + thuisH + gastRegelsHtml();
+        h += samenHtml() + programmaH + aankomstKaart() + vergetenHtml() + `<div class="gtegels">` + ontTegel + rekTegel + extTegel + omgTegel + `</div>` + verlengHtml() + datumKnopHtml() + deelHtml() + aankHtml() + thuisH + gastRegelsHtml();
       }
     }
   }
@@ -5764,7 +5975,8 @@ async function zorgGastLinks(o = {}){
   for(const k of kamers){ if(o.zonderKamers && k.bron !== "dicht") continue; if(k.uit < grens || k.in > vooruit) continue; await zorg(k.nr, k.kamer === "Complete Finca" ? "Hele finca" : k.kamer, kNaam(k) || null, k.in, k.uit); }
   /* campers: zelfde link, nr is het boekings-id, plek in plaats van kamer */
   /* testboekingen (demo-): wel een link aanmaken, maar niet bijwerken (dat doet schuifTestlinks) */
-  for(const b of boekingen){ if(b.gestald || (DEMO(b.id) && gastLinks[b.id]) || !b.in || !b.uit || b.uit < grens || b.in > vooruit) continue; await zorg(b.id, b.plek, b.naam || null, b.in, b.uit); }
+  /* 03-11-2026 e (review): verder dan 60 dagen vooruit geen nieuwe link, maar een bestaande (aanvraaglink, Datum aanpassen) loopt wel mee */
+  for(const b of boekingen){ if(b.gestald || (DEMO(b.id) && gastLinks[b.id]) || !b.in || !b.uit || b.uit < grens || (b.in > vooruit && !gastLinks[b.id])) continue; await zorg(b.id, b.plek, b.naam || null, b.in, b.uit); }
   /* 20-10-2026 e: een gastenlink van het gastenverblijf (alleen als die er al is) volgt naam en datums uit de agenda */
   for(const e of eigen){ if(e.plek === "Gastenverblijf" && gastLinks["eigen-" + e.id]) await zorg("eigen-" + e.id, "Gastenverblijf", e.naam || null, e.in, e.uit); }
   return veranderd;
@@ -7322,8 +7534,8 @@ function bindAgenda(bak){
     if(ep){ eigenForm(null, ep.dataset.agep, ep.dataset.agd); return; }
     const p = e.target.closest("[data-agp]");
     if(p){
-      const g = groepOp(p.dataset.agd);
-      if(g){ alert(groepMelding(g)); return; }
+      /* 04-11-2026 a (review): ook op een groepsdag gewoon het formulier openen; daar staat de rode regel over de groep, en Opslaan
+         vraagt "Toch opslaan?" (Bart: "als we een groep hebben en we toch een camper willen laten komen") */
       dag = parse(p.dataset.agd); nieuweBoeking(p.dataset.agp);
     }
   };
@@ -8731,6 +8943,13 @@ function inboxItems(){
         (waarsch ? `<br><span style="color:var(--rood);font-weight:600">${vrij(waarsch)}</span>` : ""),
       knoppen:(b ? `<button class="hoofd" data-cabekijk="${vrij(a.id)}">Boeking bekijken</button>` : "") + `<button data-cagezien="${vrij(a.id)}">Gezien</button>` });
   });
+  /* 03-11-2026 e (Bart): een camper heeft zelf zijn datum aangepast; staat er tot Bart op Gezien tikt */
+  const dk = d => `${DG[parse(d).getDay()].slice(0,2)} ${kort(d)}`;
+  boekingen.filter(b => b.datumWas && !DEMO(b.id)).forEach(b => { const w = b.datumWas;
+    antwoord.push({ id:"dt" + b.id, nr:b.id, naam:b.naam, plek:b.plek, wanneer:tijdTekst(w.op),
+      wat:`<b>Datum zelf aangepast</b>: nu ${dk(b.in)} t/m ${dk(b.uit)} (was ${dk(w.aankomst)} t/m ${dk(w.vertrek)})` +
+        (w.plek && w.plek !== b.plek ? `. Staat nu op ${vrij(b.plek)} (was ${vrij(w.plek)}).` : "."),
+      knoppen:`<button class="hoofd" data-dtgezien="${vrij(b.id)}">Gezien</button><button data-dtbekijk="${vrij(b.id)}">Boeking bekijken</button>` }); });
   /* aanvraaglinks die nog niet zijn ingevuld: zo zie je wie nog moet reageren */
   camperAanvragen.filter(a => !a.ingevuld_op).forEach(a => info.push({ id:"o" + a.id, nr:"", naam:a.naam || "Naam niet ingevuld", plek:"aanvraaglink", wanneer:tijdTekst(a.aangemaakt),
     wat:`Aanvraaglink verstuurd (${(TAAL_NL[a.taal] || a.taal || "")}), nog niet ingevuld`,
@@ -8780,6 +8999,14 @@ function tekenInbox(){
   bak.querySelectorAll("[data-cagezien]").forEach(kn => kn.onclick = async () => { const a = camperAanvragen.find(x => String(x.id) === kn.dataset.cagezien); if(!a) return; a.gezien = true; tekenNu();
     const { error } = await db.from("camper_aanvragen").update({ gezien: true }).eq("id", a.id); if(error) alert("Opslaan mislukt: " + error.message); });
   bak.querySelectorAll("[data-cabekijk]").forEach(kn => kn.onclick = () => { const a = camperAanvragen.find(x => String(x.id) === kn.dataset.cabekijk); const b = a && boekingen.find(x => String(x.id) === String(a.boeking_id)); if(b) toonDetail(b); });
+  bak.querySelectorAll("[data-dtgezien]").forEach(kn => kn.onclick = async () => {
+    const b = boekingen.find(x => x.id === kn.dataset.dtgezien); if(!b) return;
+    const oud = b.datumWas; b.datumWas = null; tekenNu();
+    /* alleen als de datums nog dezelfde zijn: past de gast intussen opnieuw aan, dan blijft de melding staan */
+    const { error } = await db.from("boekingen").update({ datum_was: null }).eq("id", b.id).eq("aankomst", b.in).eq("vertrek", b.uit);
+    if(error){ b.datumWas = oud; alert("Opslaan mislukt: " + error.message); tekenNu(); }
+  });
+  bak.querySelectorAll("[data-dtbekijk]").forEach(kn => kn.onclick = () => { const b = boekingen.find(x => x.id === kn.dataset.dtbekijk); if(b) toonDetail(b); });
   bak.querySelectorAll("[data-caweg]").forEach(kn => kn.onclick = async () => { const a = camperAanvragen.find(x => String(x.id) === kn.dataset.caweg); if(!a) return;
     if(!confirm(`Aanvraaglink${a.naam ? " voor " + a.naam : ""} weghalen? De link werkt daarna niet meer.`)) return;
     camperAanvragen = camperAanvragen.filter(x => x !== a); tekenNu();
@@ -8982,6 +9209,11 @@ function tekenMeer(){
   meerZet("mpPlekIndeling", plekVrij() ? "Vrij: blijft iemand langer, dan mag de app een camper die nog moet komen op een andere vrije plek zetten."
     : "Vast: de app zet nooit iemand op een andere plek.");
   meerZet("mpVerlengMax", `${verlengMax()} ${verlengMax() === 1 ? "nacht" : "nachten"} per keer, alleen als er plek is`);
+  /* 03-11-2026 e (Bart): datum zelf aanpassen */
+  meerZet("mpDatum", { uit:"Uit: gasten kunnen hun datum niet zelf aanpassen.", per_gast:"Alleen met jouw link: je geeft toestemming in het profiel van de camper en stuurt hem de link.",
+    alle:"Alle campers die nog moeten komen, zien op hun gastenpagina de knop Datum aanpassen." }[datumWie()]);
+  meerZet("mpDatumDagen", `Tot ${datumDagen()} ${datumDagen() === 1 ? "dag" : "dagen"} vóór aankomst. De nieuwe aankomst ook minstens zo ver vooruit.`);
+  meerZet("mpDatumKeer", `${datumKeer()} keer per gast${datumWie() === "per_gast" ? ", daarna staat het voor die gast weer uit" : ""}`);
   meerZet("mpMaxLengte", maxLengte() === null ? "Geen grens: elke lengte mag via de aanvraaglink, en de app mag elke camper op een andere plek zetten."
     : `${meterTekst(maxLengte())} meter. Langere campers vragen eerst via WhatsApp; zo'n uitzondering zet je zelf en die verplaatst de app nooit.`);
   meerZet("meerCampOb", campersOpen() ? "Uitzetten" : "Aanzetten");
@@ -9844,6 +10076,45 @@ async function wijzigPlekIndeling(){
   const w = await kiesUit("Plekken van campers", PLEK_INDELING, plekVrij() ? "vrij" : "vast");
   if(w && w !== (plekVrij() ? "vrij" : "vast")) await bewaarInstelling("plek_indeling", w);
 }
+/* 03-11-2026 e (Bart): campers passen zelf hun datum aan op hun gastenpagina (wachtpagina), via de link die Bart stuurt (per_gast, de
+   standaard) of alle campers die nog moeten komen. De database (gast_datum_info, gast_datum_zet) houdt zich aan dezelfde instellingen en
+   weigert tijdens een groep op de hele finca. Zonder (geldige) instelling: uit, 2 dagen, 1 keer (zelfde regels als de database). */
+const DATUM_WIE = [
+  { waarde:"uit", label:"Uit", uitleg:"Gasten kunnen hun datum niet zelf aanpassen." },
+  { waarde:"per_gast", label:"Alleen met jouw link", uitleg:"Jij geeft een camper toestemming in zijn profiel en stuurt hem de link. Daarna staat het voor die gast weer uit." },
+  { waarde:"alle", label:"Alle campers", uitleg:"Elke camper die nog moet komen, ziet op zijn gastenpagina de knop Datum aanpassen." } ];
+const datumWie = () => { const w = String(instellingen.gast_datum || "").trim(); return w === "per_gast" || w === "alle" ? w : "uit"; };
+const datumGetal = (sleutel, standaard, min, max, re) => { const t = String(instellingen[sleutel] == null ? "" : instellingen[sleutel]).trim(); return re.test(t) && +t >= min && +t <= max ? +t : standaard; };
+const datumDagen = () => datumGetal("gast_datum_dagen", 2, 1, 30, /^\d{1,2}$/);
+const datumKeer = () => datumGetal("gast_datum_keer", 1, 1, 9, /^\d$/);
+async function wijzigDatumWie(){
+  const w = await kiesUit("Wie mag zelf de datum aanpassen?", DATUM_WIE, datumWie());
+  if(w && w !== datumWie()) await bewaarInstelling("gast_datum", w);
+}
+async function wijzigDatumGetal(sleutel, vraag, nu, min, max){
+  const t = prompt(vraag, String(nu)); if(t === null) return;
+  const n = t.trim(); if(!/^\d{1,2}$/.test(n) || +n < min || +n > max){ alert(`Kies een heel getal van ${min} tot en met ${max}.`); return; }
+  if(+n !== nu) await bewaarInstelling(sleutel, String(+n));
+}
+/* uiterlijke dag waarop de gast nog zelf kan aanpassen (aankomst min het aantal dagen) */
+const datumUiterlijk = b => { const d = parse(b.in); d.setDate(d.getDate() - datumDagen()); return iso(d); };
+/* de rij in het profiel: alleen waar het ook echt kan (zelfde regels als gast_datum_info) */
+const datumKnop = b => datumWie() !== "uit" && !b.gestald && !b.betaald && VAST.includes(b.plek) && iso(new Date()) <= datumUiterlijk(b);
+const datumOver = b => Math.max(0, datumKeer() - (b.datumKeer || 0));
+/* het bericht aan de gast, in zijn taal, met de link (&datum=1 opent meteen het scherm Datum aanpassen). Een boeking ver vooruit heeft
+   nog geen gastenlink (die maakt de app pas 60 dagen vooruit): dan maakt de app hem hier. */
+async function datumBericht(b){
+  if(!gastLinks[b.id]){
+    const rij = { nr:b.id, code:nieuweCode(), kamer:b.plek, gast:b.naam || null, van:b.in, tot:b.uit };
+    const { error } = await db.from("gast_links").insert(rij);
+    if(!error) gastLinks[b.id] = rij;
+    else { await zorgGastLinks(); }
+  }
+  if(!gastLinkVan(b.id)){ alert("Er is nog geen gastenlink voor deze boeking, dus het bericht aan de gast kan nog niet. Probeer het zo nog eens."); return; }
+  const taal = taalVan(b.id), tk = TK(taal) || TK("nl");
+  const tekst = (tk.datumAan || TK("nl").datumAan)(aanhef(b.naam), gastLinkVan(b.id) + "&datum=1", taalDatum(datumUiterlijk(b), taal)).join("\n");
+  stuurKeuze({ titel:"Datum aanpassen", wie:`${b.naam} · ${TAAL_NL[taal] || taal}`, tekst, waNr: waNummer(b.tel), email: b.email, onderwerp:"Finca KaYu" });
+}
 /* toestemming per gast (profiel van de camper): alleen waar zelf verlengen ook echt kan */
 const magVerlengenKnop = b => verlengWie() === "per_gast" && !b.gestald && !b.betaald && VAST.includes(b.plek) && b.uit >= iso(new Date());
 async function wijzigVerlengMax(){
@@ -10248,6 +10519,9 @@ function toonDetail(b){
       pkKlap(b.id, "stroom", "Stroom", stroomN ? `${stroomN} ${stroomN === 1 ? "nacht" : "nachten"} · ${eur(stroomN*STROOM)}` : "geen", stroomInhoud) +
       /* 21-10-2026 c (Bart): gasten vragen eerst; met één tik mag deze camper één keer zelf verlengen op zijn gastenpagina */
       (magVerlengenKnop(b) ? pkRij(`data-cdmagverleng="1"`, "Zelf verlengen", b.magVerlengen ? "Mag 1 keer ✓" : "niet toegestaan", b.magVerlengen ? "goed" : "") : "") +
+      /* 03-11-2026 e (Bart): de gast past zelf zijn datum aan; per gast geeft Bart hier toestemming en stuurt hij de link */
+      (datumKnop(b) ? pkRij(`data-cddatum="1"`, "Datum aanpassen", datumWie() === "alle" ? (datumOver(b) ? `mag ${datumOver(b)} keer · link sturen` : "al aangepast · nog een keer toestaan")
+        : b.magDatum ? `mag ${datumOver(b)} keer ✓` : b.datumKeer ? "al aangepast" : "niet toegestaan", (datumWie() === "alle" ? datumOver(b) : b.magDatum) ? "goed" : "") : "") +
       pkRij(`data-cdnotitie="1"`, "Notitie voor ons", notitie ? vrij(notitie).replace(/\n/g, " · ") : "nog niets") +
     `</div><p class="leeg pkuitleg">De notitie is alleen voor jullie: gasten zien hem nooit. Hij staat de dag ervoor en op de aankomstdag bij Let op.</p>` +
     pkOntbijtExtras(b.id, b.uit, pkRij(`data-cdob="1"`, "Ontbijt voor deze camper", camperOntbijtLabel(b).replace("Ontbijt: ", ""))) +
@@ -10321,6 +10595,24 @@ function toonDetail(b){
     if(error){ b.magVerlengen = !w; alert("Opslaan mislukt: " + error.message); toonDetail(b); return; }
     /* 23-10-2026 e (Bart): aangezet? Dan meteen het bericht aan de gast klaarzetten */
     if(w) await verlengBericht(b);
+  });
+  /* 03-11-2026 e: per gast aan (toestemming opnieuw, de teller weer op 0) en meteen het bericht met de link; nog een tik zet het uit.
+     Bij alle campers: alleen het bericht. */
+  dB.querySelectorAll("[data-cddatum]").forEach(kn => kn.onclick = async () => {
+    if(datumWie() === "alle"){
+      /* review 03-11 e: al zo vaak aangepast als mag? Dan eerst vragen of hij het nog een keer mag (de teller weer op 0) */
+      if(!datumOver(b)){
+        if(!confirm(`${b.naam || "Deze gast"} heeft de datum al zelf aangepast. Mag het nog een keer? Dan stuur je daarna de link.`)) return;
+        const oudK = b.datumKeer; b.datumKeer = 0; toonDetail(b);
+        const { error } = await db.from("boekingen").update({ datum_keer:0 }).eq("id", b.id);
+        if(error){ b.datumKeer = oudK; alert("Opslaan mislukt: " + error.message); toonDetail(b); return; }
+      }
+      await datumBericht(b); return; }
+    const w = !b.magDatum, oud = { m:b.magDatum, k:b.datumKeer };
+    b.magDatum = w; if(w) b.datumKeer = 0; toonDetail(b);
+    const { error } = await db.from("boekingen").update(w ? { mag_datum:true, datum_keer:0 } : { mag_datum:false }).eq("id", b.id);
+    if(error){ b.magDatum = oud.m; b.datumKeer = oud.k; alert("Opslaan mislukt: " + error.message); toonDetail(b); return; }
+    if(w) await datumBericht(b);
   });
   dB.querySelectorAll("[data-cdcheckin]").forEach(kn => kn.onclick = () => openCheckin(b.id));
   dB.querySelectorAll("[data-cdcilink]").forEach(kn => kn.onclick = () => camperBericht1(b, "cdUit"));
@@ -12031,7 +12323,10 @@ async function fOpslaan(){
     && bots.every(x => !x.gestald && !teLang(x.lengte) && x.in >= start.uit && x.in >= iso(new Date()));
   if(bots.length && !schuiven){ err.textContent = `${b.plek} is bezet door ${bots[0].naam}.`; return; }
   const groep = groepBots(b.in, b.uit);
-  if(groep){ err.textContent = groepMelding(groep); return; }
+  /* 04-11-2026 a (Bart: "als we een groep hebben en we toch een camper willen laten komen"): niet meer weigeren, maar vragen.
+     Een bestaande boeking met dezelfde datums als bij het openen (bijvoorbeeld alleen de telefoon gewijzigd) vraagt het niet opnieuw. */
+  const zelfdeDatums = !!bewerktId && !!start && start.in === b.in && start.uit === b.uit;
+  if(groep && !zelfdeDatums && !confirm(`${groepMelding(groep)}\n\nToch opslaan? Dan komt deze camper tijdens de groep.`)){ err.textContent = groepMelding(groep); return; }
   let schuifMelding = "";
   if(schuiven){
     const namen = bots.map(x => `${x.naam} (komt ${DG[parse(x.in).getDay()].slice(0,2)} ${kort(x.in)})`).join(", ");
@@ -12285,6 +12580,9 @@ if(NIEUW){
     if(w === "verlengmax"){ wijzigVerlengMax(); return; }
     if(w === "verlengwie"){ wijzigVerlengWie(); return; }
     if(w === "plekindeling"){ wijzigPlekIndeling(); return; }
+    if(w === "datumwie"){ wijzigDatumWie(); return; }
+    if(w === "datumdagen"){ wijzigDatumGetal("gast_datum_dagen", "Tot hoeveel dagen vóór aankomst mag een camper zelf zijn datum aanpassen? (1 tot en met 30)", datumDagen(), 1, 30); return; }
+    if(w === "datumkeer"){ wijzigDatumGetal("gast_datum_keer", "Hoe vaak mag een camper zelf zijn datum aanpassen? (1 tot en met 9)", datumKeer(), 1, 9); return; }
     if(w === "maxlengte"){ wijzigMaxLengte(); return; }
     if(w.startsWith("inst")){ wijzigBedrijfsinstelling(w); return; }
     if(w.startsWith("kosten")){ kostenActie(w, kn); return; }
