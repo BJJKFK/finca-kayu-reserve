@@ -1426,7 +1426,7 @@
      en de knop eronder. Stip: rood = moet nog, oranje = let op of nog niet bevestigd, groen = geregeld, grijs = niets aan de hand.
      Bewust onderaan, zodat deze regels winnen (soms met !important, omdat er meldingen zijn met een kleur in het style-attribuut).
      =================================================================================================================== */
-  /* 23-10-2026 h: afrekenscherm, twee grote knoppen naast elkaar en een tekstlink voor deels contant */
+  /* 23-10-2026 h: afrekenscherm, grote knoppen naast elkaar (sinds 03-11-2026 g/h is deels contant de knop Deels in hetzelfde raster) */
   .bwkeuze{display:flex;gap:8px;margin:2px 0 0}
   .bwkeuze .bwgroot{flex:1;min-width:0;overflow-wrap:anywhere;min-height:56px;padding:10px 8px;border-radius:14px;border:1px solid var(--stipgrijs, #8F8B80);background:var(--vlak, #F0EEE6);color:var(--pine);font:inherit;font-size:16px;font-weight:600;cursor:pointer}
   .bwkeuze .bwgroot:active{background:var(--line)}
@@ -1438,7 +1438,9 @@
 .bkblok .bkaan input{flex:0 0 auto;width:22px;height:22px;min-height:0;margin:0;padding:0}
 .bwaanpas{display:block;width:100%;margin:2px 0 12px;padding:11px 12px;border-radius:12px;border:1px solid var(--stipgrijs, #8F8B80);background:var(--card, #fff);color:var(--pine);font:inherit;font-size:15px;font-weight:600;cursor:pointer}
   #betaalDlg [hidden]{display:none !important}
-  .bwdeelsknop{display:block;margin:10px 0 0;padding:6px 0;border:0;background:none;color:var(--accent);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+  /* 03-11-2026 g (Bart): Deels is een gewone knop. Vier knoppen staan twee bij twee; zijn het er drie, dan staat Deels breed eronder */
+  #bwSnel .bwkeuze{display:grid;grid-template-columns:1fr 1fr}
+  #bwSnel .bwkeuze .bwgroot.bwbreed{grid-column:1 / -1}
   /* 24-10-2026 b: check-out stap voor stap. Grote knoppen onder elkaar; de eerste (class vol) is de gewone keuze, "stil" is een tekstknop */
   .coknoppen{display:flex;flex-direction:column;gap:8px}
   .coknoppen button{min-height:52px;padding:10px 12px;border-radius:14px;border:1px solid var(--stipgrijs, #8F8B80);background:var(--vlak, #F0EEE6);color:var(--pine);font:inherit;font-size:16px;font-weight:600;cursor:pointer}
@@ -2230,12 +2232,12 @@
   <p id="bwUitleg" class="leeg" style="margin:0 0 8px;font-size:12px;color:var(--muted)"></p>
   <!-- 01-11-2026 e (Bart): bij het afrekenen nog iets toevoegen of aanpassen, daarna terug naar dit scherm -->
   <button type="button" class="bwaanpas" id="bwAanpassen" hidden>Rekening aanpassen</button>
-  <!-- 23-10-2026 h (Bart): bij het uitchecken alleen de keuze contant of bankoverschrijving; deels contant achter een link -->
+  <!-- 23-10-2026 h (Bart): bij het uitchecken alleen de keuze contant of bankoverschrijving; deels contant achter een link.
+       03-11-2026 g (Bart): deels contant is een eigen knop "Deels" tussen de andere (de link was niet te vinden) -->
   <p class="zone" style="margin:4px 0 6px">Hoe is er betaald?</p>
   <!-- 01-11-2026 e (Bart): Tikkie komt op de ING, Mollie op de Sabadell; per rekening bijhouden wat er via de app binnenkomt -->
-  <div id="bwSnel"><div class="bwkeuze"><button type="button" class="bwgroot" id="bwAlContant">Contant</button><button type="button" class="bwgroot" id="bwAlIng">Tikkie<small>ING</small></button><button type="button" class="bwgroot" id="bwAlSab">Mollie<small>Sabadell</small></button><button type="button" class="bwgroot" id="bwAlBank" hidden>Bankoverschrijving</button></div>
+  <div id="bwSnel"><div class="bwkeuze"><button type="button" class="bwgroot" id="bwAlContant">Contant</button><button type="button" class="bwgroot" id="bwAlIng">Tikkie<small>ING</small></button><button type="button" class="bwgroot" id="bwAlSab">Mollie<small>Sabadell</small></button><button type="button" class="bwgroot" id="bwAlBank" hidden>Bankoverschrijving</button><button type="button" class="bwgroot" id="bwDeelsKnop">Deels<small>contant + bank</small></button></div>
   <p class="leeg" id="bwBankUitleg" style="margin:6px 0 0;font-size:12px;color:var(--muted)">Tikkie en Mollie blijven in Let op staan tot je op Binnen tikt.</p></div>
-  <div><button type="button" class="bwdeelsknop" id="bwDeelsKnop">Deels contant, rest per Tikkie of Mollie</button></div>
   <div id="bwDeels" hidden>
     <label class="bslabel" for="bwContant">Contant €</label><input id="bwContant" inputmode="decimal" autocomplete="off">
     <label class="bslabel" for="bwTikkie" id="bwRestLabel">Rest per Tikkie of Mollie €</label><input id="bwTikkie" inputmode="decimal" autocomplete="off" placeholder="0,00">
@@ -4117,7 +4119,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "03-11-2026 c";
+const VERSIE = "03-11-2026 g";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -10422,12 +10424,13 @@ function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, tit
     document.getElementById("bwAlBank").hidden = aanK.length > 0;
     const namenOf = aanK.length ? aanK.map(x => x.naam).join(" of ") : "bankoverschrijving";
     document.getElementById("bwBankUitleg").textContent = aanK.length ? `${aanK.map(x => x.naam).join(" en ")} ${aanK.length === 1 ? "blijft" : "blijven"} in Let op staan tot je op Binnen tikt.` : "Een bankoverschrijving blijft in Let op staan tot je op Binnen tikt.";
-    document.getElementById("bwDeelsKnop").textContent = `Deels contant, rest per ${namenOf}`;
+    /* 03-11-2026 g: Deels is een knop in het raster; de volledige uitleg staat in aria-label. Drie knoppen (één of geen bankknop): Deels breed eronder */
+    const dk = document.getElementById("bwDeelsKnop"); dk.setAttribute("aria-label", `Deels: contant + bank, rest per ${namenOf}`); /* review 03-11 g: begint met de zichtbare tekst */ dk.classList.toggle("bwbreed", aanK.length !== 2);
     document.getElementById("bwRestLabel").textContent = `Rest per ${namenOf} €`;
     document.getElementById("bwRestUitleg").textContent = `Vul het contante bedrag in; de rest rekent de app als ${namenOf}.${aanK.length > 1 ? " Kies hierboven welke." : ""}`;
     document.querySelector("#bwDeels .bwrek").hidden = aanK.length < 2;
     c.value = bedragVeld(voor || totaal); t.value = voor && totaal - voor > 0.005 ? bedragVeld(totaal - voor) : ""; err.textContent = "";
-    /* 23-10-2026 h (Bart): één tik op een betaalwijze; deels contant achter de link (open als er al eerder iets contant kwam) */
+    /* 23-10-2026 h (Bart): één tik op een betaalwijze; deels contant via de knop Deels (open als er al eerder iets contant kwam) */
     const deels = document.getElementById("bwDeels"), deelsKnop = document.getElementById("bwDeelsKnop");
     /* review 23-10 h: is deels contant open, dan zijn de snelle knoppen weg (anders slaan ze iets anders op dan er staat) */
     const snel = document.getElementById("bwSnel");
