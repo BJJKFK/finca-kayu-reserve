@@ -436,6 +436,14 @@
   #bkLijst .bkrij em{font-style:normal;color:var(--muted);font-size:13px;flex:0 0 auto}
   #bkLijst .bkrij .bedrag{font-weight:700;flex:0 0 auto}
   #bkLijst .bkrij .bedrag.nul{font-weight:400;color:var(--muted)}
+  /* 04-11-2026 c (live-lijn) / d (main), Bart: onderaan de streep het totaal van wat er nu openstaat */
+  #bkLijst .bkkop{margin:14px 0 6px;font-size:13px;font-weight:700;color:var(--muted)}
+  #bkLijst .bkwie{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:1px}
+  #bkLijst .bkwie b{overflow-wrap:anywhere}
+  #bkLijst .bkwie em{font-size:12px}
+  #bkLijst .bkbank{cursor:default}
+  #bkLijst .bkbank button{flex:0 0 auto;border:1px solid #8F8B80;background:#F0EEE6;color:#141413;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  #bkLijst .bktotaal{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:2px solid var(--pine);margin-top:10px;padding:10px 13px 0;font-size:16px;font-weight:700;color:var(--pine)}
   #gasttoast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--pine);color:var(--bone);border-radius:999px;padding:11px 18px;font-size:14px;font-weight:600;box-shadow:0 8px 22px rgba(0,0,0,.2);max-width:88vw;text-align:center}
   #gast .talen{display:flex;justify-content:center;gap:6px;margin:0 0 16px}
   #gast .talen button{border:1px solid var(--line);background:var(--card);border-radius:999px;
@@ -2221,9 +2229,9 @@
 
 <dialog id="barkies"><div class="dlg">
   <h3>Honesty bar</h3>
-  <p class="leeg" style="margin:0 0 8px">Iedereen die er vandaag is. Tik op een naam om zijn honesty bar te openen. Het bedrag is wat er nu openstaat: bij campers inclusief de overnachtingen, bij kamers alleen ontbijt en bar.</p>
+  <p class="leeg" style="margin:0 0 8px">Iedereen die er vandaag is. Tik op een naam om zijn honesty bar te openen. Het bedrag is wat er nu openstaat: bij campers inclusief de overnachtingen, bij kamers alleen ontbijt en bar, min wat al contant betaald is. Daaronder wie vertrokken is zonder af te rekenen (tik om af te rekenen), en betaalverzoeken die nog niet binnen zijn (tik op Binnen zodra het geld er is).</p>
   <div id="bkLijst"></div>
-  <div class="row" style="margin-top:16px"><button class="go" id="bkSluit">Sluiten</button></div>
+  <div class="row" style="margin-top:16px"><button class="go" id="bkLijstSluit">Sluiten</button></div>
 </div></dialog>
 
 <dialog id="bsBewerk"><div class="dlg">
@@ -4133,7 +4141,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "04-11-2026 a";
+const VERSIE = "04-11-2026 c";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -8115,14 +8123,7 @@ function tekenNu(){
   bak.querySelectorAll("[data-avoorstel]").forEach(kn => kn.onclick = () => aanvraagVoorstel(kn.dataset.avoorstel));
   bak.querySelectorAll("[data-akanniet]").forEach(kn => kn.onclick = () => aanvraagKanNiet(kn.dataset.akanniet));
   bak.querySelectorAll("[data-agedaan]").forEach(kn => kn.onclick = () => aanvraagGedaan(kn.dataset.agedaan));
-  bak.querySelectorAll("[data-tikbinnen]").forEach(kn => kn.onclick = async () => {
-    const x = bonnen.find(y => String(y.id) === kn.dataset.tikbinnen); if(!x) return;
-    if(!confirm(`${x.rekening ? REK_NAAM[x.rekening] : "Bankoverschrijving"} van ${eur(Number(x.tikkie))} van ${x.gast || x.plek} is binnen?`)) return; /* review 01-11 e */
-    const nu = new Date().toISOString();
-    const { error } = await db.from("bonnen").update({ tikkie_binnen: nu }).eq("id", x.id);
-    if(error){ alert("Opslaan mislukt: " + error.message); return; }
-    x.tikkie_binnen = nu; tekenNu();
-  });
+  bak.querySelectorAll("[data-tikbinnen]").forEach(kn => kn.onclick = () => bonBinnen(kn.dataset.tikbinnen));
   bak.querySelectorAll("[data-agezien]").forEach(kn => kn.onclick = async () => { const v = aanvragen.find(x => x.id === kn.dataset.agezien); if(!v) return; v.gezien = true; tekenNu(); await db.from("aanvragen").update({ gezien: true }).eq("id", v.id); });
   bak.querySelectorAll("[data-tgezien]").forEach(kn => kn.onclick = async () => { const t = tips.find(x => x.id === kn.dataset.tgezien); if(!t) return; t.gezien = true; tekenNu(); await db.from("tips").update({ gezien: true }).eq("id", t.id); });
   vertaalAanvragen(() => { if(modus === "nu") tekenNu(); });
@@ -15417,7 +15418,20 @@ document.getElementById("tkOk").onclick = taakErbij;
 document.getElementById("tkNieuw").onkeydown = e => { if(e.key === "Enter"){ e.preventDefault(); taakErbij(); } };
 document.getElementById("tkSluit").onclick = () => document.getElementById("taken").close();
 
-/* Honesty bar in twee tikken: één knop bovenaan, daarin iedereen die er vandaag is */
+/* bankoverschrijving, Tikkie of Mollie na afronden "Binnen" zetten; vanuit Let op en (04-11-2026 c/d) vanuit de barlijst */
+async function bonBinnen(id){
+  const x = bonnen.find(y => String(y.id) === String(id)); if(!x) return false;
+  if(!confirm(`${x.rekening ? REK_NAAM[x.rekening] : "Bankoverschrijving"} van ${eur(Number(x.tikkie))} van ${x.gast || x.plek} is binnen?`)) return false; /* review 01-11 e */
+  const nu = new Date().toISOString();
+  const { error } = await db.from("bonnen").update({ tikkie_binnen: nu }).eq("id", x.id);
+  if(error){ alert("Opslaan mislukt: " + error.message); return false; }
+  x.tikkie_binnen = nu; tekenNu();
+  return true;
+}
+/* Honesty bar in twee tikken: één knop bovenaan, daarin iedereen die er vandaag is.
+   04-11-2026 c (live-lijn) / d (main), Bart: daaronder ook wie vertrokken is zonder af te rekenen (zelfde regel als "Nog te doen" op
+   Vandaag) en betaalverzoeken die nog niet binnen zijn (zelfde regel als Let op, met dezelfde knop Binnen), en onderaan de streep
+   het totaal van alles wat nog open is. Bedragen min wat al contant betaald is, zoals op Vandaag en bij uitchecken. */
 function tekenBarKies(){
   const bak = document.getElementById("bkLijst");
   const vandaag = iso(new Date());
@@ -15425,24 +15439,51 @@ function tekenBarKies(){
   const rijen = [];
   /* ook wie vandaag vertrekt: juist die moet nog afrekenen */
   [...kamers, ...verblijfKamers()].filter(k => k.in <= vandaag && k.uit >= vandaag).forEach(k => rijen.push({
-    naam: kNaam(k) || "Naam onbekend", plek: k.kamer, bedrag: kamerOpenstaand(k.nr),
+    naam: kNaam(k) || "Naam onbekend", plek: k.kamer, bedrag: rond2(kamerOpenstaand(k.nr) - kAlContant(k)),
     betaald: !!kVink(k, "betaald"), soort: "kamer", nr: k.nr
   }));
   boekingen.filter(b => !b.gestald && b.in && b.uit && b.in <= vandaag && b.uit >= vandaag).forEach(b => rijen.push({
-    naam: b.naam || "Naam onbekend", plek: b.plek, bedrag: alles(b),
+    naam: b.naam || "Naam onbekend", plek: b.plek, bedrag: rond2(alles(b) - (b.alContant || 0)),
     betaald: !!b.betaald, soort: "camper", nr: b.id
   }));
   rijen.sort((x, y) => x.naam.localeCompare(y.naam, "nl"));
-  if(!rijen.length){
+  /* vertrokken, nog niet afgerekend: precies de geldregels van "Nog te doen" op Vandaag (blijft staan tot afgerekend) */
+  const weg = [];
+  boekingen.filter(b => !b.gestald && b.uit && b.uit < vandaag && !b.betaald).forEach(b => weg.push({
+    naam: b.naam || "Naam onbekend", plek: b.plek, uit: b.uit, bedrag: rond2(alles(b) - (b.alContant || 0)), soort: "camper", nr: b.id }));
+  kamers.filter(k => k.uit < vandaag).forEach(k => { const open = kamerOpenstaand(k.nr);
+    if(open > 0 && !kVink(k, "betaald")) weg.push({ naam: kNaam(k) || "Naam onbekend", plek: k.kamer, uit: k.uit, bedrag: rond2(open - kAlContant(k)), soort: "kamer", nr: k.nr }); });
+  verblijfKamers().filter(k => k.uit < vandaag).forEach(k => { const open = kamerOpenstaand(k.nr);
+    if(open > 0 && !kVink(k, "betaald")) weg.push({ naam: kNaam(k) || "Naam onbekend", plek: k.kamer, uit: k.uit, bedrag: rond2(open - kAlContant(k)), soort: "verblijf", nr: k.nr }); });
+  weg.sort((x, y) => x.uit.localeCompare(y.uit) || x.naam.localeCompare(y.naam, "nl"));
+  /* betaalverzoek verstuurd, nog niet binnen: precies de regel van Let op */
+  const bank = bonnen.filter(x => Number(x.tikkie) > 0 && !x.tikkie_binnen).sort((a, b) => String(a.datum).localeCompare(String(b.datum)));
+  if(!rijen.length && !weg.length && !bank.length){
     bak.innerHTML = `<p class="leeg">${kamersBezig || (!kamersTijd && !kamersFout) ? "Kamers worden opgehaald…" : kamersFout ? kamersFout : "Er is vandaag niemand op de finca."}</p>`;
     return;
   }
-  if(kamersFout) bak.innerHTML = `<p class="leeg">${kamersFout}</p>`; else bak.innerHTML = "";
-  bak.innerHTML += rijen.map(r =>
+  /* zijn de kamers nog niet binnen, zeg dat; anders lijkt het totaal hieronder compleet */
+  const kamersHeel = !!kamersTijd && !kamersFout;
+  /* review: kon de app bonnen, consumpties, boekingen, kamer_vinkjes, eigen_plekken, ontbijt of gast_links niet lezen, dan klopt
+     het totaal ook niet (ontbijt telt mee in de kamerbedragen; gast_links bepaalt het gastenverblijf) */
+  const appHeel = !appLaadFout && !/kamer_vinkjes|eigen_plekken|ontbijt|gast_links/.test(laadFout || "");
+  if(kamersFout) bak.innerHTML = `<p class="leeg">${kamersFout}</p>`;
+  else bak.innerHTML = !kamersTijd ? `<p class="leeg">Kamers worden opgehaald…</p>` : "";
+  const bedragHtml = x => `<span class="bedrag${Math.abs(x) > 0.005 ? "" : " nul"}">${eur(x)}</span>`;
+  bak.innerHTML += rijen.length ? rijen.map(r =>
     `<button class="bkrij" data-bk="${r.soort}|${esc(r.nr)}"><b>${esc(r.naam)}</b><em>${esc(r.plek)}</em>` +
-    (r.betaald ? `<span class="tag gastzelf">afgerekend</span>`
-               : `<span class="bedrag${Math.abs(r.bedrag) > 0.005 ? "" : " nul"}">${eur(r.bedrag)}</span>`) +
-    `</button>`).join("");
+    (r.betaald ? `<span class="tag gastzelf">afgerekend</span>` : bedragHtml(r.bedrag)) +
+    `</button>`).join("") : (kamersHeel ? `<p class="leeg">Vandaag is er niemand op de finca.</p>` : "");
+  if(weg.length) bak.innerHTML += `<p class="bkkop">Vertrokken, nog niet afgerekend</p>` + weg.map(r =>
+    `<button class="bkrij" data-bkweg="${r.soort}|${esc(r.nr)}"><span class="bkwie"><b>${esc(r.naam)}</b><em>${esc(r.plek)} · weg ${kort(r.uit)}</em></span>${bedragHtml(r.bedrag)}</button>`).join("");
+  if(bank.length) bak.innerHTML += `<p class="bkkop">Betaalverzoek verstuurd, nog niet binnen</p>` + bank.map(x =>
+    `<div class="bkrij bkbank"><span class="bkwie"><b>${esc(x.gast || x.plek)}</b><em>${esc(x.gast && x.plek ? x.plek + " · " : "")}${esc((x.rekening && REK_NAAM[x.rekening]) || "Bank")} · ${kort(String(x.datum).slice(0,10))}</em></span>` +
+    `${bedragHtml(rond2(Number(x.tikkie)))}<button data-bkbinnen="${esc(x.id)}">Binnen</button></div>`).join("");
+  /* onderaan de streep: alles wat nog open is. Zijn de kamers niet (allemaal) binnen, dan zegt de regel dat zelf ook
+     (review: de melding bovenaan kan weggescrold zijn) */
+  const totaalOpen = rond2([...rijen.filter(r => !r.betaald), ...weg].reduce((s, r) => s + (Number.isFinite(r.bedrag) ? r.bedrag : 0), 0)
+    + bank.reduce((s, x) => s + (rond2(Number(x.tikkie)) || 0), 0));
+  bak.innerHTML += `<div class="bktotaal" id="bkTotaal"><span>Totaal nog open${!kamersHeel ? " (kamers nog niet compleet)" : !appHeel ? " (niet compleet, ververs de app)" : ""}</span><span>${eur(totaalOpen)}</span></div>`;
   bak.querySelectorAll("[data-bk]").forEach(kn => kn.onclick = () => {
     const i = kn.dataset.bk.indexOf("|");
     const soort = kn.dataset.bk.slice(0, i), nr = kn.dataset.bk.slice(i + 1);
@@ -15451,9 +15492,25 @@ function tekenBarKies(){
     const k = kamerVoorNr(nr); if(!k) return;
     openKamerbon(kNaam(k), (k.kamer.match(/^Kamer (\d)$/) || [])[1], [...ontbijtRegels(k.nr), ...kamerBarRegels(k.nr)], k.nr);
   });
+  /* vertrokken: tik opent het uitchecken met de rekening en Afrekenen (zoals de check-out op Vandaag), of meteen Afrekenen als de
+     gast al is uitgecheckt; het gastenverblijf heeft geen check-out en opent zijn bon, zoals hierboven */
+  bak.querySelectorAll("[data-bkweg]").forEach(kn => kn.onclick = () => {
+    const i = kn.dataset.bkweg.indexOf("|");
+    const soort = kn.dataset.bkweg.slice(0, i), nr = kn.dataset.bkweg.slice(i + 1);
+    document.getElementById("barkies").close();
+    if(soort === "camper"){ const b = boekingen.find(x => x.id === nr); if(!b) return;
+      if(b.uitgecheckt) bonAfronden(null, b).then(() => { if(modus === "nu") tekenNu(); }); else checkOutStart(null, b); return; }
+    const k = kamerVoorNr(nr); if(!k) return;
+    /* review: al uitgecheckt (bijvoorbeeld "Ja, toch uitchecken" zonder betaling): dan meteen afrekenen */
+    if(soort === "kamer"){ if(kUitgecheckt(k)) bonAfronden(k, null).then(() => { if(modus === "nu") tekenNu(); }); else checkOutStart(k, null); return; }
+    openKamerbon(kNaam(k), (k.kamer.match(/^Kamer (\d)$/) || [])[1], [...ontbijtRegels(k.nr), ...kamerBarRegels(k.nr)], k.nr);
+  });
+  bak.querySelectorAll("[data-bkbinnen]").forEach(kn => kn.onclick = async () => { if(await bonBinnen(kn.dataset.bkbinnen)) tekenBarKies(); });
 }
 document.getElementById("bBarKies").onclick = () => { tekenBarKies(); document.getElementById("barkies").showModal(); };
-document.getElementById("bkSluit").onclick = () => document.getElementById("barkies").close();
+/* 04-11-2026 c (live-lijn) / d (main): eigen naam; sinds 01-11-2026 g had de knop Annuleren van Betaalwijzen dezelfde naam (bkSluit), waardoor
+   Sluiten hier niets deed en Annuleren daar dit venster sloot in plaats van zijn eigen venster */
+document.getElementById("bkLijstSluit").onclick = () => document.getElementById("barkies").close();
 document.getElementById("bBoodschappen").onclick = async () => {
   document.getElementById("boodschappen").showModal();
   tekenBoodschappen();
