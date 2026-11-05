@@ -67,18 +67,43 @@
   /* 03-11-2026 c: code van 4 cijfers bij het openen (dekt de hele app af) */
   /* een venster (dialog) zodat het ook boven andere open vensters ligt; altijd schermvullend en ondoorzichtig */
   dialog#pinScherm{position:fixed;inset:0;width:100%;height:100%;max-width:none;max-height:none;margin:0;border:0;border-radius:0;box-sizing:border-box;
-    background:#FAF9F5;padding:70px 20px 20px;overflow:auto;flex-direction:column;align-items:center;justify-content:flex-start}
+    background:#FAF9F5;padding:clamp(24px, calc(50vh - 300px), 140px) 20px 20px;overflow:auto;flex-direction:column;align-items:center;justify-content:flex-start}
+  dialog#pinScherm:focus{outline:none}
   dialog#pinScherm[open]{display:flex}
   dialog#pinScherm::backdrop{background:#FAF9F5}
   /* review 03-11-2026 c: zolang de code nodig is, is de rest van de app onzichtbaar en niet aan te tikken (ook als het slot heel even
      dicht is of als er later een ander venster opengaat); bij wegleggen ook, zodat het overzicht van open apps geen gastnamen toont */
   html.pindicht body > :not(#pinScherm), html.pinweg body > *{visibility:hidden !important}
   html.pindicht, html.pinweg{background:#FAF9F5}
-  #pinScherm .merk img{width:150px;height:auto}
-  #pinScherm h2{font-size:20px;margin:18px 0 6px;text-align:center}
+  #pinScherm .merk img{width:130px;height:auto}
+  #pinScherm h2{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:700;margin:16px 0 4px;text-align:center}
+  #pinUitleg:empty{display:none}
   #pinScherm p{margin:0;text-align:center;color:var(--muted);font-size:14px;line-height:1.5;max-width:320px}
-  #pinVeld{margin:18px 0 6px;width:200px;text-align:center;font:inherit;font-size:34px;letter-spacing:18px;padding:10px 0 10px 18px;border:1px solid var(--line);border-radius:12px;background:var(--card,#fff);color:var(--pine)}
-  #pinMelding{min-height:20px;color:var(--rood);font-size:14px;margin-top:6px}
+  /* 04-11-2026 g (Bart: "net zo als de Blijk-app, maar in Finca KaYu-stijl"): vier rondjes en ronde cijfertoetsen, meteen zichtbaar */
+  #pinPunten{display:flex;gap:18px;margin:16px 0 0}
+  #pinPunten i{width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);display:block;box-sizing:border-box}
+  #pinPunten i.vol{background:var(--accent)}
+  #pinPunten.schud{animation:pinschud .35s}
+  @keyframes pinschud{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+  @media (prefers-reduced-motion:reduce){#pinPunten.schud{animation:none}}
+  #pinMelding{min-height:20px;color:var(--rood);font-size:14px;margin-top:10px}
+  #pinToetsen{display:grid;grid-template-columns:repeat(3,72px);gap:14px 24px;margin:8px 0 0}
+  #pinToetsen button{width:72px;height:72px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--pine);padding:0;cursor:pointer;
+    font-family:'Bricolage Grotesque',sans-serif;font-size:28px;font-weight:600;display:grid;place-items:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+  #pinToetsen button:active, #pinToetsen button.druk{background:#F0EEE6}
+  /* review 04-11-2026 g: op een lage telefoon (360x640) passen ook kiezen en wijzigen (met uitlegregel en een melding van twee regels) */
+  @media (max-height:680px){
+    dialog#pinScherm{padding-top:16px}
+    #pinScherm .merk img{width:100px}
+    #pinScherm h2{font-size:22px;margin:10px 0 2px}
+    #pinPunten{margin-top:12px}
+    #pinMelding{margin-top:8px}
+    #pinToetsen{grid-template-columns:repeat(3,64px);gap:10px 22px}
+    #pinToetsen button{width:64px;height:64px;font-size:26px}
+    #pinScherm .pinlink{margin-top:12px}
+  }
+  #pinToetsen button.wis{border:0;background:none}
+  #pinToetsen button.wis svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   #pinScherm .pinlink{background:none;border:0;font:inherit;font-size:14px;color:var(--pine);text-decoration:underline;margin-top:22px;cursor:pointer}
   #login label,#nieuwww label{display:block;font-size:13px;color:var(--muted);margin:14px 0 5px}
   #login input,#nieuwww input{width:100%;padding:14px;border:1px solid var(--line);border-radius:9px;
@@ -1013,16 +1038,19 @@
   html.nieuw .kalnav button[data-kalscroll="0"]{width:auto;padding:0 14px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap}
   html.nieuw .kalnav b{flex:1;text-align:center;min-width:0}
   html.nieuw .kal2 h2{flex-wrap:wrap}
-  html.nieuw .kalscroll{overflow-x:auto;overflow-y:hidden;margin:0 -14px;padding:0 0 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  /* 04-11-2026 g (Bart: "precies een week ... van links naar rechts"): een dag is --kol breed (precies 7 naast de namen), schuiven per hele dag;
+     rijen zijn --rij hoog (20 tot 26 px), zo dat de kalender boven de knoppenbalk past. Beide rekent kalMaat() uit. */
+  html.nieuw .kalscroll{overflow-x:auto;overflow-y:hidden;margin:0 -14px;padding:0 0 4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;scroll-snap-type:x mandatory;scroll-padding-left:54px}
+  html.nieuw .kalkop span[data-kald]{scroll-snap-align:start}
   html.nieuw .kalscroll::-webkit-scrollbar{display:none}
-  html.nieuw .kalbinnen{width:calc(54px + var(--n) * 44px)}
-  html.nieuw .kalr{display:grid;grid-template-columns:54px repeat(var(--n), 44px);gap:0;align-items:center;margin:4px 0}
-  html.nieuw .kalr .n, html.nieuw .kalsub .n{position:sticky;left:0;z-index:5;background:var(--card);padding:0 4px 0 14px;height:26px;line-height:26px;box-shadow:4px 0 6px -4px rgba(30,29,27,.18)}
-  html.nieuw .kalkop .n{height:auto}
+  html.nieuw .kalbinnen{width:calc(54px + var(--n) * var(--kol, 44px))}
+  html.nieuw .kalr{display:grid;grid-template-columns:54px repeat(var(--n), var(--kol, 44px));gap:0;align-items:center;margin:var(--rijgat, 4px) 0}
+  html.nieuw .kalr .n, html.nieuw .kalsub .n{position:sticky;left:0;z-index:5;background:var(--card);padding:0 4px 0 14px;height:var(--rij, 26px);line-height:var(--rij, 26px);box-shadow:4px 0 6px -4px rgba(30,29,27,.18)}
+  html.nieuw .kalkop .n{height:auto;align-self:stretch} /* 04-11-2026 g: de lege naamcel boven de namen dekt de dag ervoor af (anders leek het 8 dagen) */
   html.nieuw .kalsub{display:grid;grid-template-columns:54px 1fr;margin-top:8px}
   html.nieuw .kalsub .n{height:auto;line-height:1.3;box-shadow:none}
   html.nieuw .kalkop span.wk{color:var(--tekst)} html.nieuw .kalkop span i{display:block;font-style:normal;font-size:8px;letter-spacing:.04em;text-transform:uppercase;color:var(--pine)}
-  html.nieuw .kalr .c{height:26px;margin:0;position:relative;display:block;border-left:1px solid rgba(30,29,27,.08)}
+  html.nieuw .kalr .c{height:var(--rij, 26px);margin:0;position:relative;display:block;border-left:1px solid rgba(30,29,27,.08)}
   html.nieuw .kalr .c.fes{background:repeating-linear-gradient(135deg,rgba(192,57,43,.13) 0 3px,transparent 3px 7px)}
   html.nieuw .kalr .c.fnl{background:repeating-linear-gradient(135deg,rgba(230,126,34,.16) 0 3px,transparent 3px 7px)}
   html.nieuw .kalr .c.nu{background:rgba(138,74,51,.09)}
@@ -1036,7 +1064,7 @@
   html.nieuw .kalr .c > b.d{background:repeating-linear-gradient(135deg,#DCD6D0 0 6px,#EAE6DF 6px 12px)}
   /* 24-10-2026 f: familie of vrienden met gastenpagina: groen, zoals de eigen plekken G en C */
   html.nieuw .kalr .c > b.k.fam{background:#CFDCC8}
-  html.nieuw .kalr .c > b i{position:absolute;left:8px;top:0;line-height:20px;font-style:normal;font-size:10px;font-weight:600;color:var(--tekst);white-space:nowrap;z-index:2;pointer-events:none;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+  html.nieuw .kalr .c > b i{position:absolute;left:8px;top:0;line-height:calc(var(--rij, 26px) - 6px);font-style:normal;font-size:10px;font-weight:600;color:var(--tekst);white-space:nowrap;z-index:2;pointer-events:none;max-width:200px;overflow:hidden;text-overflow:ellipsis}
   html.nieuw .kalkop span{font-size:10px;color:var(--muted);text-align:center;line-height:1.15;padding:3px 0;border-radius:8px;font-weight:600}
   html.nieuw .kalkop span.nu{background:var(--accent);color:#fff} html.nieuw .kalkop span.nu i{color:#fff}
   /* 13-10-2026 b: feestdagen en vakanties */
@@ -1581,14 +1609,15 @@
 <body>
 
 <!-- 03-11-2026 c (Bart): "als ik de app open, een 4-cijferige code invoeren. Voor de rest in de app niks." -->
-<dialog id="pinScherm" aria-labelledby="pinKop">
+<dialog id="pinScherm" aria-labelledby="pinKop" tabindex="-1">
   <div class="merk"><img src="logo.png" alt="Finca KaYu" width="370" height="197"></div>
-  <h2 id="pinKop">Vul je code in</h2>
-  <p id="pinUitleg">4 cijfers</p>
-  <input id="pinVeld" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" aria-label="Code van 4 cijfers">
+  <h2 id="pinKop">Voer je code in</h2>
+  <p id="pinUitleg"></p>
+  <div id="pinPunten" role="img" aria-label="0 van 4 cijfers ingevuld"><i></i><i></i><i></i><i></i></div>
   <p id="pinMelding" aria-live="polite"></p>
+  <div id="pinToetsen"><button type="button" data-pin="1">1</button><button type="button" data-pin="2">2</button><button type="button" data-pin="3">3</button><button type="button" data-pin="4">4</button><button type="button" data-pin="5">5</button><button type="button" data-pin="6">6</button><button type="button" data-pin="7">7</button><button type="button" data-pin="8">8</button><button type="button" data-pin="9">9</button><span></span><button type="button" data-pin="0">0</button><button type="button" class="wis" data-pin="wis" aria-label="Laatste cijfer wissen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/><path d="m12 9 6 6"/><path d="m18 9-6 6"/></svg></button></div>
   <button type="button" class="pinlink" id="pinStop" hidden>Annuleren</button>
-  <button type="button" class="pinlink" id="pinVergeten">Code vergeten? Uitloggen</button>
+  <button type="button" class="pinlink" id="pinVergeten">Code vergeten?</button>
 </dialog>
 <div id="login" style="display:none">
   <div class="merk"><img src="logo.png" alt="Finca KaYu" width="370" height="197"></div>
@@ -2530,7 +2559,7 @@
   <div class="acts" style="margin-top:9px"><button id="dClose">Sluiten</button></div>
 </div></dialog>
 
-<script src="teksten.js?v=02112026a"></script>
+<script src="teksten.js?v=04112026g"></script>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -3181,18 +3210,19 @@ const TEGEL_TEKST = {
 };
 const BEZORG_KNOP = { nl:"Bekijken", en:"View", de:"Ansehen", es:"Ver", it:"Vedi", fr:"Voir", pt:"Ver", cs:"Zobrazit", fi: "Katso", no: "Vis", sv: "Visa" };
 const BEZORG_UITLEG = {
-  nl:"Geen zin om te koken? Deze twee bezorgen bij ons op de finca en zijn heel lekker. Tik op Bekijken voor de menukaart en het telefoonnummer. Bestellen en betalen doe je rechtstreeks bij hen, dit komt niet op je honesty bar-lijst. Geef als adres Finca KaYu door.",
-  en:"Not in the mood to cook? These two deliver to the finca and are really good. Tap View for the menu and phone number. You order and pay directly with them, nothing goes on your honesty bar list. Give Finca KaYu as the delivery address.",
-  de:"Keine Lust zu kochen? Diese zwei liefern zu uns auf die Finca und sind richtig gut. Tippt auf Ansehen für Speisekarte und Telefonnummer. Bestellen und bezahlen tut ihr direkt bei ihnen, nichts davon kommt auf eure Honesty-Bar-Liste. Gebt Finca KaYu als Adresse an.",
-  es:"¿Sin ganas de cocinar? Estos dos reparten en la finca y están buenísimos. Tocad Ver para la carta y el teléfono. Pedís y pagáis directamente con ellos, nada de esto va a vuestra lista del honesty bar. Dad Finca KaYu como dirección.",
-  it:"Nessuna voglia di cucinare? Questi due consegnano qui alla finca e sono davvero buoni. Toccate Vedi per il menu e il numero di telefono. Ordinate e pagate direttamente a loro, niente finisce sulla vostra lista dell'honesty bar. Date Finca KaYu come indirizzo.",
-  fr:"Pas envie de cuisiner ? Ces deux adresses livrent à la finca et sont vraiment bonnes. Touchez Voir pour la carte et le numéro de téléphone. Vous commandez et payez directement chez eux, rien n'est ajouté à votre liste honesty bar. Donnez Finca KaYu comme adresse.",
-  pt:"Sem vontade de cozinhar? Estes dois entregam aqui na finca e são muito bons. Toquem em Ver para a ementa e o telefone. Encomendam e pagam diretamente a eles, nada disto vai para a vossa lista do honesty bar. Indiquem Finca KaYu como morada.",
-  cs:"Nechce se vám vařit? Tihle dva vozí jídlo až k nám na fincu a jsou opravdu dobří. Klepněte na Zobrazit pro menu a telefonní číslo. Objednáváte a platíte přímo u nich, nic z toho nejde na váš seznam v honesty baru. Jako adresu doručení uveďte Finca KaYu.", fi: "Eikö huvita kokata? Nämä kaksi tuovat ruoan fincalle ja ovat todella hyviä. Napauttakaa Katso, niin näette ruokalistan ja puhelinnumeron. Tilaatte ja maksatte suoraan heille, mitään ei merkitä honesty bar -listallenne. Antakaa toimitusosoitteeksi Finca KaYu.", no: "Ikke lyst til å lage mat? Disse to leverer helt hit til fincaen og er veldig gode. Trykk på Vis for meny og telefonnummer. Dere bestiller og betaler direkte hos dem, ingenting av dette kommer på honesty bar-listen deres. Oppgi Finca KaYu som adresse.", sv: "Ingen lust att laga mat? De här två levererar hit till fincan och är riktigt goda. Tryck på Visa för meny och telefonnummer. Ni beställer och betalar direkt hos dem, inget av det hamnar på er honesty bar-lista. Ange Finca KaYu som adress." };
-/* 02-10-2026 a (Bart): alleen Mumtaz Mahal en Pepe Pizza; Sapore Italiano bezorgt wel, maar de kwaliteit is de laatste tijd matig */
+  nl:"Geen zin om te koken? Deze drie bezorgen bij ons op de finca en zijn heel lekker. Tik op Bekijken voor de menukaart en het telefoonnummer. Bestellen en betalen doe je rechtstreeks bij hen, dit komt niet op je honesty bar-lijst. Geef als adres Finca KaYu door.",
+  en:"Not in the mood to cook? These three deliver to the finca and are really good. Tap View for the menu and phone number. You order and pay directly with them, nothing goes on your honesty bar list. Give Finca KaYu as the delivery address.",
+  de:"Keine Lust zu kochen? Diese drei liefern zu uns auf die Finca und sind richtig gut. Tippt auf Ansehen für Speisekarte und Telefonnummer. Bestellen und bezahlen tut ihr direkt bei ihnen, nichts davon kommt auf eure Honesty-Bar-Liste. Gebt Finca KaYu als Adresse an.",
+  es:"¿Sin ganas de cocinar? Estos tres reparten en la finca y están buenísimos. Tocad Ver para la carta y el teléfono. Pedís y pagáis directamente con ellos, nada de esto va a vuestra lista del honesty bar. Dad Finca KaYu como dirección.",
+  it:"Nessuna voglia di cucinare? Questi tre consegnano qui alla finca e sono davvero buoni. Toccate Vedi per il menu e il numero di telefono. Ordinate e pagate direttamente a loro, niente finisce sulla vostra lista dell'honesty bar. Date Finca KaYu come indirizzo.",
+  fr:"Pas envie de cuisiner ? Ces trois adresses livrent à la finca et sont vraiment bonnes. Touchez Voir pour la carte et le numéro de téléphone. Vous commandez et payez directement chez eux, rien n'est ajouté à votre liste honesty bar. Donnez Finca KaYu comme adresse.",
+  pt:"Sem vontade de cozinhar? Estes três entregam aqui na finca e são muito bons. Toquem em Ver para a ementa e o telefone. Encomendam e pagam diretamente a eles, nada disto vai para a vossa lista do honesty bar. Indiquem Finca KaYu como morada.",
+  cs:"Nechce se vám vařit? Tihle tři vozí jídlo až k nám na fincu a jsou opravdu dobří. Klepněte na Zobrazit pro menu a telefonní číslo. Objednáváte a platíte přímo u nich, nic z toho nejde na váš seznam v honesty baru. Jako adresu doručení uveďte Finca KaYu.", fi: "Eikö huvita kokata? Nämä kolme tuovat ruoan fincalle ja ovat todella hyviä. Napauttakaa Katso, niin näette ruokalistan ja puhelinnumeron. Tilaatte ja maksatte suoraan heille, mitään ei merkitä honesty bar -listallenne. Antakaa toimitusosoitteeksi Finca KaYu.", no: "Ikke lyst til å lage mat? Disse tre leverer helt hit til fincaen og er veldig gode. Trykk på Vis for meny og telefonnummer. Dere bestiller og betaler direkte hos dem, ingenting av dette kommer på honesty bar-listen deres. Oppgi Finca KaYu som adresse.", sv: "Ingen lust att laga mat? De här tre levererar hit till fincan och är riktigt goda. Tryck på Visa för meny och telefonnummer. Ni beställer och betalar direkt hos dem, inget av det hamnar på er honesty bar-lista. Ange Finca KaYu som adress." };
+/* 02-10-2026 a (Bart): alleen Mumtaz Mahal en Pepe Pizza (Sapore Italiano: kwaliteit matig). 04-11-2026 g (Bart): Sapore Italiano "mag er weer bij" */
 const BEZORGERS = [
   { naam:"Mumtaz Mahal", zoek:"Mumtaz Mahal, Coín", t:{ nl:"Indiaas, curry's en tandoori", en:"Indian, curries and tandoori", de:"indisch, Currys und Tandoori", es:"indio, currys y tandoori", it:"indiano, curry e tandoori", fr:"indien, currys et tandoori", pt:"indiano, caris e tandoori", cs:"indická, kari a tandoori", fi: "intialainen, curryt ja tandoori", no: "indisk, karri og tandoori", sv: "indiskt, curry och tandoori" } },
   { naam:"Pepe Pizza", zoek:"Pepe Pizza, Coín", t:{ nl:"pizza", en:"pizza", de:"Pizza", es:"pizza", it:"pizza", fr:"pizza", pt:"pizza", cs:"pizza", fi: "pizza", no: "pizza", sv: "pizza" } },
+  { naam:"Sapore Italiano", zoek:"Sapore Italiano, Coín", t:{ nl:"pizza en pasta", en:"pizza and pasta", de:"Pizza und Pasta", es:"pizza y pasta", it:"pizza e pasta", fr:"pizza et pâtes", pt:"pizza e massa", cs:"pizza a těstoviny", fi: "pizzaa ja pastaa", no: "pizza og pasta", sv: "pizza och pasta" } },
 ];
 /* volgorde van de kaarten; binnen een kaart sorteert gastOmgevingHtml op alfabet (naam zoals de gast hem leest) */
 const OMG = [
@@ -3279,7 +3309,10 @@ const OMG = [
   ] },
   /* Handig in de buurt (Bart, 25-09-2026): alleen voor campers; gasflessen bij de buren en een Nederlandse automonteur; Maps-pin gecontroleerd 25-09-2026 (C. Arquímedes 24, Coín) */
   { kop:"handig", alleen:"camper", plaatsen:[
-    { naam:"DW Automotive", zoek:"DW Automotive Malaga", t:{ nl:"Nederlandse **automonteur** in Santa Rosalía (richting Málaga), ook voor je camper. Zeg even dat Finca KaYu je stuurt!", en:"Dutch **car mechanic** in Santa Rosalía (towards Málaga), also for your campervan. Tell them Finca KaYu sent you!", de:"Niederländische **Autowerkstatt** in Santa Rosalía (Richtung Málaga), auch für euer Wohnmobil. Sagt ruhig, dass Finca KaYu euch schickt!", es:"**mecánico** neerlandés en Santa Rosalía (dirección Málaga), también para tu autocaravana. ¡Decid que venís de parte de Finca KaYu!", it:"**meccanico** olandese a Santa Rosalía (verso Málaga), anche per il vostro camper. Dite che vi manda Finca KaYu!", fr:"**garagiste** néerlandais à Santa Rosalía (direction Málaga), aussi pour votre camping-car. Dites-leur que c'est Finca KaYu qui vous envoie !", pt:"**mecânico** neerlandês em Santa Rosalía (direção Málaga), também para a vossa autocaravana. Digam que vêm da parte da Finca KaYu!", cs:"Nizozemský **automechanik** v Santa Rosalía (směr Málaga), i pro váš karavan. Řekněte, že vás posílá Finca KaYu!", fi: "hollantilainen **automekaanikko** Santa Rosalíassa (Málagan suuntaan), myös matkailuautollenne. Kertokaa, että Finca KaYu lähetti teidät!", no: "nederlandsk **bilmekaniker** i Santa Rosalía (retning Málaga), også for bobilen deres. Si gjerne at Finca KaYu har sendt dere!", sv: "holländsk **bilmekaniker** i Santa Rosalía (mot Málaga), även för er husbil. Säg gärna att Finca KaYu skickade er!" } },
+    /* 04-11-2026 g (Bart): fietsenwinkel en automaterialen; adres en openingstijden van Google Maps, "reparaties en e-bikes" uit de Google-reviews (akkoord Bart) */
+    { naam:"StandBike", zoek:"StandBike, Coín", t:{ nl:"**fietsenwinkel** in Coín (industrieterrein Cantarranas), ook voor reparaties en e-bikes.", en:"**bike shop** in Coín (Cantarranas industrial estate), also for repairs and e-bikes.", de:"**Fahrradladen** in Coín (Gewerbegebiet Cantarranas), auch für Reparaturen und E-Bikes.", es:"**tienda de bicicletas** en Coín (polígono Cantarranas), también para reparaciones y bicis eléctricas.", it:"**negozio di bici** a Coín (zona industriale Cantarranas), anche per riparazioni ed e-bike.", fr:"**magasin de vélos** à Coín (zone industrielle Cantarranas), aussi pour les réparations et les vélos électriques.", pt:"**loja de bicicletas** em Coín (zona industrial Cantarranas), também para reparações e bicicletas elétricas.", cs:"**obchod s jízdními koly** v Coín (průmyslová zóna Cantarranas), i na opravy a elektrokola.", fi: "**polkupyöräliike** Coínissa (Cantarranasin teollisuusalue), myös korjaukset ja sähköpyörät.", no: "**sykkelbutikk** i Coín (industriområdet Cantarranas), også for reparasjoner og elsykler.", sv: "**cykelaffär** i Coín (industriområdet Cantarranas), även för reparationer och elcyklar." } },
+    { naam:"AD Málaga Recambios", zoek:"AD Málaga Recambios, Coín", t:{ nl:"winkel in **auto-onderdelen** in Coín (industrieterrein Cantarranas), ook voor je camper.", en:"**car parts** shop in Coín (Cantarranas industrial estate), also for your campervan.", de:"Laden für **Autoteile** in Coín (Gewerbegebiet Cantarranas), auch für euer Wohnmobil.", es:"tienda de **recambios de coche** en Coín (polígono Cantarranas), también para vuestra autocaravana.", it:"negozio di **ricambi auto** a Coín (zona industriale Cantarranas), anche per il vostro camper.", fr:"magasin de **pièces auto** à Coín (zone industrielle Cantarranas), aussi pour votre camping-car.", pt:"loja de **peças auto** em Coín (zona industrial Cantarranas), também para a vossa autocaravana.", cs:"obchod s **autodíly** v Coín (průmyslová zóna Cantarranas), i pro váš karavan.", fi: "**auton varaosia** myyvä liike Coínissa (Cantarranasin teollisuusalue), myös matkailuautollenne.", no: "butikk for **bildeler** i Coín (industriområdet Cantarranas), også til bobilen deres.", sv: "butik för **bildelar** i Coín (industriområdet Cantarranas), även för er husbil." } },
+    { naam:"DW Automotive", zoek:"DW Automotive Malaga", t:{ nl:"Nederlandse **automonteur** in Santa Rosalía (richting Málaga), ook voor je camper. Zeg even dat Finca KaYu je stuurt!", en:"Dutch **car mechanic** in Santa Rosalía (towards Málaga), also for your campervan. Tell them Finca KaYu sent you!", de:"Niederländische **Autowerkstatt** in Santa Rosalía (Richtung Málaga), auch für euer Wohnmobil. Sagt ruhig, dass Finca KaYu euch schickt!", es:"**mecánico** neerlandés en Santa Rosalía (dirección Málaga), también para vuestra autocaravana. ¡Decid que venís de parte de Finca KaYu!", it:"**meccanico** olandese a Santa Rosalía (verso Málaga), anche per il vostro camper. Dite che vi manda Finca KaYu!", fr:"**garagiste** néerlandais à Santa Rosalía (direction Málaga), aussi pour votre camping-car. Dites-leur que c'est Finca KaYu qui vous envoie !", pt:"**mecânico** neerlandês em Santa Rosalía (direção Málaga), também para a vossa autocaravana. Digam que vêm da parte da Finca KaYu!", cs:"Nizozemský **automechanik** v Santa Rosalía (směr Málaga), i pro váš karavan. Řekněte, že vás posílá Finca KaYu!", fi: "hollantilainen **automekaanikko** Santa Rosalíassa (Málagan suuntaan), myös matkailuautollenne. Kertokaa, että Finca KaYu lähetti teidät!", no: "nederlandsk **bilmekaniker** i Santa Rosalía (retning Málaga), også for bobilen deres. Si gjerne at Finca KaYu har sendt dere!", sv: "holländsk **bilmekaniker** i Santa Rosalía (mot Málaga), även för er husbil. Säg gärna att Finca KaYu skickade er!" } },
     { naam:"Suministros Hersan", zoek:"Suministros Hersan, Coín", t:{ nl:"ijzerwarenwinkel van onze buren in Coín: **gasflessen** omwisselen of kopen, in allerlei soorten en maten, en nog veel meer. Zeg even dat Finca KaYu je stuurt!", en:"hardware store run by our neighbours in Coín: exchange or buy **gas bottles** of all types and sizes, and much more. Tell them Finca KaYu sent you!", de:"Eisenwarenladen unserer Nachbarn in Coín: **Gasflaschen** tauschen oder kaufen, in allen Sorten und Größen, und vieles mehr. Sagt ruhig, dass Finca KaYu euch schickt!", es:"ferretería de nuestros vecinos en Coín: cambiar o comprar **bombonas de gas** de todo tipo y tamaño, y mucho más. ¡Decid que venís de parte de Finca KaYu!", it:"ferramenta dei nostri vicini a Coín: cambiare o comprare **bombole del gas** di ogni tipo e misura, e molto altro. Dite che vi manda Finca KaYu!", fr:"quincaillerie de nos voisins à Coín : échanger ou acheter des **bouteilles de gaz** de tous types et tailles, et bien plus encore. Dites-leur que c'est Finca KaYu qui vous envoie !", pt:"loja de ferragens dos nossos vizinhos em Coín: trocar ou comprar **botijas de gás** de todos os tipos e tamanhos, e muito mais. Digam que vêm da parte da Finca KaYu!", cs:"železářství našich sousedů v Coín: výměna nebo koupě **plynových lahví** všech typů a velikostí a mnoho dalšího. Řekněte, že vás posílá Finca KaYu!", fi: "naapuriemme pitämä rautakauppa Coínissa: vaihtakaa tai ostakaa kaikenlaisia ja -kokoisia **kaasupulloja**, ja paljon muuta. Kertokaa, että Finca KaYu lähetti teidät!", no: "jernvarehandel drevet av naboene våre i Coín: bytt eller kjøp **gassflasker** i alle typer og størrelser, og mye mer. Si gjerne at Finca KaYu har sendt dere!", sv: "järnhandel som drivs av våra grannar i Coín: byt eller köp **gasolflaskor** i alla sorter och storlekar, och mycket mer. Säg gärna att Finca KaYu skickade er!" } }
   ] },
   { kop:"beach", plaatsen:[
@@ -3312,7 +3345,8 @@ const OMG = [
   ] },
   { kop:"wandelen", plaatsen:[
     { naam:"Barranco Blanco", zoek:"Barranco Blanco, Coín", t:{ nl:"beekjes, watervallen en zwemplekken", en:"streams, waterfalls and swimming spots", de:"Bäche, Wasserfälle und Badestellen", es:"arroyos, cascadas y pozas para bañarse", it:"ruscelli, cascate e pozze per nuotare", fr:"ruisseaux, cascades et coins de baignade", pt:"ribeiros, cascatas e poças para nadar", cs:"potoky, vodopády a místa ke koupání", fi: "puroja, vesiputouksia ja uimapaikkoja", no: "bekker, fosser og badeplasser", sv: "bäckar, vattenfall och badplatser" } },
-    { naam:"Raja Ancha", zoek:"Raja Ancha, Calle Encina 1, Pizarra", t:{ nl:"wandeling bij Pizarra", en:"hike near Pizarra", de:"Wanderung bei Pizarra", es:"ruta en Pizarra", it:"escursione a Pizarra", fr:"randonnée à Pizarra", pt:"caminhada em Pizarra", cs:"túra u Pizarry", fi: "vaellus Pizarran lähellä", no: "fottur ved Pizarra", sv: "vandring vid Pizarra" } },
+    /* 04-11-2026 g (Bart): Route naar het beginpunt (Area Recreativa Raja Ancha, Google Maps), met El Sendero Bar ernaast */
+    { naam:"Raja Ancha", zoek:"Area Recreativa Raja Ancha, Pizarra", t:{ nl:"wandeling bij Pizarra. Start bij de picknickplek Area Recreativa Raja Ancha; daar zit El Sendero Bar, fijn voor een drankje na afloop", en:"hike near Pizarra. Start at the picnic area Area Recreativa Raja Ancha; El Sendero Bar is right there, nice for a drink afterwards", de:"Wanderung bei Pizarra. Start am Picknickplatz Area Recreativa Raja Ancha; dort ist die El Sendero Bar, schön für einen Drink danach", es:"ruta en Pizarra. Salida desde el Área Recreativa Raja Ancha; allí está El Sendero Bar, ideal para tomar algo al terminar", it:"escursione a Pizarra. Partenza dall'area picnic Area Recreativa Raja Ancha; lì c'è El Sendero Bar, ideale per bere qualcosa dopo", fr:"randonnée à Pizarra. Départ de l'aire de pique-nique Area Recreativa Raja Ancha ; El Sendero Bar est juste là, idéal pour boire un verre après", pt:"caminhada em Pizarra. Partida da zona de piqueniques Area Recreativa Raja Ancha; ali fica o El Sendero Bar, ótimo para uma bebida no fim", cs:"túra u Pizarry. Start u piknikového místa Area Recreativa Raja Ancha; hned tam je El Sendero Bar, ideální na drink po túře", fi: "vaellus Pizarran lähellä. Lähtö piknikpaikalta Area Recreativa Raja Ancha; siellä on El Sendero Bar, hyvä paikka juoda jotain retken jälkeen", no: "fottur ved Pizarra. Start ved piknikplassen Area Recreativa Raja Ancha; der ligger El Sendero Bar, fint for en drink etterpå", sv: "vandring vid Pizarra. Start vid picknickplatsen Area Recreativa Raja Ancha; där ligger El Sendero Bar, perfekt för en drink efteråt" } },
     { naam:"Sierra de las Nieves", zoek:"Parque Nacional Sierra de las Nieves", t:{ nl:"bergwandelingen en panorama's", en:"mountain hikes and panoramas", de:"Bergwanderungen und Panoramen", es:"rutas de montaña y panorámicas", it:"escursioni in montagna e panorami", fr:"randonnées en montagne et panoramas", pt:"caminhadas na montanha e panoramas", cs:"horské túry a panoramata", fi: "vuoristovaelluksia ja panoraamanäkymiä", no: "fjellturer og panoramautsikt", sv: "bergsvandringar och panoramautsikt" } },
     { naam:"Caminito del Rey", zoek:"Caminito del Rey", t:{ nl:"spectaculair pad langs de kloof, vooraf reserveren", en:"spectacular walkway along the gorge, book in advance", de:"spektakulärer Steig durch die Schlucht, vorher reservieren", es:"pasarela espectacular por el desfiladero, reservar con antelación", it:"passerella spettacolare nella gola, prenotare in anticipo", fr:"passerelle spectaculaire dans les gorges, réserver à l'avance", pt:"passadiço espetacular no desfiladeiro, reservar com antecedência", cs:"velkolepá stezka podél soutěsky, rezervujte předem", fi: "huikea kävelyreitti rotkoa pitkin, varatkaa etukäteen", no: "spektakulær sti langs juvet, bestill på forhånd", sv: "spektakulär led längs ravinen, boka i förväg" } },
     { naam:"La Concha", zoek:"Pico de la Concha, Marbella", t:{ nl:"pittige klim, uitzicht over zee", en:"tough climb, view over the sea", de:"anspruchsvoller Aufstieg, Blick aufs Meer", es:"subida exigente, vistas al mar", it:"salita impegnativa, vista sul mare", fr:"montée exigeante, vue sur la mer", pt:"subida exigente, vista para o mar", cs:"náročný výstup, výhled na moře", fi: "raskas nousu, näkymä merelle", no: "krevende stigning, utsikt over havet", sv: "krävande stigning, utsikt över havet" } }
@@ -3357,7 +3391,8 @@ const OMG = [
     { naam:"La Trocha", zoek:"Centro Comercial La Trocha, Coín", t:{ nl:"speeltuintje met terras bij de ingang, zondag rommel- en streekmarkt, ook Carrefour en bioscoop", en:"small playground with terrace at the entrance, Sunday flea and farmers market, also Carrefour and cinema", de:"kleiner Spielplatz mit Terrasse am Eingang, sonntags Floh- und Bauernmarkt, auch Carrefour und Kino", es:"parquecito con terraza en la entrada, mercadillo los domingos, también Carrefour y cine", it:"piccolo parco giochi con terrazza all'ingresso, domenica mercatino, anche Carrefour e cinema", fr:"petite aire de jeux avec terrasse à l'entrée, marché aux puces et de producteurs le dimanche, aussi Carrefour et cinéma", pt:"pequeno parque infantil com esplanada à entrada, mercado ao domingo, também Carrefour e cinema", cs:"malé hřiště s terasou u vchodu, v neděli bleší a farmářský trh, také Carrefour a kino", fi: "pieni leikkipuisto ja terassi sisäänkäynnin luona, sunnuntaisin kirpputori ja tuottajatori, myös Carrefour ja elokuvateatteri", no: "liten lekeplass med uteservering ved inngangen, loppemarked og bondens marked på søndager, også Carrefour og kino", sv: "liten lekplats med uteservering vid entrén, loppis och bondemarknad på söndagar, även Carrefour och biograf" } },
     { naam:"J&S Tapas", zoek:"J&S Tapas, Coín", t:{ nl:"tapas en een springkussen voor de kinderen · Coín", en:"tapas and a bouncy castle for the children · Coín", de:"Tapas und eine Hüpfburg für die Kinder · Coín", es:"tapas y un castillo hinchable para los niños · Coín", it:"tapas e un castello gonfiabile per i bambini · Coín", fr:"tapas et un château gonflable pour les enfants · Coín", pt:"tapas e um insuflável para as crianças · Coín", cs:"tapas a skákací hrad pro děti · Coín", fi: "tapaksia ja pomppulinna lapsille · Coín", no: "tapas og et hoppeslott for barna · Coín", sv: "tapas och en hoppborg för barnen · Coín" } },
     { naam:"Barranco Blanco", zoek:"Barranco Blanco, Coín", t:{ nl:"ook leuk met kinderen: pootjebaden en zwemmen", en:"also great with children: paddling and swimming", de:"auch mit Kindern schön: planschen und schwimmen", es:"también ideal con niños: chapotear y nadar", it:"bello anche con i bambini: sguazzare e nuotare", fr:"aussi bien avec des enfants : barboter et nager", pt:"também ótimo com crianças: chapinhar e nadar", cs:"skvělé i s dětmi: brouzdání a koupání", fi: "hieno myös lasten kanssa: kahlaamista ja uimista", no: "også fint med barn: vasse og bade", sv: "också kul med barn: plaska och bada" } },
-    { naam:"Raja Ancha", zoek:"Raja Ancha, Calle Encina 1, Pizarra", t:{ nl:"korte wandeling, ook voor kinderen", en:"short hike, also for children", de:"kurze Wanderung, auch für Kinder", es:"ruta corta, también para niños", it:"escursione breve, anche per bambini", fr:"courte randonnée, aussi pour les enfants", pt:"caminhada curta, também para crianças", cs:"krátká túra, i pro děti", fi: "lyhyt vaellus, myös lapsille", no: "kort fottur, også for barn", sv: "kort vandring, även för barn" } }
+    /* 04-11-2026 g (Bart): Route naar het beginpunt, met El Sendero Bar */
+    { naam:"Raja Ancha", zoek:"Area Recreativa Raja Ancha, Pizarra", t:{ nl:"korte wandeling, ook voor kinderen. Start bij de picknickplek Area Recreativa Raja Ancha; daar zit El Sendero Bar, fijn voor een drankje na afloop", en:"short hike, also for children. Start at the picnic area Area Recreativa Raja Ancha; El Sendero Bar is right there, nice for a drink afterwards", de:"kurze Wanderung, auch für Kinder. Start am Picknickplatz Area Recreativa Raja Ancha; dort ist die El Sendero Bar, schön für einen Drink danach", es:"ruta corta, también para niños. Salida desde el Área Recreativa Raja Ancha; allí está El Sendero Bar, ideal para tomar algo al terminar", it:"escursione breve, anche per bambini. Partenza dall'area picnic Area Recreativa Raja Ancha; lì c'è El Sendero Bar, ideale per bere qualcosa dopo", fr:"courte randonnée, aussi pour les enfants. Départ de l'aire de pique-nique Area Recreativa Raja Ancha ; El Sendero Bar est juste là, idéal pour boire un verre après", pt:"caminhada curta, também para crianças. Partida da zona de piqueniques Area Recreativa Raja Ancha; ali fica o El Sendero Bar, ótimo para uma bebida no fim", cs:"krátká túra, i pro děti. Start u piknikového místa Area Recreativa Raja Ancha; hned tam je El Sendero Bar, ideální na drink po túře", fi: "lyhyt vaellus, myös lapsille. Lähtö piknikpaikalta Area Recreativa Raja Ancha; siellä on El Sendero Bar, hyvä paikka juoda jotain retken jälkeen", no: "kort fottur, også for barn. Start ved piknikplassen Area Recreativa Raja Ancha; der ligger El Sendero Bar, fint for en drink etterpå", sv: "kort vandring, även för barn. Start vid picknickplatsen Area Recreativa Raja Ancha; där ligger El Sendero Bar, perfekt för en drink efteråt" } }
   ] }
 ];
 /* 21-10-2026 b (Bart): openingstijden per plek, van Google; OMG_UUR_DATUM is de dag waarop ze het laatst zijn nagekeken
@@ -3400,6 +3435,8 @@ const OMG_UUR = {
   "Da Bruno Sul Mare, Marbella":["13:00-00:00", "13:00-00:00", "13:00-00:00", "13:00-00:00", "13:00-00:00", "13:00-00:00", "13:00-00:00"],
   "DW Automotive Malaga":["09:00-18:00", "09:00-18:00", "09:00-18:00", "09:00-18:00", "09:00-18:00", "", ""],
   "Suministros Hersan, Coín":["08:00-14:00,16:00-20:00", "08:00-14:00,16:00-20:00", "08:00-14:00,16:00-20:00", "08:00-14:00,16:00-20:00", "08:00-14:00,16:00-20:00", "08:00-14:00", ""],
+  "StandBike, Coín":["09:30-13:30,16:30-19:30", "09:30-13:30,16:30-19:30", "09:30-13:30,16:30-19:30", "09:30-13:30,16:30-19:30", "09:30-13:30,16:30-19:30", "", ""],
+  "AD Málaga Recambios, Coín":["09:00-13:00,16:00-18:00", "09:00-13:00,16:00-18:00", "09:00-13:00,16:00-18:00", "09:00-13:00,16:00-18:00", "09:00-13:00,16:00-18:00", "", ""],
   "Lucia Marbella, Carretera de Cádiz km 192, Marbella":["10:00-21:00", "10:00-21:00", "10:00-21:00", "10:00-21:00", "10:00-21:00", "10:00-21:00", "10:00-21:00"],
   "Oyana Beach, Marbella":["11:00-23:00", "11:00-23:00", "11:00-23:00", "11:00-23:00", "11:00-23:00", "11:00-23:00", "11:00-23:00"],
   "Nosso Beach, Marbella":["11:00-20:00", "11:00-20:00", "11:00-20:00", "11:00-20:00", "11:00-23:00", "11:00-23:00", "11:00-20:00"],
@@ -3510,34 +3547,34 @@ function gastOmgevingRijen(lijst, l, esc, kaart, vast){
 const GT_REGELS = {
   nl: { kop:"Handleiding", kort:"In het kort", alles:"Alle regels en info",
     camper:["Uitchecken vóór 12:00 uur.","Vanaf 00:00 uur is het buiten stil.","Geen eten, drinken of glas bij het zwembad. De ligbedden zijn voor de kamergasten; neem je eigen handdoek of stoel mee voor op het gras.","Honden altijd aangelijnd, niet bij de faciliteiten, uitlaten buiten de poort.","Grijs water loos je onderaan de heuvel, zwart water alleen in het chemisch toilet."],
-    kamer:["Uitchecken vóór 10:00 uur: sleutel in de deur, kluis op 0000.","Vanaf 00:00 uur is het buiten stil, geen eigen muziek of speakers.","Roken alleen op de rookplek links van de bar, naast de garage.","Toiletpapier in de prullenbak, niet in het toilet.","Niet eten in de kamer of op het terrasje ervoor; wel bij de bar, in de keuken of op het terras."] },
+    kamer:["Uitchecken vóór 10:00 uur: sleutel in de deur, sleutelkluisje op 0000.","Vanaf 00:00 uur is het buiten stil, geen eigen muziek of speakers.","Roken alleen op de rookplek links van de bar, naast de garage.","Toiletpapier in de prullenbak, niet in het toilet.","Niet eten in de kamer of op het terrasje ervoor; wel bij de bar, in de keuken of op het terras."] },
   en: { kop:"Guest guide", kort:"In short", alles:"All rules and info",
     camper:["Check-out before 12:00.","Quiet outside from 00:00.","No food, drinks or glass at the pool. The sunbeds are for the room guests; bring your own towel or chair for the lawn.","Dogs always on a leash, not at the facilities, walk them outside the gate.","Grey water goes at the bottom of the hill, black water only in the chemical toilet."],
-    kamer:["Check-out before 10:00: key in the door, safe back to 0000.","Quiet outside from 00:00, no music or speakers of your own.","Smoking only at the smoking spot left of the bar, next to the garage.","Toilet paper in the bin, not in the toilet.","No eating in the room or on the terrace in front of it; the bar, the kitchen and the shared terrace are the places for that."] },
+    kamer:["Check-out before 10:00: key in the door, lockbox back to 0000.","Quiet outside from 00:00, no music or speakers of your own.","Smoking only at the smoking spot left of the bar, next to the garage.","Toilet paper in the bin, not in the toilet.","No eating in the room or on the terrace in front of it; the bar, the kitchen and the shared terrace are the places for that."] },
   de: { kop:"Gästehandbuch", kort:"Kurz gesagt", alles:"Alle Regeln und Infos",
     camper:["Check-out vor 12:00 Uhr.","Ab 00:00 Uhr ist es draußen ruhig.","Kein Essen, Trinken oder Glas am Pool. Die Liegen sind für die Zimmergäste; bringt euer eigenes Handtuch oder euren Stuhl für die Wiese mit.","Hunde immer an der Leine, nicht bei den Einrichtungen, Gassi gehen außerhalb des Tors.","Grauwasser unten am Hügel entleeren, Schwarzwasser nur in der Chemietoilette."],
-    kamer:["Check-out vor 10:00 Uhr: Schlüssel in der Tür, Safe auf 0000.","Ab 00:00 Uhr ist es draußen ruhig, keine eigene Musik oder Lautsprecher.","Rauchen nur am Raucherplatz links von der Bar, neben der Garage.","Toilettenpapier in den Eimer, nicht in die Toilette.","Nicht im Zimmer oder auf der Terrasse davor essen; dafür gibt es die Bar, die Küche und die gemeinsame Terrasse."] },
+    kamer:["Check-out vor 10:00 Uhr: Schlüssel in der Tür, Schlüsselsafe auf 0000.","Ab 00:00 Uhr ist es draußen ruhig, keine eigene Musik oder Lautsprecher.","Rauchen nur am Raucherplatz links von der Bar, neben der Garage.","Toilettenpapier in den Eimer, nicht in die Toilette.","Nicht im Zimmer oder auf der Terrasse davor essen; dafür gibt es die Bar, die Küche und die gemeinsame Terrasse."] },
   es: { kop:"Guía del huésped", kort:"En resumen", alles:"Todas las normas e información",
     camper:["Salida antes de las 12:00.","A partir de las 00:00 silencio fuera.","Nada de comida, bebida ni cristal en la piscina. Las tumbonas son para los huéspedes de las habitaciones; traed vuestra toalla o silla para el césped.","Perros siempre con correa, no en las instalaciones, paseadlos fuera de la puerta.","Las aguas grises se vacían abajo de la cuesta, las aguas negras solo en el WC químico."],
-    kamer:["Salida antes de las 10:00: llave en la puerta, caja fuerte en 0000.","A partir de las 00:00 silencio fuera, sin música ni altavoces propios.","Fumar solo en la zona de fumadores a la izquierda del bar, junto al garaje.","El papel higiénico va a la papelera, no al WC.","No se come en la habitación ni en su terraza; para eso están el bar, la cocina y la terraza común."] },
+    kamer:["Salida antes de las 10:00: llave en la puerta, cajita para la llave en 0000.","A partir de las 00:00 silencio fuera, sin música ni altavoces propios.","Fumar solo en la zona de fumadores a la izquierda del bar, junto al garaje.","El papel higiénico va a la papelera, no al WC.","No se come en la habitación ni en su terraza; para eso están el bar, la cocina y la terraza común."] },
   it: { kop:"Guida per gli ospiti", kort:"In breve", alles:"Tutte le regole e le info",
     camper:["Check-out entro le 12:00.","Dalle 00:00 silenzio all'aperto.","Niente cibo, bevande o vetro in piscina. I lettini sono per gli ospiti delle camere; portate il vostro asciugamano o la vostra sedia per il prato.","Cani sempre al guinzaglio, non nelle aree comuni, portateli fuori dal cancello.","Le acque grigie si scaricano in fondo alla collina, le acque nere solo nel WC chimico."],
-    kamer:["Check-out entro le 10:00: chiave nella porta, cassaforte su 0000.","Dalle 00:00 silenzio all'aperto, niente musica o casse proprie.","Si fuma solo nell'area fumatori a sinistra del bar, accanto al garage.","La carta igienica va nel cestino, non nel WC.","Non si mangia in camera né sul terrazzino davanti; per quello ci sono il bar, la cucina e la terrazza comune."] },
+    kamer:["Check-out entro le 10:00: chiave nella porta, cassettina per la chiave su 0000.","Dalle 00:00 silenzio all'aperto, niente musica o casse proprie.","Si fuma solo nell'area fumatori a sinistra del bar, accanto al garage.","La carta igienica va nel cestino, non nel WC.","Non si mangia in camera né sul terrazzino davanti; per quello ci sono il bar, la cucina e la terrazza comune."] },
   fr: { kop:"Guide du séjour", kort:"En bref", alles:"Toutes les règles et infos",
     camper:["Départ avant 12h00.","Silence dehors à partir de 00h00.","Ni nourriture, ni boissons, ni verre à la piscine. Les transats sont pour les hôtes des chambres ; apportez votre serviette ou votre chaise pour la pelouse.","Chiens toujours en laisse, pas dans les installations, promenade en dehors du portail.","Les eaux grises se vident en bas de la colline, les eaux noires uniquement dans le WC chimique."],
-    kamer:["Départ avant 10h00 : clé sur la porte, coffre remis à 0000.","Silence dehors à partir de 00h00, pas de musique ni d'enceintes personnelles.","On fume uniquement au coin fumeurs à gauche du bar, à côté du garage.","Le papier toilette va à la poubelle, pas dans les toilettes.","On ne mange pas dans la chambre ni sur la petite terrasse devant ; le bar, la cuisine et la terrasse commune sont là pour ça."] },
+    kamer:["Départ avant 10h00 : clé sur la porte, boîte à clé remise à 0000.","Silence dehors à partir de 00h00, pas de musique ni d'enceintes personnelles.","On fume uniquement au coin fumeurs à gauche du bar, à côté du garage.","Le papier toilette va à la poubelle, pas dans les toilettes.","On ne mange pas dans la chambre ni sur la petite terrasse devant ; le bar, la cuisine et la terrasse commune sont là pour ça."] },
   pt: { kop:"Guia do hóspede", kort:"Em resumo", alles:"Todas as regras e informações",
     camper:["Check-out antes das 12:00.","A partir das 00:00 silêncio lá fora.","Sem comida, bebida ou vidro na piscina. As espreguiçadeiras são para os hóspedes dos quartos; tragam a vossa toalha ou cadeira para a relva.","Cães sempre com trela, não nas instalações, passeiem-nos fora do portão.","As águas cinzentas despejam-se ao fundo da encosta, as águas negras só na sanita química."],
-    kamer:["Check-out antes das 10:00: chave na porta, cofre em 0000.","A partir das 00:00 silêncio lá fora, sem música nem colunas próprias.","Fumar só na zona de fumadores à esquerda do bar, junto à garagem.","O papel higiénico vai para o caixote, não para a sanita.","Não se come no quarto nem no terraço em frente; para isso há o bar, a cozinha e o terraço comum."] },
+    kamer:["Check-out antes das 10:00: chave na porta, caixinha da chave em 0000.","A partir das 00:00 silêncio lá fora, sem música nem colunas próprias.","Fumar só na zona de fumadores à esquerda do bar, junto à garagem.","O papel higiénico vai para o caixote, não para a sanita.","Não se come no quarto nem no terraço em frente; para isso há o bar, a cozinha e o terraço comum."] },
   cs: { kop:"Průvodce", kort:"Stručně", alles:"Všechna pravidla a informace",
     camper:["Odjezd do 12:00.","Od 00:00 je venku klid.","U bazénu žádné jídlo, pití ani sklo. Lehátka jsou pro hosty z pokojů; na trávník si vezměte vlastní ručník nebo židli.","Psi vždy na vodítku, ne k zázemí, venčení za bránou.","Šedou vodu vypouštějte dole pod kopcem, černou jen do chemického WC."],
-    kamer:["Odjezd do 10:00: klíč nechte ve dveřích, trezor vraťte na 0000.","Od 00:00 je venku klid, žádná vlastní hudba ani reproduktory.","Kouření jen na místě pro kuřáky vlevo od baru, vedle garáže.","Toaletní papír do koše, ne do záchodu.","Nejezte na pokoji ani na terásce před ním; k tomu slouží bar, kuchyně a společná terasa."] }, fi: { kop:"Vierasopas", kort:"Lyhyesti", alles:"Kaikki säännöt ja tiedot",
+    kamer:["Odjezd do 10:00: klíč nechte ve dveřích, schránku na klíč vraťte na 0000.","Od 00:00 je venku klid, žádná vlastní hudba ani reproduktory.","Kouření jen na místě pro kuřáky vlevo od baru, vedle garáže.","Toaletní papír do koše, ne do záchodu.","Nejezte na pokoji ani na terásce před ním; k tomu slouží bar, kuchyně a společná terasa."] }, fi: { kop:"Vierasopas", kort:"Lyhyesti", alles:"Kaikki säännöt ja tiedot",
     camper:["Check-out ennen klo 12:00.","Ulkona hiljaisuus klo 00:00 alkaen.","Ei ruokaa, juomia tai lasia uima-altaalla. Aurinkotuolit ovat huonevieraille; ottakaa nurmikolle mukaan oma pyyhe tai tuoli.","Koirat aina kytkettyinä, ei yhteisiin tiloihin, ulkoiluttakaa ne portin ulkopuolella.","Harmaa vesi tyhjennetään mäen alaosaan, musta vesi vain kemiallisen WC:n tyhjennyspisteeseen."],
-    kamer:["Check-out ennen klo 10:00: avain oveen, tallelokero takaisin koodiin 0000.","Ulkona hiljaisuus klo 00:00 alkaen, ei omaa musiikkia tai kaiuttimia.","Tupakointi vain tupakointipaikalla baarin vasemmalla puolella, autotallin vieressä.","WC-paperi roskakoriin, ei pönttöön.","Ei syömistä huoneessa tai sen edessä olevalla terassilla; syömistä varten ovat baari, keittiö ja yhteinen terassi."] }, no: { kop:"Gjesteguide", kort:"Kort fortalt", alles:"Alle regler og all info",
+    kamer:["Check-out ennen klo 10:00: avain oveen, avainlokero takaisin koodiin 0000.","Ulkona hiljaisuus klo 00:00 alkaen, ei omaa musiikkia tai kaiuttimia.","Tupakointi vain tupakointipaikalla baarin vasemmalla puolella, autotallin vieressä.","WC-paperi roskakoriin, ei pönttöön.","Ei syömistä huoneessa tai sen edessä olevalla terassilla; syömistä varten ovat baari, keittiö ja yhteinen terassi."] }, no: { kop:"Gjesteguide", kort:"Kort fortalt", alles:"Alle regler og all info",
     camper:["Utsjekking før kl. 12:00.","Fra kl. 00:00 skal det være stille ute.","Ikke mat, drikke eller glass ved bassenget. Solsengene er for romgjestene; ta med eget håndkle eller egen stol til gresset.","Hunder alltid i bånd, ikke ved fasilitetene, luftes utenfor porten.","Gråvann tømmes nederst i bakken, svartvann kun i det kjemiske toalettet."],
-    kamer:["Utsjekking før kl. 10:00: nøkkelen i døren, safen tilbake på 0000.","Fra kl. 00:00 skal det være stille ute, ingen egen musikk eller høyttalere.","Røyking kun på røykeplassen til venstre for baren, ved siden av garasjen.","Toalettpapir i søppelbøtta, ikke i toalettet.","Ikke spis på rommet eller på terrassen foran; spis heller ved baren, på kjøkkenet eller på fellesterrassen."] }, sv: { kop:"Gästguide", kort:"I korthet", alles:"Alla regler och all info",
+    kamer:["Utsjekking før kl. 10:00: nøkkelen i døren, nøkkelboksen tilbake på 0000.","Fra kl. 00:00 skal det være stille ute, ingen egen musikk eller høyttalere.","Røyking kun på røykeplassen til venstre for baren, ved siden av garasjen.","Toalettpapir i søppelbøtta, ikke i toalettet.","Ikke spis på rommet eller på terrassen foran; spis heller ved baren, på kjøkkenet eller på fellesterrassen."] }, sv: { kop:"Gästguide", kort:"I korthet", alles:"Alla regler och all info",
     camper:["Utcheckning före kl. 12:00.","Från kl. 00:00 ska det vara tyst utomhus.","Ingen mat, dryck eller glas vid poolen. Solsängarna är för rumsgästerna; ta med egen handduk eller stol till gräsmattan.","Hundar alltid kopplade, inte vid faciliteterna, rastas utanför grinden.","Gråvatten töms längst ner i backen, svartvatten bara i den kemiska toaletten."],
-    kamer:["Utcheckning före kl. 10:00: nyckeln i dörren, värdeskåpet tillbaka på 0000.","Från kl. 00:00 ska det vara tyst utomhus, ingen egen musik eller högtalare.","Rökning bara på rökplatsen till vänster om baren, bredvid garaget.","Toalettpapper i papperskorgen, inte i toaletten.","Ät inte på rummet eller på terrassen framför; ät hellre vid baren, i köket eller på den gemensamma terrassen."] }
+    kamer:["Utcheckning före kl. 10:00: nyckeln i dörren, nyckelboxen tillbaka på 0000.","Från kl. 00:00 ska det vara tyst utomhus, ingen egen musik eller högtalare.","Rökning bara på rökplatsen till vänster om baren, bredvid garaget.","Toalettpapper i papperskorgen, inte i toaletten.","Ät inte på rummet eller på terrassen framför; ät hellre vid baren, i köket eller på den gemensamma terrassen."] }
 };
 const GT = {
   nl: { titel:"Ontbijt bestellen", afsprakenKop:"Vooraf afgesproken", afsprakenUitleg:"Dit hebben we samen vastgelegd. Dit rekenen we bij aankomst met jullie af, het staat los van de honesty bar hieronder.", akkoordKamer:["Wat leuk dat je er bent!", "Hieronder staat alles voor een fijn verblijf: hoe je binnenkomt, de wifi, het ontbijt en onze huisregels. Neem er even rustig de tijd voor, dan weet je meteen hoe alles hier werkt. Onderaan tik je op akkoord en dan staat je eigen gastenpagina voor je klaar."], akkoordKop:"Welkom bij Finca KaYu", akkoordIntro:"Voordat je verder gaat vragen we je één ding: lees de huisregels hieronder even door. Alles wat erin staat heeft een reden, en het is ook ons huis. Onderaan kun je aangeven dat je ze hebt gelezen. Daarna staat de hele pagina voor je open.", akkoordOnder:"Gelezen? Dan kan het weekend beginnen.", akkoordKnop:"Ik heb de huisregels gelezen en ga akkoord", vandaagKort:"vandaag", programmaKop:"Jullie programma", wieBenJe:"Wie ben je?", naamNietErbij:"Andere naam? Typ hem hier", barNietGroep:"Dat staat niet op jouw lijstje. Alleen wat je zelf hebt aangetikt kun je weghalen.", naamPlaceholder:"Je voornaam", naamOk:"Dat ben ik", annuleer:"Annuleren", tiktAls:"Je tikt aan als", iemandAnders:"ik ben iemand anders", iedereen:"Wie heeft wat gepakt", groepTotaal:"Totaal van de groep", zonderNaam:"Zonder naam", hoi:"Hoi", kamer:"Kamer", groep:"jullie groep",
@@ -4141,7 +4178,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "04-11-2026 e";
+const VERSIE = "04-11-2026 g";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -6969,8 +7006,54 @@ function poetsBlok(vandaag){
 }
 
 /* ---------- KaYu 2.0: tijdlijn van vandaag en morgen, en de weekkalender met kamers en plekken in één ---------- */
-let kalScroll = null, agendaOudOpen = false;
+let kalScroll = null, agendaOudOpen = false; /* kalScroll: de dag (index) die links staat, zodat verversen of draaien hem niet verschuift */
 const KAL_TERUG = 7, KAL_VOORUIT = 183;
+/* 04-11-2026 g (Bart: "precies een week te zien krijg, van links naar rechts in mijn scherm, dus precies 7 dagen ... en van boven naar
+   onder ook gewoon alles altijd precies in mijn telefoonscherm past"):
+   - breedte: naast de namen (54 px) precies 7 dagen; vandaag staat links; vegen en de pijltjes gaan per hele dag (scroll-snap);
+   - hoogte: de rijen zo hoog dat alles van de kop "Kalender" tot de laatste plek boven de knoppenbalk past, gerekend met de vaste
+     schermhoogte (zonder de adresbalk die wegschuift, zodat de rijen niet verspringen tijdens het scrollen); nooit lager dan 20 px
+     (dan kun je nog op een balk tikken) en nooit hoger dan de oude 26 px; is het krap, dan ook 2 px tussen de rijen in plaats van 4.
+     Zijn er heel veel rijen, dan scrol je een stukje. */
+const KAL_NAAM = 54, KAL_DAGEN = 7, KAL_RIJ_MIN = 20, KAL_RIJ_MAX = 26;
+let kalKolLaatst = 0, kalRij = KAL_RIJ_MAX, kalGat = 4, kalBreedteLaatst = 0;
+/* breedte van één dag: gemeten aan de kalender die er al staat, anders uit de breedte van het scherm (de kaart heeft een rand van 1 px) */
+function kalKol(){
+  /* een schatting: kalMaat meet na het tekenen de echte breedte (ook met een scrollbalk van een laptop) en zet --kol goed */
+  const box = document.querySelector("#nuInhoud [data-kalscrollbox]"), nu = document.getElementById("nuInhoud");
+  const w = box && box.clientWidth ? box.clientWidth : nu && nu.clientWidth ? nu.clientWidth - 2 : 0;
+  return w ? Math.max(30, (w - KAL_NAAM) / KAL_DAGEN) : (kalKolLaatst || 44);
+}
+/* na het tekenen: de echte breedte en hoogte nameten en bijstellen (alleen de maten in de opmaak, er wordt niets opnieuw opgebouwd) */
+function kalMaat(kal){
+  const box = kal && kal.querySelector("[data-kalscrollbox]"); if(!box || !box.clientWidth) return 0;
+  const kol = Math.max(30, (box.clientWidth - KAL_NAAM) / KAL_DAGEN);
+  const bin = box.querySelector(".kalbinnen"); kalKolLaatst = kol; /* review 2: vergelijken met wat er echt in de opmaak staat */
+  if(Math.abs(kol - (parseFloat(bin.style.getPropertyValue("--kol")) || 0)) > 0.01) bin.style.setProperty("--kol", kol + "px");
+  kalBreedteLaatst = document.documentElement.clientWidth;
+  const rijen = [...kal.querySelectorAll(".kalr")].filter(r => !r.classList.contains("kalband") && !r.classList.contains("kalkop"));
+  if(rijen.length){
+    const onder = document.getElementById("onder2");
+    const balk = onder && getComputedStyle(onder).display !== "none" ? onder.offsetHeight : 0;
+    const ruimte = document.documentElement.clientHeight - balk - 8 - 6; /* 8 px boven (zoals bij de knop Kalender), 6 px lucht onder */
+    /* twee rondes: rekenen, toepassen, nameten (marges tussen kopjes en rijen vallen deels samen, dus niet alles is precies te voorspellen) */
+    for(let ronde = 0; ronde < 2; ronde++){
+      const hoog = rijen[rijen.length - 1].getBoundingClientRect().bottom - kal.getBoundingClientRect().top;
+      if(ronde && hoog <= ruimte + 0.5) break;
+      const per = kalRij + kalGat + (ruimte - hoog) / rijen.length; /* hoogte per rij inclusief de ruimte ertussen */
+      const gat = per >= KAL_RIJ_MAX + 4 ? 4 : 2;
+      const rij = Math.max(KAL_RIJ_MIN, Math.min(KAL_RIJ_MAX, Math.floor((per - gat) * 10) / 10));
+      if(Math.abs(rij - kalRij) < 0.1 && gat === kalGat) break;
+      kalRij = rij; kalGat = gat; kal.style.setProperty("--rij", rij + "px"); kal.style.setProperty("--rijgat", gat + "px");
+    }
+  }
+  return kol;
+}
+/* draaien van de telefoon of een ander venster op de laptop: opnieuw tekenen als de breedte verandert (de hoogte volgt dan vanzelf) */
+let kalMaatT = 0;
+window.addEventListener("resize", () => { clearTimeout(kalMaatT); kalMaatT = setTimeout(() => {
+  if(modus !== "nu" || document.documentElement.clientWidth === kalBreedteLaatst || !document.querySelector("#nuInhoud .kal2")) return;
+  tekenNu(); }, 250); });
 /* 30-10-2026 e (Bart: "ik wil 2 jaar vooruit kunnen kijken, mocht ik dat willen"): onder de kalender een knop om tot 2 jaar vooruit te
    kijken. Niet standaard, omdat het Vandaag-scherm daarmee ongeveer twee keer zo lang over het opbouwen doet (gemeten 30-10). De keuze
    blijft op deze telefoon bewaard. */
@@ -7260,7 +7343,8 @@ function kalPas(kort, maxW){
   return kort;
 }
 function kalenderBlok(vandaag){
-  const el = document.createElement("div"); el.className = "blok kal2";
+  const el = document.createElement("div"); el.className = "blok kal2"; el.style.setProperty("--rij", kalRij + "px"); el.style.setProperty("--rijgat", kalGat + "px");
+  const KOL = kalKol(); /* breedte van één dag in px (04-11-2026 g: precies 7 in beeld; was vast 44) */
   /* één strook van een week terug tot een half jaar vooruit; scrolt van links naar rechts, de namen van kamers en plekken blijven links staan */
   const start = parse(vandaag); start.setDate(start.getDate() - KAL_TERUG);
   const N = KAL_TERUG + kalVooruit();
@@ -7299,7 +7383,7 @@ function kalenderBlok(vandaag){
         /* de naam mag over de lege dagen erna doorlopen, net als bij de boekingen */
         let n = 1; while(i + n < N && L[i + n] === l && !punten.has(i + n)) n++;
         let leeg = 0; if(i + n >= N || L[i + n] !== l) while(leeg < 4 && i + n + leeg < N && !L[i + n + leeg]) leeg++;
-        tekst = `<i style="max-width:${Math.min(220, (n + leeg) * 44 - 8)}px">${vrij(l)}</i>`;
+        tekst = `<i style="max-width:${Math.min(220, Math.round((n + leeg) * KOL - 8))}px">${vrij(l)}</i>`;
       }
       cel += `<span class="bd ${soort}${soort === "sch" && fd[ds].misschien ? " ms" : ""}${begin ? " b" : ""}${einde ? " e" : ""}" data-kalband="${ds}">${tekst}</span>`;
     });
@@ -7331,8 +7415,7 @@ function kalenderBlok(vandaag){
     /* eerst de boekingen van deze rij eruit halen, dan per dag alleen die paar vergelijken (190 dagen x 16 rijen) */
     const vanRij = bron.filter(x => hoort(x) && x.uit >= eersteDag && x.in <= laatsteDag);
     /* 01-10-2026 b (Bart: "de namen schrijven over elkaar heen"): een naam mag over lege dagen doorlopen,
-       maar stopt vóór de volgende balk in dezelfde rij. Kolom 44px; de balk begint halverwege de aankomstdag. */
-    const KOL = 44;
+       maar stopt vóór de volgende balk in dezelfde rij. Kolom KOL px (04-11-2026 g: 7 in beeld); de balk begint halverwege de aankomstdag. */
     const naamRuimte = (b, ds, start) => {
       const volgende = vanRij.filter(x => x !== b && x.in >= b.uit).sort((x, y) => x.in.localeCompare(y.in))[0];
       if(!volgende) return 0;
@@ -7363,7 +7446,7 @@ function kalenderBlok(vandaag){
   /* 29-09-2026 d: ook een gestalde camper op een noodplek krijgt zijn rij */
   const noodInGebruik = NOOD.filter(x => boekingen.some(b => b.plek === x && b.in <= laatsteDag && b.uit > eersteDag));
   rijen += `<div class="kalsub"><span class="n">Camperplaatsen</span></div>` + [...VAST, ...noodInGebruik].map(x => rij(false, x, x.replace("Pitch ", "P").replace("Boven ", "B"))).join("");
-  h += `<div class="kalscroll" data-kalscrollbox="1"><div class="kalbinnen" style="--n:${N}">` + kop + rijen + `</div></div>`;
+  h += `<div class="kalscroll" data-kalscrollbox="1"><div class="kalbinnen" style="--n:${N};--kol:${KOL}px">` + kop + rijen + `</div></div>`;
   h += `<div class="kallegenda"><span><i class="k"></i>Kamer</span><span><i class="c"></i>Camper</span><span><i class="g"></i>Hele finca</span><span><i class="gs"></i>Gestald</span><span><i class="x"></i>G gastenverblijf, C camper H&M (zelf invullen)</span><span><i class="fes"></i>Feestdag Spanje</span><span><i class="fnl"></i>Feestdag Nederland</span><span><i class="vnl"></i>Schoolvakantie NL</span><span><i class="sch"></i>Schoolvrij Coín</span><span>Tik op een datum of balk: welke feestdag of vakantie die dag</span><span>Veeg naar links en rechts voor andere dagen</span>${laatsteDag > FEEST_TOT ? `<span class="feestlet">Feestdagen en vakanties na 31 december 2027 staan er nog niet in. Vraag Claude ze bij te werken.</span>` : laatsteDag > SCHOOL_TOT ? `<span class="feestlet">Schoolvrije dagen in Coín na 9 september 2027 staan er nog niet in. Vraag Claude ze bij te werken.</span>` : ""}${FEEST_ONBEKEND && eersteDag <= "2027-12-31" && laatsteDag >= "2027-01-01" ? `<span class="feestnog">${FEEST_ONBEKEND} Vraag Claude ze toe te voegen zodra ze bekend zijn.</span>` : ""}</div>`;
   h += `<button type="button" class="kallang" data-kallang="1">${kalLang ? "Terug naar een half jaar vooruit (sneller)" : "Verder vooruit kijken, tot 2 jaar"}</button>`;
   el.innerHTML = `<h2><span class="kt">${gi2("cal")}Kalender</span><b>tik op een balk of een lege dag</b></h2>` + h;
@@ -8098,10 +8181,12 @@ function tekenNu(){
     [agendasPerDag() ? oud : null, kalenderBlok(vandaag), obBlok, obVandaagEl, broodjesEl, tlEl, letEl].filter(Boolean).forEach(e => bak.prepend(e));
     const box = bak.querySelector("[data-kalscrollbox]");
     if(box){
-      const kolom = 44, naarDag = (n, zacht) => box.scrollTo({ left: Math.max(0, n * kolom - 6), behavior: zacht ? "smooth" : "auto" });
-      if(kalScroll == null) naarDag(KAL_TERUG, false); else box.scrollLeft = kalScroll;
-      box.addEventListener("scroll", () => { kalScroll = box.scrollLeft; const i = Math.round(box.scrollLeft / kolom); const koppen = box.querySelectorAll(".kalkop [data-kald]"); const k = koppen[Math.min(i + 1, koppen.length - 1)]; const m = bak.querySelector("[data-kalmaand]"); if(k && m){ const d = parse(k.dataset.kald); m.textContent = `${MND[d.getMonth()]} ${d.getFullYear()}`; } }, { passive:true });
-      bak.querySelectorAll("[data-kalscroll]").forEach(kn => kn.onclick = () => { const st = Number(kn.dataset.kalscroll); if(st === 0) naarDag(KAL_TERUG, true); else box.scrollTo({ left: box.scrollLeft + st * kolom, behavior:"smooth" }); });
+      /* 04-11-2026 g: per hele dag; vandaag links (zonder strookje van gisteren); de maand boven de kalender is die van de linkerdag */
+      const kolom = kalMaat(box.closest(".kal2")) || kalKol(), naarDag = (n, zacht) => box.scrollTo({ left: Math.max(0, Math.round(n * kolom)), behavior: zacht ? "smooth" : "auto" });
+      const maand = () => { const i = Math.round(box.scrollLeft / kolom); const koppen = box.querySelectorAll(".kalkop [data-kald]"); const k = koppen[Math.max(0, Math.min(i, koppen.length - 1))]; const m = bak.querySelector("[data-kalmaand]"); if(k && m){ const d = parse(k.dataset.kald); m.textContent = `${MND[d.getMonth()]} ${d.getFullYear()}`; } };
+      naarDag(kalScroll == null ? KAL_TERUG : kalScroll, false); maand();
+      box.addEventListener("scroll", () => { kalScroll = Math.round(box.scrollLeft / kolom); maand(); }, { passive:true });
+      bak.querySelectorAll("[data-kalscroll]").forEach(kn => kn.onclick = () => { const st = Number(kn.dataset.kalscroll); naarDag(st === 0 ? KAL_TERUG : Math.round(box.scrollLeft / kolom) + st, true); });
     }
     bak.querySelectorAll("[data-agoudtoggle]").forEach(kn => kn.onclick = () => { agendaOudOpen = !agendaOudOpen; tekenNu(); });
     /* 30-10-2026 e: kalender tot 2 jaar vooruit, of weer een half jaar (bewaard op deze telefoon) */
@@ -13719,18 +13804,18 @@ const echteShowModal = HTMLDialogElement.prototype.showModal;
 HTMLDialogElement.prototype.showModal = function(){
   echteShowModal.call(this);
   const p = kel("pinScherm");
-  if(this !== p && p && p.open && pinNodig()){ p.close(); echteShowModal.call(p); setTimeout(() => kel("pinVeld").focus(), 0); }
+  if(this !== p && p && p.open && pinNodig()){ p.close(); echteShowModal.call(p); pinFocus(); setTimeout(pinFocus, 0); }
 };
 function pinToon(modus){
   pinModus = modus; pinEerste = "";
-  const tekst = { invoer:["Vul je code in", "4 cijfers"], kies:["Kies je code", "Kies 4 cijfers. Loes en jij gebruiken dezelfde code. Schrijf hem ergens op."],
+  const tekst = { invoer:["Voer je code in", ""], kies:["Kies je code", "Kies 4 cijfers. Loes en jij gebruiken dezelfde code. Schrijf hem ergens op."],
     aanzetten:["Kies je code", "Kies 4 cijfers. Loes en jij gebruiken dezelfde code. Schrijf hem ergens op."],
     wijzig:["Nieuwe code", "Kies 4 nieuwe cijfers. Loes gebruikt daarna ook deze code."] }[modus];
   kel("pinKop").textContent = tekst[0]; kel("pinUitleg").textContent = tekst[1]; kel("pinMelding").textContent = "";
   const nodig = modus === "invoer" || modus === "kies";
   kel("pinStop").hidden = nodig; kel("pinVergeten").hidden = !nodig;
-  kel("pinVergeten").textContent = modus === "invoer" ? "Code vergeten? Uitloggen" : "Uitloggen";
-  kel("pinVeld").value = "";
+  kel("pinVergeten").textContent = modus === "invoer" ? "Code vergeten?" : "Uitloggen";
+  pinZet("");
   if(nodig){
     /* review: het slot geldt pas weer als de code is ingevuld (ook na herladen of in een ander tabblad) */
     pinOpen = false; opslag("s", o => o.removeItem("kayu_pin_open"));
@@ -13738,9 +13823,33 @@ function pinToon(modus){
   }
   /* als laatste geopend venster ligt het boven alles wat al open stond (dat blijft gewoon staan, met wat er is ingevuld) */
   const d = kel("pinScherm"); if(d.open) d.close(); echteShowModal.call(d);
-  setTimeout(() => kel("pinVeld").focus(), 50);
+  pinFocus(); setTimeout(pinFocus, 50); /* review: meteen, anders staat de focus heel even op toets 1 (Enter = een 1) */
 }
-function pinSluit(){ pinModus = ""; document.documentElement.classList.remove("pindicht"); const d = kel("pinScherm"); if(d.open) d.close(); kel("pinVeld").value = ""; }
+function pinSluit(){ pinModus = ""; document.documentElement.classList.remove("pindicht"); const d = kel("pinScherm"); if(d.open) d.close(); pinZet(""); }
+/* 04-11-2026 g: cijfers via de ronde toetsen (of het toetsenbord van een laptop); de rondjes laten zien hoeveel er al staan */
+let pinInvoer = "";
+const pinFocus = () => { const d = kel("pinScherm"); if(d.open) d.focus(); }; /* het venster zelf, zodat Enter geen cijfer indrukt */
+function pinZet(w){ pinInvoer = w; const n = w.length, pp = kel("pinPunten");
+  pp.querySelectorAll("i").forEach((i, k) => i.classList.toggle("vol", k < n)); pp.setAttribute("aria-label", `${n} van 4 cijfers ingevuld`); }
+function pinSchud(){ const pp = kel("pinPunten"); pp.classList.remove("schud"); void pp.offsetWidth; pp.classList.add("schud"); }
+function pinToets(c){
+  if(pinBezig || !pinModus || !pinIsDicht()) return;
+  if(c === "wis"){ pinZet(pinInvoer.slice(0, -1)); return; }
+  if(!/^[0-9]$/.test(c) || pinInvoer.length >= 4) return;
+  pinZet(pinInvoer + c);
+  if(pinInvoer.length === 4) pinVoerIn();
+}
+kel("pinToetsen").addEventListener("click", e => { const k = e.target.closest("[data-pin]"); if(k) pinToets(k.dataset.pin); });
+/* een tik op een toets haalt de focus niet weg van het venster: anders drukt Enter op een laptop het laatst getikte cijfer nog eens in */
+kel("pinToetsen").addEventListener("mousedown", e => { if(e.target.closest("[data-pin]")) e.preventDefault(); });
+/* review: zichtbaar tikken, ook op een iPhone (daar kleurt :active niet zonder meer) */
+kel("pinToetsen").addEventListener("pointerdown", e => { const k = e.target.closest("[data-pin]"); if(!k) return; k.classList.add("druk"); setTimeout(() => k.classList.remove("druk"), 160); });
+document.addEventListener("keydown", e => {
+  if(!pinModus || !pinIsDicht() || e.ctrlKey || e.metaKey || e.altKey) return;
+  if(e.repeat){ if(/^[0-9]$|^Backspace$/.test(e.key)) e.preventDefault(); return; } /* review: ingedrukt houden is geen "7777" */
+  if(/^[0-9]$/.test(e.key)){ e.preventDefault(); pinToets(e.key); }
+  else if(e.key === "Backspace"){ e.preventDefault(); pinToets("wis"); }
+});
 function pinOntgrendeld(){
   pinOpen = true; pinFoutMem = 0; opslag("s", o => o.setItem("kayu_pin_open", "1")); opslag("l", o => o.removeItem("kayu_pin_fout")); pinSluit();
 }
@@ -13774,44 +13883,45 @@ document.addEventListener("visibilitychange", () => {
   const c = pinCache();
   if(document.visibilityState === "hidden"){ pinWegZet(); if(c && pinIsApp()) document.documentElement.classList.add("pinweg"); return; }
   const weg = pinWeg();
-  if(pinIsApp() && c && pinOpen && pinWegTeLang(weg, c.minuten)) pinToon("invoer");
+  if(pinIsApp() && c && pinOpen && pinWegTeLang(weg, c.minuten)){ pinToon("invoer"); if(pinBezig) kel("pinMelding").textContent = "Even geduld…"; } /* review 3: nieuwe code wordt nog bewaard */
   /* terug: het moment van wegleggen weer leeg, zodat een kopie (ander tabblad) of later herladen er niet op kan leunen */
   pinWegMem = 0; opslag("s", o => o.removeItem("kayu_weg"));
   document.documentElement.classList.remove("pinweg");
 });
 window.addEventListener("pagehide", pinWegZet);
 /* review: het slot kan niet weg met de terugknop of Escape; gaat het toch dicht, dan meteen weer open */
-kel("pinScherm").addEventListener("cancel", e => { if(pinNodig()) e.preventDefault(); });
+kel("pinScherm").addEventListener("cancel", e => { if(pinNodig() || pinBezig) e.preventDefault(); }); /* review 3: niet annuleren tijdens opslaan */
 kel("pinScherm").addEventListener("close", () => {
   const d = kel("pinScherm");
   if(d.open) return; /* al weer geopend (opnieuw bovenop gezet) */
-  if(pinNodig()){ echteShowModal.call(d); setTimeout(() => kel("pinVeld").focus(), 0); return; }
+  if(pinNodig()){ echteShowModal.call(d); pinFocus(); setTimeout(pinFocus, 0); return; }
   pinModus = ""; /* wijzigen of aanzetten afgebroken (Annuleren of Escape) */
   document.documentElement.classList.remove("pindicht");
 });
 async function pinVoerIn(){
-  const v = kel("pinVeld").value.replace(/\D/g, "").slice(0, 4); kel("pinVeld").value = v;
+  const v = pinInvoer;
   if(v.length < 4 || pinBezig) return;
   const m = kel("pinMelding");
   if(pinModus === "invoer"){
     const c = pinBlob() || (pinCache() || {}).blob;
-    if(!c){ kel("pinVeld").value = ""; m.textContent = "De code kon niet worden opgehaald. Controleer de verbinding en probeer het opnieuw."; haal(); return; } /* review: nooit open zonder controle */
+    if(!c){ pinZet(""); m.textContent = "De code kon niet worden opgehaald. Controleer de verbinding en probeer het opnieuw."; haal(); return; } /* review: nooit open zonder controle */
     pinBezig = true; m.textContent = "Even geduld…"; let goed = false;
     try { const k = await codeSleutelVan(v, kvan64(c.zout)); goed = new TextDecoder().decode(await crypto.subtle.decrypt({ name:"AES-GCM", iv: kvan64(c.iv) }, k, kvan64(c.inhoud))) === PIN_CONTROLE; }
     catch(e){ goed = false; }
-    pinBezig = false; kel("pinVeld").value = "";
+    pinBezig = false; pinZet("");
     if(goed){ pinOntgrendeld(); return; }
     const fout = Math.max(pinFoutMem, Number(opslag("l", o => o.getItem("kayu_pin_fout")) || 0) || 0) + 1;
     pinFoutMem = fout; opslag("l", o => o.setItem("kayu_pin_fout", String(fout)));
     if(fout >= PIN_MAX_FOUT){ m.textContent = "5 keer een foute code. Log opnieuw in met je wachtwoord.";
       opslag("l", o => { o.setItem("kayu_pin_blok", "1"); o.removeItem("kayu_pin_fout"); }); await pinUitloggen(); return; }
-    m.textContent = `De code klopt niet. Nog ${PIN_MAX_FOUT - fout} ${PIN_MAX_FOUT - fout === 1 ? "poging" : "pogingen"}.`; kel("pinVeld").focus(); return;
+    m.textContent = `De code klopt niet. Nog ${PIN_MAX_FOUT - fout} ${PIN_MAX_FOUT - fout === 1 ? "poging" : "pogingen"}.`; pinSchud(); return;
   }
   /* kiezen, aanzetten of wijzigen: twee keer dezelfde 4 cijfers */
   const opnieuw = pinModus === "wijzig" ? "Kies 4 nieuwe cijfers." : "Kies 4 cijfers.";
-  if(!pinEerste){ pinEerste = v; kel("pinVeld").value = ""; kel("pinUitleg").textContent = "Nog een keer dezelfde 4 cijfers."; m.textContent = ""; kel("pinVeld").focus(); return; }
-  if(v !== pinEerste){ pinEerste = ""; kel("pinVeld").value = ""; kel("pinUitleg").textContent = opnieuw; m.textContent = "De twee codes waren niet gelijk. Begin opnieuw."; kel("pinVeld").focus(); return; }
-  pinBezig = true; m.textContent = "Even geduld…";
+  const was = pinModus; /* review 2: vastleggen vóór het wachten; neemt het slot het venster intussen over (pinToon("invoer")), dan stoppen */
+  if(!pinEerste){ pinEerste = v; pinZet(""); kel("pinUitleg").textContent = "Nog een keer dezelfde 4 cijfers."; m.textContent = ""; return; }
+  if(v !== pinEerste){ pinEerste = ""; pinZet(""); kel("pinUitleg").textContent = opnieuw; m.textContent = "De twee codes waren niet gelijk. Begin opnieuw."; pinSchud(); return; }
+  pinBezig = true; m.textContent = "Even geduld…"; kel("pinStop").disabled = true;
   try {
     const zout = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
     const k = await codeSleutelVan(v, zout);
@@ -13821,23 +13931,29 @@ async function pinVoerIn(){
     const toevoegen = pinModus === "kies" || (pinModus === "aanzetten" && !pinBlob());
     const { error } = toevoegen ? await db.from("instellingen").insert({ sleutel:"app_code", waarde, bijgewerkt: nu })
       : await db.from("instellingen").upsert({ sleutel:"app_code", waarde, bijgewerkt: nu }, { onConflict:"sleutel" });
-    pinBezig = false;
+    if(pinModus !== was){ /* review 3: het slot nam het over; zeg wat er met de nieuwe code is gebeurd (bij een fout eerst nakijken wat er echt staat) */
+      if(!error) instellingen.app_code = waarde; else { try { await haal(); } catch(e){} }
+      pinBewaarCache();
+      if(pinIsDicht() && pinModus === "invoer") kel("pinMelding").textContent = instellingen.app_code === waarde
+        ? "Je nieuwe code is bewaard. Vul hem in, en vertel hem ook aan Loes." : "Je nieuwe code is niet bewaard. Gebruik je oude code.";
+      return; }
     if(error){
       if(toevoegen && /duplicate|unique|23505/i.test(error.message + " " + (error.code || ""))){ await haal(); pinToon("invoer"); kel("pinMelding").textContent = "Op een ander toestel is net een code gekozen. Vul die code in."; return; }
-      m.textContent = "Opslaan mislukt: " + error.message; pinEerste = ""; kel("pinVeld").value = ""; kel("pinUitleg").textContent = opnieuw; return;
+      m.textContent = "Opslaan mislukt: " + error.message; pinEerste = ""; pinZet(""); kel("pinUitleg").textContent = opnieuw; return;
     }
     instellingen.app_code = waarde;
-    const was = pinModus;
-    if(was === "aanzetten" && !(await pinInstelling("app_code_aan", "aan"))){ pinEerste = ""; kel("pinVeld").value = ""; m.textContent = "De code is bewaard, maar aanzetten lukte niet. Probeer het in Meer nog eens."; return; }
+    if(was === "aanzetten" && !(await pinInstelling("app_code_aan", "aan"))){ if(pinModus !== was) return; pinEerste = ""; pinZet(""); kel("pinUitleg").textContent = opnieuw; m.textContent = "De code is bewaard, maar aanzetten lukte niet. Probeer het in Meer nog eens."; return; }
+    if(pinModus !== was){ pinBewaarCache(); if(pinIsDicht() && pinModus === "invoer") kel("pinMelding").textContent = "Je nieuwe code is bewaard. Vul hem in, en vertel hem ook aan Loes."; return; }
     pinBewaarCache(); pinOntgrendeld(); tekenMeer();
     if(was === "wijzig") alert("De nieuwe code is bewaard. Vertel hem ook aan Loes.");
     if(was === "aanzetten") alert("De code staat aan. Vertel hem ook aan Loes.");
-  } catch(e){ pinBezig = false; m.textContent = "Mislukt: " + (e && e.message || e); pinEerste = ""; kel("pinVeld").value = ""; }
+  } catch(e){ if(pinModus === was){ m.textContent = "Mislukt: " + (e && e.message || e); pinEerste = ""; pinZet(""); kel("pinUitleg").textContent = opnieuw; }
+    else if(pinIsDicht() && pinModus === "invoer") kel("pinMelding").textContent = "Je nieuwe code is niet bewaard. Gebruik je oude code."; }
+  finally { pinBezig = false; kel("pinStop").disabled = false; } /* review 04-11-2026 g: pas vrij als ook aanzetten en ophalen klaar zijn (geen tweede opslag ertussen) */
 }
 async function pinUitloggen(){ opslag("s", o => { o.removeItem("kayu_pin_open"); o.removeItem("kayu_weg"); }); try { await db.auth.signOut(); } catch(e){} location.reload(); }
-kel("pinVeld").addEventListener("input", pinVoerIn);
 kel("pinVergeten").onclick = () => { if(confirm("Uitloggen? Daarna log je in met je e-mailadres en wachtwoord, en kun je in Meer een nieuwe code kiezen.")) pinUitloggen(); };
-kel("pinStop").onclick = () => { pinSluit(); };
+kel("pinStop").onclick = () => { if(pinBezig) return; pinSluit(); }; /* review 3: tijdens opslaan telt Annuleren niet (de code wordt toch bewaard) */
 async function pinSchakel(){
   if(pinAan()){
     if(!confirm("Code bij openen uitzetten? Dan opent de app zonder code, ook als iemand anders je telefoon pakt.")) return;
