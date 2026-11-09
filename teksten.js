@@ -9,6 +9,11 @@ const BR_STANDAARD = { ophalen_van:"09:30", ophalen_tot:"10:00", bestellen_tot:"
 const BRB = c => (c && c.brood) || BR_STANDAARD;
 const BRV = (c, taal, s) => { const b = BRB(c), f = x => taal === "fr" ? x.replace(/^0/, "").replace(":", "h") : x;
   return s.replace(/\{bt\}/g, f(b.bestellen_tot)).replace(/\{van\}/g, f(b.ophalen_van)).replace(/\{tot\}/g, f(b.ophalen_tot)); };
+/* 09-11-2026 c (Bart): de gewone tijd van het ontbijt uit de instelling ontbijt_tijden; de app geeft hem mee als c.ontbijt = { van, tot }
+   (ontbijtStandaard in index.html). Zonder c.ontbijt 09:00 tot 10:00. {ovan} en {otot}; Frans schrijft 9h00. */
+const OB_STANDAARD = { van:"09:00", tot:"10:00" };
+const OBV = (c, taal, s) => { const b = (c && c.ontbijt) || OB_STANDAARD, f = x => taal === "fr" ? x.replace(/^0/, "").replace(":", "h") : x;
+  return s.replace(/\{ovan\}/g, f(b.van)).replace(/\{otot\}/g, f(b.tot)); };
 const KAART = {
   salud: "https://www.google.com/maps/search/?api=1&query=Centro+de+Salud+Co%C3%ADn%2C+Calle+Subida+San+Ant%C3%B3n%2C+Co%C3%ADn",
   coinsalud: "https://www.google.com/maps/search/?api=1&query=Cl%C3%ADnica+Coinsalud%2C+Avenida+Reina+Sof%C3%ADa%2C+Co%C3%ADn",
@@ -1567,9 +1572,9 @@ nl: {
     STREEP, "",
     "🍳 ONTBIJT", "",
     ...(c.link ? [`• Bestellen doe je via jullie eigen gastenpagina, die werkt tijdens het hele verblijf: ${c.link}`,
-                  c.groep ? "• Geef per ochtend het totaal door voor de hele groep, met hoe laat jullie willen eten (tussen 09:00 en 10:00 uur, per kwartier). Eén tijd per ochtend voor de groep."
-                          : "• Kies per ochtend wat je wilt, voor hoeveel personen en hoe laat (tussen 09:00 en 10:00 uur, per kwartier)."]
-               : ["• Ontbijt serveren we tussen 09:00 en 10:00 uur."]),
+                  c.groep ? OBV(c, "nl", "• Geef per ochtend het totaal door voor de hele groep, met hoe laat jullie willen eten (tussen {ovan} en {otot} uur, per kwartier). Eén tijd per ochtend voor de groep.")
+                          : OBV(c, "nl", "• Kies per ochtend wat je wilt, voor hoeveel personen en hoe laat (tussen {ovan} en {otot} uur, per kwartier).")]
+               : [OBV(c, "nl", "• Ontbijt serveren we tussen {ovan} en {otot} uur.")]),
     "• Bestellen of wijzigen kan tot uiterlijk een dag van tevoren, zodat wij alles vers kunnen voorbereiden. De Overnight Apple Oat maken we de avond ervoor klaar; die kun je na 21:00 uur niet meer bestellen of wijzigen.",
     "• Ontbijt kost € 10 per persoon, kinderen € 5.",
     "• Zin in koffie of thee? Die kun je alvast zelf pakken.",
@@ -1913,9 +1918,9 @@ en: {
     STREEP, "",
     "🍳 BREAKFAST", "",
     ...(c.link ? [`• You order via your own guest page, which works for your whole stay: ${c.link}`,
-                  c.groep ? "• Each morning, let us know the total for the whole group and what time you would like to eat (between 09:00 and 10:00, per quarter hour). One time per morning for the group."
-                          : "• Each morning, choose what you would like, for how many people and at what time (between 09:00 and 10:00, per quarter hour)."]
-               : ["• We serve breakfast between 09:00 and 10:00."]),
+                  c.groep ? OBV(c, "en", "• Each morning, let us know the total for the whole group and what time you would like to eat (between {ovan} and {otot}, per quarter hour). One time per morning for the group.")
+                          : OBV(c, "en", "• Each morning, choose what you would like, for how many people and at what time (between {ovan} and {otot}, per quarter hour).")]
+               : [OBV(c, "en", "• We serve breakfast between {ovan} and {otot}.")]),
     "• You can order or change up to one day in advance, so we can prepare everything fresh. We prepare the Overnight Apple Oat the evening before; after 21:00 it can no longer be ordered or changed.",
     "• Breakfast costs € 10 per person, children € 5.",
     "• Fancy a coffee or tea? Help yourself.",
@@ -2254,9 +2259,9 @@ de: {
     STREEP, "",
     "🍳 FRÜHSTÜCK", "",
     ...(c.link ? [`• Bestellt wird über eure eigene Gästeseite, die während des ganzen Aufenthalts funktioniert: ${c.link}`,
-                  c.groep ? "• Gebt pro Morgen die Gesamtzahl für die ganze Gruppe durch und wann ihr essen möchtet (zwischen 09:00 und 10:00 Uhr, viertelstündlich). Eine Uhrzeit pro Morgen für die Gruppe."
-                          : "• Wählt pro Morgen, was ihr möchtet, für wie viele Personen und um wie viel Uhr (zwischen 09:00 und 10:00 Uhr, viertelstündlich)."]
-               : ["• Frühstück servieren wir zwischen 09:00 und 10:00 Uhr."]),
+                  c.groep ? OBV(c, "de", "• Gebt pro Morgen die Gesamtzahl für die ganze Gruppe durch und wann ihr essen möchtet (zwischen {ovan} und {otot} Uhr, viertelstündlich). Eine Uhrzeit pro Morgen für die Gruppe.")
+                          : OBV(c, "de", "• Wählt pro Morgen, was ihr möchtet, für wie viele Personen und um wie viel Uhr (zwischen {ovan} und {otot} Uhr, viertelstündlich).")]
+               : [OBV(c, "de", "• Frühstück servieren wir zwischen {ovan} und {otot} Uhr.")]),
     "• Bestellen oder ändern könnt ihr bis spätestens einen Tag vorher, damit wir alles frisch vorbereiten können. Den Overnight Apple Oat bereiten wir am Abend davor zu; nach 21:00 Uhr kann er nicht mehr bestellt oder geändert werden.",
     "• Das Frühstück kostet € 10 pro Person, Kinder € 5.",
     "• Lust auf Kaffee oder Tee? Den könnt ihr euch schon selbst nehmen.",
@@ -2595,9 +2600,9 @@ es: {
     STREEP, "",
     "🍳 DESAYUNO", "",
     ...(c.link ? [`• Se pide desde vuestra propia página de huéspedes, que funciona durante toda la estancia: ${c.link}`,
-                  c.groep ? "• Cada mañana, indicad el total para todo el grupo y a qué hora queréis comer (entre las 09:00 y las 10:00, cada cuarto de hora). Una sola hora por mañana para el grupo."
-                          : "• Cada mañana, elegid qué queréis, para cuántas personas y a qué hora (entre las 09:00 y las 10:00, cada cuarto de hora)."]
-               : ["• Servimos el desayuno entre las 09:00 y las 10:00."]),
+                  c.groep ? OBV(c, "es", "• Cada mañana, indicad el total para todo el grupo y a qué hora queréis comer (entre las {ovan} y las {otot}, cada cuarto de hora). Una sola hora por mañana para el grupo.")
+                          : OBV(c, "es", "• Cada mañana, elegid qué queréis, para cuántas personas y a qué hora (entre las {ovan} y las {otot}, cada cuarto de hora).")]
+               : [OBV(c, "es", "• Servimos el desayuno entre las {ovan} y las {otot}.")]),
     "• Se puede pedir o cambiar como muy tarde un día antes, para que podamos prepararlo todo fresco. El Overnight Apple Oat lo preparamos la noche anterior; después de las 21:00 ya no se puede pedir ni cambiar.",
     "• El desayuno cuesta 10 € por persona, niños 5 €.",
     "• ¿Apetece un café o un té? Podéis cogerlo vosotros mismos.",
@@ -2935,9 +2940,9 @@ it: {
     STREEP, "",
     "🍳 COLAZIONE", "",
     ...(c.link ? [`• Si ordina dalla vostra pagina ospiti, che funziona per tutto il soggiorno: ${c.link}`,
-                  c.groep ? "• Ogni mattina indicate il totale per tutto il gruppo e a che ora volete mangiare (tra le 09:00 e le 10:00, ogni quarto d'ora). Un solo orario per mattina per il gruppo."
-                          : "• Scegliete ogni mattina cosa volete, per quante persone e a che ora (tra le 09:00 e le 10:00, ogni quarto d'ora)."]
-               : ["• La colazione viene servita tra le 09:00 e le 10:00."]),
+                  c.groep ? OBV(c, "it", "• Ogni mattina indicate il totale per tutto il gruppo e a che ora volete mangiare (tra le {ovan} e le {otot}, ogni quarto d'ora). Un solo orario per mattina per il gruppo.")
+                          : OBV(c, "it", "• Scegliete ogni mattina cosa volete, per quante persone e a che ora (tra le {ovan} e le {otot}, ogni quarto d'ora).")]
+               : [OBV(c, "it", "• La colazione viene servita tra le {ovan} e le {otot}.")]),
     "• Si può ordinare o modificare al più tardi un giorno prima, così possiamo preparare tutto fresco. L'Overnight Apple Oat lo prepariamo la sera prima; dopo le 21:00 non si può più ordinare né modificare.",
     "• La colazione costa € 10 a persona, bambini € 5.",
     "• Voglia di caffè o tè? Potete servirvi da soli.",
@@ -3275,9 +3280,9 @@ fr: {
     STREEP, "",
     "🍳 PETIT-DÉJEUNER", "",
     ...(c.link ? [`• Vous commandez depuis votre page d'accueil, qui fonctionne pendant tout le séjour : ${c.link}`,
-                  c.groep ? "• Chaque matin, indiquez le total pour tout le groupe et l'heure à laquelle vous voulez manger (entre 9h00 et 10h00, par quart d'heure). Une seule heure par matin pour le groupe."
-                          : "• Choisissez chaque matin ce que vous voulez, pour combien de personnes et à quelle heure (entre 9h00 et 10h00, par quart d'heure)."]
-               : ["• Le petit-déjeuner est servi entre 9h00 et 10h00."]),
+                  c.groep ? OBV(c, "fr", "• Chaque matin, indiquez le total pour tout le groupe et l'heure à laquelle vous voulez manger (entre {ovan} et {otot}, par quart d'heure). Une seule heure par matin pour le groupe.")
+                          : OBV(c, "fr", "• Choisissez chaque matin ce que vous voulez, pour combien de personnes et à quelle heure (entre {ovan} et {otot}, par quart d'heure).")]
+               : [OBV(c, "fr", "• Le petit-déjeuner est servi entre {ovan} et {otot}.")]),
     "• Vous pouvez commander ou modifier au plus tard la veille, pour que nous puissions tout préparer frais. L'Overnight Apple Oat est préparé la veille au soir ; après 21h00 il n'est plus possible de le commander ni de le modifier.",
     "• Le petit-déjeuner coûte 10 € par personne, 5 € pour les enfants.",
     "• Envie d'un café ou d'un thé ? Servez-vous.",
@@ -3615,9 +3620,9 @@ pt: {
     STREEP, "",
     "🍳 PEQUENO-ALMOÇO", "",
     ...(c.link ? [`• Encomendam através da vossa própria página de hóspedes, que funciona durante toda a estadia: ${c.link}`,
-                  c.groep ? "• Indiquem em cada manhã o total para todo o grupo e a que horas querem comer (entre as 09:00 e as 10:00, de quarto em quarto de hora). Uma só hora por manhã para o grupo."
-                          : "• Escolham em cada manhã o que querem, para quantas pessoas e a que horas (entre as 09:00 e as 10:00, de quarto em quarto de hora)."]
-               : ["• Servimos o pequeno-almoço entre as 09:00 e as 10:00."]),
+                  c.groep ? OBV(c, "pt", "• Indiquem em cada manhã o total para todo o grupo e a que horas querem comer (entre as {ovan} e as {otot}, de quarto em quarto de hora). Uma só hora por manhã para o grupo.")
+                          : OBV(c, "pt", "• Escolham em cada manhã o que querem, para quantas pessoas e a que horas (entre as {ovan} e as {otot}, de quarto em quarto de hora).")]
+               : [OBV(c, "pt", "• Servimos o pequeno-almoço entre as {ovan} e as {otot}.")]),
     "• Podem encomendar ou alterar no máximo até ao dia anterior, para que possamos preparar tudo fresco. O Overnight Apple Oat é preparado na noite anterior; depois das 21:00 já não é possível encomendá-lo nem alterá-lo.",
     "• O pequeno-almoço custa 10 € por pessoa, crianças 5 €.",
     "• Apetece um café ou um chá? Podem servir-se à vontade.",
@@ -3954,9 +3959,9 @@ cs: {
     STREEP, "",
     "🍳 SNÍDANĚ", "",
     ...(c.link ? [`• Objednáváte přes svou vlastní stránku pro hosty, která funguje po celý pobyt: ${c.link}`,
-                  c.groep ? "• Každé ráno nám dejte vědět celkový počet za celou skupinu a v kolik chcete jíst (mezi 09:00 a 10:00, po čtvrthodinách). Jeden čas na ráno pro celou skupinu."
-                          : "• Na každé ráno si vyberte, co chcete, pro kolik osob a v kolik hodin (mezi 09:00 a 10:00, po čtvrthodinách)."]
-               : ["• Snídani podáváme mezi 09:00 a 10:00."]),
+                  c.groep ? OBV(c, "cs", "• Každé ráno nám dejte vědět celkový počet za celou skupinu a v kolik chcete jíst (mezi {ovan} a {otot}, po čtvrthodinách). Jeden čas na ráno pro celou skupinu.")
+                          : OBV(c, "cs", "• Na každé ráno si vyberte, co chcete, pro kolik osob a v kolik hodin (mezi {ovan} a {otot}, po čtvrthodinách).")]
+               : [OBV(c, "cs", "• Snídani podáváme mezi {ovan} a {otot}.")]),
     "• Objednat nebo změnit můžete nejpozději den předem, abychom vše připravili čerstvé. Overnight Apple Oat připravujeme večer předem; po 21:00 už ho nelze objednat ani změnit.",
     "• Snídaně stojí 10 € za osobu, děti 5 €.",
     "• Dáte si kávu nebo čaj? Poslužte si sami.",
@@ -4295,9 +4300,9 @@ fi: {
     STREEP, "",
     "🍳 AAMIAINEN", "",
     ...(c.link ? [`• Tilaatte oman vierassivunne kautta, joka toimii koko vierailunne ajan: ${c.link}`,
-                  c.groep ? "• Ilmoittakaa jokaiselle aamulle koko ryhmän yhteismäärä ja mihin aikaan haluatte syödä (klo 09:00 ja 10:00 välillä, vartin välein). Yksi aika aamua kohden koko ryhmälle."
-                          : "• Valitkaa jokaiselle aamulle, mitä haluatte, kuinka monelle henkilölle ja mihin aikaan (klo 09:00 ja 10:00 välillä, vartin välein)."]
-               : ["• Tarjoilemme aamiaista klo 09:00 ja 10:00 välillä."]),
+                  c.groep ? OBV(c, "fi", "• Ilmoittakaa jokaiselle aamulle koko ryhmän yhteismäärä ja mihin aikaan haluatte syödä (klo {ovan} ja {otot} välillä, vartin välein). Yksi aika aamua kohden koko ryhmälle.")
+                          : OBV(c, "fi", "• Valitkaa jokaiselle aamulle, mitä haluatte, kuinka monelle henkilölle ja mihin aikaan (klo {ovan} ja {otot} välillä, vartin välein).")]
+               : [OBV(c, "fi", "• Tarjoilemme aamiaista klo {ovan} ja {otot} välillä.")]),
     "• Voitte tilata tai muuttaa tilausta viimeistään päivää etukäteen, jotta voimme valmistaa kaiken tuoreena. Overnight Apple Oat valmistetaan edellisenä iltana; klo 21:00 jälkeen sitä ei voi enää tilata tai muuttaa.",
     "• Aamiainen maksaa € 10 henkilöltä, lapset € 5.",
     "• Tekeekö mieli kahvia tai teetä? Ottakaa vapaasti.",
@@ -4637,9 +4642,9 @@ no: {
     STREEP, "",
     "🍳 FROKOST", "",
     ...(c.link ? [`• Dere bestiller via deres egen gjesteside, som virker under hele oppholdet: ${c.link}`,
-                  c.groep ? "• Gi beskjed for hver morgen om totalen for hele gruppen, og når dere vil spise (mellom kl. 09:00 og 10:00, hvert kvarter). Ett klokkeslett per morgen for gruppen."
-                          : "• Velg for hver morgen hva dere vil ha, for hvor mange personer og når (mellom kl. 09:00 og 10:00, hvert kvarter)."]
-               : ["• Frokost serverer vi mellom kl. 09:00 og 10:00."]),
+                  c.groep ? OBV(c, "no", "• Gi beskjed for hver morgen om totalen for hele gruppen, og når dere vil spise (mellom kl. {ovan} og {otot}, hvert kvarter). Ett klokkeslett per morgen for gruppen.")
+                          : OBV(c, "no", "• Velg for hver morgen hva dere vil ha, for hvor mange personer og når (mellom kl. {ovan} og {otot}, hvert kvarter).")]
+               : [OBV(c, "no", "• Frokost serverer vi mellom kl. {ovan} og {otot}.")]),
     "• Dere kan bestille eller endre senest dagen før, så vi kan forberede alt ferskt. Overnight Apple Oat lager vi kvelden før; den kan ikke bestilles eller endres etter kl. 21:00.",
     "• Frokost koster € 10 per person, barn € 5.",
     "• Lyst på kaffe eller te? Det kan dere forsyne dere med selv.",
@@ -4977,9 +4982,9 @@ sv: {
     STREEP, "",
     "🍳 FRUKOST", "",
     ...(c.link ? [`• Ni beställer via er egen gästsida, som fungerar under hela vistelsen: ${c.link}`,
-                  c.groep ? "• Meddela för varje morgon det totala antalet för hela gruppen och när ni vill äta (mellan kl. 09:00 och 10:00, varje kvart). En tid per morgon för gruppen."
-                          : "• Välj för varje morgon vad ni vill ha, för hur många personer och vilken tid (mellan kl. 09:00 och 10:00, varje kvart)."]
-               : ["• Frukost serverar vi mellan kl. 09:00 och 10:00."]),
+                  c.groep ? OBV(c, "sv", "• Meddela för varje morgon det totala antalet för hela gruppen och när ni vill äta (mellan kl. {ovan} och {otot}, varje kvart). En tid per morgon för gruppen.")
+                          : OBV(c, "sv", "• Välj för varje morgon vad ni vill ha, för hur många personer och vilken tid (mellan kl. {ovan} och {otot}, varje kvart).")]
+               : [OBV(c, "sv", "• Frukost serverar vi mellan kl. {ovan} och {otot}.")]),
     "• Ni kan beställa eller ändra senast dagen innan, så att vi kan förbereda allt färskt. Overnight Apple Oat gör vi i ordning kvällen innan; den går inte att beställa eller ändra efter kl. 21:00.",
     "• Frukost kostar € 10 per person, barn € 5.",
     "• Sugen på kaffe eller te? Det kan ni ta själva.",
