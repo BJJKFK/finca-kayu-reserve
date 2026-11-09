@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="05-11-2026 b"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="09-11-2026 b"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FAF9F5">
 <title>Finca KaYu</title>
@@ -1066,6 +1066,10 @@
   /* 24-10-2026 f: familie of vrienden met gastenpagina: groen, zoals de eigen plekken G en C */
   html.nieuw .kalr .c > b.k.fam{background:#CFDCC8}
   html.nieuw .kalr .c > b i{position:absolute;left:8px;top:0;line-height:calc(var(--rij, 26px) - 6px);font-style:normal;font-size:10px;font-weight:600;color:var(--tekst);white-space:nowrap;z-index:2;pointer-events:none;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+  /* 09-11-2026 b (Bart): herkomst van een kamerboeking als rondje met een letter vóór de naam: B Booking.com, A Airbnb, W eigen website */
+  u.hk{display:inline-block;width:11px;height:11px;line-height:11px;border-radius:50%;font-size:8px;font-weight:700;font-style:normal;text-decoration:none;text-align:center;color:#fff;margin-right:3px;vertical-align:1px}
+  u.hk.hkB{background:#2F5D9A} u.hk.hkA{background:#B03A55} u.hk.hkW{background:#8B5A2B} /* review: wit op de letter minstens 4,5:1 (5,8:1); niet de KaYu-roest #9E543E, die is alleen voor accenten (tests/kleuren.mjs A2) */
+  .kallegenda u.hk{margin-right:4px;vertical-align:0}
   html.nieuw .kalkop span{font-size:10px;color:var(--muted);text-align:center;line-height:1.15;padding:3px 0;border-radius:8px;font-weight:600}
   html.nieuw .kalkop span.nu{background:var(--accent);color:#fff} html.nieuw .kalkop span.nu i{color:#fff}
   /* 13-10-2026 b: feestdagen en vakanties */
@@ -1880,6 +1884,10 @@
     <!-- 05-11-2026 c: gastenboek onder de tegel Gasten, standaard aan -->
     <div class="meerkaart">
       <div class="meerinst"><span><b>Gastenboek</b><small id="mpGastenboek"></small></span><button type="button" class="meerzet" data-meer="gastenboek" id="meerGastenboek"></button></div>
+    </div>
+    <!-- 09-11-2026 b: herkomst van een kamerboeking in de agenda (B, A, W), standaard aan -->
+    <div class="meerkaart">
+      <div class="meerinst"><span><b>Herkomst in de agenda</b><small id="mpHerkomst"></small></span><button type="button" class="meerzet" data-meer="herkomst" id="meerHerkomst"></button></div>
     </div>
     <!-- 03-11-2026 a: de oude agenda's per dag onder de weekkalender op Vandaag, standaard uit -->
     <div class="meerkaart">
@@ -4208,7 +4216,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "05-11-2026 b";
+const VERSIE = "09-11-2026 b";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -6177,7 +6185,8 @@ const hoofdletter = t => t ? t.charAt(0).toUpperCase() + t.slice(1) : t;
 const gastLink = k => gastLinkVan(k.nr);
 const kamerLabel = k =>
   `<span class="tag kamer">${k.kamer === "Complete Finca" ? "hele finca" : "kamer"}</span>` +
-  (k.status === "optional" ? `<span class="tag optie">optie</span>` : "") +
+  /* 09-11-2026 b: geen label "optie" meer. MyTourist zet elke boeking via de eigen website en elke rechtstreekse boeking op optional,
+     ook betaald (nagekeken 09-11), dus het label zei niets. */
   (k.bron === "dicht" ? `<span class="tag optie">familie of vrienden</span>` : "") +
   (kEerder(k) ? `<span class="tag eerder">${kLater(k) ? "blijft langer" : "eerder weg"}</span>` : "");
 
@@ -7405,6 +7414,20 @@ function kalPas(kort, maxW){
   for(let n = vn.length - 1; n >= 1; n--){ const t = `${vn.slice(0, n).join("")}… ${m[2]}`; if(n === 1 || kalBreedte(t) <= maxW) return t; }
   return kort;
 }
+/* 09-11-2026 b (Bart: "met een icoontje aangeven of het van Booking, Airbnb of onze website afkomt"): instelling kalender_herkomst
+   (Meer > Gasten), standaard aan. Bron van de kamers uit de koerier: booking, airbnb-ical, api (eigen website), mytourist (rechtstreeks),
+   dicht. Een boeking die de app zelf in MyTourist maakt (mytourist-schrijven) komt ook als api binnen, maar met status confirmed;
+   de website geeft altijd optional (nagekeken 09-11). Daarom W alleen bij api zonder confirmed. Rechtstreeks en familie: geen rondje. */
+const HERKOMST_NAAM = { B:"Booking.com", A:"Airbnb", W:"Eigen website" };
+const herkomstAan = () => (instellingen.kalender_herkomst || "aan") === "aan";
+const herkomstLetter = b => {
+  if(!b || !herkomstAan()) return "";
+  const bron = String(b.bron || "").toLowerCase();
+  if(bron === "booking") return "B";
+  if(bron === "airbnb-ical" || bron === "airbnb") return "A";
+  if(bron === "api" && b.status !== "confirmed") return "W";
+  return "";
+};
 function kalenderBlok(vandaag){
   const el = document.createElement("div"); el.className = "blok kal2"; el.style.setProperty("--rij", kalRij + "px"); el.style.setProperty("--rijgat", kalGat + "px");
   const KOL = kalKol(); /* breedte van één dag in px (04-11-2026 g: precies 7 in beeld; was vast 44) */
@@ -7472,8 +7495,12 @@ function kalenderBlok(vandaag){
          met dezelfde voornaam, "Francisco" en "Francisco"): voornaam plus de eerste letter van de achternaam, "Francisco M." */
       const persoon = b.dicht ? "" : eigenRij ? (b.naam || "") : kamer ? (kNaam(b) || "") : (b.naam || "");
       let tekst = (heleFinca ? "Hele finca · " : "") + naam;
-      if(maxW && tekst.length * 6 > maxW) tekst = (persoon ? kalPas(kalKortNaam(persoon), maxW) : "") || String(naam).trim().split(/\s+/)[0] || tekst;
-      return `<b class="${klas} ${soort}${b.uit <= vandaag ? " weg" : ""}" ${sleutel}>${label ? `<i${maxW ? ` style="max-width:${maxW}px"` : ""}>${vrij(tekst)}</i>` : ""}</b>`;
+      /* 09-11-2026 b: herkomst als rondje vóór de naam (alleen kamerboekingen, niet bij dicht of eigen plekken); het rondje neemt 14px */
+      const hk = label && kamer && !eigenRij && !b.dicht ? herkomstLetter(b) : "";
+      const ruimte = maxW && hk ? Math.max(14, maxW - 14) : maxW;
+      if(ruimte && tekst.length * 6 > ruimte) tekst = (persoon ? kalPas(kalKortNaam(persoon), ruimte) : "") || String(naam).trim().split(/\s+/)[0] || tekst;
+      const rond = hk ? `<u class="hk hk${hk}" role="img" aria-label="${HERKOMST_NAAM[hk]}" title="${HERKOMST_NAAM[hk]}">${hk}</u>` : "";
+      return `<b class="${klas} ${soort}${b.uit <= vandaag ? " weg" : ""}" ${sleutel}>${label ? `<i${maxW ? ` style="max-width:${maxW}px"` : ""}>${rond}${vrij(tekst)}</i>` : ""}</b>`;
     };
     /* eerst de boekingen van deze rij eruit halen, dan per dag alleen die paar vergelijken (190 dagen x 16 rijen) */
     const vanRij = bron.filter(x => hoort(x) && x.uit >= eersteDag && x.in <= laatsteDag);
@@ -7510,7 +7537,7 @@ function kalenderBlok(vandaag){
   const noodInGebruik = NOOD.filter(x => boekingen.some(b => b.plek === x && b.in <= laatsteDag && b.uit > eersteDag));
   rijen += `<div class="kalsub"><span class="n">Camperplaatsen</span></div>` + [...VAST, ...noodInGebruik].map(x => rij(false, x, x.replace("Pitch ", "P").replace("Boven ", "B"))).join("");
   h += `<div class="kalscroll" data-kalscrollbox="1"><div class="kalbinnen" style="--n:${N};--kol:${KOL}px">` + kop + rijen + `</div></div>`;
-  h += `<div class="kallegenda"><span><i class="k"></i>Kamer</span><span><i class="c"></i>Camper</span><span><i class="g"></i>Hele finca</span><span><i class="gs"></i>Gestald</span><span><i class="x"></i>G gastenverblijf, C camper H&M (zelf invullen)</span><span><i class="fes"></i>Feestdag Spanje</span><span><i class="fnl"></i>Feestdag Nederland</span><span><i class="vnl"></i>Schoolvakantie NL</span><span><i class="sch"></i>Schoolvrij Coín</span><span>Tik op een datum of balk: welke feestdag of vakantie die dag</span><span>Veeg naar links en rechts voor andere dagen</span>${laatsteDag > FEEST_TOT ? `<span class="feestlet">Feestdagen en vakanties na 31 december 2027 staan er nog niet in. Vraag Claude ze bij te werken.</span>` : laatsteDag > SCHOOL_TOT ? `<span class="feestlet">Schoolvrije dagen in Coín na 9 september 2027 staan er nog niet in. Vraag Claude ze bij te werken.</span>` : ""}${FEEST_ONBEKEND && eersteDag <= "2027-12-31" && laatsteDag >= "2027-01-01" ? `<span class="feestnog">${FEEST_ONBEKEND} Vraag Claude ze toe te voegen zodra ze bekend zijn.</span>` : ""}</div>`;
+  h += `<div class="kallegenda"><span><i class="k"></i>Kamer</span><span><i class="c"></i>Camper</span><span><i class="g"></i>Hele finca</span><span><i class="gs"></i>Gestald</span><span><i class="x"></i>G gastenverblijf, C camper H&M (zelf invullen)</span>${herkomstAan() ? Object.entries(HERKOMST_NAAM).map(([l, n]) => `<span data-hklegenda="${l}"><u class="hk hk${l}">${l}</u>${n}</span>`).join("") + `<span>Geen rondje: rechtstreeks geboekt of familie</span>` : ""}<span><i class="fes"></i>Feestdag Spanje</span><span><i class="fnl"></i>Feestdag Nederland</span><span><i class="vnl"></i>Schoolvakantie NL</span><span><i class="sch"></i>Schoolvrij Coín</span><span>Tik op een datum of balk: welke feestdag of vakantie die dag</span><span>Veeg naar links en rechts voor andere dagen</span>${laatsteDag > FEEST_TOT ? `<span class="feestlet">Feestdagen en vakanties na 31 december 2027 staan er nog niet in. Vraag Claude ze bij te werken.</span>` : laatsteDag > SCHOOL_TOT ? `<span class="feestlet">Schoolvrije dagen in Coín na 9 september 2027 staan er nog niet in. Vraag Claude ze bij te werken.</span>` : ""}${FEEST_ONBEKEND && eersteDag <= "2027-12-31" && laatsteDag >= "2027-01-01" ? `<span class="feestnog">${FEEST_ONBEKEND} Vraag Claude ze toe te voegen zodra ze bekend zijn.</span>` : ""}</div>`;
   h += `<button type="button" class="kallang" data-kallang="1">${kalLang ? "Terug naar een half jaar vooruit (sneller)" : "Verder vooruit kijken, tot 2 jaar"}</button>`;
   el.innerHTML = `<h2><span class="kt">${gi2("cal")}Kalender</span><b>tik op een balk of een lege dag</b></h2>` + h;
   return el;
@@ -7775,7 +7802,7 @@ function tegelVenster(welke){
 /* ---------- 05-11-2026 c: gastenboek (wens Bart, akkoord "ga maar bouwen") ----------
    Onder de tegel Gasten (Wie is er nu) een knop Gastenboek: alle verblijven tot en met vandaag, nieuwste bovenaan, per maand, met een zoekveld
    (naam, telefoon, kenteken, kamer of plek). Bronnen: campers uit boekingen (niet gestald); kamers en hele finca uit mt_boekingen (kopie uit
-   MyTourist, sinds 24-12-2025; niet geannuleerd, geen optie, niet verdwenen), aangevuld met de kamers die de app al kent; familie en vrienden
+   MyTourist, sinds 24-12-2025; niet geannuleerd, niet verdwenen; opties wel, sinds 09-11-2026 a), aangevuld met de kamers die de app al kent; familie en vrienden
    (gastenlinks dicht- en eigen-). Telefoon van kamergasten uit kamer_vinkjes. Na 3 jaar haalt gegevens_opruimen naam en telefoon van campers
    en de telefoon van kamergasten weg (mt_boekingen blijft, kopie van MyTourist); dan staat er "Gast (opgeruimd)" of geen telefoon.
    Instelling gastenboek (aan/uit, Meer > Gasten), standaard aan. Alleen lezen: er wordt niets bewaard. */
@@ -7787,10 +7814,13 @@ async function gastenboekLaad(){
   try { mt = await cfAlles("mt_boekingen", "id,status,kanaal,kamer,aankomst,vertrek,naam,gasten,kinderen,verdwenen"); } catch(e){ console.error("gastenboek", e); mt = null; }
   const lijst = [], gezien = new Set();
   const kamerLabel = x => x === "Complete Finca" ? "Hele finca" : x;
-  /* review c: elk nummer uit de kopie telt als gezien, ook geannuleerde en opties (anders kwamen die via de kamers van de app toch terug) */
+  /* review c: elk nummer uit de kopie telt als gezien, ook geannuleerde (anders kwamen die via de kamers van de app toch terug); een optie komt
+     sinds 09-11-2026 a uit de kopie, met kamer en datums van de app als die hem kent, en zo maar één keer */
   (mt || []).forEach(m => gezien.add(String(m.id)));
   const appK = m => (kamers || []).find(x => String(x.nr) === String(m.id));
-  (mt || []).filter(m => { const k = appK(m), a = k ? k.in : m.aankomst; return !m.verdwenen && !/cancel|option/i.test(m.status || "") && a && a <= vandaag; }).forEach(m => {
+  /* 09-11-2026 a: opties tellen mee. In MyTourist staan alle boekingen via de eigen website en alle rechtstreekse boekingen op "optional",
+     ook als ze betaald zijn (nagekeken 09-11: 190 van de 190); alleen geannuleerd en verdwenen blijven weg. */
+  (mt || []).filter(m => { const k = appK(m), a = k ? k.in : m.aankomst; return !m.verdwenen && !/cancel/i.test(m.status || "") && a && a <= vandaag; }).forEach(m => {
     const v = vinkjes[m.id] || {}, l = gastLinks[m.id] || {};
     /* review c: kent de app de boeking (laatste 30 dagen), dan kamer en datums van de app (die is actueler dan de kopie van vannacht; ook voor
        het filter tot en met vandaag); anders de kopie, met eerder vertrek zoals in de app (eerder_uit, zelfde regel als pasEerderToe) */
@@ -9519,6 +9549,8 @@ function tekenMeer(){
   meerZet("meerUitleg", uitlegAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpGastenboek", gastenboekAan() ? "Staat aan: tik op de tegel Gasten, dan staat onder wie er nu is de knop Gastenboek (alle gasten van vroeger, per maand, met zoeken)." : "Staat uit: geen knop Gastenboek onder de tegel Gasten.");
   meerZet("meerGastenboek", gastenboekAan() ? "Uitzetten" : "Aanzetten");
+  meerZet("mpHerkomst", herkomstAan() ? "Staat aan: in de agenda staat vóór de naam van een kamergast een rondje met B (Booking.com), A (Airbnb) of W (eigen website). Geen rondje: rechtstreeks geboekt of familie." : "Staat uit: geen rondjes met de herkomst in de agenda.");
+  meerZet("meerHerkomst", herkomstAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpHerinnering", herinneringAan() ? "Staat aan: de dag voor vertrek staat bij Vandaag een herinnering voor wie morgen vertrekt, met wat ze moeten weten voor het uitchecken en wat er nog open staat." : "Staat uit.");
   meerZet("meerHerinnering", herinneringAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpHerinneringTekst", herinneringEigen() ? (herinneringMist().length ? "Eigen tekst, nog niet in alle talen vertaald" : "Eigen tekst, in alle talen") : "Vaste tekst, in de taal van de gast");
@@ -10068,6 +10100,15 @@ async function uitlegWissel(){
     : "Uitzetten? Dan verdwijnen de kleine i's met uitleg.")) return;
   instellingen.uitleg_icoontjes = nieuw; uitlegToepassen(); tekenMeer();
   const { error } = await db.from("instellingen").upsert({ sleutel:"uitleg_icoontjes", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
+}
+/* 09-11-2026 b: herkomst in de agenda aan of uit (Meer, Gasten); alleen de rondjes en de uitleg eronder verdwijnen */
+async function herkomstWissel(){
+  const nieuw = herkomstAan() ? "uit" : "aan";
+  if(!confirm(nieuw === "aan" ? "Aanzetten? In de agenda staat dan vóór de naam van een kamergast een rondje met B (Booking.com), A (Airbnb) of W (eigen website)."
+    : "Uitzetten? Dan staan er geen rondjes met de herkomst meer in de agenda.")) return;
+  instellingen.kalender_herkomst = nieuw; tekenMeer(); if(modus === "nu") tekenNu();
+  const { error } = await db.from("instellingen").upsert({ sleutel:"kalender_herkomst", waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
   if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
 }
 /* 05-11-2026 c: gastenboek aan of uit (Meer, Gasten); alleen de knop onder de tegel Gasten verdwijnt, er wordt niets gewist */
@@ -12964,6 +13005,7 @@ if(NIEUW){
     if(w === "obvandaag"){ obVandaagWissel(); return; }
     if(w === "herinnering"){ herinneringWissel(); return; }
     if(w === "gastenboek"){ gastenboekWissel(); return; }
+    if(w === "herkomst"){ herkomstWissel(); return; }
     if(w === "uitleg"){ uitlegWissel(); return; }
     if(w === "bargesch"){ barGeschWissel(); return; }
     if(w === "todoletop"){ todoLetOpWissel(); return; } /* 29-10-2026 a */
