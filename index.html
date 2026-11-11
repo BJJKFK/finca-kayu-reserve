@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="10-11-2026 b"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="10-11-2026 c"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FAF9F5">
 <title>Finca KaYu</title>
@@ -657,6 +657,11 @@
   html.nieuw .kop2 button.inboxknop b{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--accent);color:#fff;font-size:11px;font-weight:700}
   html.nieuw .kop2 button.inboxknop b[hidden]{display:none}
   .inboxdlg .ibrij{padding:12px 0;border-top:1px solid var(--line)}
+  /* 10-11-2026 c: kruisje rechtsboven om een bericht weg te halen */
+  .inboxdlg .ibrij{position:relative}
+  .inboxdlg #inboxKop:focus{outline:none} /* bij openen staat de focus op de kop, niet op het eerste kruisje */
+  .inboxdlg .ibrij .wie{padding-right:44px}
+  .inboxdlg .ibrij .bkruis{position:absolute;top:4px;right:-6px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;padding:0;border:0;border-radius:50%;background:none;color:var(--muted);font:inherit;font-size:20px;line-height:1;cursor:pointer}
   .inboxdlg .ibrij:first-child{border-top:0}
   .inboxdlg .ibrij .wie{font-size:15px;font-weight:600;color:var(--tekst)}
   .inboxdlg .ibrij .wat{font-size:14px;color:var(--tekst);margin-top:2px;line-height:1.4}
@@ -2149,8 +2154,8 @@
   <div class="acts"><button id="inkoopDicht">Sluiten</button></div>
 </div></dialog>
 <dialog id="inbox"><div class="dlg meerdlg tegeldlg inboxdlg">
-  <h3 id="inboxKop">Inbox</h3>
-  <p class="leeg" style="margin:0 0 8px">Alles waarop een gast een reactie van ons verwacht, en bestellingen en afzeggingen van ontbijt en broodjes tot je op Gezien tikt. Praten doe je in WhatsApp.</p>
+  <h3 id="inboxKop" tabindex="-1" autofocus>Inbox</h3>
+  <p class="leeg" style="margin:0 0 8px">Alles waarop een gast een reactie van ons verwacht, en bestellingen en afzeggingen van ontbijt en broodjes tot je op Gezien tikt. Al geregeld? Haal een bericht weg met ✕ (past de gast daarna iets aan, dan staat het er weer). Praten doe je in WhatsApp.</p>
   <div id="inboxInhoud"></div>
   <div class="acts"><button id="inboxDicht">Sluiten</button></div>
 </div></dialog>
@@ -2993,9 +2998,18 @@ const DEMO = nr => String(nr || "").indexOf("demo-") === 0;
 const letWeg = () => { try { const w = JSON.parse(instellingen.let_weg || "{}"); return (w && typeof w === "object" && !Array.isArray(w)) ? w : {}; } catch(e){ return {}; } };
 async function letWegZet(sleutel){
   const w = letWeg(); w[sleutel] = iso(new Date());
+  /* review 10-11-2026 c: meteen tonen, dan de stand in de database erbij nemen, zodat een ander apparaat (telefoon, laptop, Loes)
+     niets kwijtraakt van wat het intussen heeft weggehaald of afgevinkt */
+  const oud = instellingen.let_weg;
+  instellingen.let_weg = JSON.stringify(w); if(modus === "nu") tekenNu();
+  try { const { data } = await db.from("instellingen").select("sleutel, waarde").eq("sleutel", "let_weg");
+    const r = (data || []).find(x => x.sleutel === "let_weg"), d = r ? JSON.parse(r.waarde || "{}") : null;
+    if(d && typeof d === "object" && !Array.isArray(d)) Object.keys(d).forEach(k => { if(!(k in w)) w[k] = d[k]; }); } catch(e){}
   const grens = iso(new Date(Date.now() - 60*864e5));
-  Object.keys(w).forEach(k => { if(w[k] < grens) delete w[k]; });
-  const waarde = JSON.stringify(w), oud = instellingen.let_weg;
+  /* 10-11-2026 c: een weggehaald bericht (ib|...) blijft bewaard zolang het bericht er nog is; anders kwam het na 60 dagen terug */
+  const nogEr = new Set(); try { const b = inboxItems(true); [...b.antwoord, ...b.info].forEach(x => nogEr.add(x.weg)); } catch(e){}
+  Object.keys(w).forEach(k => { if(w[k] < grens && !nogEr.has(k)) delete w[k]; });
+  const waarde = JSON.stringify(w);
   instellingen.let_weg = waarde; if(modus === "nu") tekenNu();
   const { error } = await db.from("instellingen").upsert({ sleutel:"let_weg", waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
   if(error){ instellingen.let_weg = oud; alert("Opslaan mislukt: " + error.message); if(modus === "nu") tekenNu(); }
@@ -4345,7 +4359,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "10-11-2026 b";
+const VERSIE = "10-11-2026 c";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -9376,8 +9390,10 @@ async function aanvraagVoorstel(id){
   const taal = v.taal || taalVan(v.nr);
   let vertaald = null;
   if(taal && taal !== "nl") vertaald = await vertaal(voorstel, "nl", taal);
-  Object.assign(v, { status:"voorstel", voorstel, voorstel_vertaald: vertaald, gezien:false }); tekenNu();
-  const { error } = await db.from("aanvragen").update({ status:"voorstel", voorstel, voorstel_vertaald: vertaald, bijgewerkt: new Date().toISOString() }).eq("id", id);
+  /* review 10-11-2026 c: dezelfde tijd ook in de app, anders komt een met het kruisje weggehaald voorstel na herladen terug */
+  const nu = new Date().toISOString();
+  Object.assign(v, { status:"voorstel", voorstel, voorstel_vertaald: vertaald, gezien:false, bijgewerkt: nu }); tekenNu();
+  const { error } = await db.from("aanvragen").update({ status:"voorstel", voorstel, voorstel_vertaald: vertaald, bijgewerkt: nu }).eq("id", id);
   if(error) alert("Opslaan mislukt: " + error.message);
   else nuMelding(vertaald || taal === "nl" ? `Voorstel "${voorstel}" staat bij ${v.gast || "de gast"} op de gastenpagina.` : `Voorstel opgeslagen, maar vertalen lukte niet: de gast ziet het Nederlands.`, "gelukt");
 }
@@ -9437,61 +9453,63 @@ function inboxWaKnop(nr, naam){
   const w = waNummer(inboxTel(nr)), href = w ? `https://wa.me/${w}?text=${encodeURIComponent(tekst)}` : `https://wa.me/?text=${encodeURIComponent(tekst)}`;
   return `<a class="wa${w ? "" : " geen"}" href="${href}" target="_blank" rel="noopener" title="${w ? "Opent het WhatsApp-gesprek met een beginzin in de taal van de gast" : "Geen nummer in de app: kies zelf het contact"}">${w ? "WhatsApp" : "WhatsApp, kies contact"}</a>`;
 }
-function inboxItems(){
+function inboxItems(alles){
   const vandaag = iso(new Date()), morgen = iso(new Date(Date.now() + 864e5));
   const wanneerTekst = d => d === morgen ? "morgen" : d === vandaag ? "vandaag" : `${DG[parse(d).getDay()].slice(0,2)} ${kort(d)}`;
   const tijdTekst = t => { if(!t) return ""; const d = new Date(t); if(isNaN(d)) return ""; const dag = iso(d); return `${dag === vandaag ? "Vandaag" : dag === morgen ? "Morgen" : DG[d.getDay()] + " " + kort(dag)} ${d.toTimeString().slice(0,5)}`; };
   const antwoord = [], info = [];
-  aanvragen.filter(v => ["aanvraag", "anders"].includes(v.status)).forEach(v => antwoord.push({ id:"a" + v.id, nr:v.nr, naam:v.gast, plek:v.plek, wanneer:tijdTekst(v.bijgewerkt || v.gemaakt),
+  /* 10-11-2026 c: de stand van een bericht; verandert die (de gast past iets aan), dan komt een weggehaald bericht terug */
+  const stand = (...xs) => xs.map(x => { const t = typeof x === "string" && /^\d{4}-\d\d-\d\dT/.test(x) ? Date.parse(x.replace(/(\.\d{3})\d+/, "$1")) : NaN; return isNaN(t) ? String(x == null ? "" : x) : String(t); }).join("~");
+  aanvragen.filter(v => ["aanvraag", "anders"].includes(v.status)).forEach(v => antwoord.push({ id:"a" + v.id, kruis:"aanvraag", stand:stand(v.status, v.bijgewerkt || v.gemaakt), nr:v.nr, naam:v.gast, plek:v.plek, wanneer:tijdTekst(v.bijgewerkt || v.gemaakt),
     wat:`${v.status === "anders" ? "Wil <b>liever anders</b>: " : "<b>Aangevraagd</b>: "}${extraNaam(v)}${v.wens ? ` · ${wensTekst(v)}` : ""}`,
     knoppen:`<button class="hoofd" data-avoorstel="${vrij(v.id)}">Voorstel doen</button>${gedaanKnop(v)}<button data-akanniet="${vrij(v.id)}">Kan niet</button>` }));
-  ontbijt.filter(o => o.status === "aanvraag" && o.datum >= vandaag && bordjes(o) && !DEMO(o.nr)).sort((a,b) => a.datum.localeCompare(b.datum)).forEach(o => antwoord.push({ id:"o" + o.nr + o.datum, nr:o.nr, naam:o.gast, plek:o.plek, wanneer:"",
+  ontbijt.filter(o => o.status === "aanvraag" && o.datum >= vandaag && bordjes(o) && !DEMO(o.nr)).sort((a,b) => a.datum.localeCompare(b.datum)).forEach(o => antwoord.push({ id:"o" + o.nr + o.datum, kruis:"aanvraag", stand:stand(o.bijgewerkt), nr:o.nr, naam:o.gast, plek:o.plek, wanneer:"",
     wat:`<b>Ontbijt aangevraagd</b> voor ${wanneerTekst(o.datum)}: ${ontbijtSamenvatting(o)}`,
     knoppen:`<button class="hoofd" data-oaanvraag="ok|${o.nr}|${o.datum}">Beschikbaar</button><button data-oaanvraag="nee|${o.nr}|${o.datum}">Niet beschikbaar</button>` }));
   /* 10-11-2026 a: bestellingen van gasten (ontbijt en broodjes) tot Gezien */
   /* review 10-11 a: ontbijtTelt (status leeg of ok): een camper die zelf bestelt krijgt in de database meteen status ok */
   if(meldingOntbijtAan()) ontbijt.filter(o => o.bron === "gast" && ontbijtTelt(o) && o.datum >= vandaag && bordjes(o) > 0 && !DEMO(o.nr))
-    .sort((a, b) => a.datum.localeCompare(b.datum) || String(a.plek || "").localeCompare(String(b.plek || ""))).forEach(o => antwoord.push({ id:"og" + o.nr + o.datum, nr:o.nr, naam:o.gast, plek:o.plek, wanneer:tijdTekst(o.bijgewerkt),
+    .sort((a, b) => a.datum.localeCompare(b.datum) || String(a.plek || "").localeCompare(String(b.plek || ""))).forEach(o => antwoord.push({ id:"og" + o.nr + o.datum, stand:stand(o.bijgewerkt), nr:o.nr, naam:o.gast, plek:o.plek, wanneer:tijdTekst(o.bijgewerkt),
       wat:`<b>Ontbijt besteld of gewijzigd</b> voor ${wanneerTekst(o.datum)}: ${ontbijtSamenvatting(o)}`,
       knoppen:`<button class="hoofd" data-obgezien="${vrij(o.nr)}|${vrij(o.datum)}">Gezien</button>` }));
   if(meldingBroodjesAan()) broodjes.filter(o => o.bron === "gast" && o.datum >= vandaag && !o.afgehaald && brStuks(o) > 0 && !DEMO(o.nr))
-    .sort((a, b) => a.datum.localeCompare(b.datum) || String(a.plek || "").localeCompare(String(b.plek || ""))).forEach(o => antwoord.push({ id:"bg" + o.id, nr:o.nr, naam:o.gast, plek:o.plek, wanneer:tijdTekst(o.bijgewerkt),
+    .sort((a, b) => a.datum.localeCompare(b.datum) || String(a.plek || "").localeCompare(String(b.plek || ""))).forEach(o => antwoord.push({ id:"bg" + o.id, stand:stand(o.bijgewerkt), nr:o.nr, naam:o.gast, plek:o.plek, wanneer:tijdTekst(o.bijgewerkt),
       wat:`<b>Broodjes besteld of gewijzigd</b> voor ${wanneerTekst(o.datum)}: ${brSamenNl(o)}`,
       knoppen:`<button class="hoofd" data-brgezien="${vrij(o.id)}">Gezien</button>` }));
   /* 10-11-2026 b: afgezegd (de database zet bron op gast-afgezegd als een gast een bestelling op nul zet) */
   if(meldingOntbijtAan()) ontbijt.filter(o => o.bron === "gast-afgezegd" && o.datum >= vandaag && !DEMO(o.nr)).sort((a, b) => a.datum.localeCompare(b.datum))
-    .forEach(o => antwoord.push({ id:"oa" + o.nr + o.datum, nr:o.nr, naam:o.gast, plek:o.plek, wanneer:tijdTekst(o.bijgewerkt),
+    .forEach(o => antwoord.push({ id:"oa" + o.nr + o.datum, stand:stand(o.bijgewerkt), nr:o.nr, naam:o.gast, plek:o.plek, wanneer:tijdTekst(o.bijgewerkt),
       wat:`<b>Ontbijt afgezegd</b> voor ${wanneerTekst(o.datum)}`, knoppen:`<button class="hoofd" data-obgezien="${vrij(o.nr)}|${vrij(o.datum)}">Gezien</button>` }));
   if(meldingBroodjesAan()) broodjes.filter(o => o.bron === "gast-afgezegd" && o.datum >= vandaag && !DEMO(o.nr)).sort((a, b) => a.datum.localeCompare(b.datum))
-    .forEach(o => antwoord.push({ id:"ba" + o.id, nr:o.nr, naam:o.gast, plek:o.plek, wanneer:tijdTekst(o.bijgewerkt),
+    .forEach(o => antwoord.push({ id:"ba" + o.id, stand:stand(o.bijgewerkt), nr:o.nr, naam:o.gast, plek:o.plek, wanneer:tijdTekst(o.bijgewerkt),
       wat:`<b>Broodjes afgezegd</b> voor ${wanneerTekst(o.datum)}`, knoppen:`<button class="hoofd" data-brgezien="${vrij(o.id)}">Gezien</button>` }));
-  aanvragen.filter(v => v.status === "akkoord" && !v.gezien).forEach(v => antwoord.push({ id:"k" + v.id, nr:v.nr, naam:v.gast, plek:v.plek, wanneer:tijdTekst(v.bijgewerkt),
+  aanvragen.filter(v => v.status === "akkoord" && !v.gezien).forEach(v => antwoord.push({ id:"k" + v.id, stand:stand(v.bijgewerkt), nr:v.nr, naam:v.gast, plek:v.plek, wanneer:tijdTekst(v.bijgewerkt),
     wat:`<b>Akkoord</b> met ${extraNaam(v)}, ${vrij(v.voorstel)}${v.prijs ? ` · ${eur(Number(v.prijs) * v.aantal)} op de rekening` : " · prijs zelf op de bon zetten"}. Nu regelen.`,
     knoppen:`<button class="hoofd" data-agezien="${vrij(v.id)}">Geregeld</button>` }));
-  aanvragen.filter(v => v.status === "voorstel").forEach(v => info.push({ id:"v" + v.id, nr:v.nr, naam:v.gast, plek:v.plek, wanneer:tijdTekst(v.bijgewerkt),
+  aanvragen.filter(v => v.status === "voorstel").forEach(v => info.push({ id:"v" + v.id, stand:stand(v.bijgewerkt), nr:v.nr, naam:v.gast, plek:v.plek, wanneer:tijdTekst(v.bijgewerkt),
     wat:`${extraNaam(v)}: voorstel "${vrij(v.voorstel)}" <span class="tag optie">wacht op gast</span>`,
     knoppen:`<button data-avoorstel="${vrij(v.id)}">Ander voorstel</button>${gedaanKnop(v)}<button data-akanniet="${vrij(v.id)}">Kan niet</button>` }));
   tips.filter(t => !t.gezien).forEach(t => { const idee = /^Ontbijtidee:/i.test(t.tekst || ""); const tekst = String(t.tekst || "").replace(/^Ontbijtidee:\s*/i, "");
-    info.push({ id:"t" + t.id, nr:t.nr, naam:t.gast, plek:t.plek, wanneer:tijdTekst(t.gemaakt),
+    info.push({ id:"t" + t.id, stand:stand(t.gemaakt), nr:t.nr, naam:t.gast, plek:t.plek, wanneer:tijdTekst(t.gemaakt),
       wat:`<b>${idee ? "Ontbijtidee" : "Tip"}</b>: "${tekst.replace(/</g, "&lt;")}"${t.tekst_nl && t.tekst_nl.toLowerCase() !== (t.tekst || "").toLowerCase() ? `<br><span style="color:var(--muted)">${String(t.tekst_nl).replace(/^Ontbijtidee:\s*/i, "").replace(/</g, "&lt;")}</span>` : ""}`,
       knoppen:`<button data-tgezien="${vrij(t.id)}">Gezien</button>` }); });
   /* 03-11-2026 a (Bart: "dan moet ik een berichtje in mijn berichtenbox krijgen dat er iets is ingevuld"): uren van het poetsteam */
   poetsUren.filter(u => !u.gezien_finca).sort((a, b) => String(a.gewijzigd || a.gemaakt).localeCompare(String(b.gewijzigd || b.gemaakt))).forEach(u => {
     const gewijzigd = u.gewijzigd && u.gemaakt && Math.abs(new Date(u.gewijzigd) - new Date(u.gemaakt)) > 60000;
-    antwoord.push({ id:"pu" + u.id, nr:"", naam:u.door || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(u.gewijzigd || u.gemaakt),
+    antwoord.push({ id:"pu" + u.id, stand:stand(u.gewijzigd || u.gemaakt), nr:"", naam:u.door || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(u.gewijzigd || u.gemaakt),
       wat:`<b>${gewijzigd ? "Uren gewijzigd" : "Uren ingevuld"}</b>: ${DG[parse(u.datum).getDay()].slice(0,2)} ${kort(u.datum)} · ${poetsInvoerNl(u)} = ${eur(u.totaal)}`,
       knoppen:`<button class="hoofd" data-pugezien="${vrij(u.id)}">Gezien</button><button data-puaanpas2="${vrij(u.id)}">Aanpassen</button>`, geenWa:true });
   });
   /* review 03-11-2026 a: ook als het poetsteam iets weghaalt, tot Bart op Gezien tikt (instelling poets_weg_gezien: de ids van de geziene logregels) */
   { const gezien = poetsWegGezien();
-    poetsWeg.filter(w => w.door === "poets" && w.oud && !gezien.has(String(w.id))).forEach(w => antwoord.push({ id:"pw" + w.id, nr:"", naam:w.door_naam || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(w.tijd),
+    poetsWeg.filter(w => w.door === "poets" && w.oud && !gezien.has(String(w.id))).forEach(w => antwoord.push({ id:"pw" + w.id, stand:stand(w.tijd), nr:"", naam:w.door_naam || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(w.tijd),
       wat:`<b>Uren weggehaald</b>: ${DG[parse(w.oud.datum).getDay()].slice(0,2)} ${kort(w.oud.datum)} · ${poetsInvoerNl(w.oud)} = ${eur(w.oud.totaal)}`,
       knoppen:`<button class="hoofd" data-pwgezien="${vrij(w.id)}">Gezien</button>`, geenWa:true })); }
   /* versie h: camper heeft het aanvraagformulier ingevuld; de boeking staat er al (met automatisch gekozen plek, alleen intern) */
   camperAanvragen.filter(a => a.ingevuld_op && !a.gezien).forEach(a => {
     const b = boekingen.find(x => String(x.id) === String(a.boeking_id));
     const waarsch = aanvraagWaarschuwing(a, b);
-    antwoord.push({ id:"c" + a.id, nr:b ? b.id : "", naam:b ? b.naam : (a.naam || ""), plek:b ? b.plek : "camper", wanneer:tijdTekst(a.ingevuld_op),
+    antwoord.push({ id:"c" + a.id, stand:stand(a.ingevuld_op), nr:b ? b.id : "", naam:b ? b.naam : (a.naam || ""), plek:b ? b.plek : "camper", wanneer:tijdTekst(a.ingevuld_op),
       wat:`<b>Nieuwe camperboeking via de link</b>${b ? `: ${kort(b.in)} t/m ${kort(b.uit)} · ${b.personen} ${b.personen === 1 ? "persoon" : "personen"}` : ""}.` +
         (waarsch ? `<br><span style="color:var(--rood);font-weight:600">${vrij(waarsch)}</span>` : ""),
       knoppen:(b ? `<button class="hoofd" data-cabekijk="${vrij(a.id)}">Boeking bekijken</button>` : "") + `<button data-cagezien="${vrij(a.id)}">Gezien</button>` });
@@ -9499,15 +9517,20 @@ function inboxItems(){
   /* 03-11-2026 e (Bart): een camper heeft zelf zijn datum aangepast; staat er tot Bart op Gezien tikt */
   const dk = d => `${DG[parse(d).getDay()].slice(0,2)} ${kort(d)}`;
   boekingen.filter(b => b.datumWas && !DEMO(b.id)).forEach(b => { const w = b.datumWas;
-    antwoord.push({ id:"dt" + b.id, nr:b.id, naam:b.naam, plek:b.plek, wanneer:tijdTekst(w.op),
+    antwoord.push({ id:"dt" + b.id, stand:stand(w.op, b.in, b.uit), nr:b.id, naam:b.naam, plek:b.plek, wanneer:tijdTekst(w.op),
       wat:`<b>Datum zelf aangepast</b>: nu ${dk(b.in)} t/m ${dk(b.uit)} (was ${dk(w.aankomst)} t/m ${dk(w.vertrek)})` +
         (w.plek && w.plek !== b.plek ? `. Staat nu op ${vrij(b.plek)} (was ${vrij(w.plek)}).` : "."),
       knoppen:`<button class="hoofd" data-dtgezien="${vrij(b.id)}">Gezien</button><button data-dtbekijk="${vrij(b.id)}">Boeking bekijken</button>` }); });
   /* aanvraaglinks die nog niet zijn ingevuld: zo zie je wie nog moet reageren */
-  camperAanvragen.filter(a => !a.ingevuld_op).forEach(a => info.push({ id:"o" + a.id, nr:"", naam:a.naam || "Naam niet ingevuld", plek:"aanvraaglink", wanneer:tijdTekst(a.aangemaakt),
+  camperAanvragen.filter(a => !a.ingevuld_op).forEach(a => info.push({ id:"l" + a.id, stand:stand(a.aangemaakt), nr:"", naam:a.naam || "Naam niet ingevuld", plek:"aanvraaglink", wanneer:tijdTekst(a.aangemaakt),
     wat:`Aanvraaglink verstuurd (${(TAAL_NL[a.taal] || a.taal || "")}), nog niet ingevuld`,
-    knoppen:`<button data-caweg="${vrij(a.id)}">Weghalen</button>`, geenWa:true }));
-  return { antwoord, info };
+    knoppen:`<button data-caweg="${vrij(a.id)}">Link intrekken</button>`, geenWa:true }));
+  /* 10-11-2026 c (Bart: "kruisje, weet je zeker, ja, weg"): met het kruisje weggehaalde berichten staan in de instelling let_weg
+     (sleutel ib|id|stand, op elk apparaat weg); alles = true geeft ook de weggehaalde (voor het opruimen in letWegZet) */
+  [antwoord, info].forEach(l => l.forEach(x => { x.weg = "ib|" + x.id + "|" + (x.stand || ""); }));
+  if(alles) return { antwoord, info };
+  const wegB = letWeg();
+  return { antwoord: antwoord.filter(x => !wegB[x.weg]), info: info.filter(x => !wegB[x.weg]) };
 }
 /* waarschuwing bij een boeking via de aanvraaglink: geen plek vrij, dubbel op dezelfde plek, of de hele finca is verhuurd aan een groep */
 function aanvraagWaarschuwing(a, b){
@@ -9528,13 +9551,21 @@ function tekenInboxTeller(){
 }
 function tekenInbox(){
   const { antwoord, info } = inboxItems();
-  const rij = x => `<div class="ibrij" data-ib="${vrij(x.id)}"><div class="wie">${vrij(x.naam) || "naam onbekend"} · ${vrij(x.plek)}</div><div class="wat">${x.wat}</div>${x.wanneer ? `<div class="wanneer">${x.wanneer}</div>` : ""}<div class="knoppen">${x.knoppen}${x.geenWa ? "" : inboxWaKnop(x.nr, x.naam)}</div></div>`;
+  const rij = x => `<div class="ibrij" data-ib="${vrij(x.id)}"><button class="bkruis" data-bkruis="${vrij(x.weg)}" data-bkwie="${x.kruis || (x.plek === "poetsteam" ? "poets" : x.plek === "aanvraaglink" ? "link" : "gast")}" aria-label="Bericht weghalen" title="Weghalen">✕</button><div class="wie">${vrij(x.naam) || "naam onbekend"} · ${vrij(x.plek)}</div><div class="wat">${x.wat}</div>${x.wanneer ? `<div class="wanneer">${x.wanneer}</div>` : ""}<div class="knoppen">${x.knoppen}${x.geenWa ? "" : inboxWaKnop(x.nr, x.naam)}</div></div>`;
   let h = "";
   if(antwoord.length) h += `<div class="ibsub">Wacht op antwoord · ${antwoord.length}</div>` + antwoord.map(rij).join("");
   if(info.length) h += `<div class="ibsub">Ter informatie</div>` + info.map(rij).join("");
   if(!h) h = `<p class="leeg">Niemand wacht op ons. Niets in de Inbox.</p>`;
   document.getElementById("inboxKop").textContent = antwoord.length ? `Inbox · ${antwoord.length}` : "Inbox";
   const bak = document.getElementById("inboxInhoud"); bak.innerHTML = h;
+  /* 10-11-2026 c: kruisje: eerst vragen, dan alleen uit Berichten (bij de gast of het poetsteam verandert niets) */
+  bak.querySelectorAll("[data-bkruis]").forEach(kn => kn.onclick = async () => {
+    const wie = { poets:"Bij het poetsteam verandert er niets.", link:"De link blijft gewoon werken.", aanvraag:"Bij de gast verandert er niets: die ziet de aanvraag nog als open." }[kn.dataset.bkwie] || "Bij de gast verandert er niets.";
+    if(!confirm(`Weet je het zeker? Dit bericht gaat weg uit de Inbox. ${wie}`)) return;
+    const klaar = letWegZet(kn.dataset.bkruis);
+    tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox();
+    await klaar; tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox();
+  });
   bak.querySelectorAll("[data-avoorstel]").forEach(kn => kn.onclick = () => aanvraagVoorstel(kn.dataset.avoorstel));
   bak.querySelectorAll("[data-akanniet]").forEach(kn => kn.onclick = () => aanvraagKanNiet(kn.dataset.akanniet));
   bak.querySelectorAll("[data-agedaan]").forEach(kn => kn.onclick = () => aanvraagGedaan(kn.dataset.agedaan));
@@ -9563,7 +9594,7 @@ function tekenInbox(){
   });
   bak.querySelectorAll("[data-dtbekijk]").forEach(kn => kn.onclick = () => { const b = boekingen.find(x => x.id === kn.dataset.dtbekijk); if(b) toonDetail(b); });
   bak.querySelectorAll("[data-caweg]").forEach(kn => kn.onclick = async () => { const a = camperAanvragen.find(x => String(x.id) === kn.dataset.caweg); if(!a) return;
-    if(!confirm(`Aanvraaglink${a.naam ? " voor " + a.naam : ""} weghalen? De link werkt daarna niet meer.`)) return;
+    if(!confirm(`Aanvraaglink${a.naam ? " voor " + a.naam : ""} intrekken? De link werkt daarna niet meer.`)) return;
     camperAanvragen = camperAanvragen.filter(x => x !== a); tekenNu();
     const { error } = await db.from("camper_aanvragen").delete().eq("id", a.id); if(error) alert("Weghalen mislukt: " + error.message); });
 }
