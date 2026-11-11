@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="11-11-2026 a"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="11-11-2026 c"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FAF9F5">
 <title>Finca KaYu</title>
@@ -1439,6 +1439,8 @@
   /* review 21-10 a: ook op de poetspagina (staat ook in #gast) blijven de gekozen keuzes donker: poetstijd (data-pt) en
      Vamos/No puedo (data-ps). Een knop die (nog) niet kan, is half doorzichtig. */
   html.nieuw #gast .vink button:disabled{opacity:.5;cursor:default}
+  /* 11-11-2026 (review aanvraagknop): ook −, + en het tekstvak zien er uit zolang een aanvraag onderweg is */
+  html.nieuw #gast .ontbg button:disabled, html.nieuw #gast textarea:disabled{opacity:.5;cursor:default}
   /* review 21-10 a: op de gastenpagina blijft alleen de gekozen ontbijttijd (data-gt) donker, want daar betekent donker "gekozen"; rood (.nee) blijft rood */
   /* 22-10-2026 b (Bart: "alle knoppen"): alle knoppen zien er hetzelfde uit. Geen volle hoofdknop meer: ook Honesty bar, Route,
      Opslaan en de witte knoppen met een zwarte rand. Bewust onderaan, zodat deze regels winnen.
@@ -1831,6 +1833,8 @@
       <button class="meerrij" data-meer="pinminuten"><span><b>Opnieuw vragen na</b><small id="mpPinMin"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 05-11-2026 c (Bart: "informatie-icoontje"): kleine i naast een paar kopjes met een korte uitleg, standaard aan -->
       <div class="meerinst"><span><b>Uitleg-icoontjes (i)</b><small id="mpUitleg"></small></span><button type="button" class="meerzet" data-meer="uitleg" id="meerUitleg"></button></div>
+      <!-- 11-11-2026 d (Bart): kijken of de koppeling met MyTourist nog werkt; alleen lezen (de lijst kamertypes), verandert niets -->
+      <button class="meerrij" data-meer="mttest"><span><b>MyTourist-koppeling</b><small id="mpMtTest"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="bUit"><svg class="gi"><use href="#gi-uit"/></svg><span><b>Uitloggen</b></span></button>
     </div>
   </div>
@@ -2032,6 +2036,13 @@
   <label class="bslabel" for="pwWachtwoord">Wifi-wachtwoord</label><input id="pwWachtwoord" autocomplete="off">
   <div id="pwErr" style="color:var(--rood, #b3261e);font-size:13px;min-height:18px;margin-top:6px"></div>
   <div class="acts"><button id="pwSluit">Annuleren</button><button class="go" id="pwOk">Opslaan</button></div>
+</div></dialog>
+<!-- 11-11-2026 d (Bart): MyTourist-koppeling testen. Alleen lezen: de app vraagt MyTourist alleen de lijst met kamers op -->
+<dialog id="mtTestDlg"><div class="dlg">
+  <h3>MyTourist-koppeling</h3>
+  <p class="leeg" style="margin:0 0 10px">Kijkt of de app nog met MyTourist kan praten. Dat is nodig om via de plusknop een kamer dicht te zetten of een boeking te maken. De test vraagt alleen de lijst met kamers op en verandert niets.</p>
+  <div id="mtTestUit" style="font-size:14px;min-height:20px;margin:4px 0 6px"></div>
+  <div class="acts"><button id="mtTestSluit">Sluiten</button><button class="go" id="mtTestOk">Koppeling testen</button></div>
 </div></dialog>
 <!-- 01-11-2026 g (Bart): de knoppen voor betalen per bank zelf instellen (naam, rekening, aan of uit) -->
 <!-- 02-11-2026 a (Bart): tijden van de broodjes -->
@@ -4359,7 +4370,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "11-11-2026 a";
+const VERSIE = "11-11-2026 c";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -5639,13 +5650,15 @@ function tekenGast(){
       if(EXTRA_ZELF[soort]){
         h += `<div class="vink"><a class="knop" href="${EXTRA_LINK[soort]}" target="_blank" rel="noopener">${EXTRA_ZELF[soort]}</a></div>`;
       } else if(open){
-        h += `<div class="ontbl" style="margin-top:8px"><div class="ontbg"><span>${t.aantalVraag || t.aantal}</span><button data-gx="-1">−</button><b>${gastExtraOpen.aantal}</b><button data-gx="1">+</button></div>` +
-          `<textarea data-gxwens="1" placeholder="${esc(t.wens)}" style="margin-top:8px;width:100%;min-height:64px;font:inherit;font-size:14px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--pine)">${esc(gastExtraOpen.wens)}</textarea>` +
+        /* 11-11-2026 b (review): zolang de aanvraag onderweg is, staan ook −, +, het tekstvak en Annuleren uit (anders zegt de knop "3 personen" terwijl er 1 is verstuurd) */
+        const uit = gastAanvraagBezig ? " disabled" : "";
+        h += `<div class="ontbl" style="margin-top:8px"><div class="ontbg"><span>${t.aantalVraag || t.aantal}</span><button data-gx="-1"${uit}>−</button><b>${gastExtraOpen.aantal}</b><button data-gx="1"${uit}>+</button></div>` +
+          `<textarea data-gxwens="1"${uit} placeholder="${esc(t.wens)}" style="margin-top:8px;width:100%;min-height:64px;font:inherit;font-size:14px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--pine)">${esc(gastExtraOpen.wens)}</textarea>` +
           /* 11-11-2026 a (een gast vroeg twee keer aan omdat hij "Aantal personen" niet zag): de knop zegt voor hoeveel personen */
-          `<div class="vink"><button data-gxstuur="1" class="aan">${t.aanvragenVoor ? t.aanvragenVoor(gastExtraOpen.aantal) : t.versturen}</button><button data-gxweg="1">${t.annuleren}</button></div>` +
+          `<div class="vink"><button data-gxstuur="1" class="aan"${uit}>${t.aanvragenVoor ? t.aanvragenVoor(gastExtraOpen.aantal) : t.versturen}</button><button data-gxweg="1"${uit}>${t.annuleren}</button></div>` +
           `<div class="status ${gastStatus.extra === "fout" ? "fout" : ""}">${gastStatus.extra === "fout" ? t.fout : ""}</div></div>`;
       } else if(!gastData.betaald){
-        h += `<div class="vink"><button data-gxopen="${soort}">${t.aanvragen}</button></div>`;
+        h += `<div class="vink"><button data-gxopen="${soort}"${gastAanvraagBezig ? " disabled" : ""}>${t.aanvragen}</button></div>`;
       } else {
         h += `<div class="melding">${t.barBetaald}</div>`;
       }
@@ -5791,10 +5804,10 @@ function tekenGast(){
     bak.querySelectorAll("[data-gwieanders]").forEach(kn => kn.onclick = () => { gastWieZet(""); gastNaamVraag = null; tekenGast(); });
     /* extra's aanvragen */
     const leesWens = () => { const ta = bak.querySelector("[data-gxwens]"); return ta ? ta.value : ""; };
-    bak.querySelectorAll("[data-gxopen]").forEach(kn => kn.onclick = () => { gastExtraOpen = { soort: kn.dataset.gxopen, aantal: 1, wens: "" }; delete gastStatus.extra; tekenGast(); });
-    bak.querySelectorAll("[data-gxweg]").forEach(kn => kn.onclick = () => { gastExtraOpen = null; tekenGast(); });
-    bak.querySelectorAll("[data-gx]").forEach(kn => kn.onclick = () => { gastExtraOpen.wens = leesWens(); gastExtraOpen.aantal = Math.max(1, Math.min(20, gastExtraOpen.aantal + Number(kn.dataset.gx))); tekenGast(); });
-    bak.querySelectorAll("[data-gxstuur]").forEach(kn => kn.onclick = () => { gastExtraOpen.wens = leesWens(); gastAanvraagStuur(); });
+    bak.querySelectorAll("[data-gxopen]").forEach(kn => kn.onclick = () => { if(gastAanvraagBezig) return; gastExtraOpen = { soort: kn.dataset.gxopen, aantal: 1, wens: "" }; delete gastStatus.extra; tekenGast(); });
+    bak.querySelectorAll("[data-gxweg]").forEach(kn => kn.onclick = () => { if(gastAanvraagBezig) return; gastExtraOpen = null; tekenGast(); });
+    bak.querySelectorAll("[data-gx]").forEach(kn => kn.onclick = () => { if(gastAanvraagBezig) return; gastExtraOpen.wens = leesWens(); gastExtraOpen.aantal = Math.max(1, Math.min(20, gastExtraOpen.aantal + Number(kn.dataset.gx))); tekenGast(); });
+    bak.querySelectorAll("[data-gxstuur]").forEach(kn => kn.onclick = () => { if(gastAanvraagBezig) return; gastExtraOpen.wens = leesWens(); kn.closest(".ontbl").querySelectorAll("button,textarea").forEach(e => e.disabled = true); bak.querySelectorAll("[data-gxopen]").forEach(e => e.disabled = true); gastAanvraagStuur(); });
     const aidVan = kn => kn.closest("[data-aid]").dataset.aid;
     bak.querySelectorAll("[data-gaja]").forEach(kn => kn.onclick = () => gastAanvraagAntwoord(aidVan(kn), true, ""));
     bak.querySelectorAll("[data-gaopen]").forEach(kn => kn.onclick = () => { gastAndersOpen = aidVan(kn); tekenGast(); });
@@ -5843,13 +5856,18 @@ function gastBarZet(naam, stap){
     tekenGast();
   });
 }
+/* 11-11-2026 b (review, akkoord Bart): één tik is één aanvraag, ook bij een trage verbinding; de knop staat uit tot het antwoord er is */
+let gastAanvraagBezig = false;
 async function gastAanvraagStuur(){
-  const x = gastExtraOpen; if(!x) return;
-  const { data, error } = await db.rpc("gast_aanvraag", { p_code: gastCode, p_soort: x.soort, p_aantal: x.aantal, p_wens: (x.wens || "").trim(), p_taal: gastTaal });
-  if(error || !data || data.fout){ gastStatus.extra = "fout"; tekenGast(); return; }
-  gastExtraOpen = null; delete gastStatus.extra;
-  try { gastData = await gastHaal(); } catch(e){}
-  tekenGast();
+  const x = gastExtraOpen; if(!x || gastAanvraagBezig) return;
+  gastAanvraagBezig = true;
+  try {
+    const { data, error } = await db.rpc("gast_aanvraag", { p_code: gastCode, p_soort: x.soort, p_aantal: x.aantal, p_wens: (x.wens || "").trim(), p_taal: gastTaal });
+    if(error || !data || data.fout){ if(gastExtraOpen === x) gastStatus.extra = "fout"; return; }
+    if(gastExtraOpen === x){ gastExtraOpen = null; delete gastStatus.extra; }
+    try { gastData = await gastHaal(); } catch(e){}
+  } catch(e){ if(gastExtraOpen === x) gastStatus.extra = "fout"; }
+  finally { gastAanvraagBezig = false; tekenGast(); }
 }
 async function gastAanvraagAntwoord(id, akkoord, wens){
   const v = (gastData.aanvragen || []).find(x => x.id === id); if(!v) return;
@@ -9831,6 +9849,7 @@ function tekenMeer(){
   { const n = producten.filter(p => isBarProduct(p) && p.voorraad_tijd).length, l = voorraadLaag().length;
     meerZet("mpVoorraadStand", !n ? "Nog niet geteld" : l ? `${l} bijna op` : `${n} ${n === 1 ? "product" : "producten"} geteld`); }
   meerZet("mpUitleg", uitlegAan() ? "Staat aan: een kleine i naast een paar kopjes (profiel, check-out, afrekenen) met een korte uitleg." : "Staat uit: geen i's met uitleg.");
+  meerZet("mpMtTest", mtTestRegel()); /* 11-11-2026 d */
   meerZet("meerUitleg", uitlegAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpGastenboek", gastenboekAan() ? "Staat aan: tik op de tegel Gasten, dan staat onder wie er nu is de knop Gastenboek (alle gasten van vroeger, per maand, met zoeken)." : "Staat uit: geen knop Gastenboek onder de tegel Gasten.");
   meerZet("meerGastenboek", gastenboekAan() ? "Uitzetten" : "Aanzetten");
@@ -9915,6 +9934,7 @@ function meerToon(naam){
 }
 function openMeer(){
   tekenMeer();
+  mtLaatstHaal(); /* 11-11-2026 d: wanneer de kamers het laatst uit MyTourist zijn opgehaald (alleen lezen, wacht er niet op) */
   const d = document.getElementById("meer2"); if(!d.open) d.showModal();
   meerToon("menu");
 }
@@ -10153,6 +10173,71 @@ document.getElementById("pwOk").onclick = async () => {
   openMeer(); meerToon("gasten");
 };
 let pwBezig = false;
+/* ---------- 11-11-2026 d (Bart): Meer > MyTourist-koppeling > Koppeling testen ----------
+   Alleen lezen. De app stuurt uitsluitend MT_TEST_VRAAG ({"actie":"kamertypes"}) naar mytourist-schrijven; die functie vraagt MyTourist dan
+   alleen de lijst kamertypes op (GET /roomtypes). Nooit boekingen, debiteuren, facturen of de kalender. De functie zelf is niet veranderd.
+   Bewaakt door tests/koppelingtest.mjs (die leest dit blok tot "einde MyTourist-koppeling testen" letterlijk in). */
+const MT_TEST_VRAAG = Object.freeze({ actie: "kamertypes" });
+const MT_TEST_NAMEN = ["#1", "#2", "#3", "#4", "#5", "Boek de gehele finca"]; /* gelijk aan TYPE_NAAM in mytourist-schrijven */
+/* var en function (geen let/const): tekenMeer kan al aangeroepen worden voordat het script hier is */
+var mtLaatst = null, mtTestBezig = false;
+/* zelfde tekst als bij Cijfers ("Kamers uit MyTourist, opgehaald vandaag 03:00"), zonder het stuk over campers */
+function mtTestRegel(){ return mtLaatst ? cfOpgehaald(mtLaatst).tekst.split(" · ")[0] + " · tik om de koppeling te testen" : "Tik om te testen of de app nog bij MyTourist kan (verandert niets)"; }
+async function mtLaatstHaal(){
+  try {
+    const r = await db.from("mt_ophaalrondes").select("status,klaar").eq("status", "klaar").not("klaar", "is", null).order("klaar", { ascending:false }).limit(1);
+    const k = ((r && r.data) || []).filter(x => x && x.status === "klaar" && x.klaar).map(x => x.klaar).sort().pop();
+    if(k){ mtLaatst = k; meerZet("mpMtTest", mtTestRegel()); }
+  } catch(e){}
+}
+/* uitkomst in gewone taal; r is het antwoord van functions.invoke ({ data, error }).
+   Review 11-11-2026 d: namen zoals de app ze noemt (Kamer 1, de hele finca); een kamertype telt pas als het minstens één tarief heeft
+   (dichtzetten werkt per tarief); geen jargon. */
+const mtTestNaam = n => n === "Boek de gehele finca" ? "de hele finca" : n.replace(/^#(\d)$/, "Kamer $1");
+const mtTestLijst = l => l.length < 2 ? l.join("") : l.slice(0, -1).join(", ") + " en " + l[l.length - 1];
+function mtTestUitkomst(r){
+  const e = r && r.error;
+  if(!e){
+    const d = r && r.data;
+    if(d && d.fout) return { ok:false, tekst:"MyTourist antwoordt niet of laat de app niet binnen. Probeer het later nog eens. Blijft het, laat het Claude weten.", reden: String(d.fout).slice(0, 200) };
+    const lijst = d && Array.isArray(d.kamertypes) ? d.kamertypes : null;
+    if(!lijst) return { ok:false, tekst:"Er kwam een onverwacht antwoord terug. Probeer het later nog eens. Blijft het, laat het Claude weten." };
+    const namen = lijst.filter(x => x && Array.isArray(x.rates) && x.rates.length > 0).map(x => String(x.name || "").trim());
+    const mist = MT_TEST_NAMEN.filter(n => !namen.includes(n));
+    if(mist.length) return { ok:false, tekst:`Werkt, maar MyTourist mist: ${mtTestLijst(mist.map(mtTestNaam))}. Dan lukt dichtzetten of boeken niet. Laat het Claude weten.` };
+    return { ok:true, tekst:"Werkt. MyTourist kent alle 5 kamers en de hele finca." };
+  }
+  const status = e.context && typeof e.context.status === "number" ? e.context.status : null;
+  if(e.name === "FunctionsFetchError" || (typeof navigator !== "undefined" && navigator.onLine === false)) return { ok:false, tekst:"Geen verbinding. Kijk of je internet hebt en probeer het opnieuw." };
+  if(status === 401 || /ingelogde gebruikers|Invalid JWT/i.test(String(e.message || ""))) return { ok:false, tekst:"Dit account komt er niet door. Log uit en opnieuw in. Helpt dat niet, laat het Claude weten." };
+  return { ok:false, tekst:"MyTourist antwoordt niet of laat de app niet binnen. Probeer het later nog eens. Blijft het, laat het Claude weten." };
+}
+/* review: de uitkomst blijft staan als je het venster sluit en weer opent (met de tijd erbij); een nieuwe test maakt hem leeg */
+function openMtTest(){ document.getElementById("mtTestDlg").showModal(); }
+async function mtTestStart(){
+  if(mtTestBezig) return;
+  const uit = document.getElementById("mtTestUit"), knop = document.getElementById("mtTestOk");
+  /* review 11-11-2026 d: op de testsite en in de proefversie bestaat de koppeling niet; dan niets sturen en dat gewoon zeggen */
+  if(TESTVERSIE || PROEF){ uit.style.color = "var(--muted)"; uit.textContent = "In deze versie kan de koppeling niet getest worden. Dat kan alleen in de echte app."; return; }
+  mtTestBezig = true; knop.disabled = true; uit.style.color = ""; uit.textContent = "Bezig met testen…";
+  let r;
+  try { r = db.functions ? await db.functions.invoke("mytourist-schrijven", { body: MT_TEST_VRAAG }) : { data:null, error:{ message:"Niet beschikbaar in deze versie" } }; }
+  catch(e){ r = { data:null, error:e }; }
+  const u = mtTestUitkomst(r), nu = new Date();
+  /* de reden van een fout klein erbij, zodat "laat het Claude weten" iets oplevert (alleen lezen van het antwoord) */
+  let reden = u.reden || "";
+  if(!reden && r && r.error && r.error.context && typeof r.error.context.clone === "function"){
+    try { const j = await r.error.context.clone().json(); if(j && j.fout) reden = String(j.fout).slice(0, 200); } catch(e){}
+  }
+  uit.textContent = `${u.tekst} (getest om ${String(nu.getHours()).padStart(2, "0")}:${String(nu.getMinutes()).padStart(2, "0")})`;
+  if(reden){ const k = document.createElement("small"); k.style.cssText = "display:block;color:var(--muted);margin-top:4px"; k.textContent = "Voor Claude: " + reden; uit.appendChild(k); }
+  uit.style.color = u.ok ? "#3E6448" : "var(--rood, #b3261e)";
+  mtTestBezig = false; knop.disabled = false;
+}
+document.getElementById("mtTestSluit").onclick = () => document.getElementById("mtTestDlg").close();
+document.getElementById("mtTestOk").onclick = () => mtTestStart();
+/* review ronde 2: sluiten mag ook tijdens het testen (blijft het hangen, dan zit je niet vast); de uitkomst blijft bewaard en staat er bij weer openen */
+/* ---------- einde MyTourist-koppeling testen ---------- */
 /* tijdens het opslaan niet met Escape wegklikken, anders komt een foutmelding in een dicht venster */
 document.getElementById("poortWifi").addEventListener("cancel", e => { if(pwBezig) e.preventDefault(); });
 /* alleen een nummer met landcode (+31, 0031) krijgt een directe WhatsApp-link; anders opent WhatsApp met de tekst en kiest Bart het contact */
@@ -13435,6 +13520,7 @@ if(NIEUW){
     if(w === "pinaan"){ pinSchakel(); return; } /* 03-11-2026 c */
     if(w === "pinwijzig"){ pinToon("wijzig"); return; }
     if(w === "pinminuten"){ pinZetMinuten(); return; }
+    if(w === "mttest"){ openMtTest(); return; } /* 11-11-2026 d */
     if(w === "agendasperdag"){ agendasPerDagWissel(); return; } /* 03-11-2026 a */
     if(w === "betaalknoppen"){ openBetaalKnoppen(); return; } /* 01-11-2026 g */
     if(w === "broodtijden"){ openBroodTijden(); return; } /* 02-11-2026 a */
