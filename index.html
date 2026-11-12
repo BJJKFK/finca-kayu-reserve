@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="11-11-2026 c"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="12-11-2026 d"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FAF9F5">
 <title>Finca KaYu</title>
@@ -2914,6 +2914,7 @@ const vouwWissel = (g, opnieuw) => { if(barVouw.has(g)) barVouw.delete(g); else 
 let poetsUren = []; /* 03-11-2026 a: gewerkte uren van het poetsteam (tabel poets_uren) */
 let poetsWeg = []; /* review 03-11-2026 a: weggehaalde regels (poets_uren_log, actie weg), voor de Inbox en de geschiedenis per maand */
 const poetsWegGezien = () => new Set(String(instellingen.poets_weg_gezien || "").split(",").map(x => x.trim()).filter(Boolean));
+let gastLinkFouten = []; /* 12-11-2026 c */
 let boekingen = [], producten = [], consumpties = [], vinkjes = {}, ontbijt = [], gastLinks = {}, poetsDagen = {}, poetsLinks = [], aankondigingen = [], aanmeldingen = [], instellingen = {}, aanvragen = [], tips = [], bonnen = [], broodjes = [], camperAanvragen = [], laadFout = "";
 /* 17-10-2026 c: syncMag = alle bronnen voor het ontbijt op de rekening zijn goed opgehaald; appLaadFout = boekingen, consumpties of bonnen niet geladen (Cijfers en het maandoverzicht kloppen dan niet) */
 let syncMag = false, appLaadFout = "nog niet geladen";
@@ -4370,7 +4371,7 @@ async function gastAkkoordGeef(){
   location.replace(u.toString());
 }
 let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "11-11-2026 c";
+const VERSIE = "12-11-2026 d";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -6081,6 +6082,7 @@ async function haal(){
   ontbijt = ob.data || [];
   obLokaalToepassen(mijn);
   gastLinks = {}; (gl.data || []).forEach(g => gastLinks[g.nr] = g);
+  laadGastLinkFouten(); /* 12-11-2026 c: los, wacht niet */
   schuifTestlinks();
   poetsDagen = {}; (pd.data || []).forEach(p => poetsDagen[p.datum] = p);
   poetsLinks = pl.data || [];
@@ -6311,14 +6313,16 @@ async function wisOudeKamerNamen(){
     if(!error) l.gast = null;
   }
 }
-const gastLinkVan = nr => gastLinks[nr] ? `${location.origin}${MAP}?ontbijt=${gastLinks[nr].code}` : ""; /* 25-10-2026 e (review): één vorm, via MAP */
+const gastLinkVan = nr => gastLinks[nr] && gastLinks[nr].code ? `${location.origin}${MAP}?ontbijt=${gastLinks[nr].code}` : ""; /* 25-10-2026 e (review): één vorm, via MAP; 12-11-2026 b: een ingetrokken link (boeking geannuleerd, code leeg) geeft geen link */
+/* 12-11-2026 b: waarom er geen gastenlink is, in gewone taal */
+const geenGastLinkTekst = l => l && l.ingetrokken_op ? `De gastenlink van deze boeking is ingetrokken${l.ingetrokken_reden ? ` (${String(l.ingetrokken_reden)})` : ""}. Klopt dat niet, laat het Claude weten.` : "Er is nog geen gastenlink voor deze boeking.";
 /* de gastenpagina openen zoals de gast hem ziet (kijk=1: bandje "je kijkt mee", geen huisregelscherm, geen installatietip);
    de link zelf staat in het welkomstbericht, dus kopiëren hoeft hier niet meer */
 async function gastenpaginaOpen(nr, uitId){
   if(!gastLinks[nr]) await zorgGastLinks();
   const link = gastLinkVan(nr);
   const uit = document.getElementById(uitId);
-  if(!link){ if(uit) uit.innerHTML = `<div class="berichtuit waarschuw">Link nog niet beschikbaar, probeer het zo nog eens.</div>`; return; }
+  if(!link){ if(uit) uit.innerHTML = `<div class="berichtuit waarschuw">${gastLinks[nr] && gastLinks[nr].ingetrokken_op ? vrij(geenGastLinkTekst(gastLinks[nr])) : "Link nog niet beschikbaar, probeer het zo nog eens."}</div>`; return; }
   const w = window.open(link + "&kijk=1", "_blank");
   if(!w && uit) uit.innerHTML = `<div class="berichtuit waarschuw">Openen lukte niet. Tik hier: <a href="${link}&kijk=1" target="_blank">gastenpagina</a></div>`;
 }
@@ -9544,6 +9548,21 @@ function inboxItems(alles){
   camperAanvragen.filter(a => !a.ingevuld_op).forEach(a => info.push({ id:"l" + a.id, stand:stand(a.aangemaakt), nr:"", naam:a.naam || "Naam niet ingevuld", plek:"aanvraaglink", wanneer:tijdTekst(a.aangemaakt),
     wat:`Aanvraaglink verstuurd (${(TAAL_NL[a.taal] || a.taal || "")}), nog niet ingevuld`,
     knoppen:`<button data-caweg="${vrij(a.id)}">Link intrekken</button>`, geenWa:true }));
+  /* 12-11-2026 c (database 12-11-2026 d): gastenlinks. Geannuleerd terwijl de gasten er (mogelijk) zijn: Bart beslist; na een weer actieve
+     boeking een nieuwe link (de oude werkt nooit meer) die de gast nog moet krijgen; en een fout in de nachtelijke controle. Naam: zoals in
+     het profiel (vinkjes) of uit de link; bij een geannuleerde boeking is die vaak leeg, daarom ook de datums. Na de vertrekdag niet meer. */
+  const glNaam = l => ((vinkjes[l.nr] && vinkjes[l.nr].naam) || l.gast || "").trim();
+  const glWanneer = l => l.van && l.tot ? `${kort(l.van)} t/m ${kort(l.tot)}` : "";
+  Object.values(gastLinks).filter(l => l && l.code && l.beoordelen_sinds && !DEMO(l.nr) && (!l.tot || l.tot >= vandaag)).forEach(l => antwoord.push({ id:"gl" + l.nr, kruis:"gastlink",
+    stand:stand(l.beoordelen_sinds), nr:l.nr, naam:glNaam(l), plek:l.kamer, wanneer:tijdTekst(l.beoordelen_sinds),
+    wat:`<b>Geannuleerd in MyTourist</b>${glWanneer(l) ? ` (verblijf ${glWanneer(l)})` : ""}. ${l.beoordelen_reden === "document of paspoort gezien" ? "Maar de gasten zijn er: document of paspoort gezien." : l.beoordelen_reden === "online ingecheckt, document nog niet gecontroleerd" ? "Misschien zijn de gasten er: ze hebben online ingecheckt." : "Het verblijf is begonnen of begint morgen, maar er is niets vastgelegd (geen check-in). Misschien zijn de gasten er."} Hun gastenlink werkt nog. Wat wil je?`,
+    knoppen:`<button class="hoofd" data-glkeuze="laten staan|${vrij(l.nr)}">Laten staan tot vertrek</button><button data-glkeuze="intrekken|${vrij(l.nr)}">Link nu intrekken</button>` }));
+  Object.values(gastLinks).filter(l => l && l.code && l.nieuwe_link_op && !DEMO(l.nr) && (!l.tot || l.tot >= vandaag)).forEach(l => antwoord.push({ id:"gn" + l.nr, kruis:"gastlink",
+    stand:stand(l.nieuwe_link_op), nr:l.nr, naam:glNaam(l), plek:l.kamer, wanneer:tijdTekst(l.nieuwe_link_op),
+    wat:`<b>Boeking weer actief: nieuwe gastenlink</b>${glWanneer(l) ? ` (verblijf ${glWanneer(l)})` : ""}. De oude link werkt niet meer. Stuur de gast de nieuwe link (profiel van de boeking).`,
+    knoppen:`<button class="hoofd" data-glkeuze="gezien|${vrij(l.nr)}">Gezien</button>` }));
+  gastLinkFouten.forEach(f => antwoord.push({ id:"gf" + f.id, kruis:"gastlinkfout", stand:String(f.id), nr:f.nr, naam:"Gastenlinks", plek:"controle", wanneer:tijdTekst(f.tijd),
+    wat:`<b>De nachtelijke controle van de gastenlinks liep vast</b> bij één boeking. Die link is niet aangepast. Laat het Claude weten.`, knoppen:"", geenWa:true }));
   /* 10-11-2026 c (Bart: "kruisje, weet je zeker, ja, weg"): met het kruisje weggehaalde berichten staan in de instelling let_weg
      (sleutel ib|id|stand, op elk apparaat weg); alles = true geeft ook de weggehaalde (voor het opruimen in letWegZet) */
   [antwoord, info].forEach(l => l.forEach(x => { x.weg = "ib|" + x.id + "|" + (x.stand || ""); }));
@@ -9579,12 +9598,13 @@ function tekenInbox(){
   const bak = document.getElementById("inboxInhoud"); bak.innerHTML = h;
   /* 10-11-2026 c: kruisje: eerst vragen, dan alleen uit Berichten (bij de gast of het poetsteam verandert niets) */
   bak.querySelectorAll("[data-bkruis]").forEach(kn => kn.onclick = async () => {
-    const wie = { poets:"Bij het poetsteam verandert er niets.", link:"De link blijft gewoon werken.", aanvraag:"Bij de gast verandert er niets: die ziet de aanvraag nog als open." }[kn.dataset.bkwie] || "Bij de gast verandert er niets.";
+    const wie = { poets:"Bij het poetsteam verandert er niets.", link:"De link blijft gewoon werken.", aanvraag:"Bij de gast verandert er niets: die ziet de aanvraag nog als open.", gastlink:"De gastenlink blijft zoals hij is.", gastlinkfout:"Er verandert niets aan de gastenlink." }[kn.dataset.bkwie] || "Bij de gast verandert er niets.";
     if(!confirm(`Weet je het zeker? Dit bericht gaat weg uit de Inbox. ${wie}`)) return;
     const klaar = letWegZet(kn.dataset.bkruis);
     tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox();
     await klaar; tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox();
   });
+  bak.querySelectorAll("[data-glkeuze]").forEach(kn => kn.onclick = () => gastLinkKeuze(...kn.dataset.glkeuze.split("|"))); /* 12-11-2026 c */
   bak.querySelectorAll("[data-avoorstel]").forEach(kn => kn.onclick = () => aanvraagVoorstel(kn.dataset.avoorstel));
   bak.querySelectorAll("[data-akanniet]").forEach(kn => kn.onclick = () => aanvraagKanNiet(kn.dataset.akanniet));
   bak.querySelectorAll("[data-agedaan]").forEach(kn => kn.onclick = () => aanvraagGedaan(kn.dataset.agedaan));
@@ -9616,6 +9636,27 @@ function tekenInbox(){
     if(!confirm(`Aanvraaglink${a.naam ? " voor " + a.naam : ""} intrekken? De link werkt daarna niet meer.`)) return;
     camperAanvragen = camperAanvragen.filter(x => x !== a); tekenNu();
     const { error } = await db.from("camper_aanvragen").delete().eq("id", a.id); if(error) alert("Weghalen mislukt: " + error.message); });
+}
+/* 12-11-2026 c: de keuze van Bart of Loes over een gastenlink (database: gast_link_beoordeel, alleen ingelogd). Intrekken kan niet terug:
+   de oude code wordt nooit meer geldig. Daarna altijd de link opnieuw ophalen (heeft de ander het al gedaan, dan klopt het scherm weer). */
+async function gastLinkKeuze(keuze, nr){
+  if(!gastLinks[nr]) return;
+  if(keuze === "intrekken" && !confirm("Gastenlink nu intrekken? De gasten kunnen de gastenpagina daarna niet meer gebruiken (ook geen check-in, ontbijt of bar). Dit kan niet terug. Wil je ze later toch weer toegang geven, dan maakt Claude een nieuwe link.")) return;
+  const { data, error } = await db.rpc("gast_link_beoordeel", { p_nr: nr, p_keuze: keuze });
+  if(error) alert("Opslaan lukte niet: " + error.message);
+  else if(data === "fout: al ingetrokken" || data === "fout: er is niets te beoordelen") alert("Dit is al geregeld, misschien door Loes of Bart.");
+  else if(data !== "ok" && data !== "niets te doen") alert("Opslaan lukte niet" + (data ? ": " + String(data) : "."));
+  const { data:rijen } = await db.from("gast_links").select("*").eq("nr", nr);
+  if(rijen && rijen[0]) gastLinks[nr] = rijen[0];
+  tekenNu();
+}
+/* 12-11-2026 c: fouten van de nachtelijke controle van de gastenlinks (laatste 7 dagen); bestaat het logboek nog niet, dan niets */
+async function laadGastLinkFouten(){
+  try {
+    const { data, error } = await db.from("gast_link_log").select("id,nr,tijd,uitkomst").like("uitkomst", "fout:%").gte("tijd", new Date(Date.now() - 7*864e5).toISOString()).order("id");
+    gastLinkFouten = error ? [] : (data || []);
+  } catch(e){ gastLinkFouten = []; }
+  try { tekenInboxTeller(); } catch(e){}
 }
 async function ontbijtAanvraagAntwoord(code){
   const [keus, nr, datum] = code.split("|");
@@ -12340,7 +12381,7 @@ function toonKamerDetail(k){
   body.querySelectorAll("[data-kdsamenlink]").forEach(kn => kn.onclick = async () => {
     if(!gastLinks[k.nr]) await zorgGastLinks();
     const l = gastLinks[k.nr];
-    if(!l || !l.code){ alert("Er is nog geen gastenlink voor deze boeking."); return; }
+    if(!l || !l.code){ alert(geenGastLinkTekst(l)); return; }
     const taal = taalVan(samenTaalNr(k)), tekst = samenGt(taal).tekst(kamerNummer(k.kamer), gastLinkVan(k.nr));
     /* 23-10-2026 d: via de keuze WhatsApp, Mail of Kopiëren; zonder nummer (meestal de kamergenoten) kies je in WhatsApp zelf het contact */
     return profielBericht("kdUit", tekst, null, kTelWa(k), { titel:"Link van deze kamer", wie:`${k.kamer} · ${TAAL_NL[taal] || taal}` });
@@ -12349,7 +12390,7 @@ function toonKamerDetail(k){
   body.querySelectorAll("[data-kdcilink]").forEach(kn => kn.onclick = async () => {
     if(!gastLinks[k.nr]) await zorgGastLinks();
     const l = gastLinks[k.nr];
-    if(!l || !l.code){ alert("Er is nog geen gastenlink voor deze boeking."); return; }
+    if(!l || !l.code){ alert(geenGastLinkTekst(l)); return; }
     const taal = taalVan(k.nr), t = TK(taal);
     const link = `${location.origin}${MAP}checkin.html?c=${encodeURIComponent(l.code)}`; /* 25-10-2026 e: werkt ook op het reserve-adres */
     const tekst = (t.checkinLink || TK("nl").checkinLink)(aanhef(kNaam(k)), link).join("\n");
