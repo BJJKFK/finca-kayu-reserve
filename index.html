@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="12-11-2026 d"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="13-11-2026 f"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FAF9F5">
 <title>Finca KaYu</title>
@@ -3086,7 +3086,10 @@ const verberg = el => document.getElementById(el).style.display = "none";
 
 async function start(){
   const code = new URLSearchParams(location.search).get("ontbijt");
-  if(code){ eigenManifest("Finca KaYu", "Finca KaYu"); return startGast(code.trim()); }
+  if(code){ gastKenmerkenLees(code.trim()); eigenManifest("Finca KaYu", "Finca KaYu"); return startGast(code.trim()); }
+  /* 13-11-2026 e (Bart): de huisregels lezen vóór het versturen van het formulier (link in checkin.html, nieuw tabblad) */
+  const hr = new URLSearchParams(location.search).get("huisregels");
+  if(hr){ return startHuisregels(hr); }
   const pcode = new URLSearchParams(location.search).get("poets");
   if(pcode){ eigenManifest("Limpieza KaYu", "Limpieza Finca KaYu"); return startPoets(pcode.trim()); }
   /* terug uit de mail "wachtwoord vergeten": eerst een nieuw wachtwoord kiezen */
@@ -4328,15 +4331,27 @@ const gastOntbijtInbegrepen = () => { const a = gastAfspraken(); return !!(a && 
 const gastEetavondInbegrepen = () => { const a = gastAfspraken(); return !!(a && a.eetavonden_inbegrepen); };
 /* groepen ontbijten altijd aan een gedeelde tafel (geen kaart); de tijd staat in de afspraken */
 const gastOntbijtTijd = () => String((gastAfspraken() || {}).ontbijt_tijd || "").trim();
-/* huisregels eerst: bij een groep moet elke telefoon één keer akkoord geven voordat de pagina opengaat.
-   Sinds 27-09-2026 j ook bij kamergasten (verzoek Bart), maar alleen bij aankomst vanaf KAMER_AKKOORD_VANAF,
-   zodat gasten die er al zitten niet ineens een scherm met huisregels krijgen.
-   Sinds 30-09-2026 a ook bij campers met aankomst vanaf CAMPER_AKKOORD_VANAF: de huisregels staan niet meer in het aanvraagformulier (wens Bart). */
-const KAMER_AKKOORD_VANAF = "2026-09-28";
+/* 13-11-2026 e (Bart): geen aparte huisregelspagina met akkoordknop meer (die stond er sinds 27-09-2026 j voor kamers, 30-09-2026 a voor
+   campers en eerder al voor groepen). Het akkoord geeft de gast nu bij het versturen van het formulier (checkin.html legt het vast met
+   gast_akkoord, campers ook met p_akkoord in camper_aanvraag_zet). De huisregels staan op de gastenpagina onder een oranje kader; alleen
+   meteen na het formulier (na=1 in de link) zakt de pagina daar zichtbaar naartoe.
+   CAMPER_AKKOORD_VANAF blijft: campers vanaf die aankomst krijgen het blok "✅ AKKOORD, stuur ons Akkoord terug" niet op de pagina. */
 const CAMPER_AKKOORD_VANAF = "2026-10-01";
 const gastCamperAkkoord = () => !!gastData && isCamperPlek(gastData.kamer) && String(gastData.van || "") >= CAMPER_AKKOORD_VANAF;
-const gastIsKamer = () => !!gastData && /^Kamer /.test(gastData.kamer || "");
 const gastAkkoordSleutel = () => "kayu_akkoord_" + gastCode;
+/* 13-11-2026 e: kenmerken in de link, één keer gelezen bij het openen en daarna uit de adresbalk gehaald (ook uit het beginscherm-icoon):
+   na=1 komt van het formulier (dan één keer naar de huisregels zakken), qr=1 van de QR-code bij de poort (dan de WhatsApp-knop) */
+let gastNaFormulier = false, gastViaQr = false, regelsZicht = false;
+function gastKenmerkenLees(code){
+  const q = new URLSearchParams(location.search);
+  gastNaFormulier = q.get("na") === "1" && q.get("kijk") !== "1";
+  gastViaQr = q.get("qr") === "1";
+  if(gastViaQr) try { localStorage.setItem("kayu_qr_" + code, "1"); } catch(e){}
+  if(q.has("na") || q.has("qr") || q.has("ak")){
+    const u = new URL(location.href); ["na", "qr", "ak"].forEach(k => u.searchParams.delete(k));
+    try { history.replaceState(null, "", u.toString()); } catch(e){}
+  }
+}
 const kijkMee = new URLSearchParams(location.search).get("kijk") === "1";
 /* review 01-11 k: staat het akkoord op deze telefoon maar kwam het (trage verbinding, meer dan 3 seconden) niet in de database, geef het dan
    bij een volgend bezoek nog één keer door, zodat Bart en Loes het in de app zien. Niet bij de hele finca: daar telt elke aanroep een
@@ -4348,30 +4363,53 @@ function gastAkkoordNazenden(){
   if(!staat || gemeld) return;
   Promise.resolve(db.rpc("gast_akkoord", { p_code: gastCode })).then(r => { if(r && r.data && r.data.ok) try { localStorage.setItem(gastAkkoordSleutel() + "_db", "1"); } catch(e){} }).catch(() => {});
 }
-/* review 01-11 c: is er op deze telefoon echt akkoord gegeven (in de link of in de opslag)? Bij geblokkeerde opslag: nee */
-const gastAkkoordGegeven = () => { if(akkoordInLink) return true; try { return !!localStorage.getItem(gastAkkoordSleutel()); } catch(e){ return false; } };
-const gastAkkoordNodig = () => {
-  if(kijkMee) return false;
-  if(akkoordInLink) return false; /* 13-10-2026 a: net akkoord gegeven (staat in de link) */
-  const kamerNieuw = gastIsKamer() && String(gastData.van || "") >= KAMER_AKKOORD_VANAF;
-  if(!gastIsGroep() && !kamerNieuw && !gastCamperAkkoord()) return false;
-  try { return !localStorage.getItem(gastAkkoordSleutel()); } catch(e){ return false; } };
-/* 13-10-2026 a (Bart): na akkoord meteen en gegarandeerd door naar de gastenpagina: de pagina laadt opnieuw met ak=<tijd> in de link.
-   Die link telt zelf als akkoord, dus het werkt ook op telefoons of in apps die niets onthouden. */
-const akkoordInLink = (() => { const v = new URLSearchParams(location.search).get("ak"); return v && /^\d{10,}$/.test(v) ? Number(v) : 0; })();
-const akkoordNet = () => akkoordInLink && Date.now() - akkoordInLink < 2 * 60000;
-let akkoordBezig = false;
-async function gastAkkoordGeef(){
-  if(akkoordBezig) return; akkoordBezig = true;
-  document.querySelectorAll("[data-gakkoord]").forEach(k => { k.disabled = true; k.textContent = "…"; });
-  try { localStorage.setItem(gastAkkoordSleutel(), new Date().toISOString()); } catch(e){}
-  try { const r = await Promise.race([db.rpc("gast_akkoord", { p_code: gastCode }), new Promise(r => setTimeout(r, 3000))]);
-        if(r && r.data && r.data.ok) try { localStorage.setItem(gastAkkoordSleutel() + "_db", "1"); } catch(e){} } catch(e){} /* review 01-11 k: doorgekomen */
-  const u = new URL(location.href); u.searchParams.set("ak", String(Date.now()));
-  location.replace(u.toString());
+/* 13-11-2026 e: meteen na het formulier zakt de pagina zichtbaar naar het oranje kader boven de huisregels (eerst bovenaan, dan rustig omlaag) */
+function gastNaarRegels(){
+  if(!gastNaFormulier) return;
+  gastNaFormulier = false;
+  /* review 13-11 e: bij een QR-gast staat de WhatsApp-knop net boven het kader; dan naar de knop, zodat die ook in beeld is */
+  setTimeout(() => { const k = document.getElementById("qrAppKnop"), el = (k && k.closest(".dag")) || document.getElementById("regelsLetOp"); if(el) el.scrollIntoView({ behavior:"smooth", block:"start" }); }, 800);
 }
-let gastToastTimer = null, gastVasteLijst = null, gastAkkoordStart = 0;
-const VERSIE = "12-11-2026 d";
+/* 13-11-2026 e (Bart): QR-gast bij de poort: boven het oranje kader één knop die WhatsApp opent met een kant-en-klaar bericht aan Bart en Loes,
+   met de link naar de eigen gastenpagina (zelfde bericht als in versie c). Blijft op deze telefoon staan (kayu_qr_<code>). */
+const gastIsQr = () => {
+  if(kijkMee || regelsZicht || !gastData || gastData.fout || !isCamperPlek(gastData.kamer)) return false;
+  if(gastViaQr) return true;
+  try { return localStorage.getItem("kayu_qr_" + gastCode) === "1"; } catch(e){ return false; } };
+function gastQrKnopHtml(){
+  if(!gastIsQr()) return "";
+  const t = GT[gastTaal] || GT.nl, esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  let data = "";
+  try { const loc = gastTaal === "en" ? "en-GB" : ({ no:"nb-NO", sv:"sv-SE" }[gastTaal] || gastTaal);
+        data = new Intl.DateTimeFormat(loc, { day:"numeric", month:"long" }).formatRange(new Date(gastData.van + "T12:00:00"), new Date(gastData.tot + "T12:00:00")); }
+  catch(e){ data = gastData.van + " / " + gastData.tot; }
+  const link = new URL("./?ontbijt=" + encodeURIComponent(gastCode), location.href).href;
+  const bericht = String(t.qrTekst || GT.nl.qrTekst).replace("{naam}", String(gastData.gast || "")).replace("{data}", data).replace("{link}", link);
+  return `<div class="dag qrapp"><a class="groute qrappknop" id="qrAppKnop" href="https://wa.me/34722162962?text=${encodeURIComponent(bericht)}">${esc(t.qrKnop || GT.nl.qrKnop)}</a></div>`;
+}
+/* 13-11-2026 e (Bart: "akkoord met de groepsoplossing"): groepen (hele finca) vullen geen formulier in, dus geen akkoord bij versturen.
+   Daarom bij groepen onderaan de huisregels één knop "Ik heb de huisregels gelezen en ga akkoord"; de pagina is gewoon open (geen tussenpagina).
+   Elke tik telt via gast_akkoord een persoon (kamer_vinkjes.akkoord_aantal), zoals eerder met de akkoordpagina; daarna op deze telefoon
+   de bedankzin (bestaande tekst wachtGelezen). Niet bij meekijken en niet op de losse huisregelspagina. */
+let groepAkkoordNu = false, groepAkkoordBezig = false;
+function gastGroepAkkoordHtml(){
+  if(regelsZicht || kijkMee || !gastData || gastData.kamer !== "Hele finca") return "";
+  const tg = GT[gastTaal] || GT.nl;
+  let al = groepAkkoordNu; try { al = al || !!localStorage.getItem(gastAkkoordSleutel()); } catch(e){}
+  return `<div class="dag akkoord" id="groepAkkoord">` + (al ? `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`
+    : `<div class="vink"><button data-gakkoord="1" class="aan groot">${tg.akkoordKnop || GT.nl.akkoordKnop}</button></div>`) + `</div>`;
+}
+document.addEventListener("click", async e => {
+  const k = e.target && e.target.closest && e.target.closest("#groepAkkoord [data-gakkoord]"); if(!k || groepAkkoordBezig) return;
+  groepAkkoordBezig = true; k.disabled = true;
+  try { localStorage.setItem(gastAkkoordSleutel(), new Date().toISOString()); } catch(e){}
+  try { await Promise.race([db.rpc("gast_akkoord", { p_code: gastCode }), new Promise(r => setTimeout(r, 3000))]); } catch(e){}
+  groepAkkoordNu = true; groepAkkoordBezig = false;
+  const bak = document.getElementById("groepAkkoord"), tg = GT[gastTaal] || GT.nl;
+  if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
+});
+let gastToastTimer = null, gastVasteLijst = null;
+const VERSIE = "13-11-2026 f";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -4426,6 +4464,32 @@ Object.assign(GT.cs, { akkoordLetOpKop:"⚠️ Důležité: přečtěte si to po
 Object.assign(GT.fi, { akkoordLetOpKop:"⚠️ Tärkeää: lukekaa tämä huolellisesti", akkoordLetOp:"Alta löydätte talon säännöt ja kaiken, mitä teidän tarvitsee tietää. Vierittäkää rauhassa aivan alas asti ja napauttakaa siellä olevaa painiketta. Sen jälkeen oma vierassivunne aukeaa, ja siellä on portin koodi, wifi ja kaikki oleskeluanne varten.", akkoordSnelVraag:"Luitteko kaiken? Ottakaa rauhassa aikaa. Siinä on tärkeitä sääntöjä, ja tämä on myös meidän kotimme.", akkoordSnelJa:"Kyllä, luin kaiken", akkoordSnelLezen:"Luen vielä" });
 Object.assign(GT.no, { akkoordLetOpKop:"⚠️ Viktig: les dette nøye", akkoordLetOp:"Nedenfor finner dere husreglene våre og alt dere trenger å vite. Bla rolig helt ned og trykk på knappen der. Deretter dukker gjestesiden deres opp, med portkoden, wifi og alt til oppholdet.", akkoordSnelVraag:"Har dere lest alt? Ta dere gjerne god tid. Det står viktige regler der, og det er også hjemmet vårt.", akkoordSnelJa:"Ja, jeg har lest alt", akkoordSnelLezen:"Jeg leser litt til" });
 Object.assign(GT.sv, { akkoordLetOpKop:"⚠️ Viktigt: läs det här noga", akkoordLetOp:"Nedan hittar ni våra husregler och allt ni behöver veta. Skrolla i lugn och ro hela vägen ner och tryck på knappen där. Sedan visas er egen gästsida, med koden till grinden, wifi och allt för er vistelse.", akkoordSnelVraag:"Har ni läst allt? Ta gärna den tid ni behöver. Där står viktiga regler, och det är också vårt hem.", akkoordSnelJa:"Ja, jag har läst allt", akkoordSnelLezen:"Jag läser lite till" });
+/* 13-11-2026 e (Bart): tekst in het oranje kader boven de huisregels (Nederlands van Bart; de kop blijft akkoordLetOpKop), de WhatsApp-knop voor
+   QR-gasten (opzet goedgekeurd door Bart) en het bericht (zelfde als aQrTekst in checkin.html, versie c). Aanspreekvorm zoals in de andere teksten. */
+const GT_REGELS_E = {
+  nl:{ regelsLetOp:"Hieronder vind je onze huisregels en belangrijke informatie over je verblijf. Lees ze goed door. We vragen iedereen rekening te houden met onze afspraken, zodat het voor iedereen prettig blijft.",
+       qrKnop:"Stuur deze pagina naar Bart en Loes (WhatsApp)", qrTekst:"Hoi Bart en Loes! Wij zijn {naam}, {data}. Onze gastenpagina: {link}" },
+  en:{ regelsLetOp:"Below you'll find our house rules and important information about your stay. Please read them carefully. We ask everyone to respect our agreements, so that it stays pleasant for everyone.",
+       qrKnop:"Send this page to Bart and Loes (WhatsApp)", qrTekst:"Hi Bart and Loes! We are {naam}, {data}. Our guest page: {link}" },
+  de:{ regelsLetOp:"Unten findet ihr unsere Hausregeln und wichtige Informationen zu eurem Aufenthalt. Lest sie bitte gründlich durch. Wir bitten alle, sich an unsere Absprachen zu halten, damit es für alle angenehm bleibt.",
+       qrKnop:"Schickt diese Seite an Bart und Loes (WhatsApp)", qrTekst:"Hallo Bart und Loes! Wir sind {naam}, {data}. Unsere Gästeseite: {link}" },
+  es:{ regelsLetOp:"Aquí abajo encontraréis nuestras normas de la casa e información importante sobre vuestra estancia. Leedlas con atención. Pedimos a todos que respeten lo que hemos acordado, para que siga siendo agradable para todos.",
+       qrKnop:"Enviad esta página a Bart y Loes (WhatsApp)", qrTekst:"¡Hola Bart y Loes! Somos {naam}, {data}. Nuestra página de huéspedes: {link}" },
+  it:{ regelsLetOp:"Qui sotto trovate le nostre regole della casa e informazioni importanti sul vostro soggiorno. Leggetele con attenzione. Chiediamo a tutti di rispettare i nostri accordi, così che resti piacevole per tutti.",
+       qrKnop:"Inviate questa pagina a Bart e Loes (WhatsApp)", qrTekst:"Ciao Bart e Loes! Siamo {naam}, {data}. La nostra pagina ospiti: {link}" },
+  fr:{ regelsLetOp:"Vous trouverez ci-dessous nos règles de la maison et des informations importantes sur votre séjour. Lisez-les attentivement. Nous demandons à chacun de respecter nos règles, pour que cela reste agréable pour tout le monde.",
+       qrKnop:"Envoyez cette page à Bart et Loes (WhatsApp)", qrTekst:"Bonjour Bart et Loes ! Nous sommes {naam}, {data}. Notre page invités : {link}" },
+  pt:{ regelsLetOp:"Aqui em baixo encontram as nossas regras da casa e informações importantes sobre a vossa estadia. Leiam-nas com atenção. Pedimos a todos que respeitem o que combinámos, para que continue a ser agradável para todos.",
+       qrKnop:"Enviem esta página ao Bart e à Loes (WhatsApp)", qrTekst:"Olá Bart e Loes! Somos {naam}, {data}. A nossa página de hóspedes: {link}" },
+  cs:{ regelsLetOp:"Níže najdete náš domovní řád a důležité informace o vašem pobytu. Přečtěte si je prosím pozorně. Prosíme všechny, aby dodržovali naše pravidla, aby to tu bylo příjemné pro všechny.",
+       qrKnop:"Pošlete tuto stránku Bartovi a Loes (WhatsApp)", qrTekst:"Ahoj Barte a Loes! Jsme {naam}, {data}. Naše stránka pro hosty: {link}" },
+  fi:{ regelsLetOp:"Alta löydätte talon säännöt ja tärkeää tietoa oleskelustanne. Lukekaa ne huolellisesti. Pyydämme kaikkia noudattamaan sopimuksiamme, jotta täällä on mukavaa kaikille.",
+       qrKnop:"Lähettäkää tämä sivu Bartille ja Loesille (WhatsApp)", qrTekst:"Hei Bart ja Loes! Olemme {naam}, {data}. Vierassivumme: {link}" },
+  no:{ regelsLetOp:"Nedenfor finner dere husreglene våre og viktig informasjon om oppholdet deres. Les dem nøye. Vi ber alle om å respektere avtalene våre, slik at det blir hyggelig for alle.",
+       qrKnop:"Send denne siden til Bart og Loes (WhatsApp)", qrTekst:"Hei Bart og Loes! Vi er {naam}, {data}. Gjestesiden vår: {link}" },
+  sv:{ regelsLetOp:"Nedan hittar ni våra husregler och viktig information om er vistelse. Läs dem noga. Vi ber alla att respektera våra överenskommelser, så att det förblir trevligt för alla.",
+       qrKnop:"Skicka den här sidan till Bart och Loes (WhatsApp)", qrTekst:"Hej Bart och Loes! Vi är {naam}, {data}. Vår gästsida: {link}" } };
+Object.keys(GT_REGELS_E).forEach(l => { if(GT[l]) Object.assign(GT[l], GT_REGELS_E[l]); });
 const TAAL_NAAM = { nl:"Nederlands", en:"English", de:"Deutsch", es:"Español", it:"Italiano", fr:"Français", pt:"Português", cs:"Čeština", fi: "Suomi", no: "Norsk", sv: "Svenska" };
 const taalOptie = l => (TAAL_NAAM[l] || l.toUpperCase()) + (gastTaal === "nl" && l !== "nl" && TAAL_NL[l] ? ` (${TAAL_NL[l]})` : "");
 /* 30-09-2026 d (wens Bart): in de app staan talen overal in het Nederlands; op de gastpagina's de eigen naam, met de Nederlandse erachter als de pagina in het Nederlands staat */
@@ -4801,7 +4865,9 @@ async function startGast(code){
     if(gastData && !gastData.fout && isCamperPlek(gastData.kamer)){ tekenGastDatum(); return; }
   }
   if(await checkinNodig(code)){ location.replace(MAP + "checkin.html?c=" + encodeURIComponent(code)); return; }
-  if(await aanvraagOpen(code)){ location.replace(MAP + "checkin.html?c=" + encodeURIComponent(code) + "&aanvraag=1"); return; }
+  /* 13-11-2026 c: kwam de gast via de QR-code bij de poort (&qr=1), dan gaat dat kenmerk mee naar het aanvraagformulier */
+  /* 13-11-2026 e: het kenmerk is bij het openen al gelezen (gastKenmerkenLees) en uit de adresbalk gehaald */
+  if(await aanvraagOpen(code)){ location.replace(MAP + "checkin.html?c=" + encodeURIComponent(code) + "&aanvraag=1" + (gastViaQr ? "&qr=1" : "")); return; }
   gastCode = code; gastTaal = gastTaalKies(); gastVasteLijst = null; gastWieLaad();
   document.title = "Finca KaYu";
   toon("gast");
@@ -4811,14 +4877,18 @@ async function startGast(code){
   /* taal: wat Bart of de gast koos; anders de taal van de telefoon (wordt pas bewaard als de gast zelf een taal kiest) */
   if(gastData && gastData.taal && GT[gastData.taal]) gastTaal = gastData.taal;
   /* campers met de nieuwe check-in (plan 29-09-2026): de gastenpagina opent pas de dag vóór aankomst vanaf 13:00; tot dan een korte wachtpagina */
-  /* 01-11-2026 c (Bart: "beter dat de pagina voor de huisregels is"): wie online heeft ingecheckt maar nog niet akkoord gaf, leest meteen de
-     huisregels, ook als de pagina nog niet open is. Na akkoord komt de wachtpagina (poortcode en wifi pas de dag vóór aankomst vanaf 13:00). */
+  /* 01-11-2026 c (Bart: "beter dat de pagina voor de huisregels is"); sinds 13-11-2026 e staan de huisregels op de wachtpagina zelf
+     (zonder poortcode en wifi, die komen de dag vóór aankomst vanaf 13:00) */
   if(gastData && !gastData.fout && gastWachtNodig()){
-    if(gastAkkoordNodig()){ tekenGast(); return; }
-    tekenGastWacht(); setTimeout(() => location.reload(), 5 * 60000); return;
+    tekenGastWacht(); gastNaarRegels();
+    /* review 13-11 e: de huisregels staan nu op de wachtpagina; herladen om de 5 minuten zette een lezende gast terug bovenaan. Nu: om de
+       5 minuten kijken (gast_ontbijt) en pas herladen als de pagina open mag (of de link niet meer geldig is) */
+    const wachtKijk = setInterval(async () => { try { const d = await gastHaal(); if(d && (d.fout || (gastData = d, !gastWachtNodig()))){ clearInterval(wachtKijk); location.reload(); } } catch(e){} }, 5 * 60000);
+    return;
   }
   if(gastData && !gastData.fout && gastVertrokken()) gastTab = "rekening";
   tekenGast();
+  gastNaarRegels(); /* 13-11-2026 e: alleen meteen na het formulier */
   gastSamenHaal();
   /* live: als Bart iets wijzigt (betaald, ontbijt bevestigd, bar), ververst de pagina zichzelf om de minuut */
   /* 18-10-2026 a: verloopt de link terwijl de pagina openstaat (24 uur na de uitchecktijd), dan meteen de melding "niet meer beschikbaar" (en dus geen poortcode meer) */
@@ -4840,9 +4910,12 @@ function tekenGastWacht(){
   const talen = `<div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span><div class="gtaal">${gIcoon("bol")}<select data-gtaal="1" aria-label="Taal">` +
     Object.keys(GT).map(l => `<option value="${l}"${l === gastTaal ? " selected" : ""}>${taalOptie(l)}</option>`).join("") + `</select></div></div>`;
   bak.innerHTML = `<div class="gkop">${talen}</div><div class="dag akkoord" style="margin-top:14px"><b style="display:block;font-size:16px;font-weight:600;margin-bottom:6px">${t.wachtKop}</b>` +
-    `<p style="margin:0 0 12px">${gastCamperAkkoord() && !kijkMee && gastAkkoordGegeven() ? (t.wachtGelezen || GT.nl.wachtGelezen) + " " : ""}${t.wachtTekst(taalDatum(iso(g), gastTaal))}</p>` +
-    (route ? `<a class="groute" href="${route}" target="_blank" rel="noopener">${t.route}</a>` + routeStopHtml() : "") + `</div>` + datumKnopHtml();
+    `<p style="margin:0 0 12px">${t.wachtTekst(taalDatum(iso(g), gastTaal))}</p>` +
+    (route ? `<a class="groute" href="${route}" target="_blank" rel="noopener">${t.route}</a>` + routeStopHtml() : "") + `</div>` + datumKnopHtml() +
+    /* 13-11-2026 e: de huisregels (zonder poortcode en wifi) staan nu op de wachtpagina zelf, onder het oranje kader; bij een QR-gast de WhatsApp-knop erboven */
+    gastRegelsHtml();
   bak.querySelectorAll("[data-gtaal]").forEach(sel => sel.onchange = () => { gastTaal = sel.value; try{ localStorage.setItem("ontbijtTaal", gastTaal); }catch(e){} tekenGastWacht(); });
+  gastIcoontjes(bak);
 }
 const gastDagen = () => { const l = []; if(!gastData || !gastData.van) return l;
   const d = parse(gastData.van); d.setDate(d.getDate()+1);
@@ -4996,17 +5069,20 @@ const gastBarAantal = naam => (gastData.bar || []).filter(c => !c.auto && c.naam
 const VERTREK_EINDE = "20:00";
 const gastVertrokken = () => !!gastData && (gastData.tot < gastData.vandaag || (gastData.tot === gastData.vandaag && String(gastData.nu || "00:00") >= VERTREK_EINDE));
 const gastBarMag = () => !gastData.betaald && gastData.vandaag >= gastData.van && gastData.vandaag <= gastData.tot;
-/* huisregels als laatste blok op Start (campers en kamers, niet voor groepen): eerst in het kort, dan de hele huisinfo in één kaart */
+/* huisregels als laatste blok op Start: eerst in het kort, dan de hele huisinfo in één kaart.
+   13-11-2026 e (Bart): ook voor groepen (de akkoordpagina per telefoon is weg; de hoofdboeker deelt de regels), met erboven het oranje kader
+   "Belangrijk: lees dit goed door" (het doel van het zakken na het formulier) en bij een QR-gast de WhatsApp-knop */
 function gastRegelsHtml(){
-  if(gastData.kamer === "Hele finca") return "";
+  const tg = GT[gastTaal] || GT.nl;
+  const letOp = `<div class="dag akkoordletop" id="regelsLetOp" style="border:2px solid #D9822B;background:#FFF4E5;border-radius:12px;scroll-margin-top:12px"><h2 style="color:#8A4A00">${tg.akkoordLetOpKop || GT.nl.akkoordLetOpKop}</h2><div class="info" style="color:#5A3A1A;font-size:16px;line-height:1.55">${tg.regelsLetOp || GT.nl.regelsLetOp}</div></div>`;
   const r = GT_REGELS[gastTaal] || GT_REGELS.nl;
   const lijst = isCamperPlek(gastData.kamer) ? r.camper : r.kamer;
   const esc = x => String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;");
   const volledig = gastInfoHtml().replace(/<div class="dag hl">/g, '<div class="sub hl">').replace(/<h2>/g, "<h3>").replace(/<\/h2>/g, "</h3>");
   /* "In het kort" (de vijf regels in GT_REGELS) staat op verzoek van Bart (20-09-2026) uit; zet REGELS_KORT op true om hem terug te zetten */
   const REGELS_KORT = false;
-  return `<div class="dag regels" id="gastRegels"><h2>${NIEUW ? gIcoon("huis") : "📖"} ${esc(r.kop)}</h2>` +
-    (REGELS_KORT ? `<div class="kort"><b>${esc(r.kort)}</b><ol>${lijst.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div><div class="volledig"><b>${esc(r.alles)}</b>${volledig}</div>` : `<div class="volledig alleen">${volledig}</div>`) + `</div>`;
+  return gastQrKnopHtml() + letOp + `<div class="dag regels" id="gastRegels"><h2>${NIEUW ? gIcoon("huis") : "📖"} ${esc(r.kop)}</h2>` +
+    (REGELS_KORT ? `<div class="kort"><b>${esc(r.kort)}</b><ol>${lijst.map(x => `<li>${esc(x)}</li>`).join("")}</ol></div><div class="volledig"><b>${esc(r.alles)}</b>${volledig}</div>` : `<div class="volledig alleen">${volledig}</div>`) + `</div>` + gastGroepAkkoordHtml(); /* 13-11-2026 e: akkoordknop voor groepen */
 }
 /* 18-10-2026 a: poortcode en wifi staan niet meer in het openbare teksten.js, maar als invulvelden {poortcode}, {wifi_netwerk} en {wifi_wachtwoord}.
    De waarden komen in de personeelsapp uit instellingen (alleen ingelogd) en op de gastenpagina uit gast_ontbijt (alleen met een geldige link).
@@ -5134,7 +5210,8 @@ function vergetenHtml(){
 function gastInfoHtml(){
   const tk = (window.TEKSTEN || {})[gastTaal] || (window.TEKSTEN || {}).nl; if(!tk) return "";
   const camper = isCamperPlek(gastData.kamer);
-  const link = location.href;
+  /* 13-11-2026 e: op de losse huisregelspagina (vóór het versturen) geen link naar "jullie pagina": die bestaat dan nog niet */
+  const link = regelsZicht ? "" : location.href;
   /* 25-10-2026 d: de handleiding zoals Bart hem in de app heeft aangepast (gast_teksten); nog niet opgehaald: eerst de vaste tekst, daarna opnieuw tekenen */
   const soort = gtSoortVan(gastData.kamer), gc = { link, totDag:"" };
   gtGastLaad(soort, gastTaal);
@@ -5215,10 +5292,32 @@ function gastIcoontjes(root){
   rest.forEach(n => { let m; while((m = midden.exec(n.nodeValue))){ const na = n.splitText(m.index); na.nodeValue = na.nodeValue.slice(m[0].length);
     const sp = maak(`<span class="hweg"></span>`); sp.textContent = m[0]; n.after(sp); n = na; } });
 }
+/* 13-11-2026 e (Bart): de huisregels lezen vóór het versturen van het formulier: ?huisregels=camper|kamer|groep&taal=..
+   Zonder boeking en zonder gastenlink: alleen de openbare handleiding (zoals Bart hem in de app heeft aangepast, gast_teksten_lees),
+   zonder poortcode en wifi (die regels vallen weg omdat er geen waarden zijn) en zonder link naar "jullie pagina". */
+function startHuisregels(soort){
+  const taal = new URLSearchParams(location.search).get("taal");
+  gastTaal = taal && Object.prototype.hasOwnProperty.call(GT, taal) ? taal : gastTaalKies(); /* review 13-11 e: geen namen als "constructor" */
+  const vandaag = iso(new Date());
+  gastData = { kamer: soort === "kamer" ? "Kamer 1" : soort === "groep" ? "Hele finca" : "Pitch 1", van: vandaag, tot: vandaag, vandaag, nu: "00:00" };
+  regelsZicht = true;
+  document.title = "Finca KaYu";
+  toon("gast");
+  tekenHuisregels();
+}
+function tekenHuisregels(){
+  const bak = document.getElementById("gastInhoud");
+  const talen = `<div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span><div class="gtaal">${gIcoon("bol")}<select data-gtaal="1" aria-label="Taal">` +
+    Object.keys(GT).map(l => `<option value="${l}"${l === gastTaal ? " selected" : ""}>${taalOptie(l)}</option>`).join("") + `</select></div></div>`;
+  bak.innerHTML = `<div class="gkop">${talen}</div>` + gastRegelsHtml();
+  bak.querySelectorAll("[data-gtaal]").forEach(sel => sel.onchange = () => { gastTaal = sel.value; try{ localStorage.setItem("ontbijtTaal", gastTaal); }catch(e){} tekenHuisregels(); });
+  gastIcoontjes(bak);
+}
 function tekenGast(){
-  /* review 01-11 c: is de pagina nog niet open en is er al akkoord (bijvoorbeeld net getikt, of een late verversing), dan de wachtpagina,
-     nooit de volle pagina */
-  if(gastData && !gastData.fout && gastWachtNodig() && !gastAkkoordNodig()){ tekenGastWacht(); return; }
+  if(regelsZicht){ tekenHuisregels(); return; } /* 13-11-2026 e: de losse huisregelspagina (bijvoorbeeld na het laden van de eigen handleiding) */
+  /* review 01-11 c: is de pagina nog niet open (bijvoorbeeld een late verversing), dan de wachtpagina, nooit de volle pagina.
+     13-11-2026 e: er is geen akkoordpagina meer; de huisregels staan op de wachtpagina zelf */
+  if(gastData && !gastData.fout && gastWachtNodig()){ tekenGastWacht(); return; }
   const t = GT[gastTaal], bak = document.getElementById("gastInhoud");
   /* 21-10-2026 b (review): een opengetikte week bij Omgeving blijft open als de pagina zichzelf ververst */
   const omgOpen = new Set([...bak.querySelectorAll("details.omguur[open]")].map(d => d.dataset.k)); /* 22-10-2026 a: op naam, de lijst wisselt nu per soort */
@@ -5290,39 +5389,8 @@ function tekenGast(){
     }
     return x;
   };
-  if(gastAkkoordNodig()){
-    /* geen tabbladen: eerst de huisregels lezen en akkoord geven, daarna gaat de pagina open */
-    /* 11-10-2026 a (Bart): veel gasten tikken de huisregels weg zonder te lezen; bovenaan een duidelijke oproep, met wat ze ervoor terugkrijgen */
-    if(!gastAkkoordStart) gastAkkoordStart = Date.now();
-    /* 01-11-2026 c: vóór de dag van openen staat na akkoord nog de wachtpagina; de zin dat de pagina dan opengaat valt weg */
-    const vroeg = gastWachtNodig(), zonderSlot = x => { const z = String(x || ""), i = z.lastIndexOf(". ", z.length - 2); return vroeg && i > 0 ? z.slice(0, i + 1) : z; };
-    bak.innerHTML = noodHtml + `<div class="gkop">` + talen + `</div>` +
-      `<div class="dag akkoordletop" style="border:2px solid #D9822B;background:#FFF4E5;border-radius:12px"><h2 style="color:#8A4A00">${t.akkoordLetOpKop || GT.nl.akkoordLetOpKop}</h2><div class="info" style="color:#5A3A1A;font-size:16px;line-height:1.55">${zonderSlot(t.akkoordLetOp || GT.nl.akkoordLetOp)}</div></div>` +
-      `<div class="dag akkoord"><h2>🌿 ${t.akkoordKop}</h2>` +
-      /* kamers (27-09-2026 k, tekst goedgekeurd door Bart): warmere inleiding; groepen houden hun eigen tekst */
-      (gastIsGroep() || isCamperPlek(gastData.kamer) || !t.akkoordKamer ? `<div class="info" style="color:var(--pine);font-size:15px;line-height:1.6">${zonderSlot(t.akkoordIntro)}</div>`
-        : `<div class="info" style="color:var(--pine);font-size:16px;line-height:1.6;font-weight:600">${t.akkoordKamer[0]}</div><div class="info" style="color:var(--pine);font-size:15px;line-height:1.6;margin-top:6px">${t.akkoordKamer[1]}</div>`) + `</div>` +
-      gastInfoHtml() +
-      `<div class="dag akkoord" id="akkoordOnder">${gastIsGroep() ? `<div class="info" style="color:var(--pine);font-size:14px;margin-bottom:10px">${t.akkoordOnder}</div>` : ""}<div class="vink"><button data-gakkoord="1" class="aan groot">${t.akkoordKnop}</button></div></div>`;
-    /* wie binnen 30 seconden tikt, krijgt eerst een vriendelijke vraag */
-    bak.querySelectorAll("[data-gakkoord]").forEach(kn => kn.onclick = () => {
-      if(akkoordBezig) return;
-      if(Date.now() - gastAkkoordStart >= 30000) return gastAkkoordGeef();
-      /* 13-10-2026 a: de vraag als duidelijk venster midden in beeld (stond onderaan op de plek van de knop en viel niet op) */
-      const oud = document.querySelector(".akvraag"); if(oud) oud.remove();
-      const o = document.createElement("div"); o.className = "akvraag"; o.setAttribute("role", "dialog");
-      o.innerHTML = `<div class="akvraagkaart"><div class="info" style="color:var(--pine);font-size:17px;line-height:1.55;margin-bottom:14px">${t.akkoordSnelVraag || GT.nl.akkoordSnelVraag}</div>` +
-        `<div class="vink"><button data-gakkja="1" class="aan groot">${t.akkoordSnelJa || GT.nl.akkoordSnelJa}</button><button data-gaklees="1" class="groot">${t.akkoordSnelLezen || GT.nl.akkoordSnelLezen}</button></div></div>`;
-      (document.getElementById("gast") || document.body).appendChild(o);
-      o.querySelector("[data-gakkja]").onclick = () => { o.remove(); gastAkkoordGeef(); };
-      o.querySelector("[data-gaklees]").onclick = () => { o.remove(); gastAkkoordStart = Date.now(); window.scrollTo({ top:0, behavior:"smooth" }); };
-    });
-    gastIcoontjes(bak); /* 23-10-2026 a */
-    bind();
-    return;
-  }
+  /* 13-11-2026 e (Bart): de aparte huisregelspagina met akkoordknop (27-09-2026 j tot 13-11-2026 c) is weg; de huisregels staan onderaan Start */
   if(gastTab === "start"){
-    if(akkoordNet() && !weg) h += `<div class="melding goed" data-akdank="1" style="margin:10px 0">${t.akkoordDank || GT.nl.akkoordDank}</div>`;
     if(weg) h += `<div class="dag"><h2>${t.eindKop}</h2><div class="info">${t.vandaagWeg}</div></div>` + rekeningHtml(true);
     else {
       let thuisH = "", programmaH = "", herH = "", welkomH = "";
@@ -11313,11 +11381,16 @@ const pkGedaan = (aan, ja) => aan ? [ja + " ✓", "goed"] : ["Nog niet", ""];
 /* 01-11-2026 k (Bart: "in de app zien wie de huisregels heeft gelezen"): het eerste akkoord op de gastenpagina staat sinds 01-11-2026
    (21:10 Spaanse tijd) in gast_links.akkoord_op (databasefunctie gast_akkoord). Van links die daarvoor zijn gemaakt weten we een eerder
    akkoord niet: dan alleen een regel als er na die tijd akkoord is gegeven, geen "Nog niet". */
-const AKKOORD_SINDS = "2026-11-01T20:10:00Z";
+/* (AKKOORD_SINDS, de grens voor "Nog niet gelezen", is sinds 13-11-2026 e niet meer nodig) */
 const pkHuisregels = nr => { const g = gastLinks[nr]; if(!g || g.kamer === "Hele finca") return ""; /* review k: bij de hele finca telt de regel "Huisregels geaccepteerd op de pagina: N keer" */
-  const t = g.akkoord_op ? new Date(g.akkoord_op) : null;
-  if(t && !isNaN(t)) return pkVast("Huisregels", `Gelezen ✓ ${DG[t.getDay()].slice(0, 2)} ${kort(iso(t))}`, "goed");
-  return g.gemaakt && new Date(g.gemaakt) >= new Date(AKKOORD_SINDS) ? pkVast("Huisregels", "Nog niet gelezen") : ""; };
+  /* 13-11-2026 e: het akkoord geeft de gast nu bij het versturen van het formulier (niet meer met een knop na het lezen): "Akkoord".
+     Bij een camperaanvraag staat het ook in camper_aanvragen.huisregels_akkoord_op (zelfde stap als de boeking); dat telt als gast_akkoord
+     niet doorkwam (review 13-11 e). Geen regel "Nog geen akkoord" meer: wie het formulier nog niet verstuurde, staat al op "Check-in: Nog
+     niet ingevuld", en kamers die via een andere kamer zijn ingecheckt of die Bart zelf invulde, kunnen geen eigen akkoord meer geven. */
+  const ca = (camperAanvragen || []).find(a => a.huisregels_akkoord_op && String(a.boeking_id) === String(nr));
+  const t = g.akkoord_op ? new Date(g.akkoord_op) : ca ? new Date(ca.huisregels_akkoord_op) : null;
+  if(t && !isNaN(t)) return pkVast("Huisregels", `Akkoord ✓ ${DG[t.getDay()].slice(0, 2)} ${kort(iso(t))}`, "goed");
+  return ""; };
 
 /* 24-10-2026 a (Bart, schets B): het profiel van een kamergast en een campergast zo gelijk als kan. Gedeelde stukken:
    de drie ronde knoppen bovenaan (WhatsApp met een groen icoontje, Gastenpagina, Taal met het lijstje), de stappen ingeklapt
@@ -12308,7 +12381,7 @@ function toonKamerDetail(k){
       check("paspoort", "Paspoorten binnen") + check("link_gedeeld", "Link gedeeld") + check("borg_ontvangen", "Borg € 750 ontvangen") +
       check("verblijf_betaald", "Verblijf betaald") +
       check("borg_terug", "Borg terugbetaald") + `</div>` +
-      `<div class="info" style="font-size:13px;margin-top:6px">Huisregels geaccepteerd op de pagina: <b>${Number(v.akkoord_aantal) || 0}</b> keer</div>`;
+      `<div class="info" style="font-size:13px;margin-top:6px">Huisregels geaccepteerd: <b>${Number(v.akkoord_aantal) || 0}</b> keer</div>`;
     const prog = (vinkjes[k.nr] && vinkjes[k.nr].programma && typeof vinkjes[k.nr].programma === "object") ? vinkjes[k.nr].programma : {};
     const pdagen = nachtLijst({ in:k.in, uit:k.uit }).concat([k.uit]);
     const gevuld = pdagen.filter(d => String(prog[d] || "").trim());
@@ -13069,7 +13142,8 @@ async function aanvraagQr(){
   const knop = document.getElementById("aQr"); if(knop.disabled) return;
   if(!linkToch()) return;
   const link = await aanvraagMaak(knop, taal, naam, uit); if(!link) return;
-  const beeld = QR.svg(link, 260);
+  /* 13-11-2026 c (Bart): de QR-link krijgt het kenmerk &qr=1; dat gaat via het formulier mee naar de gastenpagina (13-11-2026 e: daar de WhatsApp-knop) */
+  const beeld = QR.svg(link + "&qr=1", 260);
   if(!beeld){ uit.innerHTML = `<div class="berichtuit waarschuw">De QR-code lukte niet. Gebruik Check-inbericht kopiëren.</div>`; return; }
   uit.innerHTML = `<div class="berichtuit" data-aqr="1"><b>Laat de gast deze code scannen met de camera van zijn telefoon.</b>` +
     `<div style="display:flex;justify-content:center;margin:10px 0;background:#fff;padding:8px;border-radius:10px">${beeld}</div>` +
