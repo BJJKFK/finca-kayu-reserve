@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="17-11-2026 c"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="19-11-2026 a"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FAF9F5">
 <title>Finca KaYu</title>
@@ -1439,10 +1439,6 @@
   .prijsrij span{flex:1;font-size:15px}
   .prijsrij input{width:88px;padding:9px;font-size:15px;text-align:right}
   #laden{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
-  #plakBlok{border:1px solid var(--line);border-radius:12px;padding:10px 12px;
-    margin:0 0 14px;background:var(--card)}
-  #plakBlok summary{cursor:pointer;font-weight:600;font-size:15px;color:var(--pine)}
-  #plakBlok textarea{margin-top:10px;font-size:14px;min-height:110px}
   #fNot{min-height:70px;font-size:15px}
   .waarschuw{background:#FBE9E4;border:1px solid var(--rood);color:var(--rood);
     border-radius:10px;padding:10px 12px;font-size:14px;margin-top:10px;line-height:1.45}
@@ -1851,7 +1847,7 @@
   <button data-onder="nu" class="aan"><svg class="gi"><use href="#gi-home"/></svg><span>Vandaag</span></button>
   <button data-onder="kalender"><svg class="gi"><use href="#gi-cal"/></svg><span>Kalender</span></button>
   <button data-onder="nieuw" class="plus"><svg class="gi"><use href="#gi-plus"/></svg><span>Nieuw</span></button>
-  <button data-onder="bar"><svg class="gi"><use href="#gi-glas"/></svg><span>Bar</span></button>
+  <button data-onder="bar"><svg class="gi"><use href="#gi-glas"/></svg><span>Verkoop</span></button><!-- 19-11-2026 a (Bart): in de onderbalk van de host "Verkoop" in plaats van "Bar"; gasten houden "Bar" -->
   <button data-onder="meer"><svg class="gi"><use href="#gi-meer"/></svg><span>Meer</span></button>
 </nav>
 <dialog id="meer2"><div class="dlg meerdlg">
@@ -2678,15 +2674,6 @@
     <div id="aUit"></div>
   </div>
   <p class="note" id="zelfKop" style="margin:0 0 4px">Of vul de boeking zelf in:</p>
-  <details id="plakBlok">
-    <summary>Boeking uit WhatsApp plakken</summary>
-    <textarea id="fPlak" placeholder="Plak hier het ingevulde formulier dat de gast terugstuurde"></textarea>
-    <div class="acts">
-      <button type="button" id="fPlakLeeg">Leegmaken</button>
-      <button type="button" class="go" id="fPlakGo">Invullen</button>
-    </div>
-    <div id="fPlakUit"></div>
-  </details>
   <label for="fNaam">Naam</label>
   <input id="fNaam" autocomplete="off">
   <label for="fPlek">Plek</label>
@@ -4679,7 +4666,7 @@ document.addEventListener("click", async e => {
   if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
 });
 let gastToastTimer = null, gastVasteLijst = null;
-const VERSIE = "17-11-2026 c";
+const VERSIE = "19-11-2026 a";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -13683,12 +13670,9 @@ document.getElementById("aQr").onclick = aanvraagQr;
 function nieuweBoeking(plek){
   bewerkt = null; formStart = null;
   document.getElementById("fTitle").textContent = "Nieuwe boeking";
-  ["fNaam","fTel","fGezel","fKent","fMerk","fLengte","fTijd","fMail","fAdres","fNot","fPlak"]
+  ["fNaam","fTel","fGezel","fKent","fMerk","fLengte","fTijd","fMail","fAdres","fNot"]
     .forEach(id => document.getElementById(id).value = "");
-  document.getElementById("fPlakUit").innerHTML = "";
   document.getElementById("fLengteLet").innerHTML = "";
-  document.getElementById("plakBlok").style.display = "";
-  document.getElementById("plakBlok").open = false;
   document.getElementById("aanvraagBlok").style.display = ""; document.getElementById("zelfKop").style.display = "";
   document.getElementById("aNaam").value = ""; document.getElementById("aUit").innerHTML = "";
   aBezetTeken();
@@ -13720,9 +13704,7 @@ function bewerkBoeking(b){
   document.getElementById("fMail").value = b.email || "";
   document.getElementById("fAdres").value = b.adres || "";
   document.getElementById("fNot").value = b.notities || "";
-  document.getElementById("fPlakUit").innerHTML = "";
   document.getElementById("fLengteLet").innerHTML = "";
-  document.getElementById("plakBlok").style.display = "none";
   document.getElementById("aanvraagBlok").style.display = "none"; document.getElementById("zelfKop").style.display = "none"; document.getElementById("fCancel").textContent = "Annuleren";
   document.getElementById("fPers").value = b.personen;
   document.getElementById("fDier").value = b.dier;
@@ -17829,186 +17811,9 @@ function herinneringen(b){
   return uit;
 }
 
-/* ---------- boeking uit WhatsApp lezen ---------- */
+/* 19-11-2026 a (Bart: "Boeking uit WhatsApp plakken, dat is achterhaald ... mag eruit"): het plakvak en de lezer van het oude
+   WhatsApp-formulier zijn weg; sinds 29-09-2026 doet de gast een aanvraag en checkt hij in via de link. */
 const MNDKORT = ["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"];
-/* maandnamen in het Nederlands, Engels, Duits, Spaans en Frans */
-const MND_TALEN = [
-  ["jan","ene","janv"],
-  ["feb","fev","fevr"],
-  ["mrt","maa","mar","marz","mars","marc"],
-  ["apr","abr","avr"],
-  ["mei","may","mai","mayo"],
-  ["jun","juni","junio","june","juin"],
-  ["jul","juli","julio","july","juil"],
-  ["aug","ago","aout","augu"],
-  ["sep","set","sept"],
-  ["okt","oct"],
-  ["nov"],
-  ["dec","dic","dez"]
-];
-function schoon(t){
-  if(t === null || t === undefined) return "";
-  return String(t).toLowerCase()
-          .replace(/[*_`>#]/g, "")
-          .replace(/[àáâä]/g,"a").replace(/[èéêë]/g,"e")
-          .replace(/[ìíîï]/g,"i").replace(/[òóôö]/g,"o").replace(/[ùúûü]/g,"u")
-          .replace(/ñ/g,"n").replace(/ç/g,"c")
-          .replace(/\s+/g," ").trim();
-}
-function leesDatum(v){
-  if(!v) return "";
-  const t = schoon(v).replace(/\b(\d+)(e|ste|de)\b/g,"$1");
-  let m = t.match(/(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/);
-  if(m) return `${m[1]}-${String(+m[2]).padStart(2,"0")}-${String(+m[3]).padStart(2,"0")}`;
-  m = t.match(/(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{2,4})/);
-  if(m){ let j = +m[3]; if(j < 100) j += 2000;
-    return `${j}-${String(+m[2]).padStart(2,"0")}-${String(+m[1]).padStart(2,"0")}`; }
-  m = t.match(/(\d{1,2})\.?\s+(?:de\s+|of\s+)?([a-z]{3,})\.?,?\s*(?:de\s+)?(\d{4})?/);
-  if(m){
-    const i = MND_TALEN.findIndex(rij => rij.some(x => m[2].startsWith(x)));
-    if(i >= 0){ const j = m[3] ? +m[3] : new Date().getFullYear();
-      return `${j}-${String(i+1).padStart(2,"0")}-${String(+m[1]).padStart(2,"0")}`; }
-  }
-  return "";
-}
-function leesGetal(v){
-  const m = schoon(v).replace(",", ".").match(/\d+(\.\d+)?/);
-  return m ? Number(m[0]) : null;
-}
-function leesJaNee(v){
-  const t = schoon(v);
-  if(!t) return null;
-  if(/\b(ja|jawohl|yes|yep|si|sim|oui|graag|wel|nodig|please)\b/.test(t)) return true;
-  if(/\b(nee|neen|nein|no|non|none|geen|niet|nicht|nicht notig|sin)\b/.test(t)) return false;
-  return null;
-}
-/* Veldnamen in meerdere talen. De volgorde telt: het eerste woord dat past wint,
-   dus specifieke velden staan boven algemene. */
-const LABELS = [
-  ["tijd",   ["aankomsttijd","tijd van aankomst","hora","arrival time","time of arrival",
-              "ankunftszeit","uhrzeit","heure"]],
-  ["in",     ["aankomstdatum","datum aankomst","aankomst","llegada","arrival","arrive",
-              "check in","checkin","anreise","ankunft","arrivee"]],
-  ["uit",    ["vertrekdatum","datum vertrek","vertrek","salida","departure","depart",
-              "check out","checkout","abreise","abfahrt"]],
-  ["volw",   ["volwassen","adulto","adults","adult","erwachsene","adultes"]],
-  ["kind",   ["kind","nino","children","child","kids","kinder","enfants"]],
-  ["pers",   ["person","gast","gaste","guests","huesped","people"]],
-  ["dier",   ["huisdier","mascota","pets","pet","haustier","tiere","animaux","animal"]],
-  ["merk",   ["merk","marca","marke","marque","brand","make","model"]],
-  ["kent",   ["kenteken","matricula","plate","license","licence","registration",
-              "kennzeichen","nummernschild","immatriculation"]],
-  ["lengte", ["lengte","longitud","length","lange","laenge","longueur"]],
-  ["email",  ["mail","correo","courriel"]],
-  ["adres",  ["adres","adresse","address","direccion","domicilio","anschrift","wohnort"]],
-  ["stroom", ["stroom","strom","electric","electricidad","elektr","power","courant","hookup"]],
-  ["naam",   ["naam","titular","nombre","name","nom"]]
-];
-function labelSleutel(links){
-  for(const [sleutel, woorden] of LABELS)
-    if(woorden.some(w => links.includes(w))) return sleutel;
-  return null;
-}
-function leesFormulier(tekst){
-  const regels = tekst.split(/\r?\n/);
-  const gevonden = {};
-  const kaal = t => schoon(t).replace(/\(.*?\)/g," ")
-                             .replace(/[^a-z ]/g," ").replace(/\s+/g," ").trim();
-  const isLabel = r => r.indexOf(":") >= 0 && labelSleutel(kaal(r.split(":")[0])) !== null;
-  regels.forEach((regel, i) => {
-    if(regel.indexOf(":") < 0) return;
-    const links = kaal(regel.slice(0, regel.indexOf(":")));
-    let waarde = regel.slice(regel.indexOf(":") + 1).trim();
-    if(!waarde){
-      for(let j = i + 1; j < regels.length; j++){
-        const v = regels[j].trim();
-        if(!v) continue;
-        if(isLabel(v)) break;
-        waarde = v; break;
-      }
-    }
-    const sleutel = labelSleutel(links);
-    if(sleutel && gevonden[sleutel] === undefined) gevonden[sleutel] = waarde;
-  });
-  return gevonden;
-}
-function vulUitPlak(){
-  const bak = document.getElementById("fPlakUit");
-  const tekst = document.getElementById("fPlak").value;
-  if(!tekst.trim()){
-    bak.innerHTML = `<div class="waarschuw">Er staat nog niets in het plakvak.</div>`; return;
-  }
-  const g = leesFormulier(tekst);
-  const gelukt = [], mist = [];
-  const zet = (id, waarde, naam) => {
-    if(waarde === "" || waarde === null || waarde === undefined){ mist.push(naam); return; }
-    document.getElementById(id).value = waarde; gelukt.push(naam);
-  };
-  zet("fNaam", (g.naam||"").trim(), "naam");
-  const din = leesDatum(g.in||""), duit = leesDatum(g.uit||"");
-  zet("fIn", din, "aankomst");
-  zet("fUit", duit, "vertrek");
-  zet("fTijd", (g.tijd||"").trim(), "aankomsttijd");
-  zet("fMerk", (g.merk||"").trim(), "merk camper");
-  zet("fMail", (g.email||"").trim(), "e-mailadres");
-  zet("fAdres", (g.adres||"").trim(), "woonadres");
-  const kent = (g.kent||"").trim().toUpperCase();
-  zet("fKent", kent, "kenteken");
-  const lengte = g.lengte !== undefined ? leesGetal(g.lengte) : null;
-  zet("fLengte", lengte, "lengte camper");
-  let volw = g.volw !== undefined ? leesGetal(g.volw) : null;
-  let kind = g.kind !== undefined ? leesGetal(g.kind) : null;
-  let losPers = null;
-  if(g.pers !== undefined){
-    const t = schoon(g.pers);
-    const mv = t.match(/(\d+)\s*(volwassene?n?|volw|personen|pers|gasten)/);
-    const mk = t.match(/(\d+)\s*(kinderen|kind|kids)/);
-    if(mv && volw === null) volw = Number(mv[1]);
-    if(mk && kind === null) kind = Number(mk[1]);
-    if(!mv && !mk) losPers = leesGetal(t);
-  }
-  const totaal = (volw === null && kind === null) ? losPers : (volw||0) + (kind||0);
-  if(totaal === null || totaal === undefined || totaal < 1){ mist.push("aantal personen"); }
-  else {
-    document.getElementById("fPers").value = Math.max(1, totaal);
-    gelukt.push("personen" + (kind ? ` (${volw||0} volwassenen en ${kind} kinderen)` : ""));
-  }
-  const stroom = g.stroom !== undefined ? leesJaNee(g.stroom) : null;
-  if(stroom === null) mist.push("stroom");
-  else { document.getElementById("fStroom").checked = stroom; gelukt.push("stroom " + (stroom ? "aan" : "uit")); }
-  const dtekst = schoon(g.dier || "");
-  const dsel = document.getElementById("fDier"), dnum = document.getElementById("fDierAantal");
-  if(!g.dier || /^(geen|nee|neen|nvt|n v t|no|ninguna|ninguno|none|-|0)$/.test(dtekst)){ dsel.value = ""; dnum.value = 0; }
-  else {
-    dsel.value = /hond|perro|dog|hund/.test(dtekst) ? "Hond"
-      : (/kat|poes|gato|cat|katze/.test(dtekst) ? "Kat" : "Anders");
-    const aantal = leesGetal(dtekst);
-    dnum.value = aantal && aantal > 0 ? aantal : 1;
-    gelukt.push("huisdier");
-  }
-  const rest = [];
-  if(dsel.value === "Anders" && g.dier) rest.push("Huisdier: " + g.dier.trim());
-  if(g.lengte !== undefined && lengte === null && g.lengte.trim())
-    rest.push("Lengte camper, zoals de gast het schreef: " + g.lengte.trim());
-  const nu = document.getElementById("fNot");
-  if(rest.length) nu.value = (nu.value ? nu.value + "\n" : "") + rest.join("\n");
-
-  const opsom = l => l.length === 1 ? l[0]
-    : l.slice(0,-1).join(", ") + " en " + l[l.length-1];
-  let uit = "";
-  if(!gelukt.length)
-    uit += `<div class="waarschuw">Ik kon er niets uit halen. Klopt het dat je het hele formulier hebt geplakt?</div>`;
-  else if(!mist.length)
-    uit += `<div class="gelukt">Alles ingevuld. Controleer even de plek en de datums en sla op.</div>`;
-  else {
-    uit += `<div class="gelukt">Het meeste is ingevuld. Controleer even de plek en de datums.</div>`;
-    const z = opsom(mist);
-    uit += `<div class="waarschuw">${z.charAt(0).toUpperCase()+z.slice(1)} kon ik niet lezen. Vul ${mist.length===1?"dat":"die"} zelf even in.</div>`;
-  }
-  bak.innerHTML = uit;
-  lengteCheck();
-  rekenMee();
-}
 function lengteCheck(){
   const v = document.getElementById("fLengte").value;
   const bak = document.getElementById("fLengteLet");
@@ -18017,11 +17822,6 @@ function lengteCheck(){
     : "";
 }
 document.getElementById("fLengte").addEventListener("input", lengteCheck);
-document.getElementById("fPlakGo").onclick = vulUitPlak;
-document.getElementById("fPlakLeeg").onclick = () => {
-  document.getElementById("fPlak").value = "";
-  document.getElementById("fPlakUit").innerHTML = "";
-};
 
 /* ---------- overzicht voor de gast ---------- */
 const MND_TAAL = {
