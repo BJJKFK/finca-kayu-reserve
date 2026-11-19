@@ -8,15 +8,16 @@
 <link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- 19-11-2026 c: zelfde letters en kleuren als de app in de Google-stijl -->
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     /* 20-10-2026 b (Bart): rustige kleuren zoals de app. --pine is de inkt; KaYu-roest (--accent) alleen op Versturen en het uitlegkader.
        22-10-2026 b (Bart): Versturen en de knop na het versturen zoals alle knoppen in de app, geen volle roestknop meer. Het
-       logovakje wit. 22-10-2026 c (schets R2 "zoals Claude"): knoppen lichtgrijs #F0EEE6, rand 1px #8F8B80, letters #141413; inkt
+       logovakje wit. 22-10-2026 c (schets R2 "zoals Claude"): knoppen lichtgrijs #F0EEE6, rand 1px #8F8B80, letters #1F1F1F; inkt
        bijna zwart, accent (uitlegkader) de terra van het logo #9E543E. */
-    --pine:#141413; --accent:#9E543E; --moss:#4F7A5A; --bone:#FAF9F5; --card:#FFFFFF; --line:#E8E6DC; /* 22-10-2026 c: zoals de app */
-    --rood:#B4462F; --muted:#5F5B54; /* 10-10-2026 b: donkerder, beter leesbaar voor ouderen; 20-10-2026 b neutraal grijs, contrast 6,4 */ --invul:#FFFBE6; --tekst:#141413; --r:10px;
+    --pine:#1F1F1F; --accent:#9E543E; --moss:#137333; --bone:#FFF8F1; --card:#FFFFFF; --line:#EADFD5; /* 22-10-2026 c: zoals de app */
+    --rood:#B3261E; --muted:#5F5B54; /* 10-10-2026 b: donkerder, beter leesbaar voor ouderen; 20-10-2026 b neutraal grijs, contrast 6,4 */ --invul:#FFFBE6; --tekst:#1F1F1F; --r:10px;
     color-scheme: light;
   }
   *,*::before,*::after{box-sizing:border-box;}
@@ -25,7 +26,7 @@
   [hidden]{display:none !important;}
   body{
     background:var(--bone); color:var(--tekst);
-    font-family:Inter, system-ui, -apple-system, sans-serif;
+    font-family:'Google Sans', 'Work Sans', system-ui, -apple-system, sans-serif;
     font-size:16px; line-height:1.5; -webkit-text-size-adjust:100%;
     overflow-x:hidden;
   }
@@ -46,12 +47,12 @@
   .taal:focus-within{outline:2px solid var(--pine); outline-offset:1px;}
   header{display:flex; flex-direction:column; gap:10px;}
   h1{
-    font-family:'Bricolage Grotesque', Inter, system-ui, sans-serif; font-weight:700;
+    font-family:'Google Sans', 'Work Sans', system-ui, sans-serif; font-weight:700;
     font-size:clamp(26px,7vw,34px); line-height:1.12; letter-spacing:-0.02em;
     margin:0; color:var(--pine); text-wrap:balance;
   }
-  h2{font-family:'Bricolage Grotesque', Inter, system-ui, sans-serif; font-weight:700; font-size:18px; margin:0; color:var(--pine); letter-spacing:-0.01em;}
-  h3{font-family:'Bricolage Grotesque', Inter, system-ui, sans-serif; font-weight:700; font-size:16px; margin:0; color:var(--pine);}
+  h2{font-family:'Google Sans', 'Work Sans', system-ui, sans-serif; font-weight:700; font-size:18px; margin:0; color:var(--pine); letter-spacing:-0.01em;}
+  h3{font-family:'Google Sans', 'Work Sans', system-ui, sans-serif; font-weight:700; font-size:16px; margin:0; color:var(--pine);}
   p{margin:0;}
   .eyebrow{font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); font-weight:600;}
   .card{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:16px 14px; display:flex; flex-direction:column; gap:14px; min-width:0;}
@@ -95,9 +96,9 @@
   .gebrij input{text-align:center; font-size:18px; font-variant-numeric:tabular-nums; padding:11px 6px;}
   .persoon{border-left:4px solid var(--pine);}
   .persoon h2{display:flex; align-items:center; gap:9px;}
-  .persoon h2 .pklaar{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#4F7A5A;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px}
+  .persoon h2 .pklaar{margin-left:auto;width:26px;height:26px;border-radius:50%;background:#137333;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:15px}
   .persoon h2 .pklaar[hidden]{display:none}
-  .badge{display:inline-flex; align-items:center; justify-content:center; flex:none; width:26px; height:26px; border-radius:50%; background:var(--pine); color:#fff; font-size:13px; font-weight:700; font-family:Inter,sans-serif;}
+  .badge{display:inline-flex; align-items:center; justify-content:center; flex:none; width:26px; height:26px; border-radius:50%; background:var(--pine); color:#fff; font-size:13px; font-weight:700; font-family:'Google Sans','Work Sans',sans-serif;}
   .knop2{align-self:stretch; text-align:center; border:1px solid var(--pine); color:var(--pine); background:var(--bone); border-radius:8px; padding:11px 12px; font:inherit; font-size:15px; font-weight:600; cursor:pointer;}
   .knop2:focus-visible{outline:2px solid var(--pine); outline-offset:2px;}
   .sigwrap{display:flex; flex-direction:column; gap:8px;}
@@ -111,17 +112,17 @@
   .verdict.good{color:var(--tekst); border-color:var(--moss); border-left:4px solid var(--moss);}
   .verdict.bad{color:var(--rood); border-color:var(--rood); border-left:4px solid var(--rood);}
   .verdict b{font-weight:600;}
-  .verdict a{align-self:flex-start; color:#141413; background:#F0EEE6; text-decoration:none; border-radius:8px; padding:10px 14px; font-weight:600;}
+  .verdict a{align-self:flex-start; color:#1F1F1F; background:#F4EBE2; text-decoration:none; border-radius:999px; padding:10px 16px; font-weight:600;}
   /* na het versturen van de camperaanvraag (30-09-2026 a): grote groene WhatsApp-knop, daaronder rustig de link naar de eigen pagina */
   .verdict.klaarblok{font-size:17px; gap:14px;}
-  .verdict a:not(.appknop):not(.naargast):not(.huisregelknop){border:1px solid #8F8B80;}
+  .verdict a:not(.appknop):not(.naargast):not(.huisregelknop){border:1px solid transparent;}
   .verdict a.huisregelknop{align-self:stretch; text-align:center; background:var(--pine); color:#fff; font-size:17px; font-weight:600; padding:15px 14px; border-radius:var(--r); text-decoration:none;}
   .verdict a.appknop{align-self:stretch; text-align:center; background:#25D366; color:#073B1E; font-size:17px; padding:15px 14px; border-radius:var(--r);}
   /* 13-10-2026 a: na de check-in een duidelijke volgende stap (huisregels) met een grote knop */
   .verdict a.verderknop{align-self:stretch; text-align:center; font-size:17px; padding:15px 14px; border-radius:var(--r);}
   .verdict .stapkop{font-size:20px; font-weight:700; color:var(--moss);}
   .verdict a.naargast{align-self:center; background:none; color:var(--pine); text-decoration:underline; padding:4px;}
-  .submit{background:#F0EEE6; color:#141413; border:1px solid #8F8B80; border-radius:var(--r); padding:16px; min-height:54px; width:100%; font-family:'Bricolage Grotesque', Inter, system-ui, sans-serif; font-size:17px; font-weight:700; cursor:pointer;}
+  .submit{background:#9E543E; color:#FFFFFF; border:1px solid #9E543E; border-radius:999px; padding:16px; min-height:54px; width:100%; font-family:'Google Sans', 'Work Sans', system-ui, sans-serif; font-size:17px; font-weight:700; cursor:pointer;}
   .submit:disabled{opacity:.6; cursor:default;}
   .submit:focus-visible{outline:3px solid var(--accent); outline-offset:3px;}
   details.privacy{background:var(--card); border:1px solid var(--line); border-radius:var(--r); padding:0 14px;}
