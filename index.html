@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="19-11-2026 e"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="20-11-2026 a"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF8F1">
 <title>Finca KaYu</title>
@@ -1426,6 +1426,34 @@
   html.nieuw #gast .regel.tot.gbartot{position:sticky;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:5;box-shadow:0 -4px 12px rgba(30,29,27,.08)}
   #gast .dag.aankomst .kopieer{padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);font:inherit;font-size:14px;font-weight:600;color:var(--pine);cursor:pointer}
   #gast .dag.aankomst .kopieer.gekopieerd{border-color:var(--moss);color:var(--moss)}
+  /* 20-11-2026 a (Bart): huisregels campers op de tab Info: tegels bovenaan, blokken om open te tikken */
+  #gast .hrtegels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 10px}
+  #gast .hrtegel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 13px;min-width:0}
+  #gast .hrtegel .hrlab{display:block;font-size:13px;color:var(--muted);margin-bottom:2px}
+  #gast .hrtegel .hrwaarde{display:block;font-size:18px;font-weight:600;line-height:1.3;color:var(--pine);overflow-wrap:anywhere}
+  #gast .hrtegel .hrwaarde.lang{font-size:15px}
+  #gast .hrtegel.breed{grid-column:1 / -1}
+  #gast .hrtegel.breed .hrwaarde.lang{font-size:18px}
+  #gast .hrtegel .hrnet{display:block;font-size:14px;line-height:1.35;color:var(--pine);overflow-wrap:anywhere}
+  #gast button.hrtegel.hrkop{position:relative;display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch;width:100%;text-align:left;font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  #gast button.hrtegel.hrkop .hrlab{padding-right:22px}
+  #gast button.hrtegel.hrkop .hrwaarde{user-select:text;-webkit-user-select:text}
+  #gast .hrkopico{position:absolute;top:11px;right:11px;width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  #gast button.hrtegel.hrkop.gekopieerd{border-color:var(--moss)}
+  #gast button.hrtegel.hrkop.gekopieerd .hrkopico{display:none}
+  #gast button.hrtegel.hrkop.gekopieerd .hrlab::after{content:" ✓";color:var(--moss);font-weight:600}
+  #gast .hrroute .groute{width:100%}
+  #gast details.hrblok > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:28px;-webkit-tap-highlight-color:transparent}
+  #gast details.hrblok > summary::-webkit-details-marker{display:none}
+  #gast details.hrblok > summary h2, #gast details.hrblok > summary h3{margin:0;flex:1}
+  #gast .dag.regels details.sub.hrblok{margin:0;padding:8px 0;border-top:1px solid var(--line)}
+  #gast .dag.regels details.sub.hrblok[open]{padding-bottom:14px}
+  #gast .dag.regels details.sub.hrblok > summary{min-height:40px}
+  #gast .dag.regels details.sub.hrblok > summary h3{margin:0;line-height:1.3}
+  #gast .dag.regels .sub.hrroute{border-top:0;padding-top:0;margin:4px 0 12px}
+  #gast details.hrblok > summary::after{content:"+";content:"+" / "";font-size:24px;line-height:1;font-weight:400;color:var(--muted)}
+  #gast details.hrblok[open] > summary::after{content:"−";content:"−" / ""}
+  #gast details.hrblok[open] > summary{margin-bottom:8px}
   #gast .civergeten{margin:-4px 4px 12px;font-size:14px;color:var(--muted)}
   #gast .civergeten a{color:var(--pine);font-weight:600}
   /* 16-10-2026 a: link delen met kamergenoten en links van de andere kamers */
@@ -3343,7 +3371,7 @@ html.khs.kh-google.nieuw #gast .gkop .gtaal{background:#FFFFFF}
   <div class="acts" style="margin-top:9px"><button id="dClose">Sluiten</button></div>
 </div></dialog>
 
-<script src="teksten.js?v=17112026c"></script>
+<script src="teksten.js?v=20112026a"></script>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -5905,7 +5933,7 @@ document.addEventListener("click", async e => {
   if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
 });
 let gastToastTimer = null, gastVasteLijst = null;
-const VERSIE = "19-11-2026 e";
+const VERSIE = "20-11-2026 a";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -6409,7 +6437,7 @@ async function startGast(code){
   setInterval(async () => { if(document.visibilityState !== "visible") return; try { const d = await gastHaal(); if(ververs(d)){ gastData = d; tekenGastVers(); gastRadHaal(); } } catch(e){} }, 60000);
   document.addEventListener("visibilitychange", async () => { if(document.visibilityState !== "visible") return; try { const d = await gastHaal(); if(ververs(d)){ gastData = d; tekenGastVers(); gastRadHaal(); } } catch(e){} });
 }
-/* 01-10-2026 b: zin onder elke routeknop: Google Maps stopt eerst bij tuincentrum Agrozahar (tussenpunt), dan op Doorgaan tikken */
+/* zin onder elke routeknop (01-10-2026 b; sinds 20-11-2026 a: de route stopt bij het kruispunt met ons bordje, daarna de bordjes volgen) */
 const routeStopHtml = () => { const z = ((window.TEKSTEN && window.TEKSTEN.ROUTE_STOP) || {})[gastTaal] || ""; return z ? `<div class="info routestop" style="margin-top:6px;font-size:13px;line-height:1.4;color:var(--muted)">${z.replace(/</g, "&lt;")}</div>` : ""; };
 const gastWachtNodig = () => {
   if(kijkMee || !gastData || !gastData.van || !isCamperPlek(gastData.kamer) || gastData.van < CHECKIN_CAMPERS_VANAF) return false;
@@ -6594,7 +6622,10 @@ function gastRegelsHtml(){
   const r = GT_REGELS[gastTaal] || GT_REGELS.nl;
   const lijst = isCamperPlek(gastData.kamer) ? r.camper : r.kamer;
   const esc = x => String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;");
-  const volledig = gastInfoHtml().replace(/<div class="dag hl">/g, '<div class="sub hl">').replace(/<h2>/g, "<h3>").replace(/<\/h2>/g, "</h3>");
+  /* 20-11-2026 a (Bart): op de open gastenpagina van een camper de huisregels met tegels bovenaan en blokken om open te tikken;
+     vóór aankomst (wachtpagina) en op de losse huisregelspagina blijft alles open, daar moet de gast alles lezen */
+  const klap = isCamperPlek(gastData.kamer) && !regelsZicht && !gastWachtNodig();
+  const volledig = gastInfoHtml(klap).replace(/<div class="dag hl">/g, '<div class="sub hl">').replace(/class="dag hl (hrblok|hrroute)"/g, 'class="sub hl $1"').replace(/<h2>/g, "<h3>").replace(/<\/h2>/g, "</h3>");
   /* "In het kort" (de vijf regels in GT_REGELS) staat op verzoek van Bart (20-09-2026) uit; zet REGELS_KORT op true om hem terug te zetten */
   const REGELS_KORT = false;
   return gastQrKnopHtml() + letOp + `<div class="dag regels" id="gastRegels"><h2>${NIEUW ? gIcoon("huis") : "📖"} ${esc(r.kop)}</h2>` +
@@ -6729,7 +6760,10 @@ function vergetenHtml(){
   const t = CI_VERGETEN[gastTaal] || CI_VERGETEN.en;
   return `<p class="civergeten">${t[0]} <a href="${MAP}checkin.html?c=${encodeURIComponent(gastCode)}">${t[1]} ›</a></p>`;
 }
-function gastInfoHtml(){
+/* 20-11-2026 a (Bart, huisregels in één oogopslag): klap=true bij een camper op de open gastenpagina (de huisregels onderaan Start, en de
+   oude tab Info). Bovenaan dan tegels met poortcode, wifi, aankomst en vertrek, daaronder de routeknop, en alle blokken (eerst "In het
+   kort") om open te tikken. Zonder klap (de huisregels vóór aankomst en de losse huisregelspagina) blijft alles open en zoals het was. */
+function gastInfoHtml(klap){
   const tk = (window.TEKSTEN || {})[gastTaal] || (window.TEKSTEN || {}).nl; if(!tk) return "";
   const camper = isCamperPlek(gastData.kamer);
   /* 13-11-2026 e: op de losse huisregelspagina (vóór het versturen) geen link naar "jullie pagina": die bestaat dan nog niet */
@@ -6756,22 +6790,56 @@ function gastInfoHtml(){
   }
   /* campers (plan 29-09-2026): bovenaan de handleiding "In het kort" met inchecktijden, route, poort en wifi uit het welkomstbericht,
      zodat de gast die op zijn pagina vindt (het welkomstbericht hoeft niet meer los gestuurd te worden) */
+  const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"), escA = s => esc(s).replace(/"/g,"&quot;");
+  const klapCamper = !!klap && camper;
+  let boven = "";
   if(camper){
     const kop = "📌 " + ((GT[gastTaal] || GT.nl).kort || "In het kort");
     /* 25-10-2026 c (Bart): ook de drie kernregels over plek en kinderen, eten en drinken, en de bar */
     /* 01-11-2026 c (Bart: "de rest ontdek je zelf" was weg): ook de regel over je plek (🚐) */
-    const top = regels.slice(0, i >= 0 ? i : regels.length).filter(x => /^(⏰|📍|🚪|🚐|🌐|🏕️|🍽️|🍺)/.test(String(x)));
-    lijst = [kop, ...top, ...lijst];
+    const voor = regels.slice(0, i >= 0 ? i : regels.length).map(String);
+    const top = voor.filter(x => /^(⏰|📍|🚪|🚐|🌐|🏕️|🍽️|🍺)/.test(x));
+    if(!klapCamper) lijst = [kop, ...top, ...lijst];
+    else {
+      /* tegels: het label komt uit de regel zelf (*Poort:*, *Wifi:*, *Aankomst*), de code en de wifi uit dezelfde bron als vulGeheim.
+         Is een regel weggevallen (geen waarde), dan ook geen tegel. */
+      const bron = gastWachtNodig() ? {} : (gastData || {}), w = k => String(bron[k] || "").trim();
+      const label = x => ((x.match(/\*([^*]+)\*/) || [])[1] || "").replace(/\s*:\s*$/, "").trim();
+      const zoek = e => voor.find(x => x.startsWith(e));
+      /* review 20-11 a: de hele tegel is de kopieerknop (groot genoeg om te tikken), met een kopieer-icoontje; lange waarden iets kleiner */
+      const waarde = v => `<span class="hrwaarde${v.length > 12 ? " lang" : ""}">${esc(v)}</span>`;
+      const KOPICO = `<svg class="hrkopico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>`;
+      const tegel = (lab, inhoud, soort) => `<div class="hrtegel" data-hrtegel="${soort}"><span class="hrlab">${esc(lab)}</span>${inhoud}</div>`;
+      const kopTegel = (lab, v, soort, net, breed) => `<button type="button" class="hrtegel hrkop${breed ? " breed" : ""}" data-hrtegel="${soort}" data-hrkopieer="${escA(v)}"><span class="hrlab">${esc(lab)}</span>${KOPICO}` +
+        (net ? `<span class="hrnet">${esc(net)}</span>` : "") + waarde(v) + `</button>`;
+      const poort = zoek("🚪"), wifi = zoek("🌐"), tegels = [];
+      /* review 20-11 a: een lange wifinaam of een lang wachtwoord breekt anders midden in het woord; dan krijgen poort en wifi elk een hele rij */
+      const breed = wifi && Math.max(w("wifi_netwerk").length, w("wifi_wachtwoord").length) > 12;
+      if(poort && w("poortcode")) tegels.push(kopTegel(label(poort), w("poortcode"), "poort", "", breed));
+      if(wifi && w("wifi_wachtwoord")) tegels.push(kopTegel(label(wifi), w("wifi_wachtwoord"), "wifi", w("wifi_netwerk"), breed));
+      voor.filter(x => x.startsWith("⏰")).forEach((x, n) => tegels.push(tegel(label(x), waarde(x.replace(/^[^*]*\*[^*]+\*\s*/, "")), n ? "vertrek" : "aankomst")));
+      const route = zoek("📍"), url = route ? (route.match(/https?:\/\/[^\s]+/) || [""])[0] : "";
+      const stop = route ? route.split("\n").slice(1).join(" ").trim() : "";
+      boven = (tegels.length ? `<div class="hrtegels">${tegels.join("")}</div>` : "") +
+        (url ? `<div class="dag hl hrroute"><a class="groute" href="${escA(url)}" target="_blank" rel="noopener">${(GT[gastTaal] || GT.nl).route}</a>` +
+          (stop ? `<div class="info routestop" style="margin-top:8px;font-size:14px;line-height:1.45">${esc(stop)}</div>` : "") + `</div>` : "");
+      lijst = [kop, ...top.filter(x => !/^(⏰|📍|🌐)/.test(x)), ...lijst];
+    }
   }
-  const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
   const opmaak = s => esc(s).replace(/\*(.+?)\*/g, "<b>$1</b>").replace(/(https?:\/\/[^\s]+)/g, m => `<a href="${m}" target="_blank" rel="noopener">${m.replace(/^https?:\/\//, "").slice(0, 40)}${m.length > 48 ? "…" : ""}</a>`).replace(/\+34 722 162 962/g, m => `<a href="tel:+34722162962">${m}</a>`); /* poortregel (30-09-2026 a): nummer direct aan te tikken om te bellen */
-  let h = "", open = false, groet = false;
+  let h = boven, open = false, groet = false, nr = 0;
+  /* 20-11-2026 a: met klap wordt elk blok een <details> (dicht), anders een gewone kaart */
+  const blokOpen = kop => klapCamper ? `<details class="dag hl hrblok" data-k="${nr++}"><summary><h2>${kop}</h2></summary>` : `<div class="dag hl">` + (kop ? `<h2>${kop}</h2>` : "");
+  const blokDicht = () => klapCamper ? `</details>` : `</div>`;
+  /* een kop: alleen hoofdletters (ook Ě, Ż en dergelijke), minstens twee, eventueel met iets tussen haakjes erachter ("🌿 EXTRA'S (op aanvraag)").
+     20-11-2026 a: eerder vielen "EXTRA'S (op aanvraag)", cs "DĚTI", no "RO" en pl "WAŻNE" erbuiten en stonden ze als gewone regel in het blok ervoor */
+  const isKop = s => { const k = s.replace(/[\u{1F300}-\u{1FAFF}☀-➿☎️]/gu, "").replace(/\s*\([^()]*\)\s*$/, "").trim(); return s.length < 45 && !/\p{Ll}/u.test(k) && (k.match(/\p{Lu}/gu) || []).length >= 2; };
   lijst = lijst.flatMap(x => String(x).split("\n")); /* 01-10-2026 b: zin onder de routelink staat met een regeleinde in dezelfde regel */
   for(const s of lijst){
     if(s === STREEP || s === ""){ continue; }
-    if(String(s).startsWith("📌")){ if(open) h += `</div>`; h += `<div class="dag hl"><h2>${esc(s.replace(/\*/g, ""))}</h2>`; open = true; continue; }
-    if(/^[^a-z]*[A-ZÀ-Ü]{3,}[^a-z]*$/.test(s.replace(/[\u{1F300}-\u{1FAFF}☀-➿☎️]/gu, "").trim()) && s.length < 40){ if(open) h += `</div>`; h += `<div class="dag hl"><h2>${esc(s)}</h2>`; open = true; continue; }
-    if(!open){ h += `<div class="dag hl">`; open = true; }
+    if(String(s).startsWith("📌")){ if(open) h += open === "div" ? `</div>` : blokDicht(); h += blokOpen(esc(s.replace(/\*/g, ""))); open = true; continue; }
+    if(isKop(s)){ if(open) h += open === "div" ? `</div>` : blokDicht(); h += blokOpen(esc(s)); open = true; continue; }
+    if(!open){ h += klapCamper ? `<div class="dag hl">` : blokOpen(""); open = "div"; }
     /* routeregel: de link als grote knop, de tekst zonder de kale link */
     if(camper && String(s).startsWith("📍") && /https?:\/\//.test(s)){
       const url = (s.match(/https?:\/\/[^\s]+/) || [""])[0];
@@ -6781,7 +6849,7 @@ function gastInfoHtml(){
     if(/^[•\-] /.test(s)) h += `<div class="info" style="padding-left:14px;text-indent:-14px">${opmaak(s)}</div>`;
     else h += `<div class="info" style="margin:4px 0">${opmaak(s)}</div>`;
   }
-  if(open) h += `</div>`;
+  if(open) h += open === "div" ? `</div>` : blokDicht();
   return h;
 }
 /* 23-10-2026 a (Bart, "rust en leesbaar"): op de gastenpagina geen gekleurde emoji meer vooraan in koppen en regels, maar een
@@ -6843,6 +6911,7 @@ function tekenGast(){
   const t = GT[gastTaal], bak = document.getElementById("gastInhoud");
   /* 21-10-2026 b (review): een opengetikte week bij Omgeving blijft open als de pagina zichzelf ververst */
   const omgOpen = new Set([...bak.querySelectorAll("details.omguur[open]")].map(d => d.dataset.k)); /* 22-10-2026 a: op naam, de lijst wisselt nu per soort */
+  const hrOpen = new Set([...bak.querySelectorAll("details.hrblok[open]")].map(d => d.dataset.k)); /* 20-11-2026 a: opengetikte huisregels blijven open bij verversen */
   const kaartOud = bak.querySelector(".omgkaart iframe"); /* 26-10-2026 j: de geladen kaart niet opnieuw laden bij de verversing */
   const talen = `<div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span>` +
     `<div class="gtaal">${gIcoon("bol")}<select data-gtaal="1" aria-label="Taal">` +
@@ -7292,7 +7361,7 @@ function tekenGast(){
       `<textarea data-gtip="1" placeholder="${esc(t.tipsPlaceholder)}" style="margin-top:8px;width:100%;min-height:90px;font:inherit;font-size:14px;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--pine)"></textarea>` +
       `<div class="vink"><button data-gtipstuur="1" class="aan">${t.versturen}</button></div><div class="status ${gastStatus.tip === "fout" ? "fout" : ""}">${gastStatus.tip === "fout" ? t.fout : ""}</div>`) + `</div>`; };
   if(gastTab === "tips") h += tipsBlok();
-  if(gastTab === "info") h += `<div class="dag"><div class="info" style="color:var(--pine);font-size:14px">${t.infoUitleg}</div></div>` + gastInfoHtml();
+  if(gastTab === "info") h += `<div class="dag"><div class="info" style="color:var(--pine);font-size:14px">${t.infoUitleg}</div></div>` + gastInfoHtml(true);
   if(gastTab === "omgeving") h += gastOmgevingHtml(gastTaal, isCamperPlek(gastData.kamer));
   if(gastTab === "kamers") h += kamersPaginaHtml();
   if(gastTab === "contact"){
@@ -7313,6 +7382,7 @@ function tekenGast(){
   if(kaartOud){ const plek = bak.querySelector(".omgkaart .kaartplek"); if(plek){ plek.innerHTML = ""; plek.appendChild(kaartOud); } }
   gastIcoontjes(bak); /* 23-10-2026 a: emoji worden lijn-icoontjes of een puntje (alleen de weergave) */
   bak.querySelectorAll("details.omguur").forEach(d => { if(omgOpen.has(d.dataset.k)) d.open = true; });
+  bak.querySelectorAll("details.hrblok").forEach(d => { if(hrOpen.has(d.dataset.k)) d.open = true; });
   bind();
   function bind(){
     bak.querySelectorAll("[data-gtaal]").forEach(kn => kn.onchange = () => {
@@ -7324,6 +7394,9 @@ function tekenGast(){
     bak.querySelectorAll("[data-radopen]").forEach(kn => kn.onclick = () => radOpen()); /* 19-11-2026 d: het rad */
     bak.querySelectorAll("[data-raddrank]").forEach(kn => kn.onclick = () => { bak.querySelectorAll("[data-raddrank]").forEach(x => x.disabled = true); radDrankjeVanStart(kn.dataset.raddrank); });
     bak.querySelectorAll("[data-kopieer]").forEach(kn => kn.onclick = async () => { const ok = await kopieer(kn.dataset.kopieer); if(ok){ kn.classList.add("gekopieerd"); kn.textContent = "✓ " + kn.dataset.kopieer; } });
+    /* 20-11-2026 a: tegels poortcode en wifi; lukt kopiëren niet, dan staat de waarde geselecteerd zodat de gast hem zelf kan kopiëren */
+    bak.querySelectorAll("[data-hrkopieer]").forEach(kn => kn.onclick = async () => { const ok = await kopieer(kn.dataset.hrkopieer); kn.classList.toggle("gekopieerd", !!ok);
+      if(!ok){ try { const w = kn.querySelector(".hrwaarde"), r = document.createRange(), sel = getSelection(); r.selectNodeContents(w); sel.removeAllRanges(); sel.addRange(r); } catch(e){} } });
     bak.querySelectorAll("[data-gnieuwweg]").forEach(kn => kn.onclick = e => { e.stopPropagation(); gastNieuwsZet(kn.dataset.gnieuwweg); tekenGast(); });
     bak.querySelectorAll("[data-gnieuw]").forEach(kn => kn.addEventListener("click", () => gastNieuwsZet(kn.dataset.gnieuw)));
     bak.querySelectorAll("[data-gtab]").forEach(kn => kn.onclick = e => { e.stopPropagation(); if(gastTab !== kn.dataset.gtab) gastVasteLijst = null; if(kn.dataset.gtab === "omgeving"){ gastOmgSoort = null; gastOmgFilter = null; } gastTab = kn.dataset.gtab; gastTabGekozen = true; tekenGast(); window.scrollTo({ top:0 }); });
@@ -8003,7 +8076,7 @@ const kamerLabel = k =>
   (kEerder(k) ? `<span class="tag eerder">${kLater(k) ? "blijft langer" : "eerder weg"}</span>` : "");
 
 /* ---------- berichtteksten (uit de berichtenhulp, versie 10-09-2026) ---------- */
-const ROUTE = "https://www.google.com/maps/dir/?api=1&destination=36.6833,-4.7392&waypoints=Agrozahar+Soc.+Coop.+Andaluza,+Coín&travelmode=driving";
+const ROUTE = "https://www.google.com/maps/dir/?api=1&destination=36.680629,-4.728808&travelmode=driving";
 const DAGNAAM = ["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"];
 const totDag = d => { const n = dagenTot(d); return n <= 0 ? "Tot straks!" : n === 1 ? "Tot morgen!" : `Tot ${DAGNAAM[parse(d).getDay()]}!`; };
 const datumLang = d => `${parse(d).getDate()} ${MND[parse(d).getMonth()]}`;
