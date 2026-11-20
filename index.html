@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="20-11-2026 d"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="20-11-2026 e"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF8F1">
 <title>Finca KaYu</title>
@@ -1516,14 +1516,10 @@
   #gast .camrond .gi{width:28px;height:28px}
   #gast .camstatus{display:block;width:fit-content;max-width:100%;box-sizing:border-box;font-size:14px;color:#1F1F1F;background:#FFFFFF;border-radius:12px;padding:6px 12px;margin:-4px 0 10px}
   #gast .camstatus.fout{color:#B3261E}
-  #gast .camkaart .camkop{display:flex;gap:12px;align-items:center}
-  #gast .camkaart .camico{flex:0 0 auto;width:52px;height:52px;border-radius:50%;background:#F6E3C8;display:flex;align-items:center;justify-content:center;color:var(--pine)}
-  #gast .camkaart .camico .gi{width:26px;height:26px}
-  #gast .camkaart .camkop b{display:block;font-size:17px;font-weight:600;color:var(--tekst, #1F1F1F)}
-  #gast .camkaart .camkop .camtekst{display:block;font-size:14px;color:var(--muted);line-height:1.35}
-  #gast .camkaart .camknop{margin-top:12px;display:flex;gap:10px}
-  html #gast .camkaart .camknop button{justify-content:center}
-  html #gast .camkaart .camknop button.aan{flex:1} /* kleur zoals de andere knoppen op de gastenpagina (Bestellen) */
+  #gast .camrond .camwoord{font-size:10px;font-weight:600;line-height:1;margin-top:1px;color:#594323;white-space:nowrap}
+  #gast .camrond .camwoord.lang{font-size:8.5px;letter-spacing:-.1px}
+  #gast .camrond:not(.met){flex-direction:column}
+  .camdlg .camuitleg{margin:6px 0 4px;font-size:15px;line-height:1.4;color:#3C4043}
   .camdlg .camgroot{display:block;width:100%;max-height:58vh;object-fit:contain;border-radius:14px;margin:8px 0 4px;background:#F6E3C8}
   .camdlg .radknoppen button + button{margin-top:8px}
   .camdlg .radknoppen button.camweg{background:#FFFFFF;color:#B3261E;border:1px solid #EADFD5}
@@ -2324,6 +2320,29 @@ html.khs.nieuw .vink button.aan[data-ot]:not(#gast *), html.khs.nieuw #gast .vin
 /* 19-11-2026 c: een gekozen "Nee" blijft rood (zoals voor de Google-stijl) */
 html.khs.nieuw #gast .vink button.aan.nee{background:#B3261E!important;border-color:#B3261E!important;color:#FFFFFF!important}
 html.khs.kh-google.nieuw #gast .gkop .gtaal{background:#FFFFFF}
+/* 20-11-2026 e (Bart, schets G2 en H1: "het leidt te veel af"): op Start van de gast één witte balk (rondje, groet, taal NL) en in plaats van de
+   tekening een smalle strook met alleen de heuvels (geen huisje en zon); op Vandaag van de host de groet in één witte regel en dezelfde strook.
+   Andere gastpagina's (wachtpagina, huisregels) houden de tekening (:has kijkt of de nieuwe kopbalk er staat). */
+html.khs.kh-google.nieuw #gast .gkop.g1{position:static;background:none;padding:10px 0 30px;margin:0 0 8px;border:0}
+html.khs.kh-google.nieuw #gast:has(.gkop.g1)::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 130'%3E%3Crect width='390' height='130' fill='%23F2D7B6'/%3E%3Cpath d='M0 70 C80 56 170 62 230 68 C290 74 340 60 390 54 L390 130 L0 130Z' fill='%23A3AE78'/%3E%3Cpath d='M0 92 C90 80 190 86 260 90 C320 95 360 86 390 80 L390 130 L0 130Z' fill='%236E7C46'/%3E%3Crect y='118' width='390' height='12' fill='%235F6C3C'/%3E%3C/svg%3E") center top/100% auto no-repeat, #5F6C3C}
+#gast .g1balk{display:flex;align-items:center;gap:10px;background:#FFFFFF;border-radius:999px;padding:6px 8px 6px 6px;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+#gast .g1balk .camrond{width:50px;height:50px;border-width:2px;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+#gast .g1balk .camrond .gi{width:18px;height:18px}
+html #gast .gkop.g1 .g1balk p.wie.g1groet{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;line-height:1.2;margin:0;padding:0 0 0 4px;background:none;border-radius:0;width:auto;color:#1F1F1F}
+#gast .g1balk p.wie.g1groet b{font-size:16px;font-weight:600;overflow:hidden;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2}
+#gast .g1balk p.wie.g1groet span{font-size:13px;color:#5F6368;overflow-wrap:anywhere}
+html #gast .gkop.g1 .g1balk .gtaal.g1taal{position:relative;flex:0 0 auto;margin-left:auto;display:flex;align-items:center;gap:4px;background:#F1ECE6;border:0;border-radius:999px;padding:7px 9px;color:#1F1F1F;cursor:pointer}
+#gast .g1taal b{font-size:13px;font-weight:600}
+#gast .g1taal .gi{width:15px;height:15px;color:#1F1F1F}
+#gast .g1taal .g1pijl{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.4}
+html #gast .g1taal select{position:absolute;inset:-5px -4px;width:calc(100% + 8px);height:calc(100% + 10px);max-width:none;opacity:0;cursor:pointer;font-size:16px}
+#gast .g1taal:focus-within{outline:2px solid #9E543E;outline-offset:2px}
+html.khs.kh-google.nieuw #gast .gkop.g1 + .camstatus{margin:-22px 0 14px}
+html.khs.kh-google.nieuw #app .kop2{padding:6px 4px 34px;margin:0 0 6px}
+html.khs.kh-google.nieuw #app .kop2 .tekst{flex:0 0 auto;flex-direction:row-reverse;flex-wrap:wrap-reverse;justify-content:flex-end;align-items:baseline;gap:0 8px;background:#FFFFFF;border-radius:999px;padding:6px 14px;width:fit-content;max-width:calc(100% - 8px);box-sizing:border-box}
+html.khs.kh-google.nieuw #app .kop2 .tekst b{font-size:18px;font-weight:600;color:#1F1F1F;white-space:nowrap;line-height:22px}
+html.khs.kh-google.nieuw #app .kop2 .tekst span{font-size:14px;color:#3C4043;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:22px}
+html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 200'%3E%3Crect width='390' height='200' fill='%23F2D7B6'/%3E%3Cpath d='M0 140 C80 126 170 132 230 138 C290 144 340 130 390 124 L390 200 L0 200Z' fill='%23A3AE78'/%3E%3Cpath d='M0 162 C90 150 190 156 260 160 C320 165 360 156 390 150 L390 200 L0 200Z' fill='%236E7C46'/%3E%3Crect y='188' width='390' height='12' fill='%235F6C3C'/%3E%3C/svg%3E") center top/100% auto no-repeat, #5F6C3C}
 
 </style>
 </head>
@@ -4550,41 +4569,41 @@ const kindPrijsNl = () => "kind (€ " + prijsGetal(gastPrijs("ontbijt_kind"), "
    geen rij = campers aan, kamers uit. gast_foto geeft { mag, foto }; null = nog niet opgehaald of geen tabel (oude database): dan niets.
    Testsite en vaste testlinks (gast_foto_zet geeft fout "demo"): de foto blijft alleen in dit tabblad (sessionStorage), niets naar de database. */
 const CAMFOTO_TEKST = {
-  nl:{ kop:"Foto van jullie camper", kopKamer:"Een foto van jullie", uitleg:"Zo zien wij meteen bij welke camper jullie horen. Alleen wij zien hem, na vertrek gaat hij vanzelf weg.",
-    uitlegKamer:"Zo herkennen wij jullie meteen. Alleen wij zien hem, na vertrek gaat hij vanzelf weg.", maak:"Maak een foto", later:"Later", ander:"Andere foto",
+  nl:{ woord:"Foto", kop:"Foto van jullie camper", kopKamer:"Een foto van jullie", uitleg:"Zo zien wij meteen bij welke camper jullie horen. Alleen wij zien hem, na vertrek gaat hij vanzelf weg.",
+    uitlegKamer:"Zo herkennen wij jullie meteen. Alleen wij zien hem, na vertrek gaat hij vanzelf weg.", maak:"Maak een foto", ander:"Andere foto",
     weg:"Foto weghalen", sluit:"Sluiten", bezig:"Foto wordt bewaard…", fout:"Dat lukte niet. Probeer het nog eens.", foutFoto:"Deze foto kunnen we niet openen. Maak een nieuwe foto met de camera." },
-  en:{ kop:"Photo of your camper", kopKamer:"A photo of you", uitleg:"This way we can see straight away which camper is yours. Only we can see it, and it is removed automatically after you leave.",
-    uitlegKamer:"This way we recognise you straight away. Only we can see it, and it is removed automatically after you leave.", maak:"Take a photo", later:"Later", ander:"Another photo",
+  en:{ woord:"Photo", kop:"Photo of your camper", kopKamer:"A photo of you", uitleg:"This way we can see straight away which camper is yours. Only we can see it, and it is removed automatically after you leave.",
+    uitlegKamer:"This way we recognise you straight away. Only we can see it, and it is removed automatically after you leave.", maak:"Take a photo", ander:"Another photo",
     weg:"Remove photo", sluit:"Close", bezig:"Saving photo…", fout:"That didn't work. Please try again.", foutFoto:"We can't open this photo. Please take a new one with the camera." },
-  de:{ kop:"Foto von eurem Wohnmobil", kopKamer:"Ein Foto von euch", uitleg:"So sehen wir gleich, welches Wohnmobil zu euch gehört. Nur wir sehen das Foto, nach eurer Abreise wird es automatisch gelöscht.",
-    uitlegKamer:"So erkennen wir euch gleich. Nur wir sehen das Foto, nach eurer Abreise wird es automatisch gelöscht.", maak:"Foto machen", later:"Später", ander:"Anderes Foto",
+  de:{ woord:"Foto", kop:"Foto von eurem Wohnmobil", kopKamer:"Ein Foto von euch", uitleg:"So sehen wir gleich, welches Wohnmobil zu euch gehört. Nur wir sehen das Foto, nach eurer Abreise wird es automatisch gelöscht.",
+    uitlegKamer:"So erkennen wir euch gleich. Nur wir sehen das Foto, nach eurer Abreise wird es automatisch gelöscht.", maak:"Foto machen", ander:"Anderes Foto",
     weg:"Foto löschen", sluit:"Schließen", bezig:"Foto wird gespeichert…", fout:"Das hat nicht geklappt. Versucht es bitte noch einmal.", foutFoto:"Dieses Foto können wir nicht öffnen. Macht bitte ein neues Foto mit der Kamera." },
-  es:{ kop:"Foto de vuestra autocaravana", kopKamer:"Una foto vuestra", uitleg:"Así vemos enseguida cuál es vuestra autocaravana. Solo la vemos nosotros y se borra sola cuando os vayáis.",
-    uitlegKamer:"Así os reconocemos enseguida. Solo la vemos nosotros y se borra sola cuando os vayáis.", maak:"Hacer una foto", later:"Más tarde", ander:"Otra foto",
+  es:{ woord:"Foto", kop:"Foto de vuestra autocaravana", kopKamer:"Una foto vuestra", uitleg:"Así vemos enseguida cuál es vuestra autocaravana. Solo la vemos nosotros y se borra sola cuando os vayáis.",
+    uitlegKamer:"Así os reconocemos enseguida. Solo la vemos nosotros y se borra sola cuando os vayáis.", maak:"Hacer una foto", ander:"Otra foto",
     weg:"Quitar la foto", sluit:"Cerrar", bezig:"Guardando la foto…", fout:"No ha funcionado. Volved a intentarlo.", foutFoto:"No podemos abrir esta foto. Haced una nueva con la cámara." },
-  it:{ kop:"Foto del vostro camper", kopKamer:"Una vostra foto", uitleg:"Così vediamo subito qual è il vostro camper. La vediamo solo noi e dopo la partenza viene cancellata automaticamente.",
-    uitlegKamer:"Così vi riconosciamo subito. La vediamo solo noi e dopo la partenza viene cancellata automaticamente.", maak:"Scatta una foto", later:"Più tardi", ander:"Un'altra foto",
+  it:{ woord:"Foto", kop:"Foto del vostro camper", kopKamer:"Una vostra foto", uitleg:"Così vediamo subito qual è il vostro camper. La vediamo solo noi e dopo la partenza viene cancellata automaticamente.",
+    uitlegKamer:"Così vi riconosciamo subito. La vediamo solo noi e dopo la partenza viene cancellata automaticamente.", maak:"Scatta una foto", ander:"Un'altra foto",
     weg:"Elimina la foto", sluit:"Chiudi", bezig:"Salvataggio della foto…", fout:"Non ha funzionato. Riprovate.", foutFoto:"Non riusciamo ad aprire questa foto. Scattatene una nuova con la fotocamera." },
-  fr:{ kop:"Photo de votre camping-car", kopKamer:"Une photo de vous", uitleg:"Ainsi, nous voyons tout de suite quel camping-car est le vôtre. Nous seuls la voyons, et elle est supprimée automatiquement après votre départ.",
-    uitlegKamer:"Ainsi, nous vous reconnaissons tout de suite. Nous seuls la voyons, et elle est supprimée automatiquement après votre départ.", maak:"Prendre une photo", later:"Plus tard", ander:"Autre photo",
+  fr:{ woord:"Photo", kop:"Photo de votre camping-car", kopKamer:"Une photo de vous", uitleg:"Ainsi, nous voyons tout de suite quel camping-car est le vôtre. Nous seuls la voyons, et elle est supprimée automatiquement après votre départ.",
+    uitlegKamer:"Ainsi, nous vous reconnaissons tout de suite. Nous seuls la voyons, et elle est supprimée automatiquement après votre départ.", maak:"Prendre une photo", ander:"Autre photo",
     weg:"Supprimer la photo", sluit:"Fermer", bezig:"Enregistrement de la photo…", fout:"Cela n'a pas fonctionné. Veuillez réessayer.", foutFoto:"Nous ne pouvons pas ouvrir cette photo. Prenez-en une nouvelle avec l'appareil photo." },
-  pt:{ kop:"Foto da vossa autocaravana", kopKamer:"Uma foto vossa", uitleg:"Assim vemos logo qual é a vossa autocaravana. Só nós a vemos e é apagada automaticamente depois da vossa partida.",
-    uitlegKamer:"Assim reconhecemo-vos logo. Só nós a vemos e é apagada automaticamente depois da vossa partida.", maak:"Tirar uma foto", later:"Mais tarde", ander:"Outra foto",
+  pt:{ woord:"Foto", kop:"Foto da vossa autocaravana", kopKamer:"Uma foto vossa", uitleg:"Assim vemos logo qual é a vossa autocaravana. Só nós a vemos e é apagada automaticamente depois da vossa partida.",
+    uitlegKamer:"Assim reconhecemo-vos logo. Só nós a vemos e é apagada automaticamente depois da vossa partida.", maak:"Tirar uma foto", ander:"Outra foto",
     weg:"Apagar a foto", sluit:"Fechar", bezig:"A guardar a foto…", fout:"Não funcionou. Tentem outra vez.", foutFoto:"Não conseguimos abrir esta foto. Tirem uma nova com a câmara." },
-  cs:{ kop:"Fotka vašeho obytného vozu", kopKamer:"Vaše fotka", uitleg:"Hned tak uvidíme, který obytný vůz je váš. Vidíme ji jen my a po vašem odjezdu se sama smaže.",
-    uitlegKamer:"Hned vás tak poznáme. Vidíme ji jen my a po vašem odjezdu se sama smaže.", maak:"Vyfotit", later:"Později", ander:"Jiná fotka",
+  cs:{ woord:"Fotka", kop:"Fotka vašeho obytného vozu", kopKamer:"Vaše fotka", uitleg:"Hned tak uvidíme, který obytný vůz je váš. Vidíme ji jen my a po vašem odjezdu se sama smaže.",
+    uitlegKamer:"Hned vás tak poznáme. Vidíme ji jen my a po vašem odjezdu se sama smaže.", maak:"Vyfotit", ander:"Jiná fotka",
     weg:"Smazat fotku", sluit:"Zavřít", bezig:"Fotka se ukládá…", fout:"Nepovedlo se. Zkuste to prosím znovu.", foutFoto:"Tuto fotku nedokážeme otevřít. Vyfoťte prosím novou fotoaparátem." },
-  fi:{ kop:"Kuva matkailuautostanne", kopKamer:"Kuva teistä", uitleg:"Näin näemme heti, mikä matkailuauto on teidän. Vain me näemme sen, ja se poistuu itsestään lähtönne jälkeen.",
-    uitlegKamer:"Näin tunnistamme teidät heti. Vain me näemme sen, ja se poistuu itsestään lähtönne jälkeen.", maak:"Ota kuva", later:"Myöhemmin", ander:"Toinen kuva",
+  fi:{ woord:"Kuva", kop:"Kuva matkailuautostanne", kopKamer:"Kuva teistä", uitleg:"Näin näemme heti, mikä matkailuauto on teidän. Vain me näemme sen, ja se poistuu itsestään lähtönne jälkeen.",
+    uitlegKamer:"Näin tunnistamme teidät heti. Vain me näemme sen, ja se poistuu itsestään lähtönne jälkeen.", maak:"Ota kuva", ander:"Toinen kuva",
     weg:"Poista kuva", sluit:"Sulje", bezig:"Kuvaa tallennetaan…", fout:"Se ei onnistunut. Yrittäkää uudelleen.", foutFoto:"Emme saa tätä kuvaa auki. Ottakaa uusi kuva kameralla." },
-  no:{ kop:"Bilde av bobilen deres", kopKamer:"Et bilde av dere", uitleg:"Slik ser vi med en gang hvilken bobil som er deres. Bare vi ser det, og det slettes automatisk etter at dere har reist.",
-    uitlegKamer:"Slik kjenner vi dere igjen med en gang. Bare vi ser det, og det slettes automatisk etter at dere har reist.", maak:"Ta et bilde", later:"Senere", ander:"Et annet bilde",
+  no:{ woord:"Bilde", kop:"Bilde av bobilen deres", kopKamer:"Et bilde av dere", uitleg:"Slik ser vi med en gang hvilken bobil som er deres. Bare vi ser det, og det slettes automatisk etter at dere har reist.",
+    uitlegKamer:"Slik kjenner vi dere igjen med en gang. Bare vi ser det, og det slettes automatisk etter at dere har reist.", maak:"Ta et bilde", ander:"Et annet bilde",
     weg:"Fjern bildet", sluit:"Lukk", bezig:"Bildet lagres…", fout:"Det gikk ikke. Prøv igjen.", foutFoto:"Vi får ikke åpnet dette bildet. Ta et nytt bilde med kameraet." },
-  sv:{ kop:"Foto på er husbil", kopKamer:"Ett foto på er", uitleg:"Så ser vi direkt vilken husbil som är er. Bara vi ser det, och det raderas automatiskt när ni har rest.",
-    uitlegKamer:"Så känner vi igen er direkt. Bara vi ser det, och det raderas automatiskt när ni har rest.", maak:"Ta ett foto", later:"Senare", ander:"Ett annat foto",
+  sv:{ woord:"Foto", kop:"Foto på er husbil", kopKamer:"Ett foto på er", uitleg:"Så ser vi direkt vilken husbil som är er. Bara vi ser det, och det raderas automatiskt när ni har rest.",
+    uitlegKamer:"Så känner vi igen er direkt. Bara vi ser det, och det raderas automatiskt när ni har rest.", maak:"Ta ett foto", ander:"Ett annat foto",
     weg:"Ta bort fotot", sluit:"Stäng", bezig:"Fotot sparas…", fout:"Det gick inte. Försök igen.", foutFoto:"Vi kan inte öppna det här fotot. Ta ett nytt foto med kameran." },
-  pl:{ kop:"Zdjęcie waszego kampera", kopKamer:"Wasze zdjęcie", uitleg:"Dzięki temu od razu widzimy, który kamper jest wasz. Widzimy je tylko my, a po waszym wyjeździe samo się usunie.",
-    uitlegKamer:"Dzięki temu od razu was rozpoznamy. Widzimy je tylko my, a po waszym wyjeździe samo się usunie.", maak:"Zrób zdjęcie", later:"Później", ander:"Inne zdjęcie",
+  pl:{ woord:"Zdjęcie", kop:"Zdjęcie waszego kampera", kopKamer:"Wasze zdjęcie", uitleg:"Dzięki temu od razu widzimy, który kamper jest wasz. Widzimy je tylko my, a po waszym wyjeździe samo się usunie.",
+    uitlegKamer:"Dzięki temu od razu was rozpoznamy. Widzimy je tylko my, a po waszym wyjeździe samo się usunie.", maak:"Zrób zdjęcie", ander:"Inne zdjęcie",
     weg:"Usuń zdjęcie", sluit:"Zamknij", bezig:"Zapisywanie zdjęcia…", fout:"Nie udało się. Spróbujcie jeszcze raz.", foutFoto:"Nie możemy otworzyć tego zdjęcia. Zróbcie nowe aparatem." }
 };
 const camT = () => CAMFOTO_TEKST[gastTaal] || CAMFOTO_TEKST.en;
@@ -4606,20 +4625,23 @@ async function camFotoHaal(){
   } catch(e){}
 }
 const camFotoToon = () => !!(camFoto && camFoto.mag && gastData && !gastData.fout && !gastVertrokken());
-const camFotoLater = () => { try { return localStorage.getItem("kayu_camfoto_later_" + gastCode) === "1"; } catch(e){ return false; } };
-function camFotoKaartHtml(){
-  if(!camFotoToon() || camFoto.foto || camFotoLater()) return "";
-  const ct = camT(), camper = isCamperPlek(gastData.kamer), bezig = camFotoStatus === "bezig";
-  return `<div class="dag camkaart"><div class="camkop"><span class="camico">${gIcoon("camera")}</span><div><b>${camper ? ct.kop : ct.kopKamer}</b>` +
-    `<span class="camtekst">${camper ? ct.uitleg : ct.uitlegKamer}</span></div></div>` +
-    `<div class="vink camknop"><button type="button" class="aan" data-camfoto="1"${bezig ? " disabled" : ""}>${ct.maak}</button><button type="button" data-camlater="1">${ct.later}</button></div></div>`;
+/* 20-11-2026 e (Bart: het blok "Foto van jullie camper" stopte de rest weg): geen kaart meer, alleen het rondje met een plusje en het woord
+   Foto (in de taal van de gast); een tik opent het venster met de uitleg en Maak een foto */
+const camKop = () => isCamperPlek(gastData.kamer) ? camT().kop : camT().kopKamer;
+function camRondHtml(){
+  if(!camFotoToon()) return "";
+  return `<button type="button" class="camrond${camFoto.foto ? " met" : ""}" data-camfoto="1" aria-label="${vrij(camKop())}">` +
+    (camFoto.foto ? `<img src="${camFoto.foto}" alt="">` : gIcoon("plus") + `<span class="camwoord${camT().woord.length > 5 ? " lang" : ""}">${camT().woord}</span>`) + `</button>`;
 }
+function camStatusHtml(){
+  if(!camFotoToon()) return "";
+  const ct = camT();
+  return camFotoStatus === "bezig" ? `<div class="camstatus" aria-live="polite">${ct.bezig}</div>` : camFotoStatus === "fout" || camFotoStatus === "foutFoto" ? `<div class="camstatus fout" role="alert">${ct[camFotoStatus]}</div>` : "";
+}
+/* de oude opmaak (?oud=1): rondje naast de groet, zoals in versie d */
 function camWieHtml(wieHtml){
   if(!camFotoToon()) return wieHtml;
-  const ct = camT(), kop = isCamperPlek(gastData.kamer) ? ct.kop : ct.kopKamer;
-  const st = camFotoStatus === "bezig" ? `<div class="camstatus" aria-live="polite">${ct.bezig}</div>` : camFotoStatus === "fout" || camFotoStatus === "foutFoto" ? `<div class="camstatus fout" role="alert">${ct[camFotoStatus]}</div>` : "";
-  return `<div class="camwie"><button type="button" class="camrond${camFoto.foto ? " met" : ""}" data-camfoto="1" aria-label="${vrij(kop)}">` +
-    (camFoto.foto ? `<img src="${camFoto.foto}" alt="">` : gIcoon("plus")) + `</button>${wieHtml}</div>` + st;
+  return `<div class="camwie">${camRondHtml()}${wieHtml}</div>` + camStatusHtml();
 }
 /* verkleinen tot hooguit 480 pixels (langste kant), als JPEG; past hij niet in 200.000 tekens, dan kleiner of grover */
 async function camFotoVerklein(f){
@@ -4667,12 +4689,16 @@ function camFotoOpen(){
   const ct = camT();
   let d = document.getElementById("camFotoDlg");
   if(!d){ d = document.createElement("dialog"); d.id = "camFotoDlg"; d.className = "raddlg camdlg"; document.body.appendChild(d); }
-  d.innerHTML = `<div class="radin"><h2>${isCamperPlek(gastData.kamer) ? ct.kop : ct.kopKamer}</h2><img class="camgroot" src="${camFoto.foto}" alt="">` +
-    `<div class="raduit" aria-live="polite"></div><div class="radknoppen"><button type="button" data-camander="1">${ct.ander}</button>` +
-    `<button type="button" class="camweg" data-camweg="1">${ct.weg}</button><button type="button" class="radlater" data-camsluit="1">${ct.sluit}</button></div></div>`;
+  const camper = isCamperPlek(gastData.kamer), uitleg = `<p class="camuitleg">${camper ? ct.uitleg : ct.uitlegKamer}</p>`;
+  d.innerHTML = camFoto.foto
+    ? `<div class="radin"><h2>${camKop()}</h2><img class="camgroot" src="${camFoto.foto}" alt="">${uitleg}` +
+      `<div class="raduit" aria-live="polite"></div><div class="radknoppen"><button type="button" data-camander="1">${ct.ander}</button>` +
+      `<button type="button" class="camweg" data-camweg="1">${ct.weg}</button><button type="button" class="radlater" data-camsluit="1">${ct.sluit}</button></div></div>`
+    : `<div class="radin"><h2>${camKop()}</h2>${uitleg}` +
+      `<div class="radknoppen"><button type="button" data-cammaak="1">${ct.maak}</button><button type="button" class="radlater" data-camsluit="1">${ct.sluit}</button></div></div>`;
   d.querySelector("[data-camsluit]").onclick = () => d.close();
-  d.querySelector("[data-camander]").onclick = () => { d.close(); camFotoKiezer(); };
-  d.querySelector("[data-camweg]").onclick = async () => {
+  const maak = d.querySelector("[data-camander], [data-cammaak]"); if(maak) maak.onclick = () => { d.close(); camFotoKiezer(); };
+  const wegKnop = d.querySelector("[data-camweg]"); if(wegKnop) wegKnop.onclick = async () => {
     d.querySelectorAll("button").forEach(x => x.disabled = true);
     const gelukt = await camFotoBewaar("");
     if(gelukt){ camFoto.foto = null; if(!camFotoLokaal) try { sessionStorage.removeItem(camFotoSleutel()); } catch(e){} camFotoStatus = ""; d.close(); tekenGastVers(); }
@@ -4680,7 +4706,7 @@ function camFotoOpen(){
   };
   if(!d.open) d.showModal();
 }
-function camFotoTik(){ if(!camFotoToon() || camFotoStatus === "bezig") return; if(camFoto.foto) camFotoOpen(); else camFotoKiezer(); }
+function camFotoTik(){ if(!camFotoToon() || camFotoStatus === "bezig") return; camFotoOpen(); }
 let gastRad = null; /* uitkomst van gast_rad; null = nog niet opgehaald of niet beschikbaar (oude database) */
 async function gastRadHaal(){
   if(!gastCode || !gastData || gastData.fout) return;
@@ -6144,7 +6170,7 @@ document.addEventListener("click", async e => {
   if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
 });
 let gastToastTimer = null, gastVasteLijst = null;
-const VERSIE = "20-11-2026 d";
+const VERSIE = "20-11-2026 e";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -7144,9 +7170,17 @@ function tekenGast(){
   /* bericht aan alle gasten (noodgeval of iets wat iedereen meteen moet weten): rode balk bovenaan, op elk tabblad */
   /* 23-10-2026 f (Bart): de tekst in de taal van de gast (vertaald door de app van Bart, in mededeling_vertaald); ontbreekt die taal, dan Engels */
   const noodHtml = gastData.mededeling ? `<div class="noodbalk" role="alert"><b>${t.mededelingKop}</b>${vrij(mdTekstVoor(gastTaal, gastData.mededeling, mdVertaaldVoor(gastData.mededeling, gastData.mededeling_vertaald))).replace(/\n/g, "<br>")}${gastData.mededeling_sinds ? `<small>${vrij(gastData.mededeling_sinds)}</small>` : ""}</div>` : "";
-  let h = noodHtml + gastNieuwsHtml(t) + `<div class="gkop">` + talen +
-    (NIEUW ? `</div>` : `<div class="gnav">` + gastTabs().map(x => `<button data-gtab="${x}" class="${x===gastTab?"aan":""}">${t.tabs[x]}</button>`).join("") + `</div></div>`) +
-    camWieHtml(`<p class="wie">${t.hoi}${naam ? " " + naam : ""}${plek ? " · " + plek : ""} · ${gastDatumKort(gastData.van)} ${t.tot} ${gastDatumKort(gastData.tot)}</p>`); /* 20-11-2026 d: rondje met de foto */
+  /* 20-11-2026 e (Bart, schets G2): in de nieuwe opmaak alles in één witte balk: het rondje (foto), de groet met de datums en de taal als klein
+     knopje (NL); het logo staat er niet meer in (het is al duidelijk waar je bent). Het echte keuzelijstje ligt onzichtbaar over het knopje. */
+  const datums = `${gastDatumKort(gastData.van)} ${t.tot} ${gastDatumKort(gastData.tot)}`;
+  const taalKnop = `<label class="gtaal g1taal">${gIcoon("bol")}<b>${vrij(String(gastTaal || "nl").toUpperCase())}</b>` +
+    `<svg class="g1pijl" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg><select data-gtaal="1" aria-label="Taal">` +
+    Object.keys(GT).map(l => `<option value="${l}"${l === gastTaal ? " selected" : ""}>${taalOptie(l)}</option>`).join("") + `</select></label>`;
+  let h = noodHtml + gastNieuwsHtml(t) + (NIEUW
+    ? `<div class="gkop g1"><div class="g1balk">${camRondHtml()}<p class="wie g1groet"><b>${t.hoi}${naam ? " " + naam : ""}</b>` +
+      `<span>${plek ? plek.charAt(0).toUpperCase() + plek.slice(1) + " · " : ""}${datums.replace(/ /g, "\u00a0")}</span></p>${taalKnop}</div></div>` + camStatusHtml()
+    : `<div class="gkop">` + talen + `<div class="gnav">` + gastTabs().map(x => `<button data-gtab="${x}" class="${x===gastTab?"aan":""}">${t.tabs[x]}</button>`).join("") + `</div></div>` +
+      camWieHtml(`<p class="wie">${t.hoi}${naam ? " " + naam : ""}${plek ? " · " + plek : ""} · ${datums}</p>`)); /* 20-11-2026 d: rondje met de foto */
   const statusRegel = o => !camper || !o.status ? "" : `<div class="melding ${o.status === "ok" ? "goed" : ""}" style="margin-top:8px">${o.status === "ok" ? t.beschikbaar : o.status === "nee" ? t.nietBeschikbaar : t.aangevraagd}</div>`;
   const a = gastData.aankondiging;
   const aankHtml = () => {
@@ -7259,7 +7293,7 @@ function tekenGast(){
         welkomH = `<div class="dag"><h2>${t.welkom}</h2>` + morgenH + extrasH +
           `<div class="regel" data-gtab="rekening" style="cursor:pointer"><span>${t.startRek}</span><b>${eur(rek.totaal)}</b></div>` +
           `<div class="info" style="margin-top:10px">${t.barUitleg}</div><div class="vink"><button data-gtab="bar" class="aan">${t.tabs.bar} ›</button></div></div>`;
-        h += samenHtml() + camFotoKaartHtml() + thuisH + programmaH + herH + welkomH + verlengHtml() + datumKnopHtml() + deelHtml() + aankHtml();
+        h += samenHtml() + thuisH + programmaH + herH + welkomH + verlengHtml() + datumKnopHtml() + deelHtml() + aankHtml();
       } else {
         /* Start als vier tegels (op verzoek van Bart, 23-09-2026): ontbijt of broodjes, rekening met de honesty bar,
            extra's en omgeving; daaronder aankondiging, installatietip en als laatste de huisregels.
@@ -7297,7 +7331,7 @@ function tekenGast(){
         const kamTegel = gastKamersToon() ? tegel("kamers", "bed", kt.tab, `<div class="gtinfo">${kt.tegel}</div>`,
           `<button data-gtab="kamers">${BEZORG_KNOP[gastTaal] || BEZORG_KNOP.en}</button>`) : "";
         /* 16-10-2026 a: bovenaan de links voor de andere kamers (alleen de hoofdboeker), onder de tegels de knop om de eigen link te delen */
-        h += samenHtml() + radBovenHtml() + programmaH + aankomstKaart() + vergetenHtml() + camFotoKaartHtml() /* 20-11-2026 d */ + `<div class="gtegels">` + ontTegel + rekTegel + extTegel + omgTegel + kamTegel + `</div>` + verlengHtml() + datumKnopHtml() + deelHtml() + aankHtml() + fotoKaartHtml() + thuisH + gastRegelsHtml();
+        h += samenHtml() + radBovenHtml() + programmaH + aankomstKaart() + vergetenHtml() + `<div class="gtegels">` + ontTegel + rekTegel + extTegel + omgTegel + kamTegel + `</div>` + verlengHtml() + datumKnopHtml() + deelHtml() + aankHtml() + fotoKaartHtml() + thuisH + gastRegelsHtml();
       }
     }
   }
@@ -7611,9 +7645,8 @@ function tekenGast(){
     });
     bak.querySelectorAll("[data-gobopen]").forEach(kn => kn.onclick = () => { gastObOpen.add(kn.dataset.gobopen); tekenGast(); });
     bak.querySelectorAll("[data-radopen]").forEach(kn => kn.onclick = () => radOpen()); /* 19-11-2026 d: het rad */
-    /* 20-11-2026 d: foto van de camper (rondje of de kaart; Later verbergt de kaart op dit toestel, het rondje blijft) */
+    /* 20-11-2026 d en e: foto van de camper (het rondje opent het venster) */
     bak.querySelectorAll("[data-camfoto]").forEach(kn => kn.onclick = e => { e.stopPropagation(); camFotoTik(); });
-    bak.querySelectorAll("[data-camlater]").forEach(kn => kn.onclick = e => { e.stopPropagation(); try { localStorage.setItem("kayu_camfoto_later_" + gastCode, "1"); } catch(x){} tekenGastVers(); });
     bak.querySelectorAll("[data-raddrank]").forEach(kn => kn.onclick = () => { bak.querySelectorAll("[data-raddrank]").forEach(x => x.disabled = true); radDrankjeVanStart(kn.dataset.raddrank); });
     bak.querySelectorAll("[data-kopieer]").forEach(kn => kn.onclick = async () => { const ok = await kopieer(kn.dataset.kopieer); if(ok){ kn.classList.add("gekopieerd"); kn.textContent = "✓ " + kn.dataset.kopieer; } });
     /* 20-11-2026 a: tegels poortcode en wifi; lukt kopiëren niet, dan staat de waarde geselecteerd zodat de gast hem zelf kan kopiëren */
@@ -11973,11 +12006,11 @@ function tekenMeer(){
   meerZet("meerKamersCampers", kamersCampersAan() ? "Uitzetten" : "Aanzetten");
   /* 20-11-2026 d: foto van de camper */
   { const cf = camFotoInst();
-    meerZet("mpCamFoto", cf.campers ? "Staat aan: campers krijgen op hun startpagina de vraag om een foto van hun camper. Die zie je in de agenda en in het profiel. Na vertrek gaat hij vanzelf weg."
-      : "Staat uit: campers krijgen geen vraag om een foto.");
+    meerZet("mpCamFoto", cf.campers ? "Staat aan: campers zien op hun startpagina een rondje om een foto van hun camper toe te voegen. Die zie je in de agenda en in het profiel. Na vertrek gaat hij vanzelf weg."
+      : "Staat uit: campers zien geen rondje voor een foto.");
     meerZet("meerCamFoto", cf.campers ? "Uitzetten" : "Aanzetten");
-    meerZet("mpCamFotoKamers", cf.kamers ? "Staat aan: kamergasten, groepen en het gastenverblijf krijgen de vraag om een foto (van zichzelf)."
-      : "Staat uit: kamergasten, groepen en het gastenverblijf krijgen geen vraag om een foto.");
+    meerZet("mpCamFotoKamers", cf.kamers ? "Staat aan: kamergasten, groepen en het gastenverblijf zien een rondje om een foto (van zichzelf) toe te voegen."
+      : "Staat uit: kamergasten, groepen en het gastenverblijf zien geen rondje voor een foto.");
     meerZet("meerCamFotoKamers", cf.kamers ? "Uitzetten" : "Aanzetten"); }
   /* 19-11-2026 d: het rad */
   meerZet("mpRad", radRijen === null ? "Het rad staat nog niet in de database." : radAan() ? "Staat aan: wie ons tagt met een mooie foto, kan van jou een draai krijgen. Dat zet je in het profiel van de gast, bij Aan het rad draaien; daar kies je ook de prijs."
@@ -12770,9 +12803,9 @@ const camFotoInst = () => { let j = null; try { j = JSON.parse(instellingen.gast
 async function camFotoWissel(soort){
   const i = camFotoInst(), nieuw = !i[soort];
   const vraag = soort === "campers"
-    ? (nieuw ? "Aanzetten? Campers krijgen dan op hun startpagina de vraag om een foto van hun camper. Die zie je in de agenda en in het profiel; na vertrek gaat hij vanzelf weg."
+    ? (nieuw ? "Aanzetten? Campers zien dan op hun startpagina een rondje om een foto van hun camper toe te voegen. Die zie je in de agenda en in het profiel; na vertrek gaat hij vanzelf weg."
       : "Uitzetten? Dan vragen we campers niet meer om een foto, en zien ze hun eigen foto niet meer. Foto's die er al zijn, zie jij nog tot ze na vertrek vanzelf weggaan.")
-    : (nieuw ? "Aanzetten? Kamergasten, groepen en het gastenverblijf krijgen dan de vraag om een foto (van zichzelf). Die zie je in de agenda en in het profiel; na vertrek gaat hij vanzelf weg."
+    : (nieuw ? "Aanzetten? Kamergasten, groepen en het gastenverblijf zien dan een rondje om een foto (van zichzelf) toe te voegen. Die zie je in de agenda en in het profiel; na vertrek gaat hij vanzelf weg."
       : "Uitzetten? Dan vragen we kamergasten, groepen en het gastenverblijf niet meer om een foto.");
   if(!confirm(vraag)) return;
   await bewaarInstelling("gast_foto", JSON.stringify({ campers: soort === "campers" ? nieuw : i.campers, kamers: soort === "kamers" ? nieuw : i.kamers }));
