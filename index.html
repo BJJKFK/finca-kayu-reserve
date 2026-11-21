@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="20-11-2026 e"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="21-11-2026 a"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF8F1">
 <title>Finca KaYu</title>
@@ -2641,6 +2641,8 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
       <button class="meerrij" data-meer="poortwifi"><span><b>Poortcode en wifi</b><small id="mpPoort"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 25-10-2026 d (Bart): huisregels en handleiding zelf wijzigen, in het Nederlands; de app vertaalt -->
       <button class="meerrij" data-meer="gastteksten"><span><b>Huisregels en handleiding</b><small id="mpGastTeksten"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <!-- 20-11-2026 f (Bart): de vaste zinnen van het overzicht (bonnetje) en het bedankbericht zelf wijzigen, in het Nederlands; de app vertaalt -->
+      <button class="meerrij" data-meer="berichtteksten"><span><b>Overzicht en bedankbericht</b><small id="mpBerichtTeksten"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
     <!-- 19-11-2026 b (Bart): campers zien een tegel Kamers (standaard aan); alle gasten de kaart "Mooie foto gemaakt?" (leeg = uit) -->
     <div class="meerkaart">
@@ -3007,7 +3009,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
 </div></dialog>
 <!-- 19-11-2026 e (Bart): Teksten van het rad wijzigen. Nederlands is de bron, de app vertaalt; per taal verbeteren kan ook -->
 <dialog id="radTekstDlg"><div class="dlg">
-  <h3>Teksten van het rad</h3>
+  <h3 id="rtTitel">Teksten van het rad</h3>
   <p class="leeg" id="rtUitleg" style="margin:0 0 10px"></p>
   <label for="rtTaal">Taal</label>
   <select id="rtTaal"></select>
@@ -3226,6 +3228,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
   <p id="stWie" class="leeg" style="margin:0 0 6px;font-size:13px"></p>
   <div id="stTalen" hidden></div>
   <textarea id="stTekst" readonly></textarea>
+  <p id="stNog" class="melding" style="margin:8px 0 12px" hidden></p>
   <div class="stkeuze">
     <a id="stWa" class="stknop stwa" target="_blank" rel="noopener" href="#">WhatsApp</a>
     <a id="stMail" class="stknop" href="#">Mail</a>
@@ -3437,7 +3440,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
   </div>
 </div></dialog>
 
-<script src="teksten.js?v=20112026b"></script>
+<script src="teksten.js?v=21112026a"></script>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -4385,6 +4388,21 @@ function kamersPaginaHtml(){
    gast_rad_drankje (script database/19-11-2026-d-rad.sql). Zonder die functies (oude database) of met het rad uit (instelling rad) toont de
    app de kaart "Mooie foto gemaakt?" van 19-11-2026 b. Testsite: wat Bart in het profiel kiest blijft in deze browser (localStorage
    kayu_probeer_rad) en de gast mag daar elke dag draaien; er gaat niets naar de database. */
+/* 21-11-2026 a (Bart): laatste stukje van In het kort voor campers, alleen als het rad aan staat (gastRadAan) */
+const RAD_KORT = {
+  nl:{ kop:"Win een prijs", tekst:"Mooie foto van de finca gemaakt? Zet hem online en tag ons. Dan draai je op je vertrekdag aan ons rad voor een prijs." },
+  en:{ kop:"Win a prize", tekst:"Taken a great photo of the finca? Post it online and tag us. Then you spin our wheel for a prize on your departure day." },
+  de:{ kop:"Gewinnt einen Preis", tekst:"Schönes Foto von der Finca gemacht? Stellt es online und markiert uns. Dann dreht ihr an eurem Abreisetag an unserem Glücksrad um einen Preis." },
+  es:{ kop:"Ganad un premio", tekst:"¿Habéis hecho una foto bonita de la finca? Subidla y etiquetadnos. Así, el día de vuestra salida giráis nuestra ruleta para ganar un premio." },
+  it:{ kop:"Vincete un premio", tekst:"Avete scattato una bella foto della finca? Pubblicatela e taggateci. Così il giorno della partenza girate la nostra ruota per un premio." },
+  fr:{ kop:"Gagnez un prix", tekst:"Vous avez pris une belle photo de la finca ? Publiez-la et identifiez-nous. Le jour de votre départ, vous faites alors tourner notre roue pour gagner un prix." },
+  pt:{ kop:"Ganhem um prémio", tekst:"Tiraram uma foto bonita da finca? Publiquem-na e identifiquem-nos. No dia da partida giram a nossa roda e ganham um prémio." },
+  cs:{ kop:"Vyhrajte cenu", tekst:"Vyfotili jste finku hezky? Dejte fotku na sociální sítě a označte nás. V den odjezdu pak roztočíte naše kolo o cenu." },
+  fi:{ kop:"Voittakaa palkinto", tekst:"Otitteko kauniin kuvan fincasta? Julkaiskaa se ja merkitkää meidät. Lähtöpäivänänne pyöräytätte sitten onnenpyöräämme ja voitatte palkinnon." },
+  no:{ kop:"Vinn en premie", tekst:"Har dere tatt et fint bilde av fincaen? Legg det ut og tagg oss. Da snurrer dere lykkehjulet vårt på avreisedagen og vinner en premie." },
+  sv:{ kop:"Vinn ett pris", tekst:"Har ni tagit en fin bild av fincan? Lägg ut den och tagga oss. Då snurrar ni vårt lyckohjul på avresedagen och vinner ett pris." },
+  pl:{ kop:"Wygrajcie nagrodę", tekst:"Zrobiliście ładne zdjęcie finki? Wrzućcie je do sieci i oznaczcie nas. W dniu wyjazdu zakręcicie wtedy naszym kołem i wygracie nagrodę." }
+};
 const RAD_TEKST = {
   nl:{ kop:"Mooie foto gemaakt? Win een prijs!", s1:"Volg ons op Instagram en/of Facebook.", s2:"Zet je mooiste foto van de finca online en tag ons: {naam}.",
     s3:"Bij het uitchecken draai je aan ons rad. Je wint korting op je verblijf of een drankje uit de honesty bar.", fb:"Volg ons op Facebook",
@@ -4947,28 +4965,78 @@ async function radBijAfrekenen(kamer, k, b, wie){
 /* ---- 19-11-2026 e: Teksten van het rad (Meer > Gasten). Nederlands is de bron: een gewijzigde tekst vertaalt de app (MyMemory, zoals de
    herinnering) in de andere elf talen; {naam} en {x} blijven staan (lukt dat niet, dan houdt die taal de vaste tekst en staat hij bij nog
    vertalen). In een andere taal verbeter je alleen die taal. Opslag: instelling rad_teksten = { nl:{kop:...}, en:{...}, _nog:{ en:["kop"] } }. */
-const radTekstenRuw = () => { const p = TESTVERSIE ? (radProefLees().__inst || {}) : {}; return p.rad_teksten != null ? p.rad_teksten : instellingen.rad_teksten; };
-const radTekstenEigen = () => radTekstenLees(radTekstenRuw());
+/* 20-11-2026 f (Bart: "Ik wil dat ik dit gewoon in de app kan regelen"): hetzelfde venster wijzigt ook de vaste zinnen van het overzicht
+   (bonnetje) en het bedankbericht. Een tekstset = welke instelling, welke delen en wat de vaste tekst is. Opslag zoals bij het rad:
+   instelling <sleutel> = { nl:{deel:...}, en:{...}, _nog:{ en:["deel"] } }; geen rij of kapot = de vaste tekst. */
+const TS = {
+  rad: { sleutel:"rad_teksten", titel:"Teksten van het rad", delen:() => RAD_DELEN, vast:(taal, k) => radTekstVast(taal, k),
+    waar:"Zo staan ze op de gastenpagina.", alles:"Alle teksten van het rad" },
+  bericht: { sleutel:"bericht_teksten", titel:"Overzicht en bedankbericht", delen:() => BERICHT_DELEN, vast:(taal, k) => berichtTekstVast(taal, k),
+    waar:"Zo staan ze in de berichten aan gasten: de bon voor kamergasten, het overzicht voor campers en het bedankbericht na vertrek. De naam van de gast, het bonnetje, de links en de groet zet de app er zelf bij.",
+    alles:"Alle zinnen van het overzicht en het bedankbericht" }
+};
+const tsRuw = set => { const p = TESTVERSIE ? (radProefLees().__inst || {}) : {}, k = TS[set].sleutel; return p[k] != null ? p[k] : instellingen[k]; };
+const tsEigen = set => radTekstenLees(tsRuw(set));
+const tsNu = (set, eigen, taal, k) => radEigenTekst(eigen, taal, k) || TS[set].vast(taal, k);
+const tsAantal = (set, eigen) => TS[set].delen().filter(d => TALEN.some(t => radEigenTekst(eigen, t, d.k))).length;
+const radTekstenRuw = () => tsRuw("rad");
+const radTekstenEigen = () => tsEigen("rad");
 const radTekstVast = (taal, k) => { const v = (RAD_TEKST[taal] || RAD_TEKST.en)[k]; return v != null ? v : (KAMERS_TEKST[taal] || KAMERS_TEKST.en)[k]; };
-const radTekstNu = (eigen, taal, k) => radEigenTekst(eigen, taal, k) || radTekstVast(taal, k);
+const radTekstNu = (eigen, taal, k) => tsNu("rad", eigen, taal, k);
 const radNog = (eigen, taal) => (eigen._nog && Array.isArray(eigen._nog[taal]) ? eigen._nog[taal] : []);
-const radTekstenAantal = eigen => RAD_DELEN.filter(d => TALEN.some(t => radEigenTekst(eigen, t, d.k))).length;
+const radTekstenAantal = eigen => tsAantal("rad", eigen);
 const radNogAantal = eigen => TALEN.reduce((n, t) => n + radNog(eigen, t).length, 0);
-function radMeerTekst(){ const e = radTekstenEigen(), n = radTekstenAantal(e), w = radNogAantal(e);
+function tsMeerTekst(set){ const e = tsEigen(set), n = tsAantal(set, e), w = radNogAantal(e);
   return !n ? "Vaste tekst, in de taal van de gast" : `Aangepast: ${n} ${n === 1 ? "tekst" : "teksten"}` + (w ? ` · ${w} nog vertalen` : ""); }
+const radMeerTekst = () => tsMeerTekst("rad");
 /* review 19-11 e: vlak voor het bewaren de stand uit de database halen, zodat een wijziging op een ander toestel niet verloren gaat */
-async function radTekstenVers(){
-  if(!TESTVERSIE){ try { const { data, error } = await db.from("instellingen").select("sleutel, waarde").eq("sleutel", "rad_teksten");
-    if(!error) instellingen.rad_teksten = data && data[0] ? data[0].waarde : ""; } catch(e){} }
-  return radTekstenEigen();
+async function tsVers(set){
+  const sl = TS[set].sleutel;
+  if(!TESTVERSIE){ try { const { data, error } = await db.from("instellingen").select("sleutel, waarde").eq("sleutel", sl);
+    if(!error) instellingen[sl] = data && data[0] ? data[0].waarde : ""; } catch(e){} }
+  return tsEigen(set);
 }
-async function radTekstenBewaar(eigen){
+async function tsBewaar(set, eigen){
+  const sl = TS[set].sleutel;
   const leeg = !TALEN.some(t => eigen[t] && Object.keys(eigen[t]).length) && !radNogAantal(eigen);
   const waarde = leeg ? "" : JSON.stringify(eigen);
-  if(TESTVERSIE){ const m = radProefLees(); m.__inst = Object.assign({}, m.__inst, { rad_teksten: waarde }); radProefBewaar(m); return ""; }
-  const { error } = await db.from("instellingen").upsert({ sleutel:"rad_teksten", waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
+  if(TESTVERSIE){ const m = radProefLees(); m.__inst = Object.assign({}, m.__inst, { [sl]: waarde }); radProefBewaar(m); return ""; }
+  const { error } = await db.from("instellingen").upsert({ sleutel:sl, waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
   if(error) return error.message;
-  instellingen.rad_teksten = waarde; return "";
+  instellingen[sl] = waarde; return "";
+}
+const radTekstenVers = () => tsVers("rad");
+const radTekstenBewaar = eigen => tsBewaar("rad", eigen);
+/* de delen van het overzicht en het bedankbericht; de vaste tekst komt uit T (overzicht) en TEKSTEN (bedankbericht), in de taal van de gast */
+const BERICHT_DELEN = [
+  { k:"introKamer", naam:"Bon kamergast: eerste zin" }, { k:"kloptKamer", naam:"Bon kamergast: na het bonnetje" },
+  { k:"dankKamer", naam:"Bon kamergast: vraag om een review (daarna de Google-link)" },
+  { k:"intro", naam:"Overzicht camper: eerste zin" }, { k:"klopt", naam:"Overzicht camper: na het bonnetje" },
+  { k:"dankCamper", naam:"Overzicht camper: vraag om een review (daarna park4night en Campercontact)" },
+  { k:"bedankt1", naam:"Bedankbericht: eerste zin" }, { k:"bedankt2", naam:"Bedankbericht: vraag om een review (daarna de links)" },
+  { k:"bedankt3", naam:"Bedankbericht: afsluiting" }
+];
+const BERICHT_T = { introKamer:"introKamer", kloptKamer:"kloptKamer", dankKamer:"dankZin", intro:"intro", klopt:"klopt", dankCamper:"dankZin" };
+/* het bedankbericht in TEKSTEN: [hoi, "", zin 1, "", "⭐ zin 2", ...links, "", zin 3, "", groet...] (in alle twaalf talen zo opgebouwd) */
+function bedanktVast(taal){
+  const r = TK(taal).bedankt("", []);
+  return { bedankt1: r[2] || "", bedankt2: String(r[4] || "").replace(/^⭐\s*/, ""), bedankt3: r[6] || "" };
+}
+function berichtTekstVast(taal, k){
+  if(/^bedankt\d$/.test(k)) return bedanktVast(taal)[k];
+  const t = T[taal] || T.nl, v = t[BERICHT_T[k]];
+  return v != null ? v : T.nl[BERICHT_T[k]];
+}
+/* review 20-11 f: bij de drie reviewvragen zet de app de ster ervoor; staat er al een ster in de eigen tekst (gekopieerd uit WhatsApp), dan niet dubbel */
+const BT_STER = ["dankKamer", "dankCamper", "bedankt2"];
+const bt = (taal, k) => { const v = tsNu("bericht", tsEigen("bericht"), TALEN.includes(taal) ? taal : "nl", k);
+  return BT_STER.includes(k) ? String(v).replace(/^\s*⭐\uFE0F?\s*/, "") : v; };
+/* review 20-11 f: staan er in een bericht nog vaste zinnen die in die taal nog vertaald moeten worden (vertalen mislukte)? Dan zegt het
+   verstuurvenster dat; de taal volgt uit de zin zelf (elke taal heeft een eigen vaste zin). */
+function berichtNogZinnen(tekst){
+  const e = tsEigen("bericht"), uit = [];
+  TALEN.forEach(t => radNog(e, t).forEach(k => { const v = TS.bericht.vast(t, k); if(v && String(tekst || "").includes(v)) uit.push([t, k]); }));
+  return uit;
 }
 async function radVertaalTekst(tekst, naar){
   const t = await Promise.race([vertaal(tekst.replace(/\{naam\}/g, "[1]").replace(/\{x\}/g, "[2]"), "nl", naar), new Promise(r => setTimeout(() => r(null), 10000))]);
@@ -4978,10 +5046,13 @@ async function radVertaalTekst(tekst, naar){
   if(/\{x\}/.test(tekst) && !/\{x\}/.test(terug)) return null;
   return terug.trim() || null;
 }
-let rtTaal = "nl", rtDeel = null, rtBezig = false;
-function openRadTeksten(){
+let rtTaal = "nl", rtDeel = null, rtBezig = false, rtSet = "rad";
+const rtDelen = () => TS[rtSet].delen();
+function openRadTeksten(){ openTekstSet("rad"); }
+function openTekstSet(set){
   rtKoppel();
-  rtTaal = "nl";
+  rtSet = set; rtTaal = "nl";
+  document.getElementById("rtTitel").textContent = TS[set].titel;
   const sel = document.getElementById("rtTaal");
   sel.innerHTML = TALEN.map(t => `<option value="${t}">${TAAL_NL[t] || t}</option>`).join(""); sel.value = rtTaal;
   document.getElementById("rtErr").textContent = "";
@@ -4989,31 +5060,31 @@ function openRadTeksten(){
   document.getElementById("radTekstDlg").showModal();
 }
 function tekenRadTeksten(){
-  const eigen = radTekstenEigen(), nog = radNog(eigen, rtTaal);
+  const eigen = tsEigen(rtSet), nog = radNog(eigen, rtTaal);
   document.getElementById("rtTaal").value = rtTaal;
-  document.getElementById("rtLijst").innerHTML = RAD_DELEN.map(d => {
-    const tekst = radTekstNu(eigen, rtTaal, d.k), aangepast = !!radEigenTekst(eigen, rtTaal, d.k);
+  document.getElementById("rtLijst").innerHTML = rtDelen().map(d => {
+    const tekst = tsNu(rtSet, eigen, rtTaal, d.k), aangepast = !!radEigenTekst(eigen, rtTaal, d.k);
     const nogTalen = rtTaal === "nl" ? TALEN.filter(t => radNog(eigen, t).includes(d.k)).map(t => TAAL_NL[t] || t) : [], wacht = nog.includes(d.k) || nogTalen.length > 0;
     const wachtTekst = rtTaal === "nl" ? (nogTalen.length ? " · nog niet vertaald in het " + nogTalen.join(", ") : "") : (wacht ? " · nog vertalen" : "");
     return `<button type="button" class="rtrij${wacht ? " wacht" : ""}" data-rtdeel="${d.k}"><small>${vrij(d.naam)}${aangepast ? " · aangepast" : ""}${wachtTekst}</small><span>${vrij(tekst)}</span></button>`;
   }).join("");
   document.querySelectorAll("#rtLijst [data-rtdeel]").forEach(b => b.onclick = () => openRadTekstBewerk(b.dataset.rtdeel));
-  document.getElementById("rtStandaard").hidden = !radTekstenAantal(eigen) && !radNogAantal(eigen);
+  document.getElementById("rtStandaard").hidden = !tsAantal(rtSet, eigen) && !radNogAantal(eigen);
   document.getElementById("rtUitleg").textContent = rtTaal === "nl"
-    ? "Zo staan ze op de gastenpagina. Tik op een tekst om hem te wijzigen. Schrijf in het Nederlands: de app vertaalt hem in de andere elf talen."
+    ? TS[rtSet].waar + " Tik op een tekst om hem te wijzigen. Schrijf in het Nederlands: de app vertaalt hem in de andere elf talen."
     : `Dit is de tekst in het ${TAAL_NL[rtTaal] || rtTaal}. Tik op een tekst om alleen deze taal te verbeteren.`;
 }
 function openRadTekstBewerk(k){
-  const d = RAD_DELEN.find(x => x.k === k); if(!d) return;
+  const d = rtDelen().find(x => x.k === k); if(!d) return;
   rtDeel = k;
-  const eigen = radTekstenEigen();
+  const eigen = tsEigen(rtSet);
   document.getElementById("rtbKop").textContent = d.naam + " · " + (TAAL_NL[rtTaal] || rtTaal);
   const nogHier = rtTaal !== "nl" && radNog(eigen, rtTaal).includes(k);
   document.getElementById("rtbUitleg").textContent = (rtTaal === "nl" ? "Na Bewaren vertaalt de app deze tekst in de andere talen (ook waar je zelf iets verbeterde)." :
     nogHier ? `Het vertalen naar het ${TAAL_NL[rtTaal] || rtTaal} lukte nog niet; hieronder staat de vaste tekst. Typ hier zelf de vertaling, of probeer het opnieuw vanuit het Nederlands (zelfde tekst, Bewaren).`
     : `Je verbetert alleen het ${TAAL_NL[rtTaal] || rtTaal}; de andere talen veranderen niet.`) +
     (d.veld ? ` Laat ${d.veld} staan: ${d.uitleg}.` : "");
-  document.getElementById("rtbTekst").value = radTekstNu(eigen, rtTaal, k);
+  document.getElementById("rtbTekst").value = tsNu(rtSet, eigen, rtTaal, k);
   document.getElementById("rtbTerug").hidden = !TALEN.some(t => radEigenTekst(eigen, t, k));
   document.getElementById("rtbErr").textContent = "";
   document.getElementById("radTekstBewerk").showModal();
@@ -5029,17 +5100,17 @@ function rtKoppel(){
   ["radTekstDlg", "radTekstBewerk"].forEach(id => document.getElementById(id).addEventListener("cancel", e => { if(rtBezig) e.preventDefault(); }));
   document.getElementById("rtbBewaar").onclick = async () => {
     if(rtBezig) return;
-    const k = rtDeel, d = RAD_DELEN.find(x => x.k === k), err = document.getElementById("rtbErr");
+    const k = rtDeel, d = rtDelen().find(x => x.k === k), err = document.getElementById("rtbErr"), set = rtSet;
     const tekst = document.getElementById("rtbTekst").value.trim();
     if(!tekst){ err.textContent = "De tekst is leeg. Typ een tekst, of tik op Annuleren."; return; }
     if(d.veld && !tekst.includes(d.veld) && !confirm(`In de tekst staat geen ${d.veld} meer (${d.uitleg}). Toch zo bewaren?`)) return;
     rtZetBezig(true, "Even kijken...");
-    let eigen; try { eigen = await radTekstenVers(); } finally { rtZetBezig(false, ""); }
+    let eigen; try { eigen = await tsVers(set); } finally { rtZetBezig(false, ""); }
     /* wat moet er gebeuren? (review 19-11 e) */
     let soort, naar = [], uit = [];
     if(rtTaal !== "nl") soort = "taal";
-    else if(tekst === radTekstNu(eigen, "nl", k)) soort = radEigenTekst(eigen, "nl", k) ? "nogeens" : "niets"; /* ongewijzigd: alleen nog vertalen wat mislukte */
-    else if(tekst === radTekstVast("nl", k)) soort = "vast";                                                 /* precies de vaste tekst: overal weer vast */
+    else if(tekst === tsNu(set, eigen, "nl", k)) soort = radEigenTekst(eigen, "nl", k) ? "nogeens" : "niets"; /* ongewijzigd: alleen nog vertalen wat mislukte */
+    else if(tekst === TS[set].vast("nl", k)) soort = "vast";                                                 /* precies de vaste tekst: overal weer vast */
     else soort = "nieuw";
     if(soort === "nogeens") naar = TALEN.filter(t => t !== "nl" && radNog(eigen, t).includes(k));
     if(soort === "nieuw") naar = TALEN.filter(t => t !== "nl");
@@ -5050,11 +5121,11 @@ function rtKoppel(){
     rtZetBezig(true, "Bewaren...");
     let fout, mislukt = [], blijftNog = false;
     try {
-      eigen = await radTekstenVers(); eigen._nog = Object.assign({}, eigen._nog || {}); /* opnieuw vers: een ander toestel kan intussen iets bewaard hebben */
+      eigen = await tsVers(set); eigen._nog = Object.assign({}, eigen._nog || {}); /* opnieuw vers: een ander toestel kan intussen iets bewaard hebben */
       const zet = (t, w) => { eigen[t] = Object.assign({}, eigen[t] || {}); if(w == null) delete eigen[t][k]; else eigen[t][k] = w; if(!Object.keys(eigen[t]).length) delete eigen[t]; };
       const nogZet = (t, wacht) => { const l = (eigen._nog[t] || []).filter(x => x !== k); if(wacht) l.push(k); if(l.length) eigen._nog[t] = l; else delete eigen._nog[t]; };
       if(soort === "taal"){
-        const vast = tekst === radTekstVast(rtTaal, k);
+        const vast = tekst === TS[set].vast(rtTaal, k);
         blijftNog = vast && radNog(eigen, rtTaal).includes(k); /* de vaste tekst ongewijzigd bewaard: blijft bij nog vertalen */
         zet(rtTaal, vast ? null : tekst); nogZet(rtTaal, blijftNog);
       } else if(soort === "vast" || soort === "niets") TALEN.forEach(t => { if(soort === "vast") zet(t, null); nogZet(t, false); });
@@ -5063,7 +5134,7 @@ function rtKoppel(){
         naar.forEach((t, i) => { if(uit[i]){ zet(t, uit[i]); nogZet(t, false); } else { if(soort === "nieuw") zet(t, null); nogZet(t, true); mislukt.push(TAAL_NL[t] || t); } });
       }
       if(!Object.keys(eigen._nog).length) delete eigen._nog;
-      fout = await radTekstenBewaar(eigen);
+      fout = await tsBewaar(set, eigen);
     } finally { rtZetBezig(false, ""); }
     if(fout){ err.textContent = "Bewaren mislukt: " + fout; return; }
     document.getElementById("radTekstBewerk").close(); tekenRadTeksten(); tekenMeer();
@@ -5074,19 +5145,25 @@ function rtKoppel(){
   };
   document.getElementById("rtbTerug").onclick = async () => {
     if(rtBezig) return;
-    const k = rtDeel, d = RAD_DELEN.find(x => x.k === k);
+    const k = rtDeel, d = rtDelen().find(x => x.k === k), set = rtSet;
     if(!confirm(`"${d.naam}" terugzetten naar de vaste tekst, in alle talen?`)) return;
-    const eigen = await radTekstenVers();
-    TALEN.forEach(t => { if(eigen[t]){ delete eigen[t][k]; if(!Object.keys(eigen[t]).length) delete eigen[t]; } if(eigen._nog && eigen._nog[t]){ eigen._nog[t] = eigen._nog[t].filter(x => x !== k); if(!eigen._nog[t].length) delete eigen._nog[t]; } });
-    if(eigen._nog && !Object.keys(eigen._nog).length) delete eigen._nog;
-    const fout = await radTekstenBewaar(eigen);
+    let fout;
+    rtZetBezig(true, "Terugzetten..."); /* review 20-11 f: ook hier de knoppen uit zolang het duurt */
+    try {
+      const eigen = await tsVers(set);
+      TALEN.forEach(t => { if(eigen[t]){ delete eigen[t][k]; if(!Object.keys(eigen[t]).length) delete eigen[t]; } if(eigen._nog && eigen._nog[t]){ eigen._nog[t] = eigen._nog[t].filter(x => x !== k); if(!eigen._nog[t].length) delete eigen._nog[t]; } });
+      if(eigen._nog && !Object.keys(eigen._nog).length) delete eigen._nog;
+      fout = await tsBewaar(set, eigen);
+    } finally { rtZetBezig(false, ""); }
     if(fout){ document.getElementById("rtbErr").textContent = "Terugzetten mislukt: " + fout; return; }
     document.getElementById("radTekstBewerk").close(); tekenRadTeksten(); tekenMeer();
   };
   document.getElementById("rtStandaard").onclick = async () => {
     if(rtBezig) return;
-    if(!confirm("Alle teksten van het rad terugzetten naar de vaste tekst, in alle talen?")) return;
-    const fout = await radTekstenBewaar({});
+    if(!confirm(TS[rtSet].alles + " terugzetten naar de vaste tekst, in alle talen?")) return;
+    let fout;
+    rtZetBezig(true, "Terugzetten...");
+    try { fout = await tsBewaar(rtSet, {}); } finally { rtZetBezig(false, ""); }
     if(fout){ document.getElementById("rtErr").textContent = "Terugzetten mislukt: " + fout; return; }
     tekenRadTeksten(); tekenMeer();
   };
@@ -6170,7 +6247,7 @@ document.addEventListener("click", async e => {
   if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
 });
 let gastToastTimer = null, gastVasteLijst = null;
-const VERSIE = "20-11-2026 e";
+const VERSIE = "21-11-2026 a";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -7037,7 +7114,10 @@ function gastInfoHtml(klap){
     /* 25-10-2026 c (Bart): ook de drie kernregels over plek en kinderen, eten en drinken, en de bar */
     /* 01-11-2026 c (Bart: "de rest ontdek je zelf" was weg): ook de regel over je plek (🚐) */
     const voor = regels.slice(0, i >= 0 ? i : regels.length).map(String);
-    const top = voor.filter(x => /^(⏰|📍|🚪|🚐|🌐|🏕️|🍽️|🍺)/.test(x));
+    /* 21-11-2026 a (Bart, voorstel B): In het kort met Poort, Je plek, Kinderen (👧), Honden (🐕), Honesty bar en Eten en drinken, elk met
+       een kopje op een eigen regel ("\n" in de regel); Het terrein (🏕️) is eruit. Staat het rad aan, dan als laatste "Win een prijs" (RAD_KORT). */
+    const top = voor.filter(x => /^(⏰|📍|🚪|🚐|🌐|🏕️|🍽️|🍺|👧|🐕)/.test(x));
+    if(gastRadAan()){ const rk = RAD_KORT[gastTaal] || RAD_KORT.en; top.push(`🎡 *${rk.kop}*\n${rk.tekst}`); }
     if(!klapCamper) lijst = [kop, ...top, ...lijst];
     else {
       /* tegels: het label komt uit de regel zelf (*Poort:*, *Wifi:*, *Aankomst*), de code en de wifi uit dezelfde bron als vulGeheim.
@@ -7076,7 +7156,8 @@ function gastInfoHtml(klap){
   lijst = lijst.flatMap(x => String(x).split("\n")); /* 01-10-2026 b: zin onder de routelink staat met een regeleinde in dezelfde regel */
   for(const s of lijst){
     if(s === STREEP || s === ""){ continue; }
-    if(String(s).startsWith("📌")){ if(open) h += open === "div" ? `</div>` : blokDicht(); h += blokOpen(esc(s.replace(/\*/g, ""))); open = true; continue; }
+    /* 21-11-2026 a (Bart): In het kort staat open, de blokken eronder blijven dicht */
+    if(String(s).startsWith("📌")){ if(open) h += open === "div" ? `</div>` : blokDicht(); h += blokOpen(esc(s.replace(/\*/g, ""))).replace("<details ", "<details open "); open = true; continue; }
     if(isKop(s)){ if(open) h += open === "div" ? `</div>` : blokDicht(); h += blokOpen(esc(s)); open = true; continue; }
     if(!open){ h += klapCamper ? `<div class="dag hl">` : blokOpen(""); open = "div"; }
     /* routeregel: de link als grote knop, de tekst zonder de kale link */
@@ -7150,7 +7231,8 @@ function tekenGast(){
   const t = GT[gastTaal], bak = document.getElementById("gastInhoud");
   /* 21-10-2026 b (review): een opengetikte week bij Omgeving blijft open als de pagina zichzelf ververst */
   const omgOpen = new Set([...bak.querySelectorAll("details.omguur[open]")].map(d => d.dataset.k)); /* 22-10-2026 a: op naam, de lijst wisselt nu per soort */
-  const hrOpen = new Set([...bak.querySelectorAll("details.hrblok[open]")].map(d => d.dataset.k)); /* 20-11-2026 a: opengetikte huisregels blijven open bij verversen */
+  /* 20-11-2026 a: opengetikte huisregels blijven open bij verversen; 21-11-2026 a: en dichtgetikte blijven dicht (In het kort staat standaard open) */
+  const hrStand = new Map([...bak.querySelectorAll("details.hrblok")].map(d => [d.dataset.k, d.open]));
   const kaartOud = bak.querySelector(".omgkaart iframe"); /* 26-10-2026 j: de geladen kaart niet opnieuw laden bij de verversing */
   const talen = `<div class="gkopbar"><span class="logovak"><img class="glogo" src="logo.png" alt="Finca KaYu" width="370" height="197"></span>` +
     `<div class="gtaal">${gIcoon("bol")}<select data-gtaal="1" aria-label="Taal">` +
@@ -7635,7 +7717,7 @@ function tekenGast(){
   if(kaartOud){ const plek = bak.querySelector(".omgkaart .kaartplek"); if(plek){ plek.innerHTML = ""; plek.appendChild(kaartOud); } }
   gastIcoontjes(bak); /* 23-10-2026 a: emoji worden lijn-icoontjes of een puntje (alleen de weergave) */
   bak.querySelectorAll("details.omguur").forEach(d => { if(omgOpen.has(d.dataset.k)) d.open = true; });
-  bak.querySelectorAll("details.hrblok").forEach(d => { if(hrOpen.has(d.dataset.k)) d.open = true; });
+  bak.querySelectorAll("details.hrblok").forEach(d => { if(hrStand.has(d.dataset.k)) d.open = hrStand.get(d.dataset.k); });
   bind();
   function bind(){
     bak.querySelectorAll("[data-gtaal]").forEach(kn => kn.onchange = () => {
@@ -8448,7 +8530,8 @@ function taalWaaier(knop, nr, naKeuze){
   w.scrollIntoView({ block: "nearest" });
 }
 /* alleen voor controle in de browserconsole */
-window.__berichten = { kamer24u: berichtKamer24u, kamerWelkom: berichtKamerWelkom, camperWelkom: berichtCamperWelkom, bedankt: berichtBedankt, aank: aankTekst, kamers: () => kamers, boekingen: () => boekingen, taal: taalVan, tk: TK };
+window.__berichten = { kamer24u: berichtKamer24u, kamerWelkom: berichtKamerWelkom, camperWelkom: berichtCamperWelkom, bedankt: berichtBedankt, aank: aankTekst,
+  overzicht: (b, taal) => overzichtTekst(b, taal, false), kamerbon: (taal, ctx) => kamerbonTekst(taal, false, ctx), nog: t => berichtNogZinnen(t), stuur: o => stuurKeuze(o), /* 20-11-2026 f */ kamers: () => kamers, boekingen: () => boekingen, taal: taalVan, tk: TK };
 const taalNaam = nr => TAAL_NL[taalVan(nr)] || taalVan(nr);
 const taalKnop = nr => `<button data-taal="${nr}" aria-expanded="false" title="Taal van de gast: alle berichten en de gastenpagina"><svg class="gi taalicoon" aria-hidden="true"><use href="#gi-bol"/></svg><span class="hweg">🌐 </span>${TAAL_NL[taalVan(nr)] || taalVan(nr)}</button>`; /* 23-10-2026 a: je ziet een lijn-icoontje; de wereldbol-emoji staat er nog, verborgen */
 
@@ -8555,8 +8638,13 @@ function berichtKamerWelkom(k){
 }
 
 function berichtBedankt(naam, kamer, taal){
-  const t = TK(taal || "nl");
-  return t.bedankt(naam, kamer ? ["Google: " + GOOGLE_REVIEW] : (LINKS[taal] || LINKS.nl)).join("\n");
+  const t = TK(taal || "nl"), links = kamer ? ["Google: " + GOOGLE_REVIEW] : (LINKS[taal] || LINKS.nl), L = links.length;
+  const r = t.bedankt(naam, links);
+  /* 20-11-2026 f: de drie zinnen zoals Bart ze in Meer heeft gezet (bt); alleen als de opbouw klopt, anders de vaste tekst */
+  if(typeof r[4] === "string" && /^⭐/.test(r[4]) && r[5 + L] === "" && typeof r[6 + L] === "string"){
+    r[2] = bt(taal || "nl", "bedankt1"); r[4] = "⭐ " + bt(taal || "nl", "bedankt2"); r[6 + L] = bt(taal || "nl", "bedankt3");
+  }
+  return r.join("\n");
 }
 
 /* ontbijt: per gast per dag gerechten, tijd en aantal kinderen */
@@ -12018,6 +12106,7 @@ function tekenMeer(){
   meerZet("meerRad", radAan() ? "Uitzetten" : "Aanzetten");
   { const rr = document.getElementById("meerRadRij"), fr = document.getElementById("meerFacebookRij"), tr = document.getElementById("meerRadTekstRij"); if(rr) rr.hidden = radRijen === null; if(fr) fr.hidden = radRijen === null; if(tr) tr.hidden = radRijen === null; }
   meerZet("mpRadTeksten", radMeerTekst());
+  meerZet("mpBerichtTeksten", tsMeerTekst("bericht")); /* 20-11-2026 f */
   meerZet("mpFacebook", FB_RE.test(radFacebook()) ? `${radFacebook()}: in de kaart van het rad staat de knop Volg ons op Facebook.`
     : radFacebook() ? "Deze link klopt niet, dus gasten zien geen knop Volg ons op Facebook. Tik om hem te verbeteren." : "Leeg: geen knop Volg ons op Facebook. Tik en plak de link van jullie pagina (in de Facebook-app: Delen, Link kopiëren).");
   meerZet("mpInstagram", INSTA_RE.test(instaNaam()) ? `@${instaNaam()}: alle gasten zien vanaf hun aankomstdag de kaart "Mooie foto gemaakt?" met tag ons en volg ons.`
@@ -13350,6 +13439,10 @@ function stuurKeuze(opt){
   const teken = () => {
     const t = tekstNu();
     document.getElementById("stTekst").value = t;
+    /* review 20-11 f: een zin die in deze taal nog niet vertaald is, staat er nog in de oude tekst */
+    const nog = berichtNogZinnen(t), nogEl = document.getElementById("stNog");
+    nogEl.hidden = !nog.length;
+    nogEl.textContent = nog.length ? `Let op: ${nog.length === 1 ? "1 zin staat" : nog.length + " zinnen staan"} in het ${[...new Set(nog.map(x => TAAL_NL[x[0]] || x[0]))].join(", ")} nog in de oude tekst, want het vertalen lukte nog niet. Probeer het opnieuw in Meer › Gasten › Overzicht en bedankbericht (open de Nederlandse zin en tik op Bewaren), of verbeter die taal zelf.` : "";
     wa.href = `https://wa.me/${opt.waNr || ""}?text=${encodeURIComponent(t)}`;
     ml.href = `mailto:${opt.email ? encodeURIComponent(opt.email) : ""}?subject=${encodeURIComponent(opt.onderwerp || "Finca KaYu")}&body=${encodeURIComponent(mailNu())}`;
     if(opt.tekstVoor){
@@ -16152,6 +16245,7 @@ if(NIEUW){
     if(w === "radaan"){ radAanWissel(); return; } /* 19-11-2026 d */
     if(w === "facebook"){ wijzigFacebook(); return; }
     if(w === "radteksten"){ openRadTeksten(); return; } /* 19-11-2026 e */
+    if(w === "berichtteksten"){ openTekstSet("bericht"); return; } /* 20-11-2026 f */
     if(w === "herkomst"){ herkomstWissel(); return; }
     if(w === "kamerwissel"){ kwWissel("kamer_wissel"); return; }
     if(w === "obmelding"){ meldingWissel("ontbijt"); return; }
@@ -19979,12 +20073,12 @@ function overzichtTekst(b, taal, opmaak){
   bon.push(...btwBonRegels([...verblijfRegels(b), ...barVan(b.id)], b.uit || iso(new Date()), taal), lijn);
 
   const r = [];
-  r.push(`${t.hoi} ${b.naam} 😊`, "", t.intro, "");
+  r.push(`${t.hoi} ${b.naam} 😊`, "", bt(taal, "intro"), ""); /* 20-11-2026 f: de vaste zinnen zijn te wijzigen in Meer (bt) */
   r.push(opmaak ? "```" : "");
   r.push(bon.join("\n"));
   r.push(opmaak ? "```" : "");
-  r.push(t.klopt, "");
-  r.push(`⭐ ${t.dankZin}`, ...(LINKS[taal] || LINKS.nl), "");
+  r.push(bt(taal, "klopt"), "");
+  r.push(`⭐ ${bt(taal, "dankCamper")}`, ...(LINKS[taal] || LINKS.nl), "");
   r.push(t.groet, "Bart & Loes", "Finca KaYu ☀️");
   return r.filter(x => x !== null).join("\n");
 }
@@ -20121,12 +20215,12 @@ function kamerbonTekst(taal, opmaak, ctx){
   bon.push(lijn, bonRegel(t.totaal.toUpperCase(), t.totaal.toUpperCase(), ctx ? ctx.totaal : kamerTotaal()));
   bon.push(...btwBonRegels(ctx ? ctx.regels : [...kamerVast(), ...kamerLijst()], iso(new Date()), taal), lijn);
   const r = [];
-  r.push(`${t.hoi}${naam?" "+naam:""} 😊`, "", t.introKamer, "");
+  r.push(`${t.hoi}${naam?" "+naam:""} 😊`, "", bt(taal, "introKamer"), ""); /* 20-11-2026 f */
   if(opmaak) r.push("```");
   r.push(bon.join("\n"));
   if(opmaak) r.push("```");
-  r.push(t.kloptKamer, "");
-  r.push(`⭐ ${t.dankZin}`, "Google: " + GOOGLE_REVIEW, "");
+  r.push(bt(taal, "kloptKamer"), "");
+  r.push(`⭐ ${bt(taal, "dankKamer")}`, "Google: " + GOOGLE_REVIEW, "");
   r.push(t.groet, "Bart & Loes", "Finca KaYu ☀️");
   return r.join("\n");
 }
