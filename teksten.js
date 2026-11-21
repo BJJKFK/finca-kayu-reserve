@@ -4,7 +4,9 @@
 const ROUTE = "https://www.google.com/maps/dir/?api=1&destination=36.680629,-4.728808&travelmode=driving";
 const STREEP = "━━━━━━━━━━━━━━";
 /* 02-11-2026 a (Bart): tijden van de broodjes uit de instelling broodjes_tijden; de app geeft ze mee als c.brood (broodTijden in
-   index.html). Zonder c.brood de vaste tijden van Finca KaYu. {bt} = bestellen tot, {van}/{tot} = ophalen; Frans schrijft 9h30. */
+   index.html). Zonder c.brood de vaste tijden van Finca KaYu. {bt} = bestellen tot, {van}/{tot} = ophalen; Frans schrijft 9h30.
+   21-11-2026 c (Bart: "het moet allemaal synchroon lopen"): de huisregels noemen geen broodjestijden meer; de tijden van elke dag (die
+   het ontbijt volgen) staan op de broodjespagina van de gast. BRV blijft voor eventuele nieuwe tekst met {bt}, {van} of {tot}. */
 const BR_STANDAARD = { ophalen_van:"09:30", ophalen_tot:"10:00", bestellen_tot:"09:00", zondag:"dicht" };
 const BRB = c => (c && c.brood) || BR_STANDAARD;
 const BRV = (c, taal, s) => { const b = BRB(c), f = x => taal === "fr" ? x.replace(/^0/, "").replace(":", "h") : x;
@@ -1804,7 +1806,7 @@ nl: {
     `📱 *Jullie eigen pagina*`, c.pagina, "",
     "Dit is jullie thuisbasis tijdens het verblijf. Zet hem even op je beginscherm, dan heb je hem altijd bij de hand. Je hoeft niets te downloaden en niet in te loggen.", "",
     "Wat je erop doet:",
-    ...(c.link ? [BRV(c, "nl", "🥖 Broodjes bestellen voor de ochtend (tot {bt} uur op de dag zelf)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "nl", "🥖 Broodjes bestellen voor de ochtend, op de dag zelf")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Aantikken wat je uit de honesty bar pakt",
     "✂️ Knippen, massage of een tour aanvragen",
     "📖 De huisregels en alle info over de finca teruglezen",
@@ -1818,7 +1820,7 @@ nl: {
     "🐕 HUISDIEREN", "",
     "Huisdieren zijn welkom, maar altijd aangelijnd en nooit los op het terrein.",
     "• Niet in de bar en niet bij de faciliteiten.",
-    "• Uitlaten doe je buiten de poort.", "",
+    "• Uitlaten doe je buiten de poort of in de hondenren.", "",
     STREEP, "",
     "👧 KINDEREN", "",
     "Kinderen zijn van harte welkom. Beneden bij het camperveld is de speeltuin, daar kunnen ze lekker spelen.",
@@ -1845,7 +1847,7 @@ nl: {
     "🚸 Kinderen tot 12 jaar nooit zonder ouder in de bar.",
     "🚫 De keuken is alleen voor ons, niet voor gasten.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 BROODJES", "", `Vers brood in de ochtend? Bestel het via jullie eigen gastenpagina: ${c.link}`, BRV(c, "nl", "• Bestellen kan tot {bt} uur op de dag zelf, op de dagen dat de winkel open is."), BRV(c, "nl", "• Ophalen bij de bar tussen {van} en {tot} uur."), "• Het komt automatisch op je overzicht bij het afrekenen.", "• Liever een compleet ontbijt? Dat kan op aanvraag, afhankelijk van beschikbaarheid. Stuur ons even een WhatsApp.", "",
+    ...(c.link ? ["🥖 BROODJES", "", `Vers brood in de ochtend? Bestel het via jullie eigen gastenpagina: ${c.link}`, BRV(c, "nl", "• Bestellen kan op de dag zelf, op de dagen dat de winkel open is. Tot hoe laat, zie je bij elke dag op je gastenpagina."), BRV(c, "nl", "• Ophalen bij de bar tijdens het ontbijt. De precieze tijd staat bij elke dag op je gastenpagina."), "• Het komt automatisch op je overzicht bij het afrekenen.", "• Liever een compleet ontbijt? Dat kan op aanvraag, afhankelijk van beschikbaarheid. Stuur ons even een WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 SANITAIR", "",
     "Onderaan het terrein, in de oude paardenstal:",
@@ -2151,7 +2153,7 @@ en: {
     `📱 *Your own page*`, c.pagina, "",
     "This is your home base during your stay. Add it to your home screen so it is always at hand. Nothing to download, no login.", "",
     "What you do on it:",
-    ...(c.link ? [BRV(c, "en", "🥖 Order fresh bread for the morning (until {bt} on the day itself)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "en", "🥖 Order fresh bread for the morning, on the day itself")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Tick off what you take from the honesty bar",
     "✂️ Request a haircut, a massage or a tour",
     "📖 Read the house rules and all the info about the finca",
@@ -2165,7 +2167,7 @@ en: {
     "🐕 PETS", "",
     "Pets are welcome, but always on a leash and never loose on the grounds.",
     "• Not in the bar and not at the facilities.",
-    "• Walk them outside the gate.", "",
+    "• Walk them outside the gate or in the dog run.", "",
     STREEP, "",
     "👧 CHILDREN", "",
     "Children are very welcome. Down by the camper field is the playground, where they can play to their heart's content.",
@@ -2192,7 +2194,7 @@ en: {
     "🚸 Children under 12 never in the bar without a parent.",
     "🚫 The kitchen is for us only, not for guests.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 FRESH BREAD", "", `Fresh bread in the morning? Order it on your own guest page: ${c.link}`, BRV(c, "en", "• Order until {bt} on the day itself, on days when the shop is open."), BRV(c, "en", "• Collect it at the bar between {van} and {tot}."), "• It goes on your overview automatically when you settle up.", "• Prefer a full breakfast? That is possible on request, depending on availability. Just send us a WhatsApp.", "",
+    ...(c.link ? ["🥖 FRESH BREAD", "", `Fresh bread in the morning? Order it on your own guest page: ${c.link}`, BRV(c, "en", "• Order on the day itself, on days when the shop is open. You can see the latest order time for each day on your guest page."), BRV(c, "en", "• Collect it at the bar during breakfast. The exact time is shown for each day on your guest page."), "• It goes on your overview automatically when you settle up.", "• Prefer a full breakfast? That is possible on request, depending on availability. Just send us a WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 SANITARY", "",
     "At the bottom of the grounds, in the old horse stable:",
@@ -2493,7 +2495,7 @@ de: {
     `📱 *Eure eigene Seite*`, c.pagina, "",
     "Das ist eure Basis während des Aufenthalts. Legt sie auf den Startbildschirm, dann habt ihr sie immer zur Hand. Nichts herunterladen, kein Login.", "",
     "Was ihr darauf macht:",
-    ...(c.link ? [BRV(c, "de", "🥖 Frische Brötchen für den Morgen bestellen (bis {bt} Uhr am selben Tag)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "de", "🥖 Frische Brötchen für den Morgen bestellen, am selben Tag")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Antippen, was ihr aus der Honesty Bar nehmt",
     "✂️ Haarschnitt, Massage oder eine Tour anfragen",
     "📖 Die Hausregeln und alle Infos über die Finca nachlesen",
@@ -2507,7 +2509,7 @@ de: {
     "🐕 HAUSTIERE", "",
     "Haustiere sind willkommen, aber immer an der Leine und nie frei laufend auf dem Gelände.",
     "• Nicht in der Bar und nicht bei den Einrichtungen.",
-    "• Gassi gehen außerhalb des Tors.", "",
+    "• Gassi gehen außerhalb des Tors oder im Hundeauslauf.", "",
     STREEP, "",
     "👧 KINDER", "",
     "Kinder sind herzlich willkommen. Unten am Camperfeld ist der Spielplatz, dort können sie nach Herzenslust spielen.",
@@ -2534,7 +2536,7 @@ de: {
     "🚸 Kinder unter 12 Jahren nie ohne Elternteil in der Bar.",
     "🚫 Die Küche ist nur für uns, nicht für Gäste.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 BRÖTCHEN", "", `Frisches Brot am Morgen? Bestellt es über eure eigene Gästeseite: ${c.link}`, BRV(c, "de", "• Bestellen bis {bt} Uhr am selben Tag, an den Tagen, an denen der Laden geöffnet ist."), BRV(c, "de", "• Abholen an der Bar zwischen {van} und {tot} Uhr."), "• Es kommt automatisch auf eure Übersicht beim Abrechnen.", "• Lieber ein komplettes Frühstück? Das geht auf Anfrage, je nach Verfügbarkeit. Schickt uns einfach eine WhatsApp.", "",
+    ...(c.link ? ["🥖 BRÖTCHEN", "", `Frisches Brot am Morgen? Bestellt es über eure eigene Gästeseite: ${c.link}`, BRV(c, "de", "• Bestellen am selben Tag, an den Tagen, an denen der Laden geöffnet ist. Bis wann ihr bestellen könnt, seht ihr bei jedem Tag auf eurer Gästeseite."), BRV(c, "de", "• Abholen an der Bar während des Frühstücks. Die genaue Uhrzeit steht bei jedem Tag auf eurer Gästeseite."), "• Es kommt automatisch auf eure Übersicht beim Abrechnen.", "• Lieber ein komplettes Frühstück? Das geht auf Anfrage, je nach Verfügbarkeit. Schickt uns einfach eine WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 SANITÄR", "",
     "Unten auf dem Gelände, im alten Pferdestall:",
@@ -2835,7 +2837,7 @@ es: {
     `📱 *Vuestra propia página*`, c.pagina, "",
     "Es vuestra base durante la estancia. Añadidla a la pantalla de inicio y la tendréis siempre a mano. No hay que descargar nada ni iniciar sesión.", "",
     "Lo que podéis hacer:",
-    ...(c.link ? [BRV(c, "es", "🥖 Pedir pan fresco para la mañana (hasta las {bt} del mismo día)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "es", "🥖 Pedir pan fresco para la mañana, el mismo día")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Apuntar lo que cogéis del honesty bar",
     "✂️ Pedir un corte de pelo, un masaje o una ruta",
     "📖 Leer las normas de la casa y toda la información de la finca",
@@ -2849,7 +2851,7 @@ es: {
     "🐕 MASCOTAS", "",
     "Las mascotas son bienvenidas, pero siempre con correa y nunca sueltas por el terreno.",
     "• No en el bar ni en las instalaciones.",
-    "• Sacadlas a pasear fuera de la puerta.", "",
+    "• Sacadlas a pasear fuera de la puerta o en el recinto para perros.", "",
     STREEP, "",
     "👧 NIÑOS", "",
     "Los niños son muy bienvenidos. Abajo, junto al campo de las autocaravanas, está el parque infantil, donde pueden jugar a gusto.",
@@ -2876,7 +2878,7 @@ es: {
     "🚸 Los niños menores de 12 años nunca en el bar sin un padre o una madre.",
     "🚫 La cocina es solo para nosotros, no para los huéspedes.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 PAN FRESCO", "", `¿Pan fresco por la mañana? Pedidlo en vuestra propia página de huéspedes: ${c.link}`, BRV(c, "es", "• Se puede pedir hasta las {bt} del mismo día, los días que la tienda está abierta."), BRV(c, "es", "• Se recoge en el bar entre las {van} y las {tot}."), "• Se añade automáticamente a vuestro resumen al pagar.", "• ¿Preferís un desayuno completo? Es posible bajo petición, según disponibilidad. Enviadnos un WhatsApp.", "",
+    ...(c.link ? ["🥖 PAN FRESCO", "", `¿Pan fresco por la mañana? Pedidlo en vuestra propia página de huéspedes: ${c.link}`, BRV(c, "es", "• Se puede pedir el mismo día, los días que la tienda está abierta. Hasta qué hora, lo veis en cada día en vuestra página de huéspedes."), BRV(c, "es", "• Se recoge en el bar durante el desayuno. La hora exacta aparece en cada día en vuestra página de huéspedes."), "• Se añade automáticamente a vuestro resumen al pagar.", "• ¿Preferís un desayuno completo? Es posible bajo petición, según disponibilidad. Enviadnos un WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 BAÑOS", "",
     "En la parte de abajo de la finca, en la antigua cuadra:",
@@ -3176,7 +3178,7 @@ it: {
     `📱 *La vostra pagina*`, c.pagina, "",
     "È la vostra base durante il soggiorno. Aggiungetela alla schermata iniziale, così l'avete sempre a portata di mano. Niente da scaricare e nessun login.", "",
     "Cosa potete fare:",
-    ...(c.link ? [BRV(c, "it", "🥖 Ordinare pane fresco per la mattina (entro le {bt} del giorno stesso)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "it", "🥖 Ordinare pane fresco per la mattina, il giorno stesso")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Segnare quello che prendete dall'honesty bar",
     "✂️ Chiedere un taglio di capelli, un massaggio o un tour",
     "📖 Leggere le regole della casa e tutte le informazioni sulla finca",
@@ -3190,7 +3192,7 @@ it: {
     "🐕 ANIMALI", "",
     "Gli animali sono i benvenuti, ma sempre al guinzaglio e mai liberi sul terreno.",
     "• Non al bar e non nelle strutture comuni.",
-    "• I bisogni si fanno fuori dal cancello.", "",
+    "• I bisogni si fanno fuori dal cancello o nell'area cani.", "",
     STREEP, "",
     "👧 BAMBINI", "",
     "I bambini sono i benvenuti. In basso, vicino al campo dei camper, c'è il parco giochi, dove possono giocare in libertà.",
@@ -3217,7 +3219,7 @@ it: {
     "🚸 I bambini sotto i 12 anni mai al bar senza un genitore.",
     "🚫 La cucina è solo per noi, non per gli ospiti.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 PANE FRESCO", "", `Pane fresco al mattino? Ordinatelo dalla vostra pagina ospiti: ${c.link}`, BRV(c, "it", "• Si può ordinare entro le {bt} del giorno stesso, nei giorni in cui il negozio è aperto."), BRV(c, "it", "• Ritiro al bar tra le {van} e le {tot}."), "• Viene aggiunto automaticamente al vostro riepilogo al momento del conto.", "• Preferite una colazione completa? È possibile su richiesta, in base alla disponibilità. Mandateci un WhatsApp.", "",
+    ...(c.link ? ["🥖 PANE FRESCO", "", `Pane fresco al mattino? Ordinatelo dalla vostra pagina ospiti: ${c.link}`, BRV(c, "it", "• Si può ordinare il giorno stesso, nei giorni in cui il negozio è aperto. Fino a che ora, lo vedete per ogni giorno sulla vostra pagina ospiti."), BRV(c, "it", "• Ritiro al bar durante la colazione. L'orario preciso è indicato per ogni giorno sulla vostra pagina ospiti."), "• Viene aggiunto automaticamente al vostro riepilogo al momento del conto.", "• Preferite una colazione completa? È possibile su richiesta, in base alla disponibilità. Mandateci un WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 SERVIZI", "",
     "In fondo alla proprietà, nella vecchia stalla:",
@@ -3517,7 +3519,7 @@ fr: {
     `📱 *Votre propre page*`, c.pagina, "",
     "C'est votre base pendant le séjour. Ajoutez-la à votre écran d'accueil, vous l'aurez toujours sous la main. Rien à télécharger, pas de connexion.", "",
     "Ce que vous y faites :",
-    ...(c.link ? [BRV(c, "fr", "🥖 Commander du pain frais pour le matin (jusqu'à {bt} le jour même)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "fr", "🥖 Commander du pain frais pour le matin, le jour même")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Cocher ce que vous prenez à l'honesty bar",
     "✂️ Demander une coupe de cheveux, un massage ou une balade",
     "📖 Lire les règles de la maison et toutes les infos sur la finca",
@@ -3531,7 +3533,7 @@ fr: {
     "🐕 ANIMAUX", "",
     "Les animaux sont les bienvenus, mais toujours en laisse et jamais en liberté sur le terrain.",
     "• Pas au bar ni dans les installations communes.",
-    "• Les besoins se font en dehors du portail.", "",
+    "• Les besoins se font en dehors du portail ou dans l'enclos à chiens.", "",
     STREEP, "",
     "👧 ENFANTS", "",
     "Les enfants sont les bienvenus. En bas, près du terrain des camping-cars, se trouve l'aire de jeux, où ils peuvent jouer à leur guise.",
@@ -3558,7 +3560,7 @@ fr: {
     "🚸 Les enfants de moins de 12 ans jamais au bar sans un parent.",
     "🚫 La cuisine est réservée à nous, pas aux hôtes.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 PAIN FRAIS", "", `Du pain frais le matin ? Commandez-le sur votre page invité : ${c.link}`, BRV(c, "fr", "• Commande possible jusqu'à {bt} le jour même, les jours où la boutique est ouverte."), BRV(c, "fr", "• À retirer au bar entre {van} et {tot}."), "• Il est ajouté automatiquement à votre récapitulatif au moment de régler.", "• Vous préférez un petit-déjeuner complet ? C'est possible sur demande, selon les disponibilités. Envoyez-nous un WhatsApp.", "",
+    ...(c.link ? ["🥖 PAIN FRAIS", "", `Du pain frais le matin ? Commandez-le sur votre page invité : ${c.link}`, BRV(c, "fr", "• Commande possible le jour même, les jours où la boutique est ouverte. Jusqu'à quelle heure : vous le voyez pour chaque jour sur votre page d'accueil."), BRV(c, "fr", "• À retirer au bar pendant le petit-déjeuner. L'heure exacte est indiquée pour chaque jour sur votre page d'accueil."), "• Il est ajouté automatiquement à votre récapitulatif au moment de régler.", "• Vous préférez un petit-déjeuner complet ? C'est possible sur demande, selon les disponibilités. Envoyez-nous un WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 SANITAIRES", "",
     "En bas du domaine, dans l'ancienne écurie :",
@@ -3858,7 +3860,7 @@ pt: {
     `📱 *A vossa própria página*`, c.pagina, "",
     "Esta é a vossa base durante a estadia. Adicionem-na ao ecrã inicial e estará sempre à mão. Não é preciso descarregar nada nem fazer login.", "",
     "O que podem fazer nela:",
-    ...(c.link ? [BRV(c, "pt", "🥖 Encomendar pão fresco para a manhã (até às {bt} do próprio dia)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "pt", "🥖 Encomendar pão fresco para a manhã, no próprio dia")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Registar o que tiram do honesty bar",
     "✂️ Pedir um corte de cabelo, uma massagem ou um passeio",
     "📖 Reler as regras da casa e todas as informações sobre a finca",
@@ -3872,7 +3874,7 @@ pt: {
     "🐕 ANIMAIS DE ESTIMAÇÃO", "",
     "Os animais são bem-vindos, mas sempre com trela e nunca soltos no terreno.",
     "• Não no bar nem junto às instalações comuns.",
-    "• Os passeios para as necessidades fazem-se fora do portão.", "",
+    "• Os passeios para as necessidades fazem-se fora do portão ou no parque para cães.", "",
     STREEP, "",
     "👧 CRIANÇAS", "",
     "As crianças são muito bem-vindas. Em baixo, junto ao campo das autocaravanas, está o parque infantil, onde podem brincar à vontade.",
@@ -3899,7 +3901,7 @@ pt: {
     "🚸 As crianças com menos de 12 anos nunca no bar sem um dos pais.",
     "🚫 A cozinha é só para nós, não para os hóspedes.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 PÃO FRESCO", "", `Pão fresco de manhã? Encomendem na vossa própria página de hóspedes: ${c.link}`, BRV(c, "pt", "• Podem encomendar até às {bt} do próprio dia, nos dias em que a loja está aberta."), BRV(c, "pt", "• Levantar no bar entre as {van} e as {tot}."), "• É adicionado automaticamente ao vosso resumo ao acertar contas.", "• Preferem um pequeno-almoço completo? É possível a pedido, conforme a disponibilidade. Enviem-nos um WhatsApp.", "",
+    ...(c.link ? ["🥖 PÃO FRESCO", "", `Pão fresco de manhã? Encomendem na vossa própria página de hóspedes: ${c.link}`, BRV(c, "pt", "• Podem encomendar no próprio dia, nos dias em que a loja está aberta. Até que horas podem encomendar, veem em cada dia na vossa página de hóspedes."), BRV(c, "pt", "• Levantar no bar durante o pequeno-almoço. A hora exata aparece em cada dia na vossa página de hóspedes."), "• É adicionado automaticamente ao vosso resumo ao acertar contas.", "• Preferem um pequeno-almoço completo? É possível a pedido, conforme a disponibilidade. Enviem-nos um WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 SANITÁRIOS", "",
     "Na parte de baixo da propriedade, na antiga cavalariça:",
@@ -4198,7 +4200,7 @@ cs: {
     `📱 *Vaše vlastní stránka*`, c.pagina, "",
     "Tohle je vaše základna během pobytu. Přidejte si ji na plochu, ať ji máte vždy po ruce. Nic se nestahuje, žádné přihlašování.", "",
     "Co na ní můžete dělat:",
-    ...(c.link ? [BRV(c, "cs", "🥖 Objednat čerstvé pečivo na ráno (do {bt} téhož dne)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "cs", "🥖 Objednat čerstvé pečivo na ráno, ve stejný den")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Zapsat, co si vezmete z honesty baru",
     "✂️ Požádat o stříhání, masáž nebo výlet",
     "📖 Přečíst si domovní řád a všechny informace o fince",
@@ -4212,7 +4214,7 @@ cs: {
     "🐕 DOMÁCÍ ZVÍŘATA", "",
     "Domácí zvířata jsou vítána, ale vždy na vodítku a nikdy volně po pozemku.",
     "• Ne do baru a ne k zázemí (sprchy, toalety).",
-    "• Venčení prosím za bránou.", "",
+    "• Venčení prosím za bránou nebo ve výběhu pro psy.", "",
     STREEP, "",
     "👧 DĚTI", "",
     "Děti jsou srdečně vítány. Dole u pole pro karavany je dětské hřiště, kde si mohou hrát podle libosti.",
@@ -4239,7 +4241,7 @@ cs: {
     "🚸 Děti do 12 let nikdy v baru bez rodiče.",
     "🚫 Kuchyně je jen pro nás, ne pro hosty.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 ČERSTVÉ PEČIVO", "", `Chcete ráno čerstvé pečivo? Objednejte si ho na své stránce pro hosty: ${c.link}`, BRV(c, "cs", "• Objednávejte do {bt} téhož dne, ve dnech, kdy je obchod otevřený."), BRV(c, "cs", "• Vyzvedněte si ho v baru mezi {van} a {tot}."), "• Automaticky se připíše na váš účet.", "• Raději celou snídani? Na požádání je to možné, podle dostupnosti. Stačí nám napsat na WhatsApp.", "",
+    ...(c.link ? ["🥖 ČERSTVÉ PEČIVO", "", `Chcete ráno čerstvé pečivo? Objednejte si ho na své stránce pro hosty: ${c.link}`, BRV(c, "cs", "• Objednávejte ve stejný den, ve dnech, kdy je obchod otevřený. Do kdy můžete objednávat, uvidíte u každého dne na své stránce pro hosty."), BRV(c, "cs", "• Vyzvedněte si ho v baru během snídaně. Přesný čas najdete u každého dne na své stránce pro hosty."), "• Automaticky se připíše na váš účet.", "• Raději celou snídani? Na požádání je to možné, podle dostupnosti. Stačí nám napsat na WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 SOCIÁLNÍ ZAŘÍZENÍ", "",
     "Dole v areálu, ve staré koňské stáji:",
@@ -4540,7 +4542,7 @@ fi: {
     `📱 *Oma sivunne*`, c.pagina, "",
     "Täältä löydätte kaiken tarvittavan koko oleskelunne ajan. Lisätkää sivu aloitusnäytöllenne, niin se on aina käden ulottuvilla. Ei mitään ladattavaa, ei kirjautumista.", "",
     "Sivulla voitte:",
-    ...(c.link ? [BRV(c, "fi", "🥖 tilata tuoretta leipää aamuksi (samana päivänä klo {bt} asti)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "fi", "🥖 tilata tuoretta leipää aamuksi, samana päivänä")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 merkitä, mitä otatte honesty barista",
     "✂️ pyytää hiustenleikkausta, hierontaa tai opastettua kierrosta",
     "📖 lukea talon säännöt ja kaikki tiedot fincasta",
@@ -4554,7 +4556,7 @@ fi: {
     "🐕 LEMMIKIT", "",
     "Lemmikit ovat tervetulleita, mutta aina hihnassa, ei koskaan vapaana alueella.",
     "• Ei baarissa eikä yhteisissä tiloissa.",
-    "• Ulkoiluttakaa ne portin ulkopuolella.", "",
+    "• Ulkoiluttakaa ne portin ulkopuolella tai koiratarhassa.", "",
     STREEP, "",
     "👧 LAPSET", "",
     "Lapset ovat lämpimästi tervetulleita. Alhaalla matkailuautokentän luona on leikkipaikka, jossa he voivat leikkiä vapaasti.",
@@ -4581,7 +4583,7 @@ fi: {
     "🚸 Alle 12-vuotiaat lapset eivät koskaan baarissa ilman vanhempaa.",
     "🚫 Keittiö on vain meidän käytössämme, ei vieraiden.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 TUORE LEIPÄ", "", `Tuoretta leipää aamulla? Tilatkaa se omalta vierassivultanne: ${c.link}`, BRV(c, "fi", "• Tilatkaa samana päivänä klo {bt} mennessä, niinä päivinä, kun kauppa on auki."), BRV(c, "fi", "• Noutakaa se baarista klo {van} ja {tot} välillä."), "• Summa lisätään automaattisesti laskuunne.", "• Haluatteko mieluummin täyden aamiaisen? Se onnistuu pyynnöstä, saatavuuden mukaan. Lähettäkää meille vain WhatsApp-viesti.", "",
+    ...(c.link ? ["🥖 TUORE LEIPÄ", "", `Tuoretta leipää aamulla? Tilatkaa se omalta vierassivultanne: ${c.link}`, BRV(c, "fi", "• Tilatkaa samana päivänä, niinä päivinä, kun kauppa on auki. Mihin asti, sen näette jokaisen päivän kohdalla vierassivullanne."), BRV(c, "fi", "• Noutakaa se baarista aamiaisen aikana. Tarkka aika näkyy jokaisen päivän kohdalla vierassivullanne."), "• Summa lisätään automaattisesti laskuunne.", "• Haluatteko mieluummin täyden aamiaisen? Se onnistuu pyynnöstä, saatavuuden mukaan. Lähettäkää meille vain WhatsApp-viesti.", "",
       STREEP, ""] : []),
     "🚿 SANITEETTITILAT", "",
     "Alueen alaosassa, vanhassa hevostallissa:",
@@ -4883,7 +4885,7 @@ no: {
     `📱 *Deres egen side*`, c.pagina, "",
     "Dette er hjemmebasen deres under oppholdet. Legg den til på startskjermen, så har dere den alltid for hånden. Dere trenger ikke å laste ned noe eller logge inn.", "",
     "Dette kan dere gjøre der:",
-    ...(c.link ? [BRV(c, "no", "🥖 Bestille ferskt brød til morgenen (til kl. {bt} samme dag)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "no", "🥖 Bestille ferskt brød til morgenen, samme dag")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Legge inn det dere tar fra honesty bar",
     "✂️ Be om hårklipp, massasje eller en tur",
     "📖 Lese husreglene og all info om fincaen",
@@ -4897,7 +4899,7 @@ no: {
     "🐕 KJÆLEDYR", "",
     "Kjæledyr er velkomne, men alltid i bånd og aldri løse på området.",
     "• Ikke i baren og ikke ved fasilitetene.",
-    "• Luft dem utenfor porten.", "",
+    "• Luft dem utenfor porten eller i hundegården.", "",
     STREEP, "",
     "👧 BARN", "",
     "Barn er hjertelig velkomne. Nede ved bobilfeltet er lekeplassen, der kan de leke så mye de vil.",
@@ -4924,7 +4926,7 @@ no: {
     "🚸 Barn under 12 år aldri i baren uten en forelder.",
     "🚫 Kjøkkenet er bare for oss, ikke for gjester.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 FERSKT BRØD", "", `Ferskt brød om morgenen? Bestill via deres egen gjesteside: ${c.link}`, BRV(c, "no", "• Bestill senest kl. {bt} samme dag, de dagene butikken er åpen."), BRV(c, "no", "• Hent det i baren mellom kl. {van} og {tot}."), "• Det kommer automatisk med på oversikten deres når dere gjør opp.", "• Heller en full frokost? Det går på forespørsel, avhengig av hva som er ledig. Send oss en WhatsApp.", "",
+    ...(c.link ? ["🥖 FERSKT BRØD", "", `Ferskt brød om morgenen? Bestill via deres egen gjesteside: ${c.link}`, BRV(c, "no", "• Bestill samme dag, de dagene butikken er åpen. Hvor sent dere kan bestille, ser dere ved hver dag på gjestesiden deres."), BRV(c, "no", "• Hent det i baren i frokosttiden. Nøyaktig tid står ved hver dag på gjestesiden deres."), "• Det kommer automatisk med på oversikten deres når dere gjør opp.", "• Heller en full frokost? Det går på forespørsel, avhengig av hva som er ledig. Send oss en WhatsApp.", "",
       STREEP, ""] : []),
     "🚿 SANITÆR", "",
     "Nederst på området, i den gamle hestestallen:",
@@ -5224,7 +5226,7 @@ sv: {
     `📱 *Er egen sida*`, c.pagina, "",
     "Det här är er bas under vistelsen. Lägg till den på hemskärmen, så har ni den alltid till hands. Ni behöver inte ladda ner något eller logga in.", "",
     "Det här kan ni göra där:",
-    ...(c.link ? [BRV(c, "sv", "🥖 Beställa färskt bröd till morgonen (till kl. {bt} samma dag)")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "sv", "🥖 Beställa färskt bröd till morgonen, samma dag")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Registrera det ni tar från honesty bar",
     "✂️ Be om klippning, massage eller en tur",
     "📖 Läsa husreglerna och all info om fincan",
@@ -5238,7 +5240,7 @@ sv: {
     "🐕 HUSDJUR", "",
     "Husdjur är välkomna, men alltid kopplade och aldrig lösa på området.",
     "• Inte i baren och inte vid anläggningarna.",
-    "• Rasta dem utanför grinden.", "",
+    "• Rasta dem utanför grinden eller i hundgården.", "",
     STREEP, "",
     "👧 BARN", "",
     "Barn är varmt välkomna. Nere vid husbilsfältet finns lekplatsen, där kan de leka så mycket de vill.",
@@ -5265,7 +5267,7 @@ sv: {
     "🚸 Barn under 12 år aldrig i baren utan en förälder.",
     "🚫 Köket är bara för oss, inte för gäster.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 FÄRSKT BRÖD", "", `Färskt bröd på morgonen? Beställ det via er egen gästsida: ${c.link}`, BRV(c, "sv", "• Beställ senast kl. {bt} samma dag, de dagar butiken är öppen."), BRV(c, "sv", "• Hämta vid baren mellan kl. {van} och {tot}."), "• Det läggs automatiskt till på er översikt när ni gör upp.", "• Hellre en hel frukost? Det går på förfrågan, beroende på vad som finns ledigt. Skicka ett WhatsApp-meddelande till oss.", "",
+    ...(c.link ? ["🥖 FÄRSKT BRÖD", "", `Färskt bröd på morgonen? Beställ det via er egen gästsida: ${c.link}`, BRV(c, "sv", "• Beställ samma dag, de dagar butiken är öppen. Hur sent ni kan beställa ser ni vid varje dag på er gästsida."), BRV(c, "sv", "• Hämta vid baren under frukosten. Exakt tid står vid varje dag på er gästsida."), "• Det läggs automatiskt till på er översikt när ni gör upp.", "• Hellre en hel frukost? Det går på förfrågan, beroende på vad som finns ledigt. Skicka ett WhatsApp-meddelande till oss.", "",
       STREEP, ""] : []),
     "🚿 SANITET", "",
     "Längst ner på området, i det gamla häststallet:",
@@ -5567,7 +5569,7 @@ pl: {
     `📱 *Wasza własna strona*`, c.pagina, "",
     "To wasza baza podczas pobytu. Dodajcie ją do ekranu głównego, żeby zawsze była pod ręką. Nic nie trzeba pobierać ani się logować.", "",
     "Co na niej zrobicie:",
-    ...(c.link ? [BRV(c, "pl", "🥖 Zamówicie świeże pieczywo na rano (tego samego dnia do {bt})")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
+    ...(c.link ? [BRV(c, "pl", "🥖 Zamówicie świeże pieczywo na rano, tego samego dnia")] : []), /* 02-11-2026 a: tijd uit de instelling broodjes_tijden; geen belofte over dagen (Bart: de winkel kan dicht) */
     "💵 Zaznaczycie, co bierzecie z baru samoobsługowego",
     "✂️ Poprosicie o strzyżenie, masaż albo wycieczkę",
     "📖 Przeczytacie regulamin i wszystkie informacje o fince",
@@ -5581,7 +5583,7 @@ pl: {
     "🐕 ZWIERZĘTA", "",
     "Zwierzęta są mile widziane, ale zawsze na smyczy i nigdy luzem na terenie.",
     "• Nie w barze i nie w sanitariatach.",
-    "• Wyprowadzajcie je za bramę.", "",
+    "• Wyprowadzajcie je za bramę albo na wybieg dla psów.", "",
     STREEP, "",
     "👧 DZIECI", "",
     "Dzieci są bardzo mile widziane. Na dole przy polu dla kamperów jest plac zabaw, gdzie mogą się bawić do woli.",
@@ -5608,7 +5610,7 @@ pl: {
     "🚸 Dzieci poniżej 12 lat nigdy w barze bez rodzica.",
     "🚫 Kuchnia jest tylko dla nas, nie dla gości.", "",
     STREEP, "",
-    ...(c.link ? ["🥖 ŚWIEŻE PIECZYWO", "", `Świeże pieczywo rano? Zamówcie je na własnej stronie gościa: ${c.link}`, BRV(c, "pl", "• Zamawiajcie tego samego dnia do {bt}, w dni, gdy sklep jest otwarty."), BRV(c, "pl", "• Odbierzcie je w barze między {van} a {tot}."), "• Przy rozliczeniu trafi automatycznie na wasze zestawienie.", "• Wolicie pełne śniadanie? Jest to możliwe na życzenie, w miarę dostępności. Napiszcie do nas na WhatsAppie.", "",
+    ...(c.link ? ["🥖 ŚWIEŻE PIECZYWO", "", `Świeże pieczywo rano? Zamówcie je na własnej stronie gościa: ${c.link}`, BRV(c, "pl", "• Zamawiajcie tego samego dnia, w dni, gdy sklep jest otwarty. Do której, zobaczycie przy każdym dniu na stronie gościa."), BRV(c, "pl", "• Odbierzcie je w barze w czasie śniadania. Dokładna godzina jest przy każdym dniu na stronie gościa."), "• Przy rozliczeniu trafi automatycznie na wasze zestawienie.", "• Wolicie pełne śniadanie? Jest to możliwe na życzenie, w miarę dostępności. Napiszcie do nas na WhatsAppie.", "",
       STREEP, ""] : []),
     "🚿 SANITARIATY", "",
     "Na dole terenu, w dawnej stajni:",
