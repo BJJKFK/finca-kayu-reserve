@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="21-11-2026 d"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="21-11-2026 g"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF8F1">
 <title>Finca KaYu</title>
@@ -1507,6 +1507,21 @@
   .raddlg .radknoppen button.radlater{margin-top:8px;background:transparent;color:#5F6368;font-weight:500;padding:10px}
   .raddlg .raddranken{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}
   .raddlg .raddranken button{padding:8px 14px;border-radius:999px;border:1px solid #EADFD5;background:#FFFFFF;color:#1F1F1F;font:inherit;font-size:14px;cursor:pointer}
+  /* 21-11-2026 f (Bart): bovenaan de Bar-pagina een regel "Laatste in de bar?"; tikken opent een venster met de foto's van de knoppen */
+  html #gast .dag.barlampdag{padding:10px}
+  #gast .barlamp{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border:0;border-radius:14px;background:#FFF6EA;color:#1F1F1F;font:inherit;text-align:left;cursor:pointer}
+  #gast .barlamp .gi{flex:0 0 auto;width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;color:#9E543E}
+  #gast .barlamp b{display:block;font-size:15.5px;font-weight:600}
+  #gast .barlamp span.bls{display:block;font-size:13.5px;color:#5F6368;margin-top:1px}
+  #gast .barlamp .blp{margin-left:auto;font-size:22px;color:#80868B}
+  html .raddlg.lampdlg{max-height:90vh;max-height:90dvh}
+  .lampdlg .radin{text-align:left;max-height:calc(90vh - 2px);max-height:calc(90dvh - 2px);overflow:auto;overscroll-behavior:contain;box-sizing:border-box;background:inherit;padding-bottom:0}
+  /* Sluiten blijft onderaan in beeld, ook als je nog niet langs de foto's gescrold bent (review 21-11) */
+  .lampdlg .radknoppen{position:sticky;bottom:0;background:inherit;padding:10px 0 16px}
+  .lampdlg .lamptekst{margin:6px 0 14px;font-size:15px;line-height:1.45;color:#3C4043}
+  .lampdlg figure{margin:0 0 14px}
+  .lampdlg img{width:100%;height:auto;border-radius:14px;display:block;background:#EDE7DF}
+  .lampdlg figcaption{font-size:14.5px;line-height:1.35;margin-top:6px;color:#1F1F1F}
   .raddlg .melding.fout{color:#B3261E;margin-top:8px}
   /* 20-11-2026 d: foto van de camper (rondje naast "Hoi ...", kaart bovenaan Start, venster met de foto) */
   #gast .camwie{display:flex;align-items:center;gap:10px;margin:0 0 12px}
@@ -1530,6 +1545,16 @@
   .rtlijst .rtrij span{font-size:14px;line-height:1.4}
   .rtlijst .rtrij.wacht{border-color:#D9822B}
   .rtlijst .rtrij.wacht small{color:#8A4A00}
+  /* 21-11-2026 g: Foto's van Laatste in de bar? */
+  .iflijst{display:flex;flex-direction:column;gap:10px}
+  .iflijst .ifrij{display:grid;grid-template-columns:72px 1fr;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+  .iflijst .ifrij img,.iflijst .ifgeen{width:72px;height:96px;object-fit:contain;border-radius:8px;background:#EDE7DF;display:block}
+  .iflijst .ifrij.uit img{opacity:.35}
+  .iflijst .ifinfo{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .iflijst .ifinfo b{font-size:14px}
+  .iflijst .ifinfo span{font-size:13.5px;line-height:1.35;color:var(--muted)}
+  .iflijst .ifknoppen{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+  .iflijst .ifknoppen button{font:inherit;font-size:13.5px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);color:inherit;cursor:pointer}
   html.nieuw #gast .gtegels > .gtegel[data-gtab="kamers"]{grid-column:1/-1;min-height:0}
   #bar .money, #kamerbon .money{position:sticky;bottom:-20px;z-index:3;box-shadow:0 -6px 14px rgba(30,29,27,.1)}
   .barrij .stap button:disabled{opacity:.3;cursor:default}
@@ -2654,6 +2679,11 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
       <!-- 19-11-2026 e (Bart): de teksten van het rad zelf wijzigen, in het Nederlands; de app vertaalt -->
       <button class="meerrij" data-meer="radteksten" id="meerRadTekstRij"><span><b>Teksten van het rad</b><small id="mpRadTeksten"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
+    <!-- 21-11-2026 g (Bart: "alles moet een instelling zijn"): Laatste in de bar? bovenaan de Bar-pagina van de gast; standaard aan -->
+    <div class="meerkaart">
+      <div class="meerinst"><span><b>Laatste in de bar?</b><small id="mpBarLamp"></small></span><button type="button" class="meerzet" data-meer="barlampaan" id="meerBarLamp"></button></div>
+      <button class="meerrij" data-meer="barlampfotos"><span><b>Foto's en teksten van Laatste in de bar?</b><small id="mpBarLampFotos"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+    </div>
     <!-- 20-11-2026 d (Bart): foto van de camper; standaard aan voor campers, uit voor kamergasten -->
     <div class="meerkaart">
       <div class="meerinst"><span><b>Foto van de camper vragen</b><small id="mpCamFoto"></small></span><button type="button" class="meerzet" data-meer="camfoto" id="meerCamFoto"></button></div>
@@ -3029,6 +3059,18 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
     <button class="go" id="rtbBewaar">Bewaren</button>
     <button class="go" id="rtbTerug" hidden>Vaste tekst terugzetten</button>
     <button class="go" id="rtbAnnuleer">Annuleren</button>
+  </div>
+</div></dialog>
+<!-- 21-11-2026 g (Bart: "alles moet een instelling zijn"): Laatste in de bar? zelf wijzigen: eigen foto's, uitzetten, toevoegen, en de teksten -->
+<dialog id="infoFotoDlg"><div class="dlg">
+  <h3>Foto's van Laatste in de bar?</h3>
+  <p class="leeg" id="ifUitleg" style="margin:0 0 10px"></p>
+  <div id="ifLijst" class="iflijst"></div>
+  <p class="err" id="ifErr" style="color:var(--muted)" aria-live="polite"></p>
+  <div class="row" style="margin-top:12px">
+    <button class="go" id="ifErbij">Foto toevoegen</button>
+    <button class="go" id="ifTekst">Teksten wijzigen</button>
+    <button class="go" id="ifSluit">Sluiten</button>
   </div>
 </div></dialog>
 <dialog id="herinneringDlg"><div class="dlg">
@@ -3442,7 +3484,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
   </div>
 </div></dialog>
 
-<script src="teksten.js?v=21112026c"></script>
+<script src="teksten.js?v=21112026e"></script>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -3611,7 +3653,7 @@ function proefDb(){
   const bewaar = () => { try { localStorage.setItem(SLEUTEL, JSON.stringify(D)); } catch(e){ if(!bewaarFout){ bewaarFout = true; alert("Opslaan in de browser lukte niet (opslag vol of privévenster); na herladen is dit weg."); } } };
   const rijen = t => D[t] || (D[t] = []);
   const SLEUTELS = { boekingen:["id"], rad:["nr"], kamer_vinkjes:["nr"], gast_links:["nr"], instellingen:["sleutel"], checkin_status:["nr"], ontbijt:["nr","datum"], consumpties:["id"], bonnen:["id"],
-    producten:["id"], poets_dagen:["datum"], poets_links:["id"], poets_uren:["id"], poets_uren_log:["id"], broodjes:["id"], aanvragen:["id"], tips:["id"], aankondigingen:["id"], aanmeldingen:["id"], eigen_plekken:["id"], camper_aanvragen:["id"], taken:["id"], boodschappen:["id"], inkoop_bonnen:["id"], uitgaven:["id"], vaste_lasten:["id"], gast_teksten:["soort","taal"] };
+    producten:["id"], poets_dagen:["datum"], poets_links:["id"], poets_uren:["id"], poets_uren_log:["id"], broodjes:["id"], aanvragen:["id"], tips:["id"], aankondigingen:["id"], aanmeldingen:["id"], eigen_plekken:["id"], camper_aanvragen:["id"], taken:["id"], info_fotos:["sleutel"], boodschappen:["id"], inkoop_bonnen:["id"], uitgaven:["id"], vaste_lasten:["id"], gast_teksten:["soort","taal"] };
   const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : "proef-" + Math.random().toString(36).slice(2));
   if(nummersErbij) bewaar();
   /* 16-11-2026 (audit F05, T04): de echte database schrijft zelf een logboek bij elke wijziging van de bar (bar_logboek, ook de bron
@@ -3750,7 +3792,7 @@ const db = PROEF ? proefDb() : !TESTVERSIE ? echteDb : (() => {
   /* 15-11-2026 (Bart: "geen risico dat testen onze administratie beïnvloedt"): de testversie schrijft niets meer in de echte database.
      Weg: de uitzondering voor checkin_status van 26-09-2026 (Gecontroleerd zette een kamergast in de SES-wachtrij, ses_modus echt) en
      poets_lijst (zet poets_links.laatst_gezien). Wachtwoord wijzigen of opvragen kan hier ook niet. Alleen functies die echt alleen lezen. */
-  const LEES_RPC = new Set(["gast_ontbijt", "gast_checkin_lees", "camper_aanvraag_lees", "gast_samen_links", "gast_verleng_info", "gast_teksten_lees", "gast_datum_info", "gast_rad", "gast_prijzen", "gast_foto"]); /* 20-11-2026 d: gast_foto alleen lezen; gast_foto_zet niet (de testsite houdt de foto in het tabblad) */
+  const LEES_RPC = new Set(["gast_ontbijt", "gast_checkin_lees", "camper_aanvraag_lees", "gast_samen_links", "gast_verleng_info", "gast_teksten_lees", "gast_datum_info", "gast_rad", "gast_prijzen", "gast_foto", "gast_info", "gast_info_fotos"]); /* 20-11-2026 d: gast_foto alleen lezen; gast_foto_zet niet (de testsite houdt de foto in het tabblad) */
   const geenAuth = async () => ({ data:null, error:{ message:"Testversie: alleen kijken, er wordt niets opgeslagen" } });
   /* 15-11-2026 e (Bart: "laat me daarna de complete versie beoordelen"): btw, beoordelen en afsluiten kun je op de testsite proberen.
      Dat komt alleen in dit tabblad (sessionStorage), nooit in de database. */
@@ -4705,6 +4747,138 @@ function camFotoKiezer(){
     i.onchange = () => { const f = i.files && i.files[0]; i.value = ""; if(f) camFotoKies(f); }; document.body.appendChild(i); }
   i.click();
 }
+/* 21-11-2026 f (Bart: "Ben je de laatste in de bar? ... de foto's van onze lampenknoppen, die zitten echt op super onlogische plekken"):
+   regel bovenaan de Bar-pagina (variant C op de plaats van D); tikken opent een venster met de drie foto's. De vaste foto's staan als
+   bestanden in site/ (zonder locatiegegevens; op foto 1 is het sleutelbordje vervaagd).
+   21-11-2026 g (Bart: "alles moet een instelling zijn"): aan/uit, de teksten en de foto's zijn te wijzigen in Meer > Gasten (Foto's voor
+   gasten). Instelling info_bar_lampen ('uit' = weg), info_bar_lampen_teksten (zoals rad_teksten), tabel info_fotos (eigen foto per vaste
+   foto, extra foto's, aan/uit per foto). De gast leest het via gast_info en gast_info_fotos; zonder die functies de vaste tekst en foto's. */
+const BAR_LAMP_FOTOS = ["bar-lampen-1.jpg", "bar-lampen-2.jpg", "bar-lampen-3.jpg"];
+const BAR_LAMP = {
+  nl:{ kop:"Laatste in de bar?", sub:"Zo doe je de lampen en ventilatoren uit", titel:"Ben je de laatste in de bar?",
+    tekst:"Of denk je dat je de laatste bent? Wil je dan zo vriendelijk zijn de lampen en de ventilatoren uit te doen en de deur dicht te maken? De knoppen zitten op verrassende plekken, op de foto's zie je waar.",
+    fotos:["Lampjes boven de bar: de ronde knop in het kastje naast het krijtbord", "Lamp in de keuken: de bovenste schakelaar onder de plank met spelletjes", "Ventilatoren: de twee afstandsbedieningen naast de deur naar het terras"], sluit:"Sluiten" },
+  en:{ kop:"Last one in the bar?", sub:"How to switch off the lights and fans", titel:"Are you the last one in the bar?",
+    tekst:"Or do you think you are? Then would you be so kind as to switch off the lights and the fans and close the door? The switches are in surprising places; the photos show you where.",
+    fotos:["Lights above the bar: the round knob in the cupboard next to the chalkboard", "Kitchen light: the top switch under the shelf with games", "Fans: the two remote controls next to the door to the terrace"], sluit:"Close" },
+  de:{ kop:"Die Letzten in der Bar?", sub:"So macht ihr Licht und Ventilatoren aus", titel:"Seid ihr die Letzten in der Bar?",
+    tekst:"Oder glaubt ihr, dass ihr die Letzten seid? Wärt ihr dann so lieb, das Licht und die Ventilatoren auszumachen und die Tür zu schließen? Die Schalter sitzen an überraschenden Stellen, auf den Fotos seht ihr, wo.",
+    fotos:["Lampen über der Bar: der runde Knopf im Schränkchen neben der Kreidetafel", "Licht in der Küche: der obere Schalter unter dem Regal mit den Spielen", "Ventilatoren: die zwei Fernbedienungen neben der Tür zur Terrasse"], sluit:"Schließen" },
+  es:{ kop:"¿Los últimos en el bar?", sub:"Así se apagan las luces y los ventiladores", titel:"¿Sois los últimos en el bar?",
+    tekst:"¿O creéis que lo sois? ¿Seríais tan amables de apagar las luces y los ventiladores y cerrar la puerta? Los interruptores están en sitios inesperados; en las fotos veis dónde.",
+    fotos:["Luces sobre la barra: el botón redondo en el armarito junto a la pizarra", "Luz de la cocina: el interruptor de arriba, bajo la estantería de los juegos", "Ventiladores: los dos mandos a distancia junto a la puerta de la terraza"], sluit:"Cerrar" },
+  it:{ kop:"Ultimi al bar?", sub:"Come spegnere luci e ventilatori", titel:"Siete gli ultimi al bar?",
+    tekst:"O pensate di esserlo? Sareste così gentili da spegnere le luci e i ventilatori e chiudere la porta? Gli interruttori sono in posti inaspettati: nelle foto vedete dove.",
+    fotos:["Luci sopra il bancone: il pulsante rotondo nell'armadietto accanto alla lavagna", "Luce della cucina: l'interruttore in alto sotto la mensola con i giochi", "Ventilatori: i due telecomandi accanto alla porta della terrazza"], sluit:"Chiudi" },
+  fr:{ kop:"Les derniers au bar ?", sub:"Comment éteindre les lumières et les ventilateurs", titel:"Vous êtes les derniers au bar ?",
+    tekst:"Ou vous pensez l'être ? Auriez-vous la gentillesse d'éteindre les lumières et les ventilateurs et de fermer la porte ? Les interrupteurs sont à des endroits inattendus ; les photos vous montrent où.",
+    fotos:["Lumières au-dessus du bar : le bouton rond dans le petit placard à côté du tableau noir", "Lumière de la cuisine : l'interrupteur du haut sous l'étagère à jeux", "Ventilateurs : les deux télécommandes à côté de la porte de la terrasse"], sluit:"Fermer" },
+  pt:{ kop:"Os últimos no bar?", sub:"Como desligar as luzes e as ventoinhas", titel:"São os últimos no bar?",
+    tekst:"Ou acham que são? Podem fazer o favor de desligar as luzes e as ventoinhas e fechar a porta? Os interruptores estão em sítios inesperados; nas fotos veem onde.",
+    fotos:["Luzes por cima do bar: o botão redondo no armário ao lado do quadro de ardósia", "Luz da cozinha: o interruptor de cima, debaixo da prateleira dos jogos", "Ventoinhas: os dois comandos ao lado da porta para o terraço"], sluit:"Fechar" },
+  cs:{ kop:"Poslední v baru?", sub:"Jak zhasnout světla a vypnout ventilátory", titel:"Jste v baru poslední?",
+    tekst:"Nebo si to aspoň myslíte? Byli byste tak laskaví a zhasli světla, vypnuli ventilátory a zavřeli dveře? Vypínače jsou na nečekaných místech, na fotkách uvidíte kde.",
+    fotos:["Světla nad barem: kulatý knoflík ve skříňce vedle tabule", "Světlo v kuchyni: horní vypínač pod policí s hrami", "Ventilátory: dva dálkové ovladače u dveří na terasu"], sluit:"Zavřít" },
+  fi:{ kop:"Viimeisinä baarissa?", sub:"Näin sammutatte valot ja tuulettimet", titel:"Oletteko viimeisinä baarissa?",
+    tekst:"Vai luuletteko olevanne viimeiset? Olisitteko niin ystävällisiä, että sammutatte valot ja tuulettimet ja suljette oven? Katkaisijat ovat yllättävissä paikoissa, kuvista näette missä.",
+    fotos:["Baarin yläpuolen valot: pyöreä nuppi kaapissa liitutaulun vieressä", "Keittiön valo: ylempi katkaisija pelihyllyn alla", "Tuulettimet: kaksi kaukosäädintä terassin oven vieressä"], sluit:"Sulje" },
+  no:{ kop:"Sist i baren?", sub:"Slik slår dere av lys og vifter", titel:"Er dere de siste i baren?",
+    tekst:"Eller tror dere at dere er det? Vil dere da være så snille å slå av lyset og viftene og lukke døra? Bryterne sitter på overraskende steder, på bildene ser dere hvor.",
+    fotos:["Lys over baren: den runde knappen i skapet ved siden av krittavla", "Lys på kjøkkenet: den øverste bryteren under hylla med spill", "Vifter: de to fjernkontrollene ved døra til terrassen"], sluit:"Lukk" },
+  sv:{ kop:"Sist kvar i baren?", sub:"Så släcker ni lamporna och stänger av fläktarna", titel:"Är ni sist kvar i baren?",
+    tekst:"Eller tror ni att ni är det? Vill ni då vara så snälla och släcka lamporna, stänga av fläktarna och stänga dörren? Knapparna sitter på oväntade ställen, på bilderna ser ni var.",
+    fotos:["Lampor ovanför baren: den runda knappen i skåpet bredvid griffeltavlan", "Lampa i köket: den översta strömbrytaren under hyllan med spel", "Fläktar: de två fjärrkontrollerna bredvid dörren till terrassen"], sluit:"Stäng" },
+  pl:{ kop:"Ostatni w barze?", sub:"Jak wyłączyć światła i wentylatory", titel:"Jesteście ostatni w barze?",
+    tekst:"A może tak myślicie? Bądźcie tak mili i wyłączcie światła i wentylatory oraz zamknijcie drzwi. Włączniki są w zaskakujących miejscach, na zdjęciach zobaczycie gdzie.",
+    fotos:["Światła nad barem: okrągły przycisk w szafce obok tablicy kredowej", "Światło w kuchni: górny włącznik pod półką z grami", "Wentylatory: dwa piloty obok drzwi na taras"], sluit:"Zamknij" }
+};
+const INFO_GROEP = "bar_lampen";
+/* de vaste foto's: sleutel in info_fotos, bestand in site/, welke fotoregel uit BAR_LAMP, standaardvolgorde */
+const INFO_VAST = BAR_LAMP_FOTOS.map((bestand, nr) => ({ sleutel: INFO_GROEP + "_" + (nr + 1), bestand, nr, volgorde: nr + 1 }));
+const INFO_FOTO_MAX = 400000; /* zelfde grens als de database (info_fotos_foto) */
+const infoFotoGeldig = d => typeof d === "string" && d.length <= INFO_FOTO_MAX && /^data:image\/jpeg;base64,[A-Za-z0-9+/]+={0,2}$/.test(d);
+const infoSleutelGeldig = k => typeof k === "string" && /^[a-z][a-z0-9_]{0,59}$/.test(k);
+/* rijen (uit info_fotos of gast_info) samen met de vaste foto's: geen rij = vaste foto, aan; een extra foto telt alleen mét eigen foto */
+function infoLijst(rijen){
+  const per = {}; (Array.isArray(rijen) ? rijen : []).forEach(r => { if(r && infoSleutelGeldig(r.sleutel)) per[r.sleutel] = r; });
+  const getal = (v, std) => Number.isFinite(Number(v)) && v !== null && v !== "" ? Number(v) : std;
+  const uit = INFO_VAST.map(v => { const r = per[v.sleutel]; delete per[v.sleutel];
+    return { sleutel: v.sleutel, vast: v, volgorde: getal(r && r.volgorde, v.volgorde), aan: !r || r.aan !== false, eigen: !!(r && (r.eigen || r.foto)), foto: (r && r.foto) || null, versie: (r && r.versie) || 0 }; });
+  Object.values(per).forEach(r => { if(r.eigen || r.foto) uit.push({ sleutel: r.sleutel, vast: null, volgorde: getal(r.volgorde, 99), aan: r.aan !== false, eigen: true, foto: r.foto || null, versie: r.versie || 0 }); });
+  return uit.sort((a, b) => a.volgorde - b.volgorde || (a.sleutel < b.sleutel ? -1 : 1));
+}
+/* teksten: eigen tekst (instelling info_bar_lampen_teksten) over de vaste tekst heen; altijd als tekst (vrij bij het tonen) */
+const BAR_LAMP_DELEN_VAST = [ { k:"kop", naam:"Regel op de Bar-pagina: kop" }, { k:"sub", naam:"Regel op de Bar-pagina: kleine regel" },
+  { k:"titel", naam:"Venster: kop" }, { k:"tekst", naam:"Venster: uitleg boven de foto's" } ];
+function barLampVast(taal, k){
+  const l = BAR_LAMP[taal] || BAR_LAMP.en;
+  if(/^foto_/.test(k)){ const v = INFO_VAST.find(x => "foto_" + x.sleutel === k); return v ? l.fotos[v.nr] : ""; }
+  return l[k] != null ? l[k] : "";
+}
+let gastInfo = null; /* uitkomst van gast_info; null = nog niet opgehaald of (nog) niet in de database: dan de vaste tekst en foto's */
+let gastInfoGehaald = false; /* review 21-11 g: de regel pas tonen als gast_info één keer geantwoord heeft (anders staat hij even in beeld terwijl Bart hem uitzette) */
+const gastInfoFotos = {}; /* sleutel -> { versie, foto }: eigen foto's die al opgehaald zijn */
+const INFO_PROEF_SL = "kayu_probeer_info"; /* testsite: de foto's zoals in deze browser geprobeerd (los van de rest: foto's zijn groot) */
+const infoProefLees = () => { if(!TESTVERSIE) return null; try { const v = JSON.parse(localStorage.getItem(INFO_PROEF_SL) || "null"); return Array.isArray(v) ? v : null; } catch(e){ return null; } };
+async function gastInfoHaal(){
+  if(!gastCode || !gastData || gastData.fout) return;
+  let d = gastInfo;
+  try { const { data, error } = await db.rpc("gast_info", { p_code: gastCode, p_groep: INFO_GROEP });
+    if(!error && data && !data.fout) d = data; else if(!error && data && data.fout) d = null; } catch(e){} /* een leesfout: de vorige stand houden */
+  if(TESTVERSIE){ /* testsite: aan/uit, teksten en foto's zoals in deze browser geprobeerd */
+    const pi = radProefLees().__inst || {}, pf = infoProefLees();
+    if(pi.info_bar_lampen != null || pi.info_bar_lampen_teksten != null || pf){ d = Object.assign({ aan:true, teksten:null, fotos:[] }, d);
+      if(pi.info_bar_lampen != null) d.aan = String(pi.info_bar_lampen) !== "uit";
+      if(pi.info_bar_lampen_teksten != null) d.teksten = pi.info_bar_lampen_teksten || null;
+      if(pf) d.fotos = pf.map(r => ({ sleutel: r.sleutel, volgorde: r.volgorde, aan: r.aan !== false, eigen: !!r.foto, versie: r.versie || 0 })); } }
+  const oud = JSON.stringify(gastInfo), eerste = !gastInfoGehaald; gastInfo = d; gastInfoGehaald = true;
+  if(eerste || JSON.stringify(d) !== oud) tekenGastVers();
+}
+const barLampAanGast = () => gastInfoGehaald && !(gastInfo && gastInfo.aan === false);
+function barLampT(){
+  const taal = BAR_LAMP[gastTaal] ? gastTaal : "en", eigen = radTekstenLees(gastInfo && gastInfo.teksten);
+  const t = k => radEigenTekst(eigen, taal, k) || barLampVast(taal, k);
+  return { kop:t("kop"), sub:t("sub"), titel:t("titel"), tekst:t("tekst"), sluit:(BAR_LAMP[taal] || BAR_LAMP.en).sluit, foto: s => t("foto_" + s) };
+}
+const barLampRij = () => { if(!barLampAanGast()) return ""; const l = barLampT(); return `<div class="dag barlampdag"><button type="button" class="barlamp" data-barlamp="1">${gIcoon("lamp")}` +
+  `<span><b>${vrij(l.kop)}</b><span class="bls">${vrij(l.sub)}</span></span><span class="blp" aria-hidden="true">›</span></button></div>`; };
+/* de eigen foto's ophalen (pas bij openen, en alleen als ze veranderd zijn); true als er iets nieuws is */
+async function gastInfoFotosHaal(lijst){
+  const nodig = lijst.filter(x => x.eigen && !(gastInfoFotos[x.sleutel] && gastInfoFotos[x.sleutel].versie === x.versie));
+  if(!nodig.length) return false;
+  let fotos = null;
+  if(TESTVERSIE && infoProefLees()) fotos = infoProefLees().filter(r => r.aan !== false && r.foto).map(r => ({ sleutel: r.sleutel, foto: r.foto }));
+  else try { const { data, error } = await db.rpc("gast_info_fotos", { p_code: gastCode, p_groep: INFO_GROEP }); if(!error && data && Array.isArray(data.fotos)) fotos = data.fotos; } catch(e){}
+  if(!fotos) return false;
+  const per = {}; fotos.forEach(f => { if(f && infoSleutelGeldig(f.sleutel) && infoFotoGeldig(f.foto)) per[f.sleutel] = f.foto; });
+  nodig.forEach(x => { if(per[x.sleutel]) gastInfoFotos[x.sleutel] = { versie: x.versie, foto: per[x.sleutel] }; });
+  return true;
+}
+function barLampOpen(){
+  let d = document.getElementById("barLampDlg");
+  if(!d){ d = document.createElement("dialog"); d.id = "barLampDlg"; d.className = "raddlg lampdlg"; document.body.appendChild(d); }
+  d.setAttribute("aria-labelledby", "barLampKop");
+  /* de foto's laden pas als het venster opengaat (staan niet in de pagina zolang niemand tikt). Een eigen foto die nog niet binnen is,
+     wacht verborgen; is hij er, dan komt hij op zijn plek; lukt ophalen niet, dan bij een vaste foto de vaste foto, een extra foto blijft weg
+     (review 21-11 g: niet het hele venster opnieuw tekenen, en nooit de oude foto met de nieuwe uitleg). */
+  const l = barLampT(), lijst = infoLijst(gastInfo && gastInfo.fotos).filter(x => x.aan);
+  const binnen = x => x.eigen && gastInfoFotos[x.sleutel] && gastInfoFotos[x.sleutel].versie === x.versie ? gastInfoFotos[x.sleutel].foto : null;
+  const fig = x => { const onder = l.foto(x.sleutel), uitleg = onder ? `<figcaption>${vrij(onder)}</figcaption>` : "", e = binnen(x);
+    if(e) return `<figure><img src="${e}" alt="">${uitleg}</figure>`;
+    if(x.eigen) return `<figure data-infowacht="${vrij(x.sleutel)}" hidden><img alt="">${uitleg}</figure>`;
+    return x.vast ? `<figure><img src="${x.vast.bestand}" alt="" width="900" height="1200">${uitleg}</figure>` : ""; };
+  d.innerHTML = `<div class="radin"><h2 id="barLampKop">🌙 ${vrij(l.titel)}</h2><p class="lamptekst">${vrij(l.tekst)}</p>` + lijst.map(fig).join("") +
+    `<div class="radknoppen"><button type="button" data-barlampsluit="1">${vrij(l.sluit)}</button></div></div>`;
+  d.querySelector("[data-barlampsluit]").onclick = () => d.close();
+  d.onclick = e => { if(e.target === d) d.close(); }; /* tik naast het venster sluit het ook */
+  if(!d.open) d.showModal();
+  const r = d.querySelector(".radin"); if(r) r.scrollTop = 0;
+  if(!d.querySelector("[data-infowacht]")) return;
+  gastInfoFotosHaal(lijst).then(() => d.querySelectorAll("[data-infowacht]").forEach(f => {
+    const x = lijst.find(y => y.sleutel === f.dataset.infowacht), e = x && binnen(x), img = f.querySelector("img");
+    if(e) img.src = e; else if(x && x.vast){ img.src = x.vast.bestand; img.width = 900; img.height = 1200; } else { f.remove(); return; }
+    f.removeAttribute("data-infowacht"); f.hidden = false; }));
+}
 function camFotoOpen(){
   const ct = camT();
   let d = document.getElementById("camFotoDlg");
@@ -4975,7 +5149,10 @@ const TS = {
     waar:"Zo staan ze op de gastenpagina.", alles:"Alle teksten van het rad" },
   bericht: { sleutel:"bericht_teksten", titel:"Overzicht en bedankbericht", delen:() => BERICHT_DELEN, vast:(taal, k) => berichtTekstVast(taal, k),
     waar:"Zo staan ze in de berichten aan gasten: de bon voor kamergasten, het overzicht voor campers en het bedankbericht na vertrek. De naam van de gast, het bonnetje, de links en de groet zet de app er zelf bij.",
-    alles:"Alle zinnen van het overzicht en het bedankbericht" }
+    alles:"Alle zinnen van het overzicht en het bedankbericht" },
+  /* 21-11-2026 g: Laatste in de bar? (de regel op de Bar-pagina, het venster en de uitleg onder elke foto) */
+  barlamp: { sleutel:"info_bar_lampen_teksten", titel:"Teksten van Laatste in de bar?", delen:() => barLampDelen(), vast:(taal, k) => barLampVast(taal, k),
+    waar:"Zo staan ze bovenaan de Bar-pagina van de gast en in het venster met de foto's.", alles:"Alle teksten van Laatste in de bar?" }
 };
 const tsRuw = set => { const p = TESTVERSIE ? (radProefLees().__inst || {}) : {}, k = TS[set].sleutel; return p[k] != null ? p[k] : instellingen[k]; };
 const tsEigen = set => radTekstenLees(tsRuw(set));
@@ -5002,7 +5179,7 @@ async function tsBewaar(set, eigen){
   const sl = TS[set].sleutel;
   const leeg = !TALEN.some(t => eigen[t] && Object.keys(eigen[t]).length) && !radNogAantal(eigen);
   const waarde = leeg ? "" : JSON.stringify(eigen);
-  if(TESTVERSIE){ const m = radProefLees(); m.__inst = Object.assign({}, m.__inst, { [sl]: waarde }); radProefBewaar(m); return ""; }
+  if(TESTVERSIE){ const m = radProefLees(); m.__inst = Object.assign({}, m.__inst, { [sl]: waarde }); return radProefBewaar(m) ? "" : "bewaren in deze browser lukte niet (opslag vol)"; }
   const { error } = await db.from("instellingen").upsert({ sleutel:sl, waarde, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
   if(error) return error.message;
   instellingen[sl] = waarde; return "";
@@ -5185,6 +5362,194 @@ async function wijzigFacebook(){
   if(f === radFacebook()) return;
   if(TESTVERSIE){ const m = radProefLees(); m.__inst = Object.assign({}, m.__inst, { facebook:f }); radProefBewaar(m); alert("Testsite: alleen in deze browser, niet in de database."); tekenMeer(); return; }
   await bewaarInstelling("facebook", f);
+}
+/* ---- 21-11-2026 g (Bart: "alles moet een instelling zijn"): Laatste in de bar? in Meer > Gasten. Aan/uit (instelling info_bar_lampen),
+   per foto een eigen foto, uitzetten of terug naar de vaste foto, extra foto's toevoegen (tabel info_fotos) en alle teksten (instelling
+   info_bar_lampen_teksten, zelfde venster als de teksten van het rad). Testsite: alles alleen in deze browser. ---- */
+let infoRijen = null;  /* rijen uit info_fotos voor Laatste in de bar? (met de foto's); null = nog niet geladen */
+let infoStand = "", infoFoutTekst = ""; /* "ok", "ontbreekt" (tabel nog niet in de database) of "fout" */
+const barLampInst = () => { const p = TESTVERSIE ? (radProefLees().__inst || {}) : {}; return p.info_bar_lampen != null ? p.info_bar_lampen : instellingen.info_bar_lampen; };
+const barLampAan = () => String(barLampInst() || "").trim() !== "uit";
+const infoHostLijst = () => infoLijst(infoRijen || []);
+function barLampDelen(){
+  return BAR_LAMP_DELEN_VAST.concat(infoHostLijst().map((x, i) => ({ k: "foto_" + x.sleutel, naam: `Foto ${i + 1}: uitleg eronder` })));
+}
+async function barLampAanWissel(){
+  const nieuw = barLampAan() ? "uit" : "aan";
+  if(!confirm(nieuw === "aan" ? "Aanzetten? Gasten zien dan bovenaan de Bar-pagina de regel Laatste in de bar?, met de foto's van de lichtknoppen."
+    : "Uitzetten? Dan zien gasten de regel Laatste in de bar? niet meer. Er wordt niets gewist: de foto's en teksten blijven bewaard.")) return;
+  if(TESTVERSIE){ const m = radProefLees(); m.__inst = Object.assign({}, m.__inst, { info_bar_lampen:nieuw });
+    alert(radProefBewaar(m) ? "Testsite: alleen in deze browser, niet in de database." : "Testsite: bewaren in deze browser lukte niet (opslag vol)."); tekenMeer(); return; }
+  await bewaarInstelling("info_bar_lampen", nieuw);
+}
+function infoMeerTekst(){
+  const e = tsEigen("barlamp"), n = tsAantal("barlamp", e), w = radNogAantal(e);
+  const t = "Teksten: " + (n ? `${n} aangepast` + (w ? `, ${w} nog vertalen` : "") : "vaste tekst, in de taal van de gast") + ".";
+  if(!infoRijen) return "Foto's wijzigen, uitzetten of erbij zetten. " + t;
+  const l = infoHostLijst(), eigen = l.filter(x => x.eigen).length, uit = l.filter(x => !x.aan).length;
+  return `${l.length} foto's` + (eigen ? `, ${eigen} eigen` : "") + (uit ? `, ${uit} uitgezet` : "") + ". " + t;
+}
+/* testsite: de foto's in deze browser (localStorage), los van de database; begint bij wat de database nu heeft */
+const infoProefBewaar = l => { try { localStorage.setItem(INFO_PROEF_SL, JSON.stringify(l)); return true; } catch(e){ return false; } };
+async function infoHostLaad(){
+  if(TESTVERSIE && infoProefLees()){ infoRijen = infoProefLees(); infoStand = "ok"; return; }
+  let r; try { r = await db.from("info_fotos").select("sleutel, groep, volgorde, aan, foto, gewijzigd").eq("groep", INFO_GROEP); } catch(e){ r = { error:{ message:String(e && e.message || e) } }; }
+  if(r.error){
+    if(TESTVERSIE){ infoRijen = []; infoStand = "ok"; return; } /* testsite: proberen kan ook zonder de tabel */
+    infoStand = r.error.code === "PGRST205" || r.error.code === "42P01" || /schema cache|does not exist/i.test(r.error.message || "") ? "ontbreekt" : "fout";
+    infoFoutTekst = r.error.message || ""; return;
+  }
+  infoRijen = r.data || []; infoStand = "ok";
+}
+/* één foto wijzigen: wijz = { foto } / { aan } / { foto, aan, volgorde } (nieuw) of "weg"; "" = gelukt, anders de fout.
+   Eerst bijwerken; bestaat de rij nog niet, dan toevoegen (geen upsert: zelfde opbouw als de rest van de app). */
+async function infoZet(sleutel, wijz){
+  const vast = INFO_VAST.find(v => v.sleutel === sleutel);
+  if(TESTVERSIE){
+    const l = (infoProefLees() || (infoRijen || []).map(r => ({ sleutel:r.sleutel, groep:r.groep, volgorde:r.volgorde, aan:r.aan, foto:r.foto || null }))).filter(r => r && (wijz !== "weg" || r.sleutel !== sleutel));
+    if(wijz !== "weg"){ let r = l.find(x => x.sleutel === sleutel);
+      if(!r){ r = { sleutel, groep:INFO_GROEP, volgorde: vast ? vast.volgorde : 0, aan:true, foto:null }; l.push(r); }
+      Object.assign(r, wijz, { versie: Date.now() }); }
+    return infoProefBewaar(l) ? "" : "Bewaren in deze browser lukte niet (te weinig ruimte). Haal een extra foto weg of kies een kleinere.";
+  }
+  if(wijz === "weg"){ const { error } = await db.from("info_fotos").delete().eq("sleutel", sleutel); return error ? error.message : ""; }
+  const rij = Object.assign({}, wijz, { gewijzigd: new Date().toISOString() });
+  const bijwerken = async () => { const { data, error } = await db.from("info_fotos").update(rij).eq("sleutel", sleutel).select("sleutel");
+    return error ? error.message : data && data.length ? "" : null; }; /* null = die rij bestaat niet */
+  const toevoegen = async () => { const { error } = await db.from("info_fotos").insert(Object.assign({ sleutel, groep: INFO_GROEP, volgorde: vast ? vast.volgorde : 0, aan: true, foto: null }, rij));
+    return !error ? "" : error.code === "23505" ? null : error.message; }; /* null = bestaat al (tegelijk op een ander toestel) */
+  /* review 21-11 g: eerst wat waarschijnlijk is (de rij staat al in de lijst: bijwerken; anders toevoegen), zodat een foto maar één keer over de lijn gaat */
+  const eerst = (infoRijen || []).some(r => r.sleutel === sleutel) ? [bijwerken, toevoegen] : [toevoegen, bijwerken];
+  for(const stap of eerst.concat(eerst)){ const f = await stap(); if(f !== null) return f; }
+  return "Bewaren mislukt, probeer het nog eens.";
+}
+/* na bewaren de lijst hier bijwerken, zonder alle foto's opnieuw op te halen (review 21-11 g: scheelt mobiele data) */
+function infoLokaal(sleutel, wijz){
+  if(!infoRijen) return;
+  if(wijz === "weg"){ infoRijen = infoRijen.filter(r => r.sleutel !== sleutel); return; }
+  let r = infoRijen.find(x => x.sleutel === sleutel);
+  if(!r){ const v = INFO_VAST.find(x => x.sleutel === sleutel); r = { sleutel, groep: INFO_GROEP, volgorde: v ? v.volgorde : 0, aan: true, foto: null }; infoRijen = infoRijen.concat([r]); }
+  Object.assign(r, wijz);
+}
+/* verkleinen tot hooguit 1200 pixels (langste kant), als JPEG, zonder locatiegegevens; past hij niet, dan kleiner of grover */
+async function infoVerklein(f){
+  const url = URL.createObjectURL(f);
+  try {
+    const img = await new Promise((ok, nee) => { const i = new Image(); i.onload = () => ok(i); i.onerror = nee; i.src = url; });
+    const bw = img.naturalWidth, bh = img.naturalHeight; if(!bw || !bh) return null;
+    for(const [max, q] of [[1200, .8], [1200, .7], [1000, .7], [900, .65], [800, .6], [640, .6]]){
+      const sch = Math.min(1, max / Math.max(bw, bh)), w = Math.max(1, Math.round(bw * sch)), h = Math.max(1, Math.round(bh * sch));
+      const c = document.createElement("canvas"); c.width = w; c.height = h;
+      const x = c.getContext("2d"); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = "high"; x.fillStyle = "#FFFFFF"; x.fillRect(0, 0, w, h); x.drawImage(img, 0, 0, w, h);
+      const d = c.toDataURL("image/jpeg", q);
+      if(infoFotoGeldig(d)) return d;
+    }
+    return null;
+  } finally { URL.revokeObjectURL(url); }
+}
+function infoKiesBestand(klaar){
+  let i = document.getElementById("ifBestand");
+  if(!i){ i = document.createElement("input"); i.type = "file"; i.accept = "image/*"; i.id = "ifBestand"; i.hidden = true; document.body.appendChild(i); }
+  i.onchange = () => { const f = i.files && i.files[0]; i.value = ""; if(f) klaar(f); };
+  i.click();
+}
+let ifBezig = false, ifGekoppeld = false;
+const INFO_MAX_FOTOS = 8; /* review 21-11 g: niet eindeloos (elke foto tot 400.000 tekens; op de testsite in de browser) */
+const ifMelding = (t, fout) => { const el = document.getElementById("ifErr"); el.textContent = t || ""; el.style.color = fout ? "" : "var(--muted)"; };
+function ifZetBezig(aan, tekst){ ifBezig = aan; document.querySelectorAll("#infoFotoDlg button").forEach(b => b.disabled = aan); if(tekst != null) ifMelding(tekst); }
+async function openInfoFotos(){
+  ifKoppel();
+  const d = document.getElementById("infoFotoDlg");
+  infoRijen = null; tekenInfoFotos(); ifZetBezig(true, "Even laden...");
+  if(!d.open) d.showModal();
+  try { await infoHostLaad(); } finally { ifZetBezig(false); ifMelding(infoStand === "fout" ? "Laden is niet gelukt. Sluit en probeer het nog eens; lukt het weer niet, stuur Claude dan deze melding: " + infoFoutTekst : "", infoStand === "fout"); }
+  tekenInfoFotos(); tekenMeer();
+}
+function tekenInfoFotos(){
+  const kan = infoStand === "ok" && !!infoRijen, l = kan ? infoHostLijst() : [], eigen = tsEigen("barlamp");
+  document.getElementById("ifUitleg").textContent = !infoRijen && !infoStand ? "" :
+    infoStand === "ontbreekt" ? "Foto's en teksten wijzigen kan nog niet: de database is nog niet bijgewerkt. Gasten zien nu de vaste foto's en teksten."
+    : infoStand === "fout" ? "" : "Zo staan de foto's in het venster van de gast, van boven naar onder. Een eigen foto zet je op de plek van de vaste foto; terugzetten kan altijd.";
+  document.getElementById("ifLijst").innerHTML = l.map((x, i) => {
+    const onder = tsNu("barlamp", eigen, "nl", "foto_" + x.sleutel), src = x.eigen && x.foto ? x.foto : x.vast ? x.vast.bestand : "";
+    return `<div class="ifrij${x.aan ? "" : " uit"}" data-iffoto="${vrij(x.sleutel)}">` + (src ? `<img src="${vrij(src)}" alt="">` : `<span class="ifgeen"></span>`) +
+      `<div class="ifinfo"><b>Foto ${i + 1}${x.aan ? "" : " · uitgezet"}${x.eigen ? " · eigen foto" : ""}</b><span>${onder ? vrij(onder) : "Nog geen uitleg"}</span></div>` +
+      `<div class="ifknoppen"><button type="button" data-ifactie="uitleg">Uitleg wijzigen</button><button type="button" data-ifactie="ander">Andere foto</button>` +
+      `<button type="button" data-ifactie="aan">${x.aan ? "Uitzetten" : "Aanzetten"}</button>` +
+      (x.vast && x.eigen ? `<button type="button" data-ifactie="vast">Vaste foto terug</button>` : "") + (!x.vast ? `<button type="button" data-ifactie="weg">Weghalen</button>` : "") + `</div></div>`;
+  }).join("");
+  document.querySelectorAll("#ifLijst [data-ifactie]").forEach(b => b.onclick = () => infoActie(b.closest("[data-iffoto]").dataset.iffoto, b.dataset.ifactie));
+  ["ifTekst", "ifErbij"].forEach(id => document.getElementById(id).hidden = !kan);
+}
+function infoNa(fout, gelukt, sleutel, wijz){
+  if(fout){ ifMelding("Bewaren is niet gelukt. Probeer het nog eens; lukt het weer niet, stuur Claude dan deze melding: " + fout, true); return; }
+  infoLokaal(sleutel, wijz);
+  tekenInfoFotos(); tekenMeer(); ifMelding((TESTVERSIE ? "Testsite: alleen in deze browser bewaard. " : "") + gelukt);
+}
+async function infoFotoKies(sleutel, nieuw){
+  infoKiesBestand(async f => {
+    if(ifBezig) return;
+    ifZetBezig(true, "Foto verkleinen...");
+    let d = null; try { d = await infoVerklein(f); } catch(e){}
+    if(!d){ ifZetBezig(false, "Deze foto kan de app niet openen. Kies een andere foto (JPG of PNG), of maak er een schermafbeelding van en kies die."); return; }
+    ifMelding("Bewaren...");
+    let fout, k = sleutel, w; try {
+      if(nieuw){ const max = infoHostLijst().reduce((m, x) => Math.max(m, x.volgorde), 0);
+        k = INFO_GROEP + "_e" + Date.now().toString(36); w = { foto:d, aan:true, volgorde: max + 1 }; }
+      else w = { foto:d };
+      fout = await infoZet(k, w);
+    } finally { ifZetBezig(false); }
+    infoNa(fout, nieuw ? "Foto toegevoegd, onderaan. Tik op Uitleg wijzigen om er een uitleg onder te zetten." : "Foto vervangen.", k, w);
+  });
+}
+async function infoActie(sleutel, actie){
+  if(ifBezig) return;
+  const l = infoHostLijst(), i = l.findIndex(x => x.sleutel === sleutel), x = l[i]; if(!x) return;
+  if(actie === "uitleg"){
+    rtKoppel(); rtSet = "barlamp"; rtTaal = "nl"; document.getElementById("rtErr").textContent = ""; ifMelding("");
+    openRadTekstBewerk("foto_" + sleutel); return;
+  }
+  if(actie === "ander"){ infoFotoKies(sleutel, false); return; }
+  let fout, gelukt, wijz;
+  if(actie === "aan"){
+    wijz = { aan: !x.aan };
+    ifZetBezig(true, "Bewaren..."); try { fout = await infoZet(sleutel, wijz); } finally { ifZetBezig(false); }
+    gelukt = x.aan ? `Foto ${i + 1} staat uit: gasten zien hem niet meer.` : `Foto ${i + 1} staat weer aan.`;
+  } else if(actie === "vast"){
+    if(!confirm(`Foto ${i + 1} terugzetten naar de vaste foto? Je eigen foto wordt dan gewist.`)) return;
+    wijz = { foto:null };
+    ifZetBezig(true, "Bewaren..."); try { fout = await infoZet(sleutel, wijz); } finally { ifZetBezig(false); }
+    gelukt = `Foto ${i + 1} is weer de vaste foto.`;
+  } else if(actie === "weg"){
+    if(!confirm(`Foto ${i + 1} weghalen? De foto en de uitleg eronder worden gewist.`)) return;
+    wijz = "weg";
+    ifZetBezig(true, "Weghalen...");
+    try { fout = await infoZet(sleutel, wijz);
+      if(!fout){ /* de uitleg van deze foto ook uit de teksten, zodat er geen "nog vertalen" blijft staan van een foto die er niet meer is */
+        const k = "foto_" + sleutel, e = await tsVers("barlamp"); let anders = false;
+        TALEN.forEach(t => { if(e[t] && k in e[t]){ delete e[t][k]; anders = true; if(!Object.keys(e[t]).length) delete e[t]; }
+          if(e._nog && Array.isArray(e._nog[t]) && e._nog[t].includes(k)){ e._nog[t] = e._nog[t].filter(y => y !== k); anders = true; if(!e._nog[t].length) delete e._nog[t]; } });
+        if(e._nog && !Object.keys(e._nog).length) delete e._nog;
+        if(anders){ const f2 = await tsBewaar("barlamp", e); if(f2) gelukt = "Foto weggehaald. Alleen de uitleg eronder wissen lukte niet (" + f2 + "); dat kan geen kwaad."; }
+      }
+    } finally { ifZetBezig(false); }
+    gelukt = gelukt || "Foto weggehaald.";
+  } else return;
+  infoNa(fout, gelukt, sleutel, wijz);
+}
+function ifKoppel(){
+  if(ifGekoppeld) return; ifGekoppeld = true; rtKoppel();
+  const d = document.getElementById("infoFotoDlg");
+  document.getElementById("ifSluit").onclick = () => { if(!ifBezig) d.close(); };
+  d.addEventListener("cancel", e => { if(ifBezig) e.preventDefault(); });
+  document.getElementById("ifErbij").onclick = () => { if(ifBezig) return;
+    if(infoHostLijst().length >= INFO_MAX_FOTOS){ ifMelding(`Er staan al ${INFO_MAX_FOTOS} foto's in. Haal er eerst een weg, of vervang er een met Andere foto.`, true); return; }
+    infoFotoKies(null, true); };
+  document.getElementById("ifTekst").onclick = () => { if(!ifBezig){ ifMelding(""); openTekstSet("barlamp"); } };
+  /* na het wijzigen van een tekst: de lijst bijwerken, en de melding (bewaard, vertaald, of welke taal nog niet) hier laten zien */
+  document.getElementById("radTekstBewerk").addEventListener("close", () => { if(!d.open || rtSet !== "barlamp") return; tekenInfoFotos();
+    if(!document.getElementById("radTekstDlg").open) ifMelding(document.getElementById("rtErr").textContent); });
+  document.getElementById("radTekstDlg").addEventListener("close", () => { if(d.open && rtSet === "barlamp") tekenInfoFotos(); });
 }
 const BEZORG_UITLEG = {
   nl:"Geen zin om te koken? Deze drie bezorgen bij ons op de finca en zijn heel lekker. Tik op Bekijken voor de menukaart en het telefoonnummer. Bestellen en betalen doe je rechtstreeks bij hen, dit komt niet op je honesty bar-lijst. Geef als adres Finca KaYu door.",
@@ -6249,7 +6614,7 @@ document.addEventListener("click", async e => {
   if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
 });
 let gastToastTimer = null, gastVasteLijst = null;
-const VERSIE = "21-11-2026 d";
+const VERSIE = "21-11-2026 g";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -6747,13 +7112,14 @@ async function startGast(code){
   gastNaarRegels(); /* 13-11-2026 e: alleen meteen na het formulier */
   gastSamenHaal();
   gastRadHaal(); /* 19-11-2026 d: het rad */
+  gastInfoHaal(); /* 21-11-2026 g: Laatste in de bar? (aan/uit, teksten, foto's) */
   gastPrijzenHaal(); /* 20-11-2026 c: prijzen uit de productenlijst */
   camFotoHaal(); /* 20-11-2026 d: foto van de camper */
   /* live: als Bart iets wijzigt (betaald, ontbijt bevestigd, bar), ververst de pagina zichzelf om de minuut */
   /* 18-10-2026 a: verloopt de link terwijl de pagina openstaat (24 uur na de uitchecktijd), dan meteen de melding "niet meer beschikbaar" (en dus geen poortcode meer) */
   const ververs = d => d && (!d.fout || d.fout === "verlopen");
-  setInterval(async () => { if(document.visibilityState !== "visible") return; try { const d = await gastHaal(); if(ververs(d)){ gastData = d; tekenGastVers(); gastRadHaal(); } } catch(e){} }, 60000);
-  document.addEventListener("visibilitychange", async () => { if(document.visibilityState !== "visible") return; try { const d = await gastHaal(); if(ververs(d)){ gastData = d; tekenGastVers(); gastRadHaal(); } } catch(e){} });
+  setInterval(async () => { if(document.visibilityState !== "visible") return; try { const d = await gastHaal(); if(ververs(d)){ gastData = d; tekenGastVers(); gastRadHaal(); gastInfoHaal(); } } catch(e){} }, 60000);
+  document.addEventListener("visibilitychange", async () => { if(document.visibilityState !== "visible") return; try { const d = await gastHaal(); if(ververs(d)){ gastData = d; tekenGastVers(); gastRadHaal(); gastInfoHaal(); } } catch(e){} });
 }
 /* zin onder elke routeknop (01-10-2026 b; sinds 20-11-2026 a: de route stopt bij het kruispunt met ons bordje, daarna de bordjes volgen) */
 const routeStopHtml = () => { const z = ((window.TEKSTEN && window.TEKSTEN.ROUTE_STOP) || {})[gastTaal] || ""; return z ? `<div class="info routestop" style="margin-top:6px;font-size:13px;line-height:1.4;color:var(--muted)">${z.replace(/</g, "&lt;")}</div>` : ""; };
@@ -7426,6 +7792,7 @@ function tekenGast(){
     const barProducten = gastIsGroep() ? producten.filter(p => !wasProduct(p) && !/^Glas /.test(p.naam))
       : isCamperPlek(gastData.kamer) ? producten : producten.filter(p => !wasProduct(p));
     const groepen = [...new Set(barProducten.map(p => p.groep))];
+    h += barLampRij(); /* 21-11-2026 f: Laatste in de bar? bovenaan */
     h += `<div class="dag"><div class="info" style="margin-bottom:6px">${t.barUitleg}</div>`;
     if(gastData.betaald) h += `<div class="melding">${gastBetaalWacht() ? t.barWacht : t.barBetaald}</div>`;
     else if(!gastBarMag()) h += `<div class="melding">${t.barDicht}</div>`;
@@ -7735,6 +8102,7 @@ function tekenGast(){
     bak.querySelectorAll("[data-camfoto]").forEach(kn => kn.onclick = e => { e.stopPropagation(); camFotoTik(); });
     bak.querySelectorAll("[data-raddrank]").forEach(kn => kn.onclick = () => { bak.querySelectorAll("[data-raddrank]").forEach(x => x.disabled = true); radDrankjeVanStart(kn.dataset.raddrank); });
     bak.querySelectorAll("[data-kopieer]").forEach(kn => kn.onclick = async () => { const ok = await kopieer(kn.dataset.kopieer); if(ok){ kn.classList.add("gekopieerd"); kn.textContent = "✓ " + kn.dataset.kopieer; } });
+    bak.querySelectorAll("[data-barlamp]").forEach(kn => kn.onclick = () => barLampOpen()); /* 21-11-2026 f */
     /* 20-11-2026 a: tegels poortcode en wifi; lukt kopiëren niet, dan staat de waarde geselecteerd zodat de gast hem zelf kan kopiëren */
     bak.querySelectorAll("[data-hrkopieer]").forEach(kn => kn.onclick = async () => { const ok = await kopieer(kn.dataset.hrkopieer); kn.classList.toggle("gekopieerd", !!ok);
       if(!ok){ try { const w = kn.querySelector(".hrwaarde"), r = document.createRange(), sel = getSelection(); r.selectNodeContents(w); sel.removeAllRanges(); sel.addRange(r); } catch(e){} } });
@@ -12112,6 +12480,11 @@ function tekenMeer(){
   { const rr = document.getElementById("meerRadRij"), fr = document.getElementById("meerFacebookRij"), tr = document.getElementById("meerRadTekstRij"); if(rr) rr.hidden = radRijen === null; if(fr) fr.hidden = radRijen === null; if(tr) tr.hidden = radRijen === null; }
   meerZet("mpRadTeksten", radMeerTekst());
   meerZet("mpBerichtTeksten", tsMeerTekst("bericht")); /* 20-11-2026 f */
+  /* 21-11-2026 g: Laatste in de bar? */
+  meerZet("mpBarLamp", barLampAan() ? "Staat aan: gasten zien bovenaan de Bar-pagina een regel die een venster opent met de foto's van de lichtknoppen."
+    : "Staat uit: gasten zien de regel Laatste in de bar? niet.");
+  meerZet("meerBarLamp", barLampAan() ? "Uitzetten" : "Aanzetten");
+  meerZet("mpBarLampFotos", infoMeerTekst());
   meerZet("mpFacebook", FB_RE.test(radFacebook()) ? `${radFacebook()}: in de kaart van het rad staat de knop Volg ons op Facebook.`
     : radFacebook() ? "Deze link klopt niet, dus gasten zien geen knop Volg ons op Facebook. Tik om hem te verbeteren." : "Leeg: geen knop Volg ons op Facebook. Tik en plak de link van jullie pagina (in de Facebook-app: Delen, Link kopiëren).");
   meerZet("mpInstagram", INSTA_RE.test(instaNaam()) ? `@${instaNaam()}: alle gasten zien vanaf hun aankomstdag de kaart "Mooie foto gemaakt?" met tag ons en volg ons.`
@@ -16260,6 +16633,8 @@ if(NIEUW){
     if(w === "facebook"){ wijzigFacebook(); return; }
     if(w === "radteksten"){ openRadTeksten(); return; } /* 19-11-2026 e */
     if(w === "berichtteksten"){ openTekstSet("bericht"); return; } /* 20-11-2026 f */
+    if(w === "barlampaan"){ barLampAanWissel(); return; } /* 21-11-2026 g */
+    if(w === "barlampfotos"){ openInfoFotos(); return; }
     if(w === "herkomst"){ herkomstWissel(); return; }
     if(w === "kamerwissel"){ kwWissel("kamer_wissel"); return; }
     if(w === "obmelding"){ meldingWissel("ontbijt"); return; }
