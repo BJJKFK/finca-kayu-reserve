@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="21-11-2026 g"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="23-11-2026 a"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF8F1">
 <title>Finca KaYu</title>
@@ -1455,6 +1455,30 @@
   #gast button.hrtegel.hrkop.gekopieerd .hrkopico{display:none}
   #gast button.hrtegel.hrkop.gekopieerd .hrlab::after{content:" ✓";color:var(--moss);font-weight:600}
   #gast .hrroute .groute{width:100%}
+  /* 23-11-2026 a (Bart, variant 2 van 21-11): bovenkant van de Handleiding als lijst zoals Omgeving, rechts een pil of een fotootje */
+  #gast .hllijst{margin:0 0 8px}
+  #gast .hlrij{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);text-align:left}
+  #gast .hlrij:first-child{border-top:0;padding-top:2px}
+  #gast .hlrij > .gi{flex:0 0 22px;width:22px;height:22px;color:var(--tekst)}
+  #gast .hlrij .hltekst{flex:1;min-width:0}
+  #gast .hlrij .hltekst b{display:block;font-size:17px;font-weight:600;line-height:1.3;color:var(--tekst);overflow-wrap:anywhere}
+  #gast .hlrij .hltekst span{display:block;font-size:15px;line-height:1.35;color:var(--muted);overflow-wrap:anywhere;user-select:text;-webkit-user-select:text}
+  #gast .hlpil{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border:0;border-radius:999px;background:var(--bone,#F3ECE3);
+    color:var(--tekst);font:inherit;font-size:15px;font-weight:600;text-decoration:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  #gast .hlpil.gekopieerd{background:var(--moss);color:#FFFFFF}
+  #gast .hlpil.gekopieerd::after{content:" ✓"}
+  #gast .hlfoto{flex:0 0 auto;width:64px;height:64px;padding:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bone,#F3ECE3);
+    display:inline-flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  #gast .hlfoto[hidden]{display:none}
+  #gast .hlfoto img{width:100%;height:100%;object-fit:cover;display:block}
+  #gast .hlfoto .gi{width:26px;height:26px;color:var(--muted)}
+  #gast .info.hlregel .hlfoto{float:right;width:56px;height:56px;margin:2px 0 6px 12px}
+  /* review 23-11 a: de regel aan/uit in het fotovenster van Meer (zelfde vorm als in Meer) */
+  #infoFotoDlg .meerinst{display:flex;align-items:center;gap:12px;padding:10px 12px;margin:0 0 12px;border:1px solid var(--line);border-radius:12px}
+  #infoFotoDlg .meerinst span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  #infoFotoDlg .meerinst b{font-weight:600;font-size:15px}
+  #infoFotoDlg .meerinst small{font-size:13px;color:var(--muted)}
+  #infoFotoDlg .meerzet{flex:0 0 auto;border:1px solid #B9B4AA;border-radius:999px;background:var(--bone,#F3ECE3);font:inherit;font-size:14px;font-weight:600;color:var(--tekst);padding:8px 14px;cursor:pointer}
   #gast details.hrblok > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:28px;-webkit-tap-highlight-color:transparent}
   #gast details.hrblok > summary::-webkit-details-marker{display:none}
   #gast details.hrblok > summary h2, #gast details.hrblok > summary h3{margin:0;flex:1}
@@ -2683,6 +2707,11 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
     <div class="meerkaart">
       <div class="meerinst"><span><b>Laatste in de bar?</b><small id="mpBarLamp"></small></span><button type="button" class="meerzet" data-meer="barlampaan" id="meerBarLamp"></button></div>
       <button class="meerrij" data-meer="barlampfotos"><span><b>Foto's en teksten van Laatste in de bar?</b><small id="mpBarLampFotos"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <!-- 23-11-2026 a: foto's in de Handleiding van de gast (aan/uit, eigen foto's, teksten) -->
+      <button class="meerrij" data-meer="hlfotos" data-hlgroep="vijfsprong"><span><b>Foto's: Vijfsprong</b><small id="mpHl_vijfsprong"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="hlfotos" data-hlgroep="poort"><span><b>Foto's: Poort</b><small id="mpHl_poort"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="hlfotos" data-hlgroep="plek"><span><b>Foto's: Je plek</b><small id="mpHl_plek"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij" data-meer="hlfotos" data-hlgroep="honden"><span><b>Foto's: Hondenren</b><small id="mpHl_honden"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
     <!-- 20-11-2026 d (Bart): foto van de camper; standaard aan voor campers, uit voor kamergasten -->
     <div class="meerkaart">
@@ -3063,8 +3092,10 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
 </div></dialog>
 <!-- 21-11-2026 g (Bart: "alles moet een instelling zijn"): Laatste in de bar? zelf wijzigen: eigen foto's, uitzetten, toevoegen, en de teksten -->
 <dialog id="infoFotoDlg"><div class="dlg">
-  <h3>Foto's van Laatste in de bar?</h3>
+  <h3 id="ifKop">Foto's van Laatste in de bar?</h3>
   <p class="leeg" id="ifUitleg" style="margin:0 0 10px"></p>
+  <!-- 23-11-2026 a: bij de foto's in de Handleiding staat aan/uit in dit venster -->
+  <div class="meerinst" id="ifAanRij" hidden><span><b>Foto's voor gasten</b><small id="ifAanTekst"></small></span><button type="button" class="meerzet" id="ifAan"></button></div>
   <div id="ifLijst" class="iflijst"></div>
   <p class="err" id="ifErr" style="color:var(--muted)" aria-live="polite"></p>
   <div class="row" style="margin-top:12px">
@@ -4795,14 +4826,27 @@ const BAR_LAMP = {
 const INFO_GROEP = "bar_lampen";
 /* de vaste foto's: sleutel in info_fotos, bestand in site/, welke fotoregel uit BAR_LAMP, standaardvolgorde */
 const INFO_VAST = BAR_LAMP_FOTOS.map((bestand, nr) => ({ sleutel: INFO_GROEP + "_" + (nr + 1), bestand, nr, volgorde: nr + 1 }));
+/* 23-11-2026 a (Bart: foto's van de vijfsprong, het codekastje en de drukknop bij de poort, en de hondenren; "dat mensen daarnaast op een
+   foto kunnen klikken"): vier fotogroepen in de Handleiding, met dezelfde opbouw als Laatste in de bar? (tabel info_fotos, instellingen
+   info_<groep> en info_<groep>_teksten, gast_info en gast_info_fotos per groep; databasescript 23-11-2026-a-fotogroepen.sql). De vaste foto's
+   staan als bestanden in site/ (zonder locatiegegevens; op poort-1 is het kenteken onleesbaar en zijn Barts rode krabbels vervangen door een
+   strak rondje), met een klein vierkant fotootje (-k.jpg) voor in de lijst. Je plek heeft nog geen vaste foto (de plattegrond volgt). */
+const HL_GROEPEN = ["vijfsprong", "poort", "plek", "honden"];
+const HL_NAAM = { vijfsprong:"Vijfsprong", poort:"Poort", plek:"Je plek", honden:"Hondenren" };
+const HL_BESTANDEN = { vijfsprong:["vijfsprong-1.jpg", "vijfsprong-2.jpg"], poort:["poort-1.jpg", "poort-2.jpg"], plek:[], honden:["honden-1.jpg", "honden-2.jpg"] };
+const INFO_VAST_G = Object.assign({ [INFO_GROEP]: INFO_VAST }, Object.fromEntries(HL_GROEPEN.map(g => [g, HL_BESTANDEN[g].map((bestand, nr) =>
+  ({ sleutel: g + "_" + (nr + 1), bestand, klein: bestand.replace(/\.jpg$/, "-k.jpg"), nr, volgorde: nr + 1 }))])));
+const infoVast = g => INFO_VAST_G[g] || [];
+/* een rij hoort bij een groep als de sleutel met de groep begint (de vaste sleutels en de extra foto's: <groep>_e...) */
+const infoVanGroep = (r, g) => !!r && typeof r.sleutel === "string" && r.sleutel.startsWith(g + "_");
 const INFO_FOTO_MAX = 400000; /* zelfde grens als de database (info_fotos_foto) */
 const infoFotoGeldig = d => typeof d === "string" && d.length <= INFO_FOTO_MAX && /^data:image\/jpeg;base64,[A-Za-z0-9+/]+={0,2}$/.test(d);
 const infoSleutelGeldig = k => typeof k === "string" && /^[a-z][a-z0-9_]{0,59}$/.test(k);
 /* rijen (uit info_fotos of gast_info) samen met de vaste foto's: geen rij = vaste foto, aan; een extra foto telt alleen mét eigen foto */
-function infoLijst(rijen){
-  const per = {}; (Array.isArray(rijen) ? rijen : []).forEach(r => { if(r && infoSleutelGeldig(r.sleutel)) per[r.sleutel] = r; });
+function infoLijst(rijen, g = INFO_GROEP){
+  const per = {}; (Array.isArray(rijen) ? rijen : []).forEach(r => { if(r && infoSleutelGeldig(r.sleutel) && infoVanGroep(r, g)) per[r.sleutel] = r; });
   const getal = (v, std) => Number.isFinite(Number(v)) && v !== null && v !== "" ? Number(v) : std;
-  const uit = INFO_VAST.map(v => { const r = per[v.sleutel]; delete per[v.sleutel];
+  const uit = infoVast(g).map(v => { const r = per[v.sleutel]; delete per[v.sleutel];
     return { sleutel: v.sleutel, vast: v, volgorde: getal(r && r.volgorde, v.volgorde), aan: !r || r.aan !== false, eigen: !!(r && (r.eigen || r.foto)), foto: (r && r.foto) || null, versie: (r && r.versie) || 0 }; });
   Object.values(per).forEach(r => { if(r.eigen || r.foto) uit.push({ sleutel: r.sleutel, vast: null, volgorde: getal(r.volgorde, 99), aan: r.aan !== false, eigen: true, foto: r.foto || null, versie: r.versie || 0 }); });
   return uit.sort((a, b) => a.volgorde - b.volgorde || (a.sleutel < b.sleutel ? -1 : 1));
@@ -4820,17 +4864,23 @@ let gastInfoGehaald = false; /* review 21-11 g: de regel pas tonen als gast_info
 const gastInfoFotos = {}; /* sleutel -> { versie, foto }: eigen foto's die al opgehaald zijn */
 const INFO_PROEF_SL = "kayu_probeer_info"; /* testsite: de foto's zoals in deze browser geprobeerd (los van de rest: foto's zijn groot) */
 const infoProefLees = () => { if(!TESTVERSIE) return null; try { const v = JSON.parse(localStorage.getItem(INFO_PROEF_SL) || "null"); return Array.isArray(v) ? v : null; } catch(e){ return null; } };
-async function gastInfoHaal(){
-  if(!gastCode || !gastData || gastData.fout) return;
-  let d = gastInfo;
-  try { const { data, error } = await db.rpc("gast_info", { p_code: gastCode, p_groep: INFO_GROEP });
+/* één groep lezen (gast_info); vorige = de stand van nu, die blijft bij een leesfout */
+async function gastInfoGroepLees(g, vorige){
+  let d = vorige;
+  try { const { data, error } = await db.rpc("gast_info", { p_code: gastCode, p_groep: g });
     if(!error && data && !data.fout) d = data; else if(!error && data && data.fout) d = null; } catch(e){} /* een leesfout: de vorige stand houden */
   if(TESTVERSIE){ /* testsite: aan/uit, teksten en foto's zoals in deze browser geprobeerd */
-    const pi = radProefLees().__inst || {}, pf = infoProefLees();
-    if(pi.info_bar_lampen != null || pi.info_bar_lampen_teksten != null || pf){ d = Object.assign({ aan:true, teksten:null, fotos:[] }, d);
-      if(pi.info_bar_lampen != null) d.aan = String(pi.info_bar_lampen) !== "uit";
-      if(pi.info_bar_lampen_teksten != null) d.teksten = pi.info_bar_lampen_teksten || null;
-      if(pf) d.fotos = pf.map(r => ({ sleutel: r.sleutel, volgorde: r.volgorde, aan: r.aan !== false, eigen: !!r.foto, versie: r.versie || 0 })); } }
+    const pi = radProefLees().__inst || {}, pf = infoProefLees(), ka = "info_" + g, kt = ka + "_teksten";
+    if(pi[ka] != null || pi[kt] != null || pf){ d = Object.assign({ aan:true, teksten:null, fotos:[] }, d);
+      if(pi[ka] != null) d.aan = String(pi[ka]) !== "uit";
+      if(pi[kt] != null) d.teksten = pi[kt] || null;
+      if(pf) d.fotos = pf.filter(r => infoVanGroep(r, g)).map(r => ({ sleutel: r.sleutel, volgorde: r.volgorde, aan: r.aan !== false, eigen: !!r.foto, versie: r.versie || 0 })); } }
+  return d;
+}
+async function gastInfoHaal(){
+  if(!gastCode || !gastData || gastData.fout) return;
+  hlInfoHaal(); /* 23-11-2026 a: de foto's in de Handleiding */
+  const d = await gastInfoGroepLees(INFO_GROEP, gastInfo);
   const oud = JSON.stringify(gastInfo), eerste = !gastInfoGehaald; gastInfo = d; gastInfoGehaald = true;
   if(eerste || JSON.stringify(d) !== oud) tekenGastVers();
 }
@@ -4843,12 +4893,12 @@ function barLampT(){
 const barLampRij = () => { if(!barLampAanGast()) return ""; const l = barLampT(); return `<div class="dag barlampdag"><button type="button" class="barlamp" data-barlamp="1">${gIcoon("lamp")}` +
   `<span><b>${vrij(l.kop)}</b><span class="bls">${vrij(l.sub)}</span></span><span class="blp" aria-hidden="true">›</span></button></div>`; };
 /* de eigen foto's ophalen (pas bij openen, en alleen als ze veranderd zijn); true als er iets nieuws is */
-async function gastInfoFotosHaal(lijst){
+async function gastInfoFotosHaal(lijst, g = INFO_GROEP){
   const nodig = lijst.filter(x => x.eigen && !(gastInfoFotos[x.sleutel] && gastInfoFotos[x.sleutel].versie === x.versie));
   if(!nodig.length) return false;
   let fotos = null;
-  if(TESTVERSIE && infoProefLees()) fotos = infoProefLees().filter(r => r.aan !== false && r.foto).map(r => ({ sleutel: r.sleutel, foto: r.foto }));
-  else try { const { data, error } = await db.rpc("gast_info_fotos", { p_code: gastCode, p_groep: INFO_GROEP }); if(!error && data && Array.isArray(data.fotos)) fotos = data.fotos; } catch(e){}
+  if(TESTVERSIE && infoProefLees()) fotos = infoProefLees().filter(r => infoVanGroep(r, g) && r.aan !== false && r.foto).map(r => ({ sleutel: r.sleutel, foto: r.foto }));
+  else try { const { data, error } = await db.rpc("gast_info_fotos", { p_code: gastCode, p_groep: g }); if(!error && data && Array.isArray(data.fotos)) fotos = data.fotos; } catch(e){}
   if(!fotos) return false;
   const per = {}; fotos.forEach(f => { if(f && infoSleutelGeldig(f.sleutel) && infoFotoGeldig(f.foto)) per[f.sleutel] = f.foto; });
   nodig.forEach(x => { if(per[x.sleutel]) gastInfoFotos[x.sleutel] = { versie: x.versie, foto: per[x.sleutel] }; });
@@ -4879,6 +4929,143 @@ function barLampOpen(){
     if(e) img.src = e; else if(x && x.vast){ img.src = x.vast.bestand; img.width = 900; img.height = 1200; } else { f.remove(); return; }
     f.removeAttribute("data-infowacht"); f.hidden = false; }));
 }
+/* 23-11-2026 a: teksten van de lijst bovenaan de Handleiding en van de vier fotogroepen (Nederlands eerst aan Bart voorgelegd: de
+   poortzinnen bevestigd 23-11, de lijst uit schets variant 2 van 21-11). Per groep: kop (titel in de lijst), sub (kleine regel), titel
+   (kop van het venster; zonder titel de kop) en de uitleg onder elke vaste foto. Te wijzigen in Meer > Gasten (Foto's: ...). */
+const HL_TEKST = {
+  nl:{ routeSub:"Tot ons bordje bij de vijfsprong", openen:"Openen", kopieer:"Kopiëren",
+    vijfsprong:{ kop:"Vijfsprong", sub:"Links, volg de bordjes", fotos:["Bij dit bordje ga je links.", ""] },
+    poort:{ kop:"Poortcode", sub:"Of bel ons even", titel:"Poort", fotos:["Naar binnen: tik de code in op dit kastje.", "Naar buiten: druk op deze knop. Je hebt dan ongeveer 60 seconden."] },
+    plek:{ kop:"Je plek", sub:"Na de palmbomen links", fotos:[] },
+    honden:{ titel:"Hondenren", fotos:["De hondenren, vanaf de speeltuin gezien.", ""] } },
+  en:{ routeSub:"To our sign at the junction", openen:"Open", kopieer:"Copy",
+    vijfsprong:{ kop:"Junction", sub:"Turn left, follow the signs", fotos:["At this sign, turn left.", ""] },
+    poort:{ kop:"Gate code", sub:"Or give us a call", titel:"Gate", fotos:["Coming in: type the code on this keypad.", "Going out: press this button. You then have about 60 seconds."] },
+    plek:{ kop:"Your pitch", sub:"Left after the palm trees", fotos:[] },
+    honden:{ titel:"Dog run", fotos:["The dog run, seen from the playground.", ""] } },
+  de:{ routeSub:"Bis zu unserem Schild an der Kreuzung", openen:"Öffnen", kopieer:"Kopieren",
+    vijfsprong:{ kop:"Kreuzung", sub:"Links, folgt den Schildern", fotos:["An diesem Schild biegt ihr links ab.", ""] },
+    poort:{ kop:"Torcode", sub:"Oder ruft uns kurz an", titel:"Tor", fotos:["Rein: tippt den Code an diesem Kästchen ein.", "Raus: drückt auf diesen Knopf. Ihr habt dann etwa 60 Sekunden."] },
+    plek:{ kop:"Euer Platz", sub:"Nach den Palmen links", fotos:[] },
+    honden:{ titel:"Hundeauslauf", fotos:["Der Hundeauslauf, vom Spielplatz aus gesehen.", ""] } },
+  es:{ routeSub:"Hasta nuestro cartel en el cruce", openen:"Abrir", kopieer:"Copiar",
+    vijfsprong:{ kop:"Cruce", sub:"A la izquierda, seguid los carteles", fotos:["En este cartel, girad a la izquierda.", ""] },
+    poort:{ kop:"Código de la puerta", sub:"O llamadnos", titel:"Puerta", fotos:["Para entrar: marcad el código en este teclado.", "Para salir: pulsad este botón. Tenéis unos 60 segundos."] },
+    plek:{ kop:"Vuestra parcela", sub:"Después de las palmeras, a la izquierda", fotos:[] },
+    honden:{ titel:"Recinto para perros", fotos:["El recinto para perros, visto desde el parque infantil.", ""] } },
+  it:{ routeSub:"Fino al nostro cartello all'incrocio", openen:"Apri", kopieer:"Copia",
+    vijfsprong:{ kop:"Incrocio", sub:"A sinistra, seguite i cartelli", fotos:["A questo cartello girate a sinistra.", ""] },
+    poort:{ kop:"Codice del cancello", sub:"Oppure chiamateci", titel:"Cancello", fotos:["Per entrare: digitate il codice su questa tastiera.", "Per uscire: premete questo pulsante. Avrete circa 60 secondi."] },
+    plek:{ kop:"La vostra piazzola", sub:"Dopo le palme a sinistra", fotos:[] },
+    honden:{ titel:"Area cani", fotos:["L'area cani vista dal parco giochi.", ""] } },
+  fr:{ routeSub:"Jusqu'à notre panneau au carrefour", openen:"Ouvrir", kopieer:"Copier",
+    vijfsprong:{ kop:"Carrefour", sub:"À gauche, suivez les panneaux", fotos:["À ce panneau, tournez à gauche.", ""] },
+    poort:{ kop:"Code du portail", sub:"Ou appelez-nous", titel:"Portail", fotos:["Pour entrer : tapez le code sur ce boîtier.", "Pour sortir : appuyez sur ce bouton. Vous avez alors environ 60 secondes."] },
+    plek:{ kop:"Votre emplacement", sub:"Après les palmiers, à gauche", fotos:[] },
+    honden:{ titel:"Enclos à chiens", fotos:["L'enclos à chiens, vu depuis l'aire de jeux.", ""] } },
+  pt:{ routeSub:"Até à nossa placa no cruzamento", openen:"Abrir", kopieer:"Copiar",
+    vijfsprong:{ kop:"Cruzamento", sub:"À esquerda, sigam as placas", fotos:["Nesta placa, virem à esquerda.", ""] },
+    poort:{ kop:"Código do portão", sub:"Ou liguem-nos", titel:"Portão", fotos:["Para entrar: marquem o código neste teclado.", "Para sair: carreguem neste botão. Depois têm cerca de 60 segundos."] },
+    plek:{ kop:"O vosso lugar", sub:"Depois das palmeiras, à esquerda", fotos:[] },
+    honden:{ titel:"Parque para cães", fotos:["O parque para cães, visto do parque infantil.", ""] } },
+  cs:{ routeSub:"K naší ceduli na křižovatce", openen:"Otevřít", kopieer:"Kopírovat",
+    vijfsprong:{ kop:"Křižovatka", sub:"Doleva, pokračujte podle cedulí", fotos:["U této cedule odbočte doleva.", ""] },
+    poort:{ kop:"Kód brány", sub:"Nebo nám zavolejte", titel:"Brána", fotos:["Dovnitř: zadejte kód na této klávesnici.", "Ven: stiskněte toto tlačítko. Pak máte asi 60 sekund."] },
+    plek:{ kop:"Vaše místo", sub:"Za palmami doleva", fotos:[] },
+    honden:{ titel:"Výběh pro psy", fotos:["Výběh pro psy, pohled od dětského hřiště.", ""] } },
+  fi:{ routeSub:"Kylttiimme risteyksessä asti", openen:"Avaa", kopieer:"Kopioi",
+    vijfsprong:{ kop:"Risteys", sub:"Vasemmalle, seuratkaa kylttejä", fotos:["Tämän kyltin kohdalla kääntykää vasemmalle.", ""] },
+    poort:{ kop:"Portin koodi", sub:"Tai soittakaa meille", titel:"Portti", fotos:["Sisään: näppäilkää koodi tähän näppäimistöön.", "Ulos: painakaa tätä nappia. Teillä on sitten noin 60 sekuntia."] },
+    plek:{ kop:"Paikkanne", sub:"Palmujen jälkeen vasemmalle", fotos:[] },
+    honden:{ titel:"Koiratarha", fotos:["Koiratarha leikkipaikalta katsottuna.", ""] } },
+  no:{ routeSub:"Til skiltet vårt i krysset", openen:"Åpne", kopieer:"Kopier",
+    vijfsprong:{ kop:"Krysset", sub:"Til venstre, følg skiltene", fotos:["Ved dette skiltet tar dere til venstre.", ""] },
+    poort:{ kop:"Portkode", sub:"Eller ring oss", titel:"Porten", fotos:["Inn: tast inn koden på denne boksen.", "Ut: trykk på denne knappen. Da har dere omtrent 60 sekunder."] },
+    plek:{ kop:"Plassen deres", sub:"Til venstre etter palmene", fotos:[] },
+    honden:{ titel:"Hundegården", fotos:["Hundegården, sett fra lekeplassen.", ""] } },
+  sv:{ routeSub:"Till vår skylt vid korsningen", openen:"Öppna", kopieer:"Kopiera",
+    vijfsprong:{ kop:"Korsningen", sub:"Till vänster, följ skyltarna", fotos:["Vid den här skylten svänger ni vänster.", ""] },
+    poort:{ kop:"Grindkod", sub:"Eller ring oss", titel:"Grinden", fotos:["In: knappa in koden på den här dosan.", "Ut: tryck på den här knappen. Sedan har ni ungefär 60 sekunder."] },
+    plek:{ kop:"Er plats", sub:"Till vänster efter palmerna", fotos:[] },
+    honden:{ titel:"Hundgården", fotos:["Hundgården, sedd från lekplatsen.", ""] } },
+  pl:{ routeSub:"Do naszej tablicy na skrzyżowaniu", openen:"Otwórz", kopieer:"Kopiuj",
+    vijfsprong:{ kop:"Skrzyżowanie", sub:"W lewo, kierujcie się tablicami", fotos:["Przy tej tablicy skręćcie w lewo.", ""] },
+    poort:{ kop:"Kod do bramy", sub:"Albo do nas zadzwońcie", titel:"Brama", fotos:["Wejście: wpiszcie kod na tej klawiaturze.", "Wyjście: naciśnijcie ten przycisk. Macie wtedy około 60 sekund."] },
+    plek:{ kop:"Wasze miejsce", sub:"Za palmami w lewo", fotos:[] },
+    honden:{ titel:"Wybieg dla psów", fotos:["Wybieg dla psów widziany od strony placu zabaw.", ""] } }
+};
+/* welke teksten Bart per groep kan wijzigen (naast de uitleg per foto) */
+const HL_DELEN = { vijfsprong:["kop", "sub"], poort:["kop", "titel", "sub"], plek:["kop", "sub"], honden:["titel"] };
+const HL_DEEL_NAAM = { kop:"Regel in de Handleiding: kop", sub:"Regel in de Handleiding: kleine regel", titel:"Venster: kop" };
+function hlVast(g, taal, k){
+  const l = (HL_TEKST[taal] || HL_TEKST.en)[g] || {};
+  if(/^foto_/.test(k)){ const v = infoVast(g).find(x => "foto_" + x.sleutel === k); return v ? ((l.fotos || [])[v.nr] || "") : ""; }
+  return l[k] != null ? l[k] : "";
+}
+const gastInfoG = {}, gastInfoGehaaldG = {}; /* per groep: uitkomst van gast_info (null = vaste foto's) en of die er al is */
+/* de teksten van een groep in de taal van de gast: eigen tekst van Bart over de vaste tekst heen */
+function hlT(g){
+  const taal = HL_TEKST[gastTaal] ? gastTaal : "en", eigen = radTekstenLees(gastInfoG[g] && gastInfoG[g].teksten);
+  const t = k => radEigenTekst(eigen, taal, k) || hlVast(g, taal, k);
+  return { kop:t("kop"), sub:t("sub"), titel: HL_DELEN[g].includes("titel") ? t("titel") : t("kop"), sluit:(BAR_LAMP[taal] || BAR_LAMP.en).sluit, foto: s => t("foto_" + s) };
+}
+const hlL = () => HL_TEKST[gastTaal] || HL_TEKST.en;
+/* wat het fotootje laat zien: niets (nog niet gelezen, uitgezet of geen foto's), het kleine vaste fotootje, een al opgehaalde eigen foto,
+   of een camera-icoontje (eigen foto die pas bij openen wordt opgehaald). Op de losse huisregelspagina (zonder gastcode) geen fotootjes. */
+function hlFotoBron(g){
+  if(regelsZicht || !gastInfoGehaaldG[g]) return null; /* review 23-11 a: op de losse huisregelspagina (zonder gastcode) is aan/uit niet te lezen */
+  const d = gastInfoG[g];
+  if(d && d.aan === false) return null;
+  const x = infoLijst(d && d.fotos, g).filter(y => y.aan)[0]; if(!x) return null;
+  if(x.eigen){ const c = gastInfoFotos[x.sleutel]; return c && c.versie === x.versie ? { src: c.foto } : x.vast || x.eigen ? { icoon: true } : null; }
+  return x.vast ? { src: x.vast.klein } : null;
+}
+const hlFotoInhoud = b => b.src ? `<img src="${vrij(b.src)}" alt="" width="64" height="64">` : gIcoon("camera");
+const hlFotoKnop = g => { const b = hlFotoBron(g);
+  return `<button type="button" class="hlfoto" data-hlfoto="${g}" aria-label="${vrij(hlT(g).titel)}"${b ? "" : " hidden"}>${b ? hlFotoInhoud(b) : ""}</button>`; };
+/* na het lezen of na het openen van het venster: de fotootjes op hun plek bijwerken, zonder de pagina opnieuw te tekenen */
+function hlFotosToon(){
+  document.querySelectorAll("#gastInhoud [data-hlfoto]").forEach(kn => { const b = hlFotoBron(kn.dataset.hlfoto);
+    kn.hidden = !b; const inh = b ? hlFotoInhoud(b) : ""; if(kn.innerHTML !== inh) kn.innerHTML = inh; });
+}
+let hlLaatst = 0; /* review 23-11 a: deze instellingen veranderen zelden; niet elke minuut vier keer vragen */
+async function hlInfoHaal(){
+  if(!gastCode || !gastData || gastData.fout) return;
+  if(Date.now() - hlLaatst < 10 * 60000) return; hlLaatst = Date.now();
+  const uit = await Promise.all(HL_GROEPEN.map(g => gastInfoGroepLees(g, gastInfoG[g])));
+  /* de eigen teksten staan in de lijst bovenaan de Handleiding (kop en kleine regel): zijn die veranderd, dan de pagina opnieuw tekenen
+     (zoals bij elke verversing); anders, en op de wachtpagina, alleen de fotootjes bijwerken */
+  const tAnders = HL_GROEPEN.some((g, i) => J1(uit[i] && uit[i].teksten) !== J1(gastInfoG[g] && gastInfoG[g].teksten));
+  HL_GROEPEN.forEach((g, i) => { gastInfoG[g] = uit[i]; gastInfoGehaaldG[g] = true; });
+  if(tAnders && !regelsZicht && !gastWachtNodig()) tekenGastVers(); else hlFotosToon();
+}
+const J1 = x => JSON.stringify(x == null ? null : x);
+/* het venster met de foto's van een groep (zelfde opbouw als Laatste in de bar?) */
+function hlOpen(g){
+  if(!HL_GROEPEN.includes(g)) return;
+  let d = document.getElementById("hlFotoDlg");
+  if(!d){ d = document.createElement("dialog"); d.id = "hlFotoDlg"; d.className = "raddlg lampdlg"; document.body.appendChild(d); }
+  d.setAttribute("aria-labelledby", "hlFotoKop");
+  const l = hlT(g), info = gastInfoG[g], lijst = infoLijst(info && info.fotos, g).filter(x => x.aan);
+  const binnen = x => x.eigen && gastInfoFotos[x.sleutel] && gastInfoFotos[x.sleutel].versie === x.versie ? gastInfoFotos[x.sleutel].foto : null;
+  const fig = x => { const onder = l.foto(x.sleutel), uitleg = onder ? `<figcaption>${vrij(onder)}</figcaption>` : "", e = binnen(x);
+    if(e) return `<figure><img src="${e}" alt="">${uitleg}</figure>`;
+    if(x.eigen) return `<figure data-infowacht="${vrij(x.sleutel)}" hidden><img alt="">${uitleg}</figure>`;
+    return x.vast ? `<figure><img src="${x.vast.bestand}" alt="" width="900" height="1200">${uitleg}</figure>` : ""; };
+  d.innerHTML = `<div class="radin"><h2 id="hlFotoKop">${vrij(l.titel)}</h2>` + lijst.map(fig).join("") +
+    `<div class="radknoppen"><button type="button" data-hlsluit="1">${vrij(l.sluit)}</button></div></div>`;
+  d.querySelector("[data-hlsluit]").onclick = () => d.close();
+  d.onclick = e => { if(e.target === d) d.close(); };
+  if(!d.open) d.showModal();
+  const r = d.querySelector(".radin"); if(r) r.scrollTop = 0;
+  if(!d.querySelector("[data-infowacht]")) return;
+  gastInfoFotosHaal(lijst, g).then(() => { d.querySelectorAll("[data-infowacht]").forEach(f => {
+    const x = lijst.find(y => y.sleutel === f.dataset.infowacht), e = x && binnen(x), img = f.querySelector("img");
+    if(e) img.src = e; else if(x && x.vast){ img.src = x.vast.bestand; img.width = 900; img.height = 1200; } else { f.remove(); return; }
+    f.removeAttribute("data-infowacht"); f.hidden = false; }); hlFotosToon(); });
+}
+/* één keer voor de hele pagina: een tik op een fotootje opent het venster (ook op de wachtpagina en de losse huisregelspagina) */
+if(typeof document !== "undefined") document.addEventListener("click", e => { const kn = e.target.closest && e.target.closest("#gast [data-hlfoto]"); if(kn){ e.preventDefault(); hlOpen(kn.dataset.hlfoto); } });
 function camFotoOpen(){
   const ct = camT();
   let d = document.getElementById("camFotoDlg");
@@ -5154,6 +5341,9 @@ const TS = {
   barlamp: { sleutel:"info_bar_lampen_teksten", titel:"Teksten van Laatste in de bar?", delen:() => barLampDelen(), vast:(taal, k) => barLampVast(taal, k),
     waar:"Zo staan ze bovenaan de Bar-pagina van de gast en in het venster met de foto's.", alles:"Alle teksten van Laatste in de bar?" }
 };
+/* 23-11-2026 a: de teksten van de foto's in de Handleiding, per groep een eigen tekstset (instelling info_<groep>_teksten) */
+HL_GROEPEN.forEach(g => { TS["hl_" + g] = { sleutel:"info_" + g + "_teksten", titel:"Teksten van " + HL_NAAM[g], delen:() => hlDelen(g), vast:(taal, k) => hlVast(g, taal, k),
+  waar:"Zo staan ze in de Handleiding van de gast en in het venster met de foto's.", alles:"Alle teksten van " + HL_NAAM[g] }; });
 const tsRuw = set => { const p = TESTVERSIE ? (radProefLees().__inst || {}) : {}, k = TS[set].sleutel; return p[k] != null ? p[k] : instellingen[k]; };
 const tsEigen = set => radTekstenLees(tsRuw(set));
 const tsNu = (set, eigen, taal, k) => radEigenTekst(eigen, taal, k) || TS[set].vast(taal, k);
@@ -5366,13 +5556,39 @@ async function wijzigFacebook(){
 /* ---- 21-11-2026 g (Bart: "alles moet een instelling zijn"): Laatste in de bar? in Meer > Gasten. Aan/uit (instelling info_bar_lampen),
    per foto een eigen foto, uitzetten of terug naar de vaste foto, extra foto's toevoegen (tabel info_fotos) en alle teksten (instelling
    info_bar_lampen_teksten, zelfde venster als de teksten van het rad). Testsite: alles alleen in deze browser. ---- */
-let infoRijen = null;  /* rijen uit info_fotos voor Laatste in de bar? (met de foto's); null = nog niet geladen */
+/* 23-11-2026 a: per groep (Laatste in de bar? en de vier groepen van de Handleiding); ifGroep = de groep die nu in het venster staat */
+const infoRijenG = {};  /* per groep de rijen uit info_fotos (met de foto's); null of ontbreekt = nog niet geladen */
+let ifGroep = INFO_GROEP;
+const ifSet = () => ifGroep === INFO_GROEP ? "barlamp" : "hl_" + ifGroep;
 let infoStand = "", infoFoutTekst = ""; /* "ok", "ontbreekt" (tabel nog niet in de database) of "fout" */
 const barLampInst = () => { const p = TESTVERSIE ? (radProefLees().__inst || {}) : {}; return p.info_bar_lampen != null ? p.info_bar_lampen : instellingen.info_bar_lampen; };
 const barLampAan = () => String(barLampInst() || "").trim() !== "uit";
-const infoHostLijst = () => infoLijst(infoRijen || []);
+const infoHostLijst = (g = ifGroep) => infoLijst(infoRijenG[g] || [], g);
 function barLampDelen(){
-  return BAR_LAMP_DELEN_VAST.concat(infoHostLijst().map((x, i) => ({ k: "foto_" + x.sleutel, naam: `Foto ${i + 1}: uitleg eronder` })));
+  return BAR_LAMP_DELEN_VAST.concat(infoHostLijst(INFO_GROEP).map((x, i) => ({ k: "foto_" + x.sleutel, naam: `Foto ${i + 1}: uitleg eronder` })));
+}
+function hlDelen(g){
+  return HL_DELEN[g].map(k => ({ k, naam: HL_DEEL_NAAM[k] + (g === "poort" && k === "kop" ? " (de poortcode komt er vanzelf achter)" : "") }))
+    .concat(infoHostLijst(g).map((x, i) => ({ k: "foto_" + x.sleutel, naam: `Foto ${i + 1}: uitleg eronder` })));
+}
+const infoAanG = g => { const p = TESTVERSIE ? (radProefLees().__inst || {}) : {}, k = "info_" + g; return String((p[k] != null ? p[k] : instellingen[k]) || "").trim() !== "uit"; };
+const nFoto = n => n === 1 ? "1 foto" : n + " foto's";
+function hlMeerTekst(g){
+  const set = "hl_" + g, e = tsEigen(set), n = tsAantal(set, e), w = radNogAantal(e);
+  const t = "Teksten: " + (n ? `${n} aangepast` + (w ? `, ${w} nog vertalen` : "") : "vaste tekst, in de taal van de gast") + ".";
+  if(!infoAanG(g)) return "Staat uit: gasten zien hier geen foto's. " + t;
+  /* review 23-11 a: pas als het venster van deze groep geladen is, weten we hoeveel foto's er zijn (anders telt alleen de vaste foto) */
+  if(!infoRijenG[g]) return "Staat aan. Tik om foto's te wijzigen, uit te zetten of erbij te zetten. " + t;
+  const l = infoHostLijst(g), eigen = l.filter(x => x.eigen).length, uit = l.filter(x => !x.aan).length;
+  return (l.length ? `Staat aan, ${nFoto(l.length)}` + (eigen ? `, ${eigen} eigen` : "") + (uit ? `, ${uit} uitgezet` : "") : "Staat aan, nog geen foto's") + ". " + t;
+}
+async function infoAanWissel(g){
+  const nieuw = infoAanG(g) ? "uit" : "aan";
+  if(!confirm(nieuw === "aan" ? `Aanzetten? Gasten zien dan de foto's bij ${HL_NAAM[g]} in de Handleiding.`
+    : `Uitzetten? Dan zien gasten de foto's bij ${HL_NAAM[g]} niet meer. Er wordt niets gewist: de foto's en teksten blijven bewaard.`)) return;
+  if(TESTVERSIE){ const m = radProefLees(); m.__inst = Object.assign({}, m.__inst, { ["info_" + g]:nieuw });
+    alert(radProefBewaar(m) ? "Testsite: alleen in deze browser, niet in de database." : "Testsite: bewaren in deze browser lukte niet (opslag vol)."); tekenMeer(); return; }
+  await bewaarInstelling("info_" + g, nieuw);
 }
 async function barLampAanWissel(){
   const nieuw = barLampAan() ? "uit" : "aan";
@@ -5385,30 +5601,31 @@ async function barLampAanWissel(){
 function infoMeerTekst(){
   const e = tsEigen("barlamp"), n = tsAantal("barlamp", e), w = radNogAantal(e);
   const t = "Teksten: " + (n ? `${n} aangepast` + (w ? `, ${w} nog vertalen` : "") : "vaste tekst, in de taal van de gast") + ".";
-  if(!infoRijen) return "Foto's wijzigen, uitzetten of erbij zetten. " + t;
-  const l = infoHostLijst(), eigen = l.filter(x => x.eigen).length, uit = l.filter(x => !x.aan).length;
-  return `${l.length} foto's` + (eigen ? `, ${eigen} eigen` : "") + (uit ? `, ${uit} uitgezet` : "") + ". " + t;
+  if(!infoRijenG[INFO_GROEP]) return "Foto's wijzigen, uitzetten of erbij zetten. " + t;
+  const l = infoHostLijst(INFO_GROEP), eigen = l.filter(x => x.eigen).length, uit = l.filter(x => !x.aan).length;
+  return nFoto(l.length) + (eigen ? `, ${eigen} eigen` : "") + (uit ? `, ${uit} uitgezet` : "") + ". " + t;
 }
 /* testsite: de foto's in deze browser (localStorage), los van de database; begint bij wat de database nu heeft */
 const infoProefBewaar = l => { try { localStorage.setItem(INFO_PROEF_SL, JSON.stringify(l)); return true; } catch(e){ return false; } };
 async function infoHostLaad(){
-  if(TESTVERSIE && infoProefLees()){ infoRijen = infoProefLees(); infoStand = "ok"; return; }
-  let r; try { r = await db.from("info_fotos").select("sleutel, groep, volgorde, aan, foto, gewijzigd").eq("groep", INFO_GROEP); } catch(e){ r = { error:{ message:String(e && e.message || e) } }; }
+  const g = ifGroep;
+  if(TESTVERSIE && infoProefLees()){ infoRijenG[g] = infoProefLees().filter(r => infoVanGroep(r, g)); infoStand = "ok"; return; }
+  let r; try { r = await db.from("info_fotos").select("sleutel, groep, volgorde, aan, foto, gewijzigd").eq("groep", g); } catch(e){ r = { error:{ message:String(e && e.message || e) } }; }
   if(r.error){
-    if(TESTVERSIE){ infoRijen = []; infoStand = "ok"; return; } /* testsite: proberen kan ook zonder de tabel */
+    if(TESTVERSIE){ infoRijenG[g] = []; infoStand = "ok"; return; } /* testsite: proberen kan ook zonder de tabel */
     infoStand = r.error.code === "PGRST205" || r.error.code === "42P01" || /schema cache|does not exist/i.test(r.error.message || "") ? "ontbreekt" : "fout";
     infoFoutTekst = r.error.message || ""; return;
   }
-  infoRijen = r.data || []; infoStand = "ok";
+  infoRijenG[g] = (r.data || []).filter(x => infoVanGroep(x, g)); infoStand = "ok";
 }
 /* één foto wijzigen: wijz = { foto } / { aan } / { foto, aan, volgorde } (nieuw) of "weg"; "" = gelukt, anders de fout.
    Eerst bijwerken; bestaat de rij nog niet, dan toevoegen (geen upsert: zelfde opbouw als de rest van de app). */
 async function infoZet(sleutel, wijz){
-  const vast = INFO_VAST.find(v => v.sleutel === sleutel);
+  const g = ifGroep, vast = infoVast(g).find(v => v.sleutel === sleutel);
   if(TESTVERSIE){
-    const l = (infoProefLees() || (infoRijen || []).map(r => ({ sleutel:r.sleutel, groep:r.groep, volgorde:r.volgorde, aan:r.aan, foto:r.foto || null }))).filter(r => r && (wijz !== "weg" || r.sleutel !== sleutel));
+    const l = (infoProefLees() || (infoRijenG[g] || []).map(r => ({ sleutel:r.sleutel, groep:r.groep, volgorde:r.volgorde, aan:r.aan, foto:r.foto || null }))).filter(r => r && (wijz !== "weg" || r.sleutel !== sleutel));
     if(wijz !== "weg"){ let r = l.find(x => x.sleutel === sleutel);
-      if(!r){ r = { sleutel, groep:INFO_GROEP, volgorde: vast ? vast.volgorde : 0, aan:true, foto:null }; l.push(r); }
+      if(!r){ r = { sleutel, groep:g, volgorde: vast ? vast.volgorde : 0, aan:true, foto:null }; l.push(r); }
       Object.assign(r, wijz, { versie: Date.now() }); }
     return infoProefBewaar(l) ? "" : "Bewaren in deze browser lukte niet (te weinig ruimte). Haal een extra foto weg of kies een kleinere.";
   }
@@ -5416,19 +5633,19 @@ async function infoZet(sleutel, wijz){
   const rij = Object.assign({}, wijz, { gewijzigd: new Date().toISOString() });
   const bijwerken = async () => { const { data, error } = await db.from("info_fotos").update(rij).eq("sleutel", sleutel).select("sleutel");
     return error ? error.message : data && data.length ? "" : null; }; /* null = die rij bestaat niet */
-  const toevoegen = async () => { const { error } = await db.from("info_fotos").insert(Object.assign({ sleutel, groep: INFO_GROEP, volgorde: vast ? vast.volgorde : 0, aan: true, foto: null }, rij));
+  const toevoegen = async () => { const { error } = await db.from("info_fotos").insert(Object.assign({ sleutel, groep: g, volgorde: vast ? vast.volgorde : 0, aan: true, foto: null }, rij));
     return !error ? "" : error.code === "23505" ? null : error.message; }; /* null = bestaat al (tegelijk op een ander toestel) */
   /* review 21-11 g: eerst wat waarschijnlijk is (de rij staat al in de lijst: bijwerken; anders toevoegen), zodat een foto maar één keer over de lijn gaat */
-  const eerst = (infoRijen || []).some(r => r.sleutel === sleutel) ? [bijwerken, toevoegen] : [toevoegen, bijwerken];
+  const eerst = (infoRijenG[g] || []).some(r => r.sleutel === sleutel) ? [bijwerken, toevoegen] : [toevoegen, bijwerken];
   for(const stap of eerst.concat(eerst)){ const f = await stap(); if(f !== null) return f; }
   return "Bewaren mislukt, probeer het nog eens.";
 }
 /* na bewaren de lijst hier bijwerken, zonder alle foto's opnieuw op te halen (review 21-11 g: scheelt mobiele data) */
 function infoLokaal(sleutel, wijz){
-  if(!infoRijen) return;
-  if(wijz === "weg"){ infoRijen = infoRijen.filter(r => r.sleutel !== sleutel); return; }
-  let r = infoRijen.find(x => x.sleutel === sleutel);
-  if(!r){ const v = INFO_VAST.find(x => x.sleutel === sleutel); r = { sleutel, groep: INFO_GROEP, volgorde: v ? v.volgorde : 0, aan: true, foto: null }; infoRijen = infoRijen.concat([r]); }
+  const g = ifGroep; if(!infoRijenG[g]) return;
+  if(wijz === "weg"){ infoRijenG[g] = infoRijenG[g].filter(r => r.sleutel !== sleutel); return; }
+  let r = infoRijenG[g].find(x => x.sleutel === sleutel);
+  if(!r){ const v = infoVast(g).find(x => x.sleutel === sleutel); r = { sleutel, groep: g, volgorde: v ? v.volgorde : 0, aan: true, foto: null }; infoRijenG[g] = infoRijenG[g].concat([r]); }
   Object.assign(r, wijz);
 }
 /* verkleinen tot hooguit 1200 pixels (langste kant), als JPEG, zonder locatiegegevens; past hij niet, dan kleiner of grover */
@@ -5457,21 +5674,28 @@ let ifBezig = false, ifGekoppeld = false;
 const INFO_MAX_FOTOS = 8; /* review 21-11 g: niet eindeloos (elke foto tot 400.000 tekens; op de testsite in de browser) */
 const ifMelding = (t, fout) => { const el = document.getElementById("ifErr"); el.textContent = t || ""; el.style.color = fout ? "" : "var(--muted)"; };
 function ifZetBezig(aan, tekst){ ifBezig = aan; document.querySelectorAll("#infoFotoDlg button").forEach(b => b.disabled = aan); if(tekst != null) ifMelding(tekst); }
-async function openInfoFotos(){
+async function openInfoFotos(g = INFO_GROEP){
   ifKoppel();
   const d = document.getElementById("infoFotoDlg");
-  infoRijen = null; tekenInfoFotos(); ifZetBezig(true, "Even laden...");
+  ifGroep = INFO_VAST_G[g] ? g : INFO_GROEP; /* 23-11-2026 a: welke groep */
+  document.getElementById("ifKop").textContent = ifGroep === INFO_GROEP ? "Foto's van Laatste in de bar?" : "Foto's: " + HL_NAAM[ifGroep];
+  infoRijenG[ifGroep] = null; infoStand = ""; tekenInfoFotos(); ifZetBezig(true, "Even laden...");
   if(!d.open) d.showModal();
   try { await infoHostLaad(); } finally { ifZetBezig(false); ifMelding(infoStand === "fout" ? "Laden is niet gelukt. Sluit en probeer het nog eens; lukt het weer niet, stuur Claude dan deze melding: " + infoFoutTekst : "", infoStand === "fout"); }
   tekenInfoFotos(); tekenMeer();
 }
 function tekenInfoFotos(){
-  const kan = infoStand === "ok" && !!infoRijen, l = kan ? infoHostLijst() : [], eigen = tsEigen("barlamp");
-  document.getElementById("ifUitleg").textContent = !infoRijen && !infoStand ? "" :
+  const kan = infoStand === "ok" && !!infoRijenG[ifGroep], l = kan ? infoHostLijst() : [], eigen = tsEigen(ifSet()), hl = ifGroep !== INFO_GROEP;
+  document.getElementById("ifUitleg").textContent = !infoRijenG[ifGroep] && !infoStand ? "" :
     infoStand === "ontbreekt" ? "Foto's en teksten wijzigen kan nog niet: de database is nog niet bijgewerkt. Gasten zien nu de vaste foto's en teksten."
-    : infoStand === "fout" ? "" : "Zo staan de foto's in het venster van de gast, van boven naar onder. Een eigen foto zet je op de plek van de vaste foto; terugzetten kan altijd.";
+    : infoStand === "fout" ? "" : hl && !l.length ? "Hier staan nog geen foto's. Tik op Foto toevoegen; gasten zien dan in de Handleiding een fotootje dat het venster opent."
+    : "Zo staan de foto's in het venster van de gast, van boven naar onder. Een eigen foto zet je op de plek van de vaste foto; terugzetten kan altijd.";
+  /* 23-11-2026 a: aan/uit voor de groepen van de Handleiding (Laatste in de bar? heeft een eigen regel in Meer) */
+  document.getElementById("ifAanRij").hidden = !hl;
+  if(hl){ document.getElementById("ifAanTekst").textContent = infoAanG(ifGroep) ? "Staat aan: gasten zien de foto's in de Handleiding." : "Staat uit: gasten zien deze foto's niet.";
+    document.getElementById("ifAan").textContent = infoAanG(ifGroep) ? "Alle foto's uitzetten" : "Alle foto's aanzetten"; }
   document.getElementById("ifLijst").innerHTML = l.map((x, i) => {
-    const onder = tsNu("barlamp", eigen, "nl", "foto_" + x.sleutel), src = x.eigen && x.foto ? x.foto : x.vast ? x.vast.bestand : "";
+    const onder = tsNu(ifSet(), eigen, "nl", "foto_" + x.sleutel), src = x.eigen && x.foto ? x.foto : x.vast ? x.vast.bestand : "";
     return `<div class="ifrij${x.aan ? "" : " uit"}" data-iffoto="${vrij(x.sleutel)}">` + (src ? `<img src="${vrij(src)}" alt="">` : `<span class="ifgeen"></span>`) +
       `<div class="ifinfo"><b>Foto ${i + 1}${x.aan ? "" : " · uitgezet"}${x.eigen ? " · eigen foto" : ""}</b><span>${onder ? vrij(onder) : "Nog geen uitleg"}</span></div>` +
       `<div class="ifknoppen"><button type="button" data-ifactie="uitleg">Uitleg wijzigen</button><button type="button" data-ifactie="ander">Andere foto</button>` +
@@ -5495,7 +5719,7 @@ async function infoFotoKies(sleutel, nieuw){
     ifMelding("Bewaren...");
     let fout, k = sleutel, w; try {
       if(nieuw){ const max = infoHostLijst().reduce((m, x) => Math.max(m, x.volgorde), 0);
-        k = INFO_GROEP + "_e" + Date.now().toString(36); w = { foto:d, aan:true, volgorde: max + 1 }; }
+        k = ifGroep + "_e" + Date.now().toString(36); w = { foto:d, aan:true, volgorde: max + 1 }; }
       else w = { foto:d };
       fout = await infoZet(k, w);
     } finally { ifZetBezig(false); }
@@ -5506,7 +5730,7 @@ async function infoActie(sleutel, actie){
   if(ifBezig) return;
   const l = infoHostLijst(), i = l.findIndex(x => x.sleutel === sleutel), x = l[i]; if(!x) return;
   if(actie === "uitleg"){
-    rtKoppel(); rtSet = "barlamp"; rtTaal = "nl"; document.getElementById("rtErr").textContent = ""; ifMelding("");
+    rtKoppel(); rtSet = ifSet(); rtTaal = "nl"; document.getElementById("rtErr").textContent = ""; ifMelding("");
     openRadTekstBewerk("foto_" + sleutel); return;
   }
   if(actie === "ander"){ infoFotoKies(sleutel, false); return; }
@@ -5526,11 +5750,11 @@ async function infoActie(sleutel, actie){
     ifZetBezig(true, "Weghalen...");
     try { fout = await infoZet(sleutel, wijz);
       if(!fout){ /* de uitleg van deze foto ook uit de teksten, zodat er geen "nog vertalen" blijft staan van een foto die er niet meer is */
-        const k = "foto_" + sleutel, e = await tsVers("barlamp"); let anders = false;
+        const k = "foto_" + sleutel, e = await tsVers(ifSet()); let anders = false;
         TALEN.forEach(t => { if(e[t] && k in e[t]){ delete e[t][k]; anders = true; if(!Object.keys(e[t]).length) delete e[t]; }
           if(e._nog && Array.isArray(e._nog[t]) && e._nog[t].includes(k)){ e._nog[t] = e._nog[t].filter(y => y !== k); anders = true; if(!e._nog[t].length) delete e._nog[t]; } });
         if(e._nog && !Object.keys(e._nog).length) delete e._nog;
-        if(anders){ const f2 = await tsBewaar("barlamp", e); if(f2) gelukt = "Foto weggehaald. Alleen de uitleg eronder wissen lukte niet (" + f2 + "); dat kan geen kwaad."; }
+        if(anders){ const f2 = await tsBewaar(ifSet(), e); if(f2) gelukt = "Foto weggehaald. Alleen de uitleg eronder wissen lukte niet (" + f2 + "); dat kan geen kwaad."; }
       }
     } finally { ifZetBezig(false); }
     gelukt = gelukt || "Foto weggehaald.";
@@ -5545,11 +5769,13 @@ function ifKoppel(){
   document.getElementById("ifErbij").onclick = () => { if(ifBezig) return;
     if(infoHostLijst().length >= INFO_MAX_FOTOS){ ifMelding(`Er staan al ${INFO_MAX_FOTOS} foto's in. Haal er eerst een weg, of vervang er een met Andere foto.`, true); return; }
     infoFotoKies(null, true); };
-  document.getElementById("ifTekst").onclick = () => { if(!ifBezig){ ifMelding(""); openTekstSet("barlamp"); } };
+  document.getElementById("ifTekst").onclick = () => { if(!ifBezig){ ifMelding(""); openTekstSet(ifSet()); } };
+  /* 23-11-2026 a: aan/uit van een groep in de Handleiding */
+  document.getElementById("ifAan").onclick = async () => { if(ifBezig) return; await infoAanWissel(ifGroep); tekenInfoFotos(); };
   /* na het wijzigen van een tekst: de lijst bijwerken, en de melding (bewaard, vertaald, of welke taal nog niet) hier laten zien */
-  document.getElementById("radTekstBewerk").addEventListener("close", () => { if(!d.open || rtSet !== "barlamp") return; tekenInfoFotos();
+  document.getElementById("radTekstBewerk").addEventListener("close", () => { if(!d.open || rtSet !== ifSet()) return; tekenInfoFotos();
     if(!document.getElementById("radTekstDlg").open) ifMelding(document.getElementById("rtErr").textContent); });
-  document.getElementById("radTekstDlg").addEventListener("close", () => { if(d.open && rtSet === "barlamp") tekenInfoFotos(); });
+  document.getElementById("radTekstDlg").addEventListener("close", () => { if(d.open && rtSet === ifSet()) tekenInfoFotos(); });
 }
 const BEZORG_UITLEG = {
   nl:"Geen zin om te koken? Deze drie bezorgen bij ons op de finca en zijn heel lekker. Tik op Bekijken voor de menukaart en het telefoonnummer. Bestellen en betalen doe je rechtstreeks bij hen, dit komt niet op je honesty bar-lijst. Geef als adres Finca KaYu door.",
@@ -6614,7 +6840,7 @@ document.addEventListener("click", async e => {
   if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
 });
 let gastToastTimer = null, gastVasteLijst = null;
-const VERSIE = "21-11-2026 g";
+const VERSIE = "23-11-2026 a";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -7102,6 +7328,7 @@ async function startGast(code){
      (zonder poortcode en wifi, die komen de dag vóór aankomst vanaf 13:00) */
   if(gastData && !gastData.fout && gastWachtNodig()){
     tekenGastWacht(); gastNaarRegels();
+    hlInfoHaal(); /* 23-11-2026 a: de foto's in de huisregels (alleen de fotootjes worden bijgewerkt) */
     /* review 13-11 e: de huisregels staan nu op de wachtpagina; herladen om de 5 minuten zette een lezende gast terug bovenaan. Nu: om de
        5 minuten kijken (gast_ontbijt) en pas herladen als de pagina open mag (of de link niet meer geldig is) */
     const wachtKijk = setInterval(async () => { try { const d = await gastHaal(); if(d && (d.fout || (gastData = d, !gastWachtNodig()))){ clearInterval(wachtKijk); location.reload(); } } catch(e){} }, 5 * 60000);
@@ -7493,23 +7720,22 @@ function gastInfoHtml(klap){
       const bron = gastWachtNodig() ? {} : (gastData || {}), w = k => String(bron[k] || "").trim();
       const label = x => ((x.match(/\*([^*]+)\*/) || [])[1] || "").replace(/\s*:\s*$/, "").trim();
       const zoek = e => voor.find(x => x.startsWith(e));
-      /* review 20-11 a: de hele tegel is de kopieerknop (groot genoeg om te tikken), met een kopieer-icoontje; lange waarden iets kleiner */
-      const waarde = v => `<span class="hrwaarde${v.length > 12 ? " lang" : ""}">${esc(v)}</span>`;
-      const KOPICO = `<svg class="hrkopico" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>`;
-      const tegel = (lab, inhoud, soort) => `<div class="hrtegel" data-hrtegel="${soort}"><span class="hrlab">${esc(lab)}</span>${inhoud}</div>`;
-      const kopTegel = (lab, v, soort, net, breed) => `<button type="button" class="hrtegel hrkop${breed ? " breed" : ""}" data-hrtegel="${soort}" data-hrkopieer="${escA(v)}"><span class="hrlab">${esc(lab)}</span>${KOPICO}` +
-        (net ? `<span class="hrnet">${esc(net)}</span>` : "") + waarde(v) + `</button>`;
-      const poort = zoek("🚪"), wifi = zoek("🌐"), tegels = [];
-      /* review 20-11 a: een lange wifinaam of een lang wachtwoord breekt anders midden in het woord; dan krijgen poort en wifi elk een hele rij */
-      const breed = wifi && Math.max(w("wifi_netwerk").length, w("wifi_wachtwoord").length) > 12;
-      if(poort && w("poortcode")) tegels.push(kopTegel(label(poort), w("poortcode"), "poort", "", breed));
-      if(wifi && w("wifi_wachtwoord")) tegels.push(kopTegel(label(wifi), w("wifi_wachtwoord"), "wifi", w("wifi_netwerk"), breed));
-      voor.filter(x => x.startsWith("⏰")).forEach((x, n) => tegels.push(tegel(label(x), waarde(x.replace(/^[^*]*\*[^*]+\*\s*/, "")), n ? "vertrek" : "aankomst")));
-      const route = zoek("📍"), url = route ? (route.match(/https?:\/\/[^\s]+/) || [""])[0] : "";
-      const stop = route ? route.split("\n").slice(1).join(" ").trim() : "";
-      boven = (tegels.length ? `<div class="hrtegels">${tegels.join("")}</div>` : "") +
-        (url ? `<div class="dag hl hrroute"><a class="groute" href="${escA(url)}" target="_blank" rel="noopener">${(GT[gastTaal] || GT.nl).route}</a>` +
-          (stop ? `<div class="info routestop" style="margin-top:8px;font-size:14px;line-height:1.45">${esc(stop)}</div>` : "") + `</div>` : "");
+      const poort = zoek("🚪"), wifi = zoek("🌐");
+      /* 23-11-2026 a (Bart, variant 2 van 21-11): in plaats van tegels en de routeknop één lijst zoals Omgeving: route (Openen), vijfsprong,
+         poortcode, je plek (elk met een fotootje als er foto's zijn), wifi (Kopiëren), aankomst en vertrek. Code, wifi en tijden komen uit
+         dezelfde bron als vulGeheim en de regels (zoals de tegels); valt een regel weg, dan ook de rij. */
+      const hl = hlL(), rij = (icoon, soort, titel, sub, rechts) => `<div class="hlrij" data-hlrij="${soort}">${gIcoonLijn(icoon)}<div class="hltekst"><b>${esc(titel)}</b>` +
+        (sub ? `<span>${esc(sub)}</span>` : "") + `</div>${rechts || ""}</div>`;
+      const rijen = [], route = zoek("📍"), url = route ? (route.match(/https?:\/\/[^\s]+/) || [""])[0] : "";
+      const tijd = x => x.replace(/^[^*]*\*[^*]+\*\s*/, "").trim(), tijden = voor.filter(x => x.startsWith("⏰"));
+      if(url) rijen.push(rij("pijl", "route", (GT[gastTaal] || GT.nl).route.replace(/,\s*/, " "), hl.routeSub, `<a class="hlpil" href="${escA(url)}" target="_blank" rel="noopener">${esc(hl.openen)}</a>`));
+      rijen.push(rij("speld", "vijfsprong", hlT("vijfsprong").kop, hlT("vijfsprong").sub, hlFotoKnop("vijfsprong")));
+      if(poort && w("poortcode")) rijen.push(rij("kluis", "poort", hlT("poort").kop + " " + w("poortcode"), hlT("poort").sub, hlFotoKnop("poort")));
+      rijen.push(rij("van", "plek", hlT("plek").kop, hlT("plek").sub, hlFotoKnop("plek")));
+      if(wifi && w("wifi_wachtwoord")) rijen.push(rij("wifi", "wifi", label(wifi) + (w("wifi_netwerk") ? ": " + w("wifi_netwerk") : ""), w("wifi_wachtwoord"),
+        `<button type="button" class="hlpil" data-hrkopieer="${escA(w("wifi_wachtwoord"))}">${esc(hl.kopieer)}</button>`));
+      if(tijden.length) rijen.push(rij("cal", "tijden", label(tijden[0]) + " " + tijd(tijden[0]), tijden[1] ? label(tijden[1]) + " " + tijd(tijden[1]) : "", ""));
+      boven = `<div class="hllijst">${rijen.join("")}</div>`;
       lijst = [kop, ...top.filter(x => !/^(⏰|📍|🌐)/.test(x)), ...lijst];
     }
   }
@@ -7522,6 +7748,9 @@ function gastInfoHtml(klap){
      20-11-2026 a: eerder vielen "EXTRA'S (op aanvraag)", cs "DĚTI", no "RO" en pl "WAŻNE" erbuiten en stonden ze als gewone regel in het blok ervoor */
   const isKop = s => { const k = s.replace(/[\u{1F300}-\u{1FAFF}☀-➿☎️]/gu, "").replace(/\s*\([^()]*\)\s*$/, "").trim(); return s.length < 45 && !/\p{Ll}/u.test(k) && (k.match(/\p{Lu}/gu) || []).length >= 2; };
   lijst = lijst.flatMap(x => String(x).split("\n")); /* 01-10-2026 b: zin onder de routelink staat met een regeleinde in dezelfde regel */
+  /* 23-11-2026 a: welke fotogroep bij een regel hoort (een fotootje rechts in de regel); kopjes in hoofdletters (🐕 HUISDIEREN) niet */
+  const hlBij = s => /^📍/.test(s) && /https?:\/\//.test(s) ? (klapCamper ? "" : "vijfsprong") : /^🚪/.test(s) ? (klapCamper ? "" : "poort")
+    : /^🚐/.test(s) ? (klapCamper ? "" : "plek") : /^🐕/.test(s) ? "honden" : "";
   for(const s of lijst){
     if(s === STREEP || s === ""){ continue; }
     /* 21-11-2026 a (Bart): In het kort staat open, de blokken eronder blijven dicht */
@@ -7529,13 +7758,14 @@ function gastInfoHtml(klap){
     if(isKop(s)){ if(open) h += open === "div" ? `</div>` : blokDicht(); h += blokOpen(esc(s)); open = true; continue; }
     if(!open){ h += klapCamper ? `<div class="dag hl">` : blokOpen(""); open = "div"; }
     /* routeregel: de link als grote knop, de tekst zonder de kale link */
+    const hg = isKop(s) ? "" : hlBij(String(s)), hf = hg ? hlFotoKnop(hg) : "";
     if(camper && String(s).startsWith("📍") && /https?:\/\//.test(s)){
       const url = (s.match(/https?:\/\/[^\s]+/) || [""])[0];
-      h += `<div class="info" style="margin:4px 0">${opmaak(s.replace(url, "").replace(/[:：]\s*$/, "").trim())}</div><div class="info" style="margin:6px 0 4px"><a class="groute" href="${esc(url)}" target="_blank" rel="noopener">${(GT[gastTaal] || GT.nl).route}</a></div>`;
+      h += `<div class="info${hf ? " hlregel" : ""}" style="margin:4px 0">${hf}${opmaak(s.replace(url, "").replace(/[:：]\s*$/, "").trim())}</div><div class="info" style="margin:6px 0 4px"><a class="groute" href="${esc(url)}" target="_blank" rel="noopener">${(GT[gastTaal] || GT.nl).route}</a></div>`;
       continue;
     }
     if(/^[•\-] /.test(s)) h += `<div class="info" style="padding-left:14px;text-indent:-14px">${opmaak(s)}</div>`;
-    else h += `<div class="info" style="margin:4px 0">${opmaak(s)}</div>`;
+    else h += `<div class="info${hf ? " hlregel" : ""}" style="margin:4px 0">${hf}${opmaak(s)}</div>`;
   }
   if(open) h += open === "div" ? `</div>` : blokDicht();
   return h;
@@ -8105,7 +8335,7 @@ function tekenGast(){
     bak.querySelectorAll("[data-barlamp]").forEach(kn => kn.onclick = () => barLampOpen()); /* 21-11-2026 f */
     /* 20-11-2026 a: tegels poortcode en wifi; lukt kopiëren niet, dan staat de waarde geselecteerd zodat de gast hem zelf kan kopiëren */
     bak.querySelectorAll("[data-hrkopieer]").forEach(kn => kn.onclick = async () => { const ok = await kopieer(kn.dataset.hrkopieer); kn.classList.toggle("gekopieerd", !!ok);
-      if(!ok){ try { const w = kn.querySelector(".hrwaarde"), r = document.createRange(), sel = getSelection(); r.selectNodeContents(w); sel.removeAllRanges(); sel.addRange(r); } catch(e){} } });
+      if(!ok){ try { const w = kn.querySelector(".hrwaarde") || (kn.closest(".hlrij") && kn.closest(".hlrij").querySelector(".hltekst span")), r = document.createRange(), sel = getSelection(); r.selectNodeContents(w); sel.removeAllRanges(); sel.addRange(r); } catch(e){} } });
     bak.querySelectorAll("[data-gnieuwweg]").forEach(kn => kn.onclick = e => { e.stopPropagation(); gastNieuwsZet(kn.dataset.gnieuwweg); tekenGast(); });
     bak.querySelectorAll("[data-gnieuw]").forEach(kn => kn.addEventListener("click", () => gastNieuwsZet(kn.dataset.gnieuw)));
     bak.querySelectorAll("[data-gtab]").forEach(kn => kn.onclick = e => { e.stopPropagation(); if(gastTab !== kn.dataset.gtab) gastVasteLijst = null; if(kn.dataset.gtab === "omgeving"){ gastOmgSoort = null; gastOmgFilter = null; } gastTab = kn.dataset.gtab; gastTabGekozen = true; tekenGast(); window.scrollTo({ top:0 }); });
@@ -12485,6 +12715,7 @@ function tekenMeer(){
     : "Staat uit: gasten zien de regel Laatste in de bar? niet.");
   meerZet("meerBarLamp", barLampAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpBarLampFotos", infoMeerTekst());
+  HL_GROEPEN.forEach(g => meerZet("mpHl_" + g, hlMeerTekst(g))); /* 23-11-2026 a */
   meerZet("mpFacebook", FB_RE.test(radFacebook()) ? `${radFacebook()}: in de kaart van het rad staat de knop Volg ons op Facebook.`
     : radFacebook() ? "Deze link klopt niet, dus gasten zien geen knop Volg ons op Facebook. Tik om hem te verbeteren." : "Leeg: geen knop Volg ons op Facebook. Tik en plak de link van jullie pagina (in de Facebook-app: Delen, Link kopiëren).");
   meerZet("mpInstagram", INSTA_RE.test(instaNaam()) ? `@${instaNaam()}: alle gasten zien vanaf hun aankomstdag de kaart "Mooie foto gemaakt?" met tag ons en volg ons.`
@@ -16635,6 +16866,7 @@ if(NIEUW){
     if(w === "berichtteksten"){ openTekstSet("bericht"); return; } /* 20-11-2026 f */
     if(w === "barlampaan"){ barLampAanWissel(); return; } /* 21-11-2026 g */
     if(w === "barlampfotos"){ openInfoFotos(); return; }
+    if(w === "hlfotos" && HL_GROEPEN.includes(kn.dataset.hlgroep)){ openInfoFotos(kn.dataset.hlgroep); return; } /* 23-11-2026 a */
     if(w === "herkomst"){ herkomstWissel(); return; }
     if(w === "kamerwissel"){ kwWissel("kamer_wissel"); return; }
     if(w === "obmelding"){ meldingWissel("ontbijt"); return; }
