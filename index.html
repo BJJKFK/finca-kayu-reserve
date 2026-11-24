@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="23-11-2026 a"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="24-11-2026 f"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF8F1">
 <title>Finca KaYu</title>
@@ -747,9 +747,9 @@
   #gast .dag.regels .kort b, #gast .dag.regels .volledig > b{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
   #gast .dag.regels .volledig{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
   #gast .dag.regels .volledig.alleen{margin-top:4px;padding-top:0;border-top:0}
-  #gast .dag.regels .sub{margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+  #gast .dag.regels .sub{margin-top:20px;padding-top:16px;border-top:1px solid var(--line)} /* 24-11-2026 b: iets meer ruimte (was 14 en 12) */
   #gast .dag.regels .sub:first-of-type{border-top:0;padding-top:0}
-  #gast .dag.regels .sub h3{margin:0 0 6px;font-size:15px;color:var(--tekst);text-align:left}
+  #gast .dag.regels .sub h3{margin:0 0 8px;font-size:16px;color:var(--tekst);text-align:left}
   #gast .dag.regels .sub, #gast .dag.regels .sub p, #gast .dag.regels .sub .info, #gast .dag.regels .sub li, #gast .dag.regels .sub div{text-align:left}
   #gast .dag.regels .sub ul{padding-left:18px}
   .blok .vink.campob{margin:6px 0 4px}
@@ -1325,6 +1325,8 @@
   html.nieuw .kalr .c > b i img.kfoto{width:calc(var(--rij, 26px) - 10px);height:calc(var(--rij, 26px) - 10px);vertical-align:middle;margin-top:-2px}
   #dName .dfoto{border:0;padding:0;margin:0 10px 0 0;background:none;cursor:pointer;vertical-align:middle;display:inline-block}
   #dName .dfoto img{width:46px;height:46px;border-radius:50%;object-fit:cover;display:block;border:2px solid #FFFFFF;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #dName .dfotomaak{width:46px;height:46px;border-radius:50%;border:2px dashed #B8B2A8;background:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;color:var(--pine)} /* 24-11-2026 d */
+  #dName .dfotomaak svg{width:22px;height:22px}
   html.nieuw .kalkop span{font-size:10px;color:var(--muted);text-align:center;line-height:1.15;padding:3px 0;border-radius:8px;font-weight:600}
   html.nieuw .kalkop span.nu{background:var(--accent);color:#FFFFFF} html.nieuw .kalkop span.nu i{color:#FFFFFF}
   /* 13-10-2026 b: feestdagen en vakanties */
@@ -1435,6 +1437,8 @@
   #gast .barrij .stap.gstap button{width:30px;height:30px;font-size:16px;opacity:.9}
   #gast .barrij .stap.gstap button.plus, html.nieuw #gast .barrij .stap.gstap button.plus{width:42px;height:42px;font-size:22px;background:var(--pine);border-color:var(--pine);color:var(--bone,#FFFFFF);opacity:1}
   #gast .barrij .stap.gstap button:disabled{opacity:.3;cursor:default}
+  /* 24-11-2026 e: een uitgezette + (Stroom per nacht: alle nachten hebben al stroom) ziet er ook uit als uit; de regel hierboven verloor van opacity:1 */
+  #gast .barrij .stap.gstap button.plus:disabled, html.nieuw #gast .barrij .stap.gstap button.plus:disabled{opacity:.3;cursor:default}
   html.nieuw #gast .regel.tot.gbartot{position:sticky;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:5;box-shadow:0 -4px 12px rgba(30,29,27,.08)}
   #gast .dag.aankomst .kopieer{padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);font:inherit;font-size:14px;font-weight:600;color:var(--pine);cursor:pointer}
   #gast .dag.aankomst .kopieer.gekopieerd{border-color:var(--moss);color:var(--moss)}
@@ -1546,6 +1550,18 @@
   .lampdlg figure{margin:0 0 14px}
   .lampdlg img{width:100%;height:auto;border-radius:14px;display:block;background:#EDE7DF}
   .lampdlg figcaption{font-size:14.5px;line-height:1.35;margin-top:6px;color:#1F1F1F}
+  /* 23-11-2026 b: legenda onder de plattegrond (Je plek); dicht op de kaart, zodat alles in één venster past */
+  .lampdlg .hllegenda{list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;margin:-8px 0 0}
+  .lampdlg .hllegenda li{display:flex;align-items:center;gap:7px;font-size:13px;line-height:1.1;color:#1F1F1F;min-width:0}
+  .lampdlg .hllegenda svg{flex:none;width:22px;height:22px;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35))}
+  .lampdlg .hllegenda svg > circle{fill:#9E543E;stroke:#fff;stroke-width:1.5}
+  /* met legenda: venster bijna schermhoog, kleinere kop en Sluiten, zodat alles zonder schuiven past (Bart 23-11: "de sluiten knop smaller") */
+  html .raddlg.lampdlg.metleg{max-height:calc(100vh - 12px);max-height:calc(100dvh - 12px)}
+  .lampdlg.metleg .radin{max-height:calc(100vh - 14px);max-height:calc(100dvh - 14px);padding-top:14px}
+  .lampdlg.metleg h2{font-size:20px;margin:0 0 8px}
+  .lampdlg.metleg .radknoppen{padding:6px 0 10px}
+  .lampdlg.metleg .radknoppen button{padding:9px}
+  #gast .info.hlregel.hlpark{display:flow-root}
   .raddlg .melding.fout{color:#B3261E;margin-top:8px}
   /* 20-11-2026 d: foto van de camper (rondje naast "Hoi ...", kaart bovenaan Start, venster met de foto) */
   #gast .camwie{display:flex;align-items:center;gap:10px;margin:0 0 12px}
@@ -1668,6 +1684,7 @@
     border-bottom:1px solid var(--line)}
   .barrij .nm{flex:1;font-size:15px}
   .barrij .nm i{display:block;font-style:normal;font-size:11px;font-weight:400;color:var(--muted)}
+  .barrij .nm small.stroomal{display:block;font-size:12.5px;font-weight:400;line-height:1.3;margin-top:2px;color:var(--muted)}
   i.viagast{font-style:normal;font-size:11px;color:var(--muted)}
   .ontbg button.ibtn, #gast .dag .ontbg button.ibtn, button.ibtn{width:22px;height:22px;min-width:22px;padding:0;margin-left:6px;border:1px solid var(--line);background:var(--bone);color:var(--muted);border-radius:50%;font:inherit;font-size:12px;font-style:italic;line-height:1;cursor:pointer;vertical-align:middle}
   .gerinfo{font-size:13px;color:var(--muted);line-height:1.4;padding:2px 0 8px}
@@ -2482,7 +2499,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
   <symbol id="gi-scooter" viewBox="0 0 24 24"><circle cx="6" cy="17" r="2.6"/><circle cx="18" cy="17" r="2.6"/><path d="M8.6 17h6.8l2.1-7.5H20M17.5 9.5 16.4 6H14"/><path d="M3 13.5h7.5l1.5 3.5"/></symbol>
   <symbol id="gi-sleutel" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4"/><path d="M10.4 12.6 20 3M16.5 6.5 19 9M14.2 8.8l2 2"/></symbol>
   <!-- 23-10-2026 a: voor de handleiding op de gastenpagina (wifi, ontbijt) -->
-  <symbol id="gi-kluis" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /><circle cx="7.5" cy="7.5" r=".5" fill="currentColor" /><path d="m7.9 7.9 2.7 2.7" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /><path d="m13.4 10.6 2.7-2.7" /><circle cx="7.5" cy="16.5" r=".5" fill="currentColor" /><path d="m7.9 16.1 2.7-2.7" /><circle cx="16.5" cy="16.5" r=".5" fill="currentColor" /><path d="m13.4 13.4 2.7 2.7" /><circle cx="12" cy="12" r="2" /></symbol><symbol id="gi-slot" viewBox="0 0 24 24"><circle cx="12" cy="16" r="1" /><rect x="3" y="10" width="18" height="12" rx="2" /><path d="M7 10V7a5 5 0 0 1 10 0v3" /></symbol><symbol id="gi-open" viewBox="0 0 24 24"><circle cx="12" cy="16" r="1" /><rect width="18" height="12" x="3" y="10" rx="2" /><path d="M7 10V7a5 5 0 0 1 9.33-2.5" /></symbol><symbol id="gi-zoek" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></symbol><symbol id="gi-paperclip" viewBox="0 0 24 24"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></symbol><symbol id="gi-prullenbak" viewBox="0 0 24 24"><path d="M10 11v6" /><path d="M14 11v6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol>
+  <symbol id="gi-kluis" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /><circle cx="7.5" cy="7.5" r=".5" fill="currentColor" /><path d="m7.9 7.9 2.7 2.7" /><circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /><path d="m13.4 10.6 2.7-2.7" /><circle cx="7.5" cy="16.5" r=".5" fill="currentColor" /><path d="m7.9 16.1 2.7-2.7" /><circle cx="16.5" cy="16.5" r=".5" fill="currentColor" /><path d="m13.4 13.4 2.7 2.7" /><circle cx="12" cy="12" r="2" /></symbol><symbol id="gi-parkeer" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M9 17V7h4a3 3 0 0 1 0 6H9" /></symbol><symbol id="gi-slot" viewBox="0 0 24 24"><circle cx="12" cy="16" r="1" /><rect x="3" y="10" width="18" height="12" rx="2" /><path d="M7 10V7a5 5 0 0 1 10 0v3" /></symbol><symbol id="gi-open" viewBox="0 0 24 24"><circle cx="12" cy="16" r="1" /><rect width="18" height="12" x="3" y="10" rx="2" /><path d="M7 10V7a5 5 0 0 1 9.33-2.5" /></symbol><symbol id="gi-zoek" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></symbol><symbol id="gi-paperclip" viewBox="0 0 24 24"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></symbol><symbol id="gi-prullenbak" viewBox="0 0 24 24"><path d="M10 11v6" /><path d="M14 11v6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /><path d="M3 6h18" /><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol>
   <symbol id="gi-wifi" viewBox="0 0 24 24"><path d="M12 19.5h.01"/><path d="M2.5 8.8a14 14 0 0 1 19 0M5.6 12.2a9.5 9.5 0 0 1 12.8 0M8.7 15.5a5 5 0 0 1 6.6 0"/></symbol>
   <symbol id="gi-koffie" viewBox="0 0 24 24"><path d="M5 9.5h11v4.5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10.5h1.3a2.5 2.5 0 0 1 0 5H16"/><path d="M3.5 21.5h15"/><path d="M8.8 2.8c-.8 1 .8 2 0 3.4M12.2 2.8c-.8 1 .8 2 0 3.4"/></symbol>
 </svg>
@@ -2717,6 +2734,12 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
     <div class="meerkaart">
       <div class="meerinst"><span><b>Foto van de camper vragen</b><small id="mpCamFoto"></small></span><button type="button" class="meerzet" data-meer="camfoto" id="meerCamFoto"></button></div>
       <div class="meerinst"><span><b>Foto vragen aan kamergasten</b><small id="mpCamFotoKamers"></small></span><button type="button" class="meerzet" data-meer="camfotokamers" id="meerCamFotoKamers"></button></div>
+      <!-- 24-11-2026 d (Bart: "dat ik gewoon even fotootjes doe" bij een rondje over de camperplaats) -->
+      <div class="meerinst"><span><b>Zelf een foto maken van de camper</b><small id="mpCamFotoZelf"></small></span><button type="button" class="meerzet" data-meer="camfotozelf" id="meerCamFotoZelf"></button></div>
+    </div>
+    <!-- 24-11-2026 f (Bart: "als iemand stroom heeft aangezet in de app, melding") -->
+    <div class="meerkaart">
+      <div class="meerinst"><span><b>Melding in Berichten als een camper stroom aantikt</b><small id="mpStroomMelding"></small></span><button type="button" class="meerzet" data-meer="stroommelding" id="meerStroomMelding"></button></div>
     </div>
     <div class="meerkaart">
       <button class="meerrij" data-meer="verlengwie"><span><b>Zelf verlengen</b><small id="mpVerleng"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
@@ -2972,7 +2995,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
 </div></dialog>
 <dialog id="inbox"><div class="dlg meerdlg tegeldlg inboxdlg">
   <h3 id="inboxKop" tabindex="-1" autofocus>Inbox</h3>
-  <p class="leeg" style="margin:0 0 8px">Alles waarop een gast een reactie van ons verwacht, en bestellingen en afzeggingen van ontbijt en broodjes tot je op Gezien tikt. Al geregeld? Haal een bericht weg met ✕ (past de gast daarna iets aan, dan staat het er weer). Praten doe je in WhatsApp.</p>
+  <p class="leeg" style="margin:0 0 8px">Alles waarop een gast een reactie van ons verwacht, bestellingen en afzeggingen van ontbijt en broodjes, en stroom die een camper zelf aantikt. Het blijft staan tot je op Gezien tikt. Al geregeld? Haal een bericht weg met ✕ (past de gast daarna iets aan, dan staat het er weer). Praten doe je in WhatsApp.</p>
   <div id="inboxInhoud"></div>
   <div class="acts"><button id="inboxDicht">Sluiten</button></div>
 </div></dialog>
@@ -3515,7 +3538,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
   </div>
 </div></dialog>
 
-<script src="teksten.js?v=21112026e"></script>
+<script src="teksten.js?v=23112026c"></script>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
@@ -4830,10 +4853,10 @@ const INFO_VAST = BAR_LAMP_FOTOS.map((bestand, nr) => ({ sleutel: INFO_GROEP + "
    foto kunnen klikken"): vier fotogroepen in de Handleiding, met dezelfde opbouw als Laatste in de bar? (tabel info_fotos, instellingen
    info_<groep> en info_<groep>_teksten, gast_info en gast_info_fotos per groep; databasescript 23-11-2026-a-fotogroepen.sql). De vaste foto's
    staan als bestanden in site/ (zonder locatiegegevens; op poort-1 is het kenteken onleesbaar en zijn Barts rode krabbels vervangen door een
-   strak rondje), met een klein vierkant fotootje (-k.jpg) voor in de lijst. Je plek heeft nog geen vaste foto (de plattegrond volgt). */
+   strak rondje), met een klein vierkant fotootje (-k.jpg) voor in de lijst. Je plek heeft sinds 23-11-2026 b de plattegrond (plattegrond.jpg, met legenda in het venster). */
 const HL_GROEPEN = ["vijfsprong", "poort", "plek", "honden"];
 const HL_NAAM = { vijfsprong:"Vijfsprong", poort:"Poort", plek:"Je plek", honden:"Hondenren" };
-const HL_BESTANDEN = { vijfsprong:["vijfsprong-1.jpg", "vijfsprong-2.jpg"], poort:["poort-1.jpg", "poort-2.jpg"], plek:[], honden:["honden-1.jpg", "honden-2.jpg"] };
+const HL_BESTANDEN = { vijfsprong:["vijfsprong-1.jpg", "vijfsprong-2.jpg"], poort:["poort-1.jpg", "poort-2.jpg"], plek:["plattegrond.jpg"], honden:["honden-1.jpg", "honden-2.jpg"] };
 const INFO_VAST_G = Object.assign({ [INFO_GROEP]: INFO_VAST }, Object.fromEntries(HL_GROEPEN.map(g => [g, HL_BESTANDEN[g].map((bestand, nr) =>
   ({ sleutel: g + "_" + (nr + 1), bestand, klein: bestand.replace(/\.jpg$/, "-k.jpg"), nr, volgorde: nr + 1 }))])));
 const infoVast = g => INFO_VAST_G[g] || [];
@@ -4936,67 +4959,111 @@ const HL_TEKST = {
   nl:{ routeSub:"Tot ons bordje bij de vijfsprong", openen:"Openen", kopieer:"Kopiëren",
     vijfsprong:{ kop:"Vijfsprong", sub:"Links, volg de bordjes", fotos:["Bij dit bordje ga je links.", ""] },
     poort:{ kop:"Poortcode", sub:"Of bel ons even", titel:"Poort", fotos:["Naar binnen: tik de code in op dit kastje.", "Naar buiten: druk op deze knop. Je hebt dan ongeveer 60 seconden."] },
-    plek:{ kop:"Je plek", sub:"Na de palmbomen links", fotos:[] },
+    plek:{ kop:"Je plek", sub:"Na de palmbomen links", titelKamer:"Parkeren", subKamer:"Na de poort links", fotos:[] },
     honden:{ titel:"Hondenren", fotos:["De hondenren, vanaf de speeltuin gezien.", ""] } },
   en:{ routeSub:"To our sign at the junction", openen:"Open", kopieer:"Copy",
     vijfsprong:{ kop:"Junction", sub:"Turn left, follow the signs", fotos:["At this sign, turn left.", ""] },
     poort:{ kop:"Gate code", sub:"Or give us a call", titel:"Gate", fotos:["Coming in: type the code on this keypad.", "Going out: press this button. You then have about 60 seconds."] },
-    plek:{ kop:"Your pitch", sub:"Left after the palm trees", fotos:[] },
+    plek:{ kop:"Your pitch", sub:"Left after the palm trees", titelKamer:"Parking", subKamer:"Left after the gate", fotos:[] },
     honden:{ titel:"Dog run", fotos:["The dog run, seen from the playground.", ""] } },
   de:{ routeSub:"Bis zu unserem Schild an der Kreuzung", openen:"Öffnen", kopieer:"Kopieren",
     vijfsprong:{ kop:"Kreuzung", sub:"Links, folgt den Schildern", fotos:["An diesem Schild biegt ihr links ab.", ""] },
     poort:{ kop:"Torcode", sub:"Oder ruft uns kurz an", titel:"Tor", fotos:["Rein: tippt den Code an diesem Kästchen ein.", "Raus: drückt auf diesen Knopf. Ihr habt dann etwa 60 Sekunden."] },
-    plek:{ kop:"Euer Platz", sub:"Nach den Palmen links", fotos:[] },
+    plek:{ kop:"Euer Platz", sub:"Nach den Palmen links", titelKamer:"Parken", subKamer:"Nach dem Tor links", fotos:[] },
     honden:{ titel:"Hundeauslauf", fotos:["Der Hundeauslauf, vom Spielplatz aus gesehen.", ""] } },
   es:{ routeSub:"Hasta nuestro cartel en el cruce", openen:"Abrir", kopieer:"Copiar",
     vijfsprong:{ kop:"Cruce", sub:"A la izquierda, seguid los carteles", fotos:["En este cartel, girad a la izquierda.", ""] },
     poort:{ kop:"Código de la puerta", sub:"O llamadnos", titel:"Puerta", fotos:["Para entrar: marcad el código en este teclado.", "Para salir: pulsad este botón. Tenéis unos 60 segundos."] },
-    plek:{ kop:"Vuestra parcela", sub:"Después de las palmeras, a la izquierda", fotos:[] },
+    plek:{ kop:"Vuestra parcela", sub:"Después de las palmeras, a la izquierda", titelKamer:"Aparcamiento", subKamer:"Después de la puerta, a la izquierda", fotos:[] },
     honden:{ titel:"Recinto para perros", fotos:["El recinto para perros, visto desde el parque infantil.", ""] } },
   it:{ routeSub:"Fino al nostro cartello all'incrocio", openen:"Apri", kopieer:"Copia",
     vijfsprong:{ kop:"Incrocio", sub:"A sinistra, seguite i cartelli", fotos:["A questo cartello girate a sinistra.", ""] },
     poort:{ kop:"Codice del cancello", sub:"Oppure chiamateci", titel:"Cancello", fotos:["Per entrare: digitate il codice su questa tastiera.", "Per uscire: premete questo pulsante. Avrete circa 60 secondi."] },
-    plek:{ kop:"La vostra piazzola", sub:"Dopo le palme a sinistra", fotos:[] },
+    plek:{ kop:"La vostra piazzola", sub:"Dopo le palme a sinistra", titelKamer:"Parcheggio", subKamer:"Dopo il cancello a sinistra", fotos:[] },
     honden:{ titel:"Area cani", fotos:["L'area cani vista dal parco giochi.", ""] } },
   fr:{ routeSub:"Jusqu'à notre panneau au carrefour", openen:"Ouvrir", kopieer:"Copier",
     vijfsprong:{ kop:"Carrefour", sub:"À gauche, suivez les panneaux", fotos:["À ce panneau, tournez à gauche.", ""] },
     poort:{ kop:"Code du portail", sub:"Ou appelez-nous", titel:"Portail", fotos:["Pour entrer : tapez le code sur ce boîtier.", "Pour sortir : appuyez sur ce bouton. Vous avez alors environ 60 secondes."] },
-    plek:{ kop:"Votre emplacement", sub:"Après les palmiers, à gauche", fotos:[] },
+    plek:{ kop:"Votre emplacement", sub:"Après les palmiers, à gauche", titelKamer:"Stationnement", subKamer:"Après le portail, à gauche", fotos:[] },
     honden:{ titel:"Enclos à chiens", fotos:["L'enclos à chiens, vu depuis l'aire de jeux.", ""] } },
   pt:{ routeSub:"Até à nossa placa no cruzamento", openen:"Abrir", kopieer:"Copiar",
     vijfsprong:{ kop:"Cruzamento", sub:"À esquerda, sigam as placas", fotos:["Nesta placa, virem à esquerda.", ""] },
     poort:{ kop:"Código do portão", sub:"Ou liguem-nos", titel:"Portão", fotos:["Para entrar: marquem o código neste teclado.", "Para sair: carreguem neste botão. Depois têm cerca de 60 segundos."] },
-    plek:{ kop:"O vosso lugar", sub:"Depois das palmeiras, à esquerda", fotos:[] },
+    plek:{ kop:"O vosso lugar", sub:"Depois das palmeiras, à esquerda", titelKamer:"Estacionamento", subKamer:"Depois do portão, à esquerda", fotos:[] },
     honden:{ titel:"Parque para cães", fotos:["O parque para cães, visto do parque infantil.", ""] } },
   cs:{ routeSub:"K naší ceduli na křižovatce", openen:"Otevřít", kopieer:"Kopírovat",
     vijfsprong:{ kop:"Křižovatka", sub:"Doleva, pokračujte podle cedulí", fotos:["U této cedule odbočte doleva.", ""] },
     poort:{ kop:"Kód brány", sub:"Nebo nám zavolejte", titel:"Brána", fotos:["Dovnitř: zadejte kód na této klávesnici.", "Ven: stiskněte toto tlačítko. Pak máte asi 60 sekund."] },
-    plek:{ kop:"Vaše místo", sub:"Za palmami doleva", fotos:[] },
+    plek:{ kop:"Vaše místo", sub:"Za palmami doleva", titelKamer:"Parkování", subKamer:"Za bránou doleva", fotos:[] },
     honden:{ titel:"Výběh pro psy", fotos:["Výběh pro psy, pohled od dětského hřiště.", ""] } },
   fi:{ routeSub:"Kylttiimme risteyksessä asti", openen:"Avaa", kopieer:"Kopioi",
     vijfsprong:{ kop:"Risteys", sub:"Vasemmalle, seuratkaa kylttejä", fotos:["Tämän kyltin kohdalla kääntykää vasemmalle.", ""] },
     poort:{ kop:"Portin koodi", sub:"Tai soittakaa meille", titel:"Portti", fotos:["Sisään: näppäilkää koodi tähän näppäimistöön.", "Ulos: painakaa tätä nappia. Teillä on sitten noin 60 sekuntia."] },
-    plek:{ kop:"Paikkanne", sub:"Palmujen jälkeen vasemmalle", fotos:[] },
+    plek:{ kop:"Paikkanne", sub:"Palmujen jälkeen vasemmalle", titelKamer:"Pysäköinti", subKamer:"Portin jälkeen vasemmalle", fotos:[] },
     honden:{ titel:"Koiratarha", fotos:["Koiratarha leikkipaikalta katsottuna.", ""] } },
   no:{ routeSub:"Til skiltet vårt i krysset", openen:"Åpne", kopieer:"Kopier",
     vijfsprong:{ kop:"Krysset", sub:"Til venstre, følg skiltene", fotos:["Ved dette skiltet tar dere til venstre.", ""] },
     poort:{ kop:"Portkode", sub:"Eller ring oss", titel:"Porten", fotos:["Inn: tast inn koden på denne boksen.", "Ut: trykk på denne knappen. Da har dere omtrent 60 sekunder."] },
-    plek:{ kop:"Plassen deres", sub:"Til venstre etter palmene", fotos:[] },
+    plek:{ kop:"Plassen deres", sub:"Til venstre etter palmene", titelKamer:"Parkering", subKamer:"Til venstre etter porten", fotos:[] },
     honden:{ titel:"Hundegården", fotos:["Hundegården, sett fra lekeplassen.", ""] } },
   sv:{ routeSub:"Till vår skylt vid korsningen", openen:"Öppna", kopieer:"Kopiera",
     vijfsprong:{ kop:"Korsningen", sub:"Till vänster, följ skyltarna", fotos:["Vid den här skylten svänger ni vänster.", ""] },
     poort:{ kop:"Grindkod", sub:"Eller ring oss", titel:"Grinden", fotos:["In: knappa in koden på den här dosan.", "Ut: tryck på den här knappen. Sedan har ni ungefär 60 sekunder."] },
-    plek:{ kop:"Er plats", sub:"Till vänster efter palmerna", fotos:[] },
+    plek:{ kop:"Er plats", sub:"Till vänster efter palmerna", titelKamer:"Parkering", subKamer:"Till vänster efter grinden", fotos:[] },
     honden:{ titel:"Hundgården", fotos:["Hundgården, sedd från lekplatsen.", ""] } },
   pl:{ routeSub:"Do naszej tablicy na skrzyżowaniu", openen:"Otwórz", kopieer:"Kopiuj",
     vijfsprong:{ kop:"Skrzyżowanie", sub:"W lewo, kierujcie się tablicami", fotos:["Przy tej tablicy skręćcie w lewo.", ""] },
     poort:{ kop:"Kod do bramy", sub:"Albo do nas zadzwońcie", titel:"Brama", fotos:["Wejście: wpiszcie kod na tej klawiaturze.", "Wyjście: naciśnijcie ten przycisk. Macie wtedy około 60 sekund."] },
-    plek:{ kop:"Wasze miejsce", sub:"Za palmami w lewo", fotos:[] },
+    plek:{ kop:"Wasze miejsce", sub:"Za palmami w lewo", titelKamer:"Parking", subKamer:"Za bramą w lewo", fotos:[] },
     honden:{ titel:"Wybieg dla psów", fotos:["Wybieg dla psów widziany od strony placu zabaw.", ""] } }
 };
+/* 23-11-2026 b (Bart): plattegrond bij Je plek (luchtfoto met de bolletjes erin, "Beeld: © Google"), met daaronder een legenda in de taal
+   van de gast. De legenda tekent dezelfde bolletjes als op de kaart, in deze volgorde; alleen onder de vaste kaart (niet onder een eigen foto
+   die Bart in Meer in de plaats zet, want die heeft misschien andere bolletjes). Compact, zodat kaart en legenda op een gewone telefoon
+   (390 x 844) zonder schuiven in één venster passen (test K5). */
+const HL_KAART = "plattegrond.jpg";
+/* 23-11-2026 b (Bart: "Die hoeven niet met de pijl rechtdoor naar beneden. Die moeten linea recta naar de P", "voor groepen hetzelfde"):
+   kamergasten, het gastenverblijf en groepen krijgen dezelfde kaart met de route van de entree naar de P; zelfde groep plek, zelfde aan/uit */
+const HL_KAART_BB = "plattegrond-bb.jpg";
+const HL_MAAT = { [HL_KAART]: [900, 1076], [HL_KAART_BB]: [900, 1076] };
+const hlKaartBB = () => !!(gastData && gastData.kamer && !isCamperPlek(gastData.kamer));
+const hlVastB = v => v && v.bestand === HL_KAART && hlKaartBB() ? Object.assign({}, v, { bestand: HL_KAART_BB, klein: HL_KAART_BB.replace(/\.jpg$/, "-k.jpg") }) : v;
+const hlTitel = g => g === "plek" && hlKaartBB() ? ((HL_TEKST[gastTaal] || HL_TEKST.en).plek.titelKamer || hlT(g).titel) : hlT(g).titel;
+/* kaart en legenda in één venster, ook op een klein scherm: past het niet, dan wordt de kaart iets lager (nooit lager dan 180 px) */
+function hlPas(d){
+  const r = d && d.querySelector(".radin"), l = d && d.querySelector(".hllegenda"), img = l && l.previousElementSibling && l.previousElementSibling.querySelector("img");
+  if(!r || !img) return;
+  img.style.maxHeight = ""; img.style.width = "";
+  const te = r.scrollHeight - r.clientHeight, h = Math.floor(img.getBoundingClientRect().height - te - 1);
+  /* review 23-11 c: alleen verkleinen als het daarna echt past (liggend of met een extra foto: kaart heel laten en schuiven) */
+  if(te > 0 && h >= 180){ img.style.maxHeight = h + "px"; img.style.width = Math.round(h * (img.width || 900) / (img.height || 1076)) + "px"; img.style.marginInline = "auto"; }
+}
+if(typeof window !== "undefined") window.addEventListener("resize", () => { const d = document.getElementById("hlFotoDlg"); if(d && d.open) hlPas(d); });
+const hlMaat = b => HL_MAAT[b] || [900, 1200];
+const HL_LEG_VOLGORDE = ["entree", "camper", "kraan", "grijs", "chemisch", "wc", "was", "rest", "bed", "zwem", "vuur", "speel", "hond", "P"];
+const HL_LEG_ICOON = { entree:"<g fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 21 V8 Q3.5 3 12 3 Q20.5 3 20.5 8 V21\"/></g><path fill=\"#FFFFFF\" d=\"M12 7 L17 12.4 H13.6 V20.5 H10.4 V12.4 H7 Z\"/>", camper:"<path fill=\"#FFFFFF\" fill-rule=\"evenodd\" d=\"M1.5 6.5 Q1.5 5 3 5 H15.2 L20.8 10.4 Q22.5 10.8 22.5 12.6 V17 H20 a3 3 0 0 0 -6 0 H10 a3 3 0 0 0 -6 0 H1.5 Z M15.4 6.9 V10.6 H19.2 Z M4 7.6 V11.2 H12 V7.6 Z\"/><g fill=\"#FFFFFF\"><circle cx=\"7\" cy=\"17.6\" r=\"2.2\"/><circle cx=\"17\" cy=\"17.6\" r=\"2.2\"/></g>", kraan:"<g fill=\"#FFFFFF\"><path d=\"M2.5 7.5 H12.5 Q18.5 7.5 18.5 13.5 V14.5 H15 V13.5 Q15 11 12.5 11 H2.5 Z\"/><rect x=\"7\" y=\"3.5\" width=\"2.6\" height=\"4.5\"/><rect x=\"4.8\" y=\"2.6\" width=\"7\" height=\"2.2\" rx=\"1.1\"/><path d=\"M16.8 16.2 Q19.3 19.2 19.3 20.4 a2.5 2.5 0 0 1 -5 0 Q14.3 19.2 16.8 16.2 Z\"/></g>", grijs:"<path d=\"M12 2 C12 2 6.3 8.6 6.3 12.4 a5.7 5.7 0 0 0 11.4 0 C17.7 8.6 12 2 12 2 Z\" fill=\"#FFFFFF\"/><g stroke=\"#FFFFFF\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M4.5 21.3 H19.5\"/><path d=\"M7.5 21.3 V19.5 M10.5 21.3 V19.5 M13.5 21.3 V19.5 M16.5 21.3 V19.5\"/></g>", chemisch:"<g fill=\"#FFFFFF\"><rect x=\"3\" y=\"2.5\" width=\"6\" height=\"7.5\" rx=\"1.2\"/><path d=\"M2.5 10.8 H14.5 Q14.5 15.4 10.6 16.2 L11.4 20.5 H5.6 L6.4 16.2 Q2.5 15.4 2.5 10.8 Z\"/></g><g fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"2.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M18.5 3.5 V14.5 M15.4 11.4 L18.5 14.6 L21.6 11.4\"/><path d=\"M15 20.3 H22\"/></g>", wc:"<g fill=\"#FFFFFF\"><circle cx=\"7\" cy=\"4\" r=\"2\"/><path d=\"M4.6 7 H9.4 Q10.4 7 10.4 8 V13.6 H9.1 V20.5 H7.6 V15.5 H6.4 V20.5 H4.9 V13.6 H3.6 V8 Q3.6 7 4.6 7 Z\"/><circle cx=\"17\" cy=\"4\" r=\"2\"/><path d=\"M15.4 7 H18.6 Q19.4 7 19.7 7.8 L21.6 15 H19 V20.5 H17.6 V15.5 H16.4 V20.5 H15 V15 H12.4 L14.3 7.8 Q14.6 7 15.4 7 Z\"/><rect x=\"11.4\" y=\"2.5\" width=\"1.2\" height=\"18\" rx=\".6\" opacity=\".55\"/></g>", was:"<path fill=\"#FFFFFF\" fill-rule=\"evenodd\" d=\"M6.5 2 H17.5 Q20 2 20 4.5 V19.5 Q20 22 17.5 22 H6.5 Q4 22 4 19.5 V4.5 Q4 2 6.5 2 Z M12 8 a5.6 5.6 0 1 0 0.01 0 Z M7.2 4.2 a1.1 1.1 0 1 0 0.01 0 Z M10.4 4.2 a1.1 1.1 0 1 0 0.01 0 Z\"/><path fill=\"#FFFFFF\" d=\"M8.3 14.2 Q10.2 12.9 12 14.2 Q13.8 15.5 15.7 14.2 A3.75 3.75 0 0 1 8.3 14.2 Z\"/>", rest:"<path fill=\"#FFFFFF\" d=\"M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z\"/>", bed:"<path fill=\"#FFFFFF\" d=\"M2.5 4.5 H4.8 V13 H21.5 V20 H19.2 V17.5 H4.8 V20 H2.5 Z\"/><circle cx=\"8\" cy=\"9.8\" r=\"2.4\" fill=\"#FFFFFF\"/><path fill=\"#FFFFFF\" d=\"M11.4 7.6 H18.6 Q21.5 7.6 21.5 10.5 V12 H11.4 Z\"/>", zwem:"<g fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"2.4\" stroke-linecap=\"round\"><path d=\"M8 2.8 V13.5 M15.5 2.8 V13.5 M8 6.5 H15.5 M8 10.2 H15.5\"/><path d=\"M2.5 16.6 q2.4 -2.1 4.8 0 t4.8 0 t4.8 0 t4.8 0\"/><path d=\"M2.5 20.8 q2.4 -2.1 4.8 0 t4.8 0 t4.8 0 t4.8 0\"/></g>", vuur:"<path fill=\"#FFFFFF\" d=\"M12 1.8 C13.2 5 17.2 6.9 17.2 11.4 C17.2 14.5 14.9 16.6 12 16.6 C9.1 16.6 6.8 14.5 6.8 11.6 C6.8 9.3 8 7.8 9.2 6.8 C9.2 8.6 10 9.8 11.2 10.3 C10.6 7.4 11.2 4.4 12 1.8 Z\"/><g stroke=\"#FFFFFF\" stroke-width=\"2.6\" stroke-linecap=\"round\"><path d=\"M3.5 22 L20.5 17.6\"/><path d=\"M3.5 17.6 L20.5 22\"/></g>", speel:"<g fill=\"none\" stroke=\"#FFFFFF\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 21 L7.2 3.5 H16.8 L20.5 21\"/><path d=\"M10 3.5 V14.5 M14 3.5 V14.5\"/></g><rect x=\"8\" y=\"14.3\" width=\"8\" height=\"2.6\" rx=\"1.2\" fill=\"#FFFFFF\"/>", hond:"<g fill=\"#FFFFFF\"><ellipse cx=\"6\" cy=\"10.2\" rx=\"2.1\" ry=\"2.6\"/><ellipse cx=\"9.8\" cy=\"5.8\" rx=\"2.1\" ry=\"2.7\"/><ellipse cx=\"14.2\" cy=\"5.8\" rx=\"2.1\" ry=\"2.7\"/><ellipse cx=\"18\" cy=\"10.2\" rx=\"2.1\" ry=\"2.6\"/><path d=\"M12 11.2 C9.2 11.2 6.6 14.6 6.6 17.3 C6.6 19.3 8.2 20 9.5 20 C10.6 20 11.2 19.4 12 19.4 C12.8 19.4 13.4 20 14.5 20 C15.8 20 17.4 19.3 17.4 17.3 C17.4 14.6 14.8 11.2 12 11.2 Z\"/></g>", P:"<text x=\"12\" y=\"19.4\" text-anchor=\"middle\" font-family=\"Inter,Arial,sans-serif\" font-weight=\"800\" font-size=\"20\" fill=\"#FFFFFF\">P</text>" };
+const HL_LEGENDA = {
+  nl:["Entree", "Camperplaatsen", "Waterpunt", "Grijs water lozen", "Chemisch toilet legen", "Toiletten, douches en afwasplaats", "Wasmachine", "Receptie en honesty bar", "Kamers", "Zwembad en terras", "Zitkuil en kampvuurplek", "Speeltuin", "Hondenren", "Parkeerplaats"],
+  en:["Entrance", "Camper pitches", "Water point", "Grey water disposal", "Chemical toilet disposal", "Toilets, showers and dishwashing", "Washing machine", "Reception and honesty bar", "Rooms", "Pool and terrace", "Fire pit with seating", "Playground", "Dog run", "Car park"],
+  de:["Einfahrt", "Wohnmobil­stellplätze", "Wasserstelle", "Grauwasser entsorgen", "Chemietoilette entleeren", "Toiletten, Duschen und Abwaschplatz", "Waschmaschine", "Rezeption und Honesty Bar", "Zimmer", "Pool und Terrasse", "Feuerstelle mit Sitzplätzen", "Spielplatz", "Hundeauslauf", "Parkplatz"],
+  es:["Entrada", "Autocaravanas", "Punto de agua", "Vaciado aguas grises", "Vaciado de WC químico", "Aseos, duchas y fregadero", "Lavadora", "Recepción y honesty bar", "Habitaciones", "Piscina y terraza", "Zona de hoguera con asientos", "Parque infantil", "Recinto para perros", "Aparcamiento"],
+  it:["Ingresso", "Piazzole camper", "Punto acqua", "Scarico acque grigie", "Scarico WC chimico", "Bagni, docce e lavaggio stoviglie", "Lavatrice", "Reception e honesty bar", "Camere", "Piscina e terrazza", "Angolo falò con sedute", "Parco giochi", "Area cani", "Parcheggio"],
+  fr:["Entrée", "Emplacements camping-car", "Point d'eau", "Vidange eaux grises", "Vidange WC chimique", "Toilettes, douches et vaisselle", "Lave-linge", "Réception et honesty bar", "Chambres", "Piscine et terrasse", "Coin feu de camp", "Aire de jeux", "Enclos à chiens", "Parking"],
+  pt:["Entrada", "Autocaravanas", "Ponto de água", "Despejo águas cinzentas", "Despejo de WC químico", "Casas de banho, duches e lava-loiça", "Máquina de lavar", "Receção e honesty bar", "Quartos", "Piscina e terraço", "Zona de fogueira com assentos", "Parque infantil", "Parque para cães", "Estacionamento"],
+  cs:["Vjezd", "Místa pro obytné vozy", "Výdej vody", "Vypouštění šedé vody", "Vylévání chemického WC", "Toalety, sprchy a mytí nádobí", "Pračka", "Recepce a honesty bar", "Pokoje", "Bazén a terasa", "Posezení s ohništěm", "Dětské hřiště", "Výběh pro psy", "Parkoviště"],
+  fi:["Sisäänajo", "Matkailuauto­paikat", "Vesipiste", "Harmaan veden tyhjennys", "Kemiallisen WC:n tyhjennys", "WC:t, suihkut ja tiskipaikka", "Pesukone", "Vastaanotto ja honesty bar", "Huoneet", "Uima-allas ja terassi", "Nuotiopaikka", "Leikkipaikka", "Koiratarha", "Pysäköinti"],
+  no:["Innkjøring", "Bobilplasser", "Vannpost", "Tømming av gråvann", "Tømming av kjemisk toalett", "Toaletter, dusjer og oppvask", "Vaskemaskin", "Resepsjon og honesty bar", "Rom", "Basseng og terrasse", "Bålplass med sitteplasser", "Lekeplass", "Hundegård", "Parkering"],
+  sv:["Infart", "Husbilsplatser", "Vattenpost", "Tömning av gråvatten", "Tömning av kemtoalett", "Toaletter, duschar och diskplats", "Tvättmaskin", "Reception och honesty bar", "Rum", "Pool och terrass", "Eldplats med sittplatser", "Lekplats", "Hundgård", "Parkering"],
+  pl:["Wjazd", "Miejsca dla kamperów", "Punkt poboru wody", "Zrzut szarej wody", "Zrzut toalety chemicznej", "Toalety, prysznice i zmywalnia", "Pralka", "Recepcja i honesty bar", "Pokoje", "Basen i taras", "Ognisko z miejscami do siedzenia", "Plac zabaw", "Wybieg dla psów", "Parking"]
+};
+function hlLegenda(){
+  const t = HL_LEGENDA[gastTaal] || HL_LEGENDA.en;
+  return `<ul class="hllegenda" role="list">` + HL_LEG_VOLGORDE.map((k, i) => `<li><svg viewBox="0 0 28 28" aria-hidden="true"><circle cx="14" cy="14" r="12.5"/>` +
+    `<g transform="translate(5.6 5.6) scale(.7)">${HL_LEG_ICOON[k]}</g></svg><span>${vrij(t[i])}</span></li>`).join("") + `</ul>`;
+}
 /* welke teksten Bart per groep kan wijzigen (naast de uitleg per foto) */
-const HL_DELEN = { vijfsprong:["kop", "sub"], poort:["kop", "titel", "sub"], plek:["kop", "sub"], honden:["titel"] };
-const HL_DEEL_NAAM = { kop:"Regel in de Handleiding: kop", sub:"Regel in de Handleiding: kleine regel", titel:"Venster: kop" };
+const HL_DELEN = { vijfsprong:["kop", "sub"], poort:["kop", "titel", "sub"], plek:["kop", "sub", "subKamer"] /* 24-11-2026 c (review): ook de regel bij Parkeren voor kamers */, honden:["titel"] };
+const HL_DEEL_NAAM = { kop:"Regel in de Handleiding: kop", sub:"Regel in de Handleiding: kleine regel", titel:"Venster: kop", subKamer:"Kamergasten, regel Parkeren: kleine regel" };
 function hlVast(g, taal, k){
   const l = (HL_TEKST[taal] || HL_TEKST.en)[g] || {};
   if(/^foto_/.test(k)){ const v = infoVast(g).find(x => "foto_" + x.sleutel === k); return v ? ((l.fotos || [])[v.nr] || "") : ""; }
@@ -5007,7 +5074,7 @@ const gastInfoG = {}, gastInfoGehaaldG = {}; /* per groep: uitkomst van gast_inf
 function hlT(g){
   const taal = HL_TEKST[gastTaal] ? gastTaal : "en", eigen = radTekstenLees(gastInfoG[g] && gastInfoG[g].teksten);
   const t = k => radEigenTekst(eigen, taal, k) || hlVast(g, taal, k);
-  return { kop:t("kop"), sub:t("sub"), titel: HL_DELEN[g].includes("titel") ? t("titel") : t("kop"), sluit:(BAR_LAMP[taal] || BAR_LAMP.en).sluit, foto: s => t("foto_" + s) };
+  return { kop:t("kop"), sub:t("sub"), subKamer: HL_DELEN[g].includes("subKamer") ? t("subKamer") : "", titel: HL_DELEN[g].includes("titel") ? t("titel") : t("kop"), sluit:(BAR_LAMP[taal] || BAR_LAMP.en).sluit, foto: s => t("foto_" + s) };
 }
 const hlL = () => HL_TEKST[gastTaal] || HL_TEKST.en;
 /* wat het fotootje laat zien: niets (nog niet gelezen, uitgezet of geen foto's), het kleine vaste fotootje, een al opgehaalde eigen foto,
@@ -5016,13 +5083,14 @@ function hlFotoBron(g){
   if(regelsZicht || !gastInfoGehaaldG[g]) return null; /* review 23-11 a: op de losse huisregelspagina (zonder gastcode) is aan/uit niet te lezen */
   const d = gastInfoG[g];
   if(d && d.aan === false) return null;
+  if(g === "plek" && hlKaartBB()) return { src: HL_KAART_BB.replace(/\.jpg$/, "-k.jpg") }; /* 23-11-2026 c */
   const x = infoLijst(d && d.fotos, g).filter(y => y.aan)[0]; if(!x) return null;
   if(x.eigen){ const c = gastInfoFotos[x.sleutel]; return c && c.versie === x.versie ? { src: c.foto } : x.vast || x.eigen ? { icoon: true } : null; }
-  return x.vast ? { src: x.vast.klein } : null;
+  return x.vast ? { src: hlVastB(x.vast).klein } : null;
 }
 const hlFotoInhoud = b => b.src ? `<img src="${vrij(b.src)}" alt="" width="64" height="64">` : gIcoon("camera");
 const hlFotoKnop = g => { const b = hlFotoBron(g);
-  return `<button type="button" class="hlfoto" data-hlfoto="${g}" aria-label="${vrij(hlT(g).titel)}"${b ? "" : " hidden"}>${b ? hlFotoInhoud(b) : ""}</button>`; };
+  return `<button type="button" class="hlfoto" data-hlfoto="${g}" aria-label="${vrij(hlTitel(g))}"${b ? "" : " hidden"}>${b ? hlFotoInhoud(b) : ""}</button>`; };
 /* na het lezen of na het openen van het venster: de fotootjes op hun plek bijwerken, zonder de pagina opnieuw te tekenen */
 function hlFotosToon(){
   document.querySelectorAll("#gastInhoud [data-hlfoto]").forEach(kn => { const b = hlFotoBron(kn.dataset.hlfoto);
@@ -5046,23 +5114,30 @@ function hlOpen(g){
   let d = document.getElementById("hlFotoDlg");
   if(!d){ d = document.createElement("dialog"); d.id = "hlFotoDlg"; d.className = "raddlg lampdlg"; document.body.appendChild(d); }
   d.setAttribute("aria-labelledby", "hlFotoKop");
-  const l = hlT(g), info = gastInfoG[g], lijst = infoLijst(info && info.fotos, g).filter(x => x.aan);
+  const l = hlT(g), info = gastInfoG[g], bb = g === "plek" && hlKaartBB();
+  /* 23-11-2026 c (review): kamergasten en groepen alleen de vaste kaart naar de P, zonder Barts eigen foto's en uitleg van Je plek */
+  const lijst = bb ? infoVast("plek").slice(0, 1).map(v => ({ sleutel: v.sleutel, aan: true, eigen: false, vast: v })) : infoLijst(info && info.fotos, g).filter(x => x.aan);
   const binnen = x => x.eigen && gastInfoFotos[x.sleutel] && gastInfoFotos[x.sleutel].versie === x.versie ? gastInfoFotos[x.sleutel].foto : null;
-  const fig = x => { const onder = l.foto(x.sleutel), uitleg = onder ? `<figcaption>${vrij(onder)}</figcaption>` : "", e = binnen(x);
+  const fig = x => { const onder = bb ? "" : l.foto(x.sleutel), uitleg = onder ? `<figcaption>${vrij(onder)}</figcaption>` : "", e = binnen(x);
     if(e) return `<figure><img src="${e}" alt="">${uitleg}</figure>`;
     if(x.eigen) return `<figure data-infowacht="${vrij(x.sleutel)}" hidden><img alt="">${uitleg}</figure>`;
-    return x.vast ? `<figure><img src="${x.vast.bestand}" alt="" width="900" height="1200">${uitleg}</figure>` : ""; };
-  d.innerHTML = `<div class="radin"><h2 id="hlFotoKop">${vrij(l.titel)}</h2>` + lijst.map(fig).join("") +
+    if(!x.vast) return "";
+    const v = hlVastB(x.vast), [w, h] = hlMaat(v.bestand);
+    return `<figure><img src="${v.bestand}" alt="" width="${w}" height="${h}">${uitleg}</figure>` + (x.vast.bestand === HL_KAART ? hlLegenda() : ""); };
+  d.innerHTML = `<div class="radin"><h2 id="hlFotoKop">${vrij(hlTitel(g))}</h2>` + lijst.map(fig).join("") +
     `<div class="radknoppen"><button type="button" data-hlsluit="1">${vrij(l.sluit)}</button></div></div>`;
   d.querySelector("[data-hlsluit]").onclick = () => d.close();
   d.onclick = e => { if(e.target === d) d.close(); };
   if(!d.open) d.showModal();
+  d.classList.toggle("metleg", !!d.querySelector(".hllegenda")); hlPas(d);
   const r = d.querySelector(".radin"); if(r) r.scrollTop = 0;
   if(!d.querySelector("[data-infowacht]")) return;
   gastInfoFotosHaal(lijst, g).then(() => { d.querySelectorAll("[data-infowacht]").forEach(f => {
     const x = lijst.find(y => y.sleutel === f.dataset.infowacht), e = x && binnen(x), img = f.querySelector("img");
-    if(e) img.src = e; else if(x && x.vast){ img.src = x.vast.bestand; img.width = 900; img.height = 1200; } else { f.remove(); return; }
-    f.removeAttribute("data-infowacht"); f.hidden = false; }); hlFotosToon(); });
+    if(e) img.src = e; else if(x && x.vast){ const v = hlVastB(x.vast); img.src = v.bestand; [img.width, img.height] = hlMaat(v.bestand);
+      if(x.vast.bestand === HL_KAART){ f.insertAdjacentHTML("afterend", hlLegenda()); d.classList.add("metleg"); } }
+    else { if(x) f.remove(); return; } /* review 23-11 b: een figuur van een ander, later geopend venster laten staan */
+    f.removeAttribute("data-infowacht"); f.hidden = false; }); hlPas(d); hlFotosToon(); });
 }
 /* één keer voor de hele pagina: een tik op een fotootje opent het venster (ook op de wachtpagina en de losse huisregelspagina) */
 if(typeof document !== "undefined") document.addEventListener("click", e => { const kn = e.target.closest && e.target.closest("#gast [data-hlfoto]"); if(kn){ e.preventDefault(); hlOpen(kn.dataset.hlfoto); } });
@@ -5689,7 +5764,9 @@ function tekenInfoFotos(){
   document.getElementById("ifUitleg").textContent = !infoRijenG[ifGroep] && !infoStand ? "" :
     infoStand === "ontbreekt" ? "Foto's en teksten wijzigen kan nog niet: de database is nog niet bijgewerkt. Gasten zien nu de vaste foto's en teksten."
     : infoStand === "fout" ? "" : hl && !l.length ? "Hier staan nog geen foto's. Tik op Foto toevoegen; gasten zien dan in de Handleiding een fotootje dat het venster opent."
-    : "Zo staan de foto's in het venster van de gast, van boven naar onder. Een eigen foto zet je op de plek van de vaste foto; terugzetten kan altijd.";
+    : "Zo staan de foto's in het venster van de gast, van boven naar onder. Een eigen foto zet je op de plek van de vaste foto; terugzetten kan altijd." +
+      /* 23-11-2026 c (review): kamers en groepen delen de knop, niet de foto's */
+      (ifGroep === "plek" ? " Dit is wat campers zien. Kamergasten en groepen zien bij Parkeren altijd de vaste kaart naar de P; uitzetten geldt voor allebei." : "");
   /* 23-11-2026 a: aan/uit voor de groepen van de Handleiding (Laatste in de bar? heeft een eigen regel in Meer) */
   document.getElementById("ifAanRij").hidden = !hl;
   if(hl){ document.getElementById("ifAanTekst").textContent = infoAanG(ifGroep) ? "Staat aan: gasten zien de foto's in de Handleiding." : "Staat uit: gasten zien deze foto's niet.";
@@ -6163,7 +6240,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Geroosterd bruin of wit brood met verse avocado, 2 eieren en cherrytomaatjes.", "Yoghurt Bowl": "Romige yoghurt met vers fruit, granola, chiazaad en noten.", "Overnight Apple Oat": "Havermout met amandelmelk, appel, kaneel, noten en chiazaad.", "Uitsmijter ham": "3 gebakken eieren met ham en kaas, op geroosterd bruin of wit brood.", "Uitsmijter kip": "3 gebakken eieren met kip en kaas, op geroosterd bruin of wit brood.", "Pannenkoekenwafels": "Pannenkoeken in de vorm van wafels, met seizoensfruit, chocolade en slagroom."},
         keukenKop:"Keuken en ontbijt", keuken:["Ontbijt serveren we tussen {ovan} en {otot} uur, € {p_ontbijt} per persoon, kinderen € {p_ontbijt_kind}.", "Koffie en thee mag je altijd zelf pakken.", "Tot 11:00 uur is de keuken onze werkruimte: we bereiden het ontbijt, serveren en ruimen op. Daarom kun je er dan niet zelf terecht.", "Vanaf 11:00 uur kun je de keuken gebruiken om zelf een kleine maaltijd te maken. Op dagen dat wij vanuit de finca eten verzorgen is de keuken open tot 16:00 uur.", "Eten en servies blijven bij de bar, in de keuken of op het gezamenlijke terras, niet in de kamers.", "Klaar met ontbijten? Breng je bordjes, glazen en kopjes alsjeblieft terug naar de keuken.", "Gebruik je zelf de keuken? Was je servies dan af of zet het in de vaatwasser, en laat de keuken en je tafel schoon achter.", "Eigen boodschappen bewaar je in de witte gastenkoelkast. Gekoelde drankjes staan in de honesty bar."],
         herKop:"Nog geen ontbijt doorgegeven", herTekst:d => `Voor ${d} hebben jullie nog niets doorgegeven.`, naarOntbijt:"Ontbijt bestellen", geenOntbijt:"Nee, geen ontbijt", geenOk:"Genoteerd: geen ontbijt. Van gedachten veranderd? Bestellen kan nog.", geenNog:d => `Geen ontbijt voor ${d}. Toch nog zin? Bestellen kan nog.`, vaste:"Jullie vaste dingen", geenKort:"geen ontbijt", geenZeker:d => `Weet je het zeker? Dan noteren we geen ontbijt voor ${d}.`, ontbijtDoor:"Ontbijt doorgegeven ✓", barToe:"toegevoegd", barAf:"eraf",
-        groepen:{ Drank:"Drinken", Fris:"Fris", Water:"Water", Bier:"Bier", "Wijn en cava":"Wijn en cava", Sterk:"Sterk", Warm:"Warme dranken", Eten:"Eten", "Ontbijt en avonden":"Ontbijt en avonden", Diensten:"Wasmachine (€ 4 per beurt, laat het ons even weten)" },
+        groepen:{ Drank:"Drinken", Fris:"Fris", Water:"Water", Bier:"Bier", "Wijn en cava":"Wijn en cava", Sterk:"Sterk", Warm:"Warme dranken", Eten:"Eten", "Ontbijt en avonden":"Ontbijt en avonden", Diensten:"Wasmachine (€ 4 per beurt, laat het ons even weten)", Stroom:"Stroom" },
         extrasUitleg:"Wil je je verblijf nog completer maken? Vraag het hier aan. We laten je zo snel mogelijk weten wanneer het kan.", taxiKop:"Taxi", taxiUitleg:"Een taxi nodig? Bel Taxi Coín zelf, dat gaat het snelst. Geef als adres Finca KaYu in Coín op.",
         extraNamen:{ knippen:"Knippen door Loes", knippen_kind:"Knippen kind", massage:"Massage op locatie", reiki:"Private Reiki Experience door Lincy", tour:"Fiets- of wandeltour door Málaga met onze Nederlandse vriendin Merle als gids", buggy:"Buggytour door de bergen", padel:"Padel bij La Trocha", workstay:"Work & Stay", dj:"DJ op de finca" },
         extraInfo:{ knippen:"€ {p_knippen} per persoon", knippen_kind:"€ {p_knippen_kind} per kind", massage:"€ {p_massage} per persoon, 60 minuten", reiki:"€ {p_reiki} per persoon, 75 tot 90 minuten. Een persoonlijke 1:1 sessie, helemaal afgestemd op jou, waar mogelijk buiten in de natuur.", tour:"prijs in overleg", buggy:"Met Andalusie Buggy Tours vanuit Coín, 2 personen per buggy. Avondtocht 2,5 uur € 199, witte dorpen 3,5 uur € 299, bergtocht 4,5 tot 5 uur € 399 per buggy. Boek rechtstreeks op hun site:", padel:"Op het dak van winkelcentrum La Trocha, 10 minuten rijden, liggen de vijf buitenbanen van Bluelife Padel. Reserveren doe je zelf en dat is zo gedaan: download de app Playtomic, zoek \"BlueLife Padel\" in Coín, kies een baan en een tijd en betaal in de app. Rackets en ballen kun je bij de club huren. Open maandag t/m vrijdag 08:00 tot 23:00, zaterdag 09:00 tot 21:00, zondag 09:00 tot 14:00. De club op Playtomic:", workstay:"Hulp per dag in ruil voor een camperplaats, inclusief gebruik van alle faciliteiten. Hoeveel uur spreken we samen af. Vertel ons wie je bent, wat je kunt en hoe lang je blijft, dan kijken we of het past.", dj:"€ 500 voor een set van 5 uur, volledig op vinyl. Muziekkeuze in overleg. Tijd en prijs onderhandelbaar, op basis van beschikbaarheid." },
@@ -6206,7 +6283,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Toasted brown or white bread with fresh avocado, 2 eggs and cherry tomatoes.", "Yoghurt Bowl": "Creamy yoghurt with fresh fruit, granola, chia seeds and nuts.", "Overnight Apple Oat": "Oats with almond milk, apple, cinnamon, nuts and chia seeds.", "Uitsmijter ham": "3 fried eggs with ham and cheese, on toasted brown or white bread.", "Uitsmijter kip": "3 fried eggs with chicken and cheese, on toasted brown or white bread.", "Pannenkoekenwafels": "Pancake-style waffles with seasonal fruit, chocolate and whipped cream."},
         keukenKop:"Kitchen and breakfast", keuken:["We serve breakfast between {ovan} and {otot}, € {p_ontbijt} per person, children € {p_ontbijt_kind}.", "Coffee and tea are self-service, any time.", "Until 11:00 the kitchen is our workspace: we prepare breakfast, serve and clear up. Please do not use it before then.", "From 11:00 you can use the kitchen to make a small meal yourself. On days when we cook at the finca, the kitchen is open until 16:00.", "Food and dishes stay at the bar, in the kitchen or on the shared terrace, not in the rooms.", "Finished breakfast? Please bring your plates, glasses and cups back to the kitchen.", "Using the kitchen yourself? Wash your dishes or put them in the dishwasher, and leave the kitchen and your table clean.", "Store your own groceries in the white guest fridge. Cold drinks are in the honesty bar."],
         herKop:"No breakfast ordered yet", herTekst:d => `You have not told us anything for ${d} yet.`, naarOntbijt:"Order breakfast", geenOntbijt:"No, no breakfast", geenOk:"Noted: no breakfast. Changed your mind? You can still order.", geenNog:d => `No breakfast for ${d}. Changed your mind? You can still order.`, vaste:"Your usual", geenKort:"no breakfast", geenZeker:d => `Are you sure? Then we will note no breakfast for ${d}.`, ontbijtDoor:"Breakfast sent ✓", barToe:"added", barAf:"removed",
-        groepen:{ Drank:"Drinks", Fris:"Soft drinks", Water:"Water", Bier:"Beer", "Wijn en cava":"Wine and cava", Sterk:"Spirits", Warm:"Hot drinks", Eten:"Food", "Ontbijt en avonden":"Breakfast and dinners", Diensten:"Washing machine (€ 4 per load, please let us know)" },
+        groepen:{ Drank:"Drinks", Fris:"Soft drinks", Water:"Water", Bier:"Beer", "Wijn en cava":"Wine and cava", Sterk:"Spirits", Warm:"Hot drinks", Eten:"Food", "Ontbijt en avonden":"Breakfast and dinners", Diensten:"Washing machine (€ 4 per load, please let us know)", Stroom:"Electricity" },
         extrasUitleg:"Want to make your stay even better? Request it here. We will let you know as soon as possible when it is possible.", taxiKop:"Taxi", taxiUitleg:"Need a taxi? Call Taxi Coín directly, that is the fastest. Give Finca KaYu in Coín as the address.",
         extraNamen:{ knippen:"Haircut by Loes", knippen_kind:"Children's haircut", massage:"Massage on site", reiki:"Private Reiki Experience by Lincy", tour:"Cycling or walking tour of Málaga with our Dutch friend Merle as your guide", buggy:"Buggy tour through the mountains", padel:"Padel at La Trocha", workstay:"Work & Stay", dj:"DJ at the finca" },
         extraInfo:{ knippen:"€ {p_knippen} per person", knippen_kind:"€ {p_knippen_kind} per child", massage:"€ {p_massage} per person, 60 minutes", reiki:"€ {p_reiki} per person, 75 to 90 minutes. A personal one-to-one session, fully tuned to you, outside in nature where possible.", tour:"price on request", buggy:"With Andalusie Buggy Tours from Coín, 2 people per buggy. Evening tour 2.5 h € 199, white villages 3.5 h € 299, mountain tour 4.5 to 5 h € 399 per buggy. Book directly on their site:", padel:"On the roof of the La Trocha shopping centre, 10 minutes by car, are the five outdoor courts of Bluelife Padel. You book it yourself and it takes a minute: download the Playtomic app, search \"BlueLife Padel\" in Coín, pick a court and a time and pay in the app. Rackets and balls can be rented at the club. Open Monday to Friday 08:00 to 23:00, Saturday 09:00 to 21:00, Sunday 09:00 to 14:00. The club on Playtomic:", workstay:"Help out each day in exchange for a camper pitch, including the use of all facilities. How many hours we agree together. Tell us who you are, what you can do and how long you are staying, and we will see if it fits.", dj:"€ 500 for a 5-hour set, played entirely on vinyl. Music choice in consultation with you. Time and price negotiable, subject to availability." },
@@ -6249,7 +6326,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Getoastetes helles oder dunkles Brot mit frischer Avocado, 2 Eiern und Kirschtomaten.", "Yoghurt Bowl": "Cremiger Joghurt mit frischem Obst, Granola, Chiasamen und Nüssen.", "Overnight Apple Oat": "Haferflocken mit Mandelmilch, Apfel, Zimt, Nüssen und Chiasamen.", "Uitsmijter ham": "3 Spiegeleier mit Schinken und Käse, auf getoastetem hellem oder dunklem Brot.", "Uitsmijter kip": "3 Spiegeleier mit Hähnchen und Käse, auf getoastetem hellem oder dunklem Brot.", "Pannenkoekenwafels": "Pfannkuchen in Waffelform, mit Obst der Saison, Schokolade und Sahne."},
         keukenKop:"Küche und Frühstück", keuken:["Frühstück servieren wir zwischen {ovan} und {otot} Uhr, € {p_ontbijt} pro Person, Kinder € {p_ontbijt_kind}.", "Kaffee und Tee könnt ihr euch jederzeit selbst nehmen.", "Bis 11:00 Uhr ist die Küche unser Arbeitsbereich: wir bereiten das Frühstück vor, servieren und räumen auf. Bitte nutzt sie vorher nicht.", "Ab 11:00 Uhr könnt ihr die Küche nutzen, um euch eine kleine Mahlzeit zu machen. An Tagen, an denen wir auf der Finca kochen, ist die Küche bis 16:00 Uhr offen.", "Essen und Geschirr bleiben an der Bar, in der Küche oder auf der gemeinsamen Terrasse, nicht in den Zimmern.", "Fertig mit dem Frühstück? Bringt eure Teller, Gläser und Tassen bitte zurück in die Küche.", "Nutzt ihr die Küche selbst? Dann spült euer Geschirr ab oder stellt es in die Spülmaschine, und lasst die Küche und euren Tisch sauber zurück.", "Eigene Einkäufe bewahrt ihr im weißen Gästekühlschrank auf. Kalte Getränke stehen in der Honesty Bar."],
         herKop:"Noch kein Frühstück angegeben", herTekst:d => `Für ${d} habt ihr noch nichts angegeben.`, naarOntbijt:"Frühstück bestellen", geenOntbijt:"Nein, kein Frühstück", geenOk:"Notiert: kein Frühstück. Anders überlegt? Bestellen geht noch.", geenNog:d => `Kein Frühstück für ${d}. Doch Lust bekommen? Bestellen geht noch.`, vaste:"Eure üblichen", geenKort:"kein Frühstück", geenZeker:d => `Seid ihr sicher? Dann notieren wir kein Frühstück für ${d}.`, ontbijtDoor:"Frühstück übermittelt ✓", barToe:"hinzugefügt", barAf:"entfernt",
-        groepen:{ Drank:"Getränke", Fris:"Softdrinks", Water:"Wasser", Bier:"Bier", "Wijn en cava":"Wein und Cava", Sterk:"Spirituosen", Warm:"Heißgetränke", Eten:"Essen", "Ontbijt en avonden":"Frühstück und Abende", Diensten:"Waschmaschine (€ 4 pro Ladung, bitte kurz Bescheid sagen)" },
+        groepen:{ Drank:"Getränke", Fris:"Softdrinks", Water:"Wasser", Bier:"Bier", "Wijn en cava":"Wein und Cava", Sterk:"Spirituosen", Warm:"Heißgetränke", Eten:"Essen", "Ontbijt en avonden":"Frühstück und Abende", Diensten:"Waschmaschine (€ 4 pro Ladung, bitte kurz Bescheid sagen)", Stroom:"Strom" },
         extrasUitleg:"Möchtet ihr euren Aufenthalt noch schöner machen? Fragt hier an. Wir sagen euch so schnell wie möglich, wann es geht.", taxiKop:"Taxi", taxiUitleg:"Braucht ihr ein Taxi? Ruft Taxi Coín am besten selbst an, das geht am schnellsten. Als Adresse: Finca KaYu in Coín.",
         extraNamen:{ knippen:"Haarschnitt bei Loes", knippen_kind:"Kinderhaarschnitt", massage:"Massage vor Ort", reiki:"Private Reiki Experience bei Lincy", tour:"Radtour oder Stadtrundgang durch Málaga mit unserer niederländischen Freundin Merle als Führerin", buggy:"Buggy-Tour durch die Berge", padel:"Padel bei La Trocha", workstay:"Work & Stay", dj:"DJ auf der Finca" },
         extraInfo:{ knippen:"€ {p_knippen} pro Person", knippen_kind:"€ {p_knippen_kind} pro Kind", massage:"€ {p_massage} pro Person, 60 Minuten", reiki:"€ {p_reiki} pro Person, 75 bis 90 Minuten. Eine persönliche 1:1-Sitzung, ganz auf dich abgestimmt, wenn möglich draußen in der Natur.", tour:"Preis nach Absprache", buggy:"Mit Andalusie Buggy Tours ab Coín, 2 Personen pro Buggy. Abendtour 2,5 Std. € 199, weiße Dörfer 3,5 Std. € 299, Bergtour 4,5 bis 5 Std. € 399 pro Buggy. Bucht direkt auf ihrer Website:", padel:"Auf dem Dach des Einkaufszentrums La Trocha, 10 Minuten mit dem Auto, liegen die fünf Außenplätze von Bluelife Padel. Ihr bucht selbst, das geht in einer Minute: App Playtomic laden, \"BlueLife Padel\" in Coín suchen, Platz und Uhrzeit wählen und in der App bezahlen. Schläger und Bälle könnt ihr im Club leihen. Geöffnet Montag bis Freitag 08:00 bis 23:00, Samstag 09:00 bis 21:00, Sonntag 09:00 bis 14:00. Der Club auf Playtomic:", workstay:"Hilfe pro Tag im Tausch gegen einen Stellplatz, inklusive Nutzung aller Einrichtungen. Wie viele Stunden, besprechen wir gemeinsam. Erzählt uns, wer ihr seid, was ihr könnt und wie lange ihr bleibt, dann schauen wir, ob es passt.", dj:"€ 500 für ein 5-Stunden-Set, komplett auf Vinyl. Musikauswahl nach Absprache. Zeit und Preis verhandelbar, je nach Verfügbarkeit." },
@@ -6292,7 +6369,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Pan tostado blanco o integral con aguacate fresco, 2 huevos y tomates cherry.", "Yoghurt Bowl": "Yogur cremoso con fruta fresca, granola, semillas de chía y frutos secos.", "Overnight Apple Oat": "Avena con leche de almendras, manzana, canela, frutos secos y semillas de chía.", "Uitsmijter ham": "3 huevos fritos con jamón y queso, sobre pan tostado blanco o integral.", "Uitsmijter kip": "3 huevos fritos con pollo y queso, sobre pan tostado blanco o integral.", "Pannenkoekenwafels": "Tortitas en forma de gofre, con fruta de temporada, chocolate y nata montada."},
         keukenKop:"Cocina y desayuno", keuken:["Servimos el desayuno entre las {ovan} y las {otot}, {p_ontbijt} € por persona, niños {p_ontbijt_kind} €.", "El café y el té podéis cogerlos vosotros mismos cuando queráis.", "Hasta las 11:00 la cocina es nuestro espacio de trabajo: preparamos el desayuno, servimos y recogemos. Por favor, no la uséis antes.", "A partir de las 11:00 podéis usar la cocina para prepararos algo ligero. Los días que cocinamos en la finca, la cocina está abierta hasta las 16:00.", "La comida y la vajilla se quedan en el bar, en la cocina o en la terraza común, no en las habitaciones.", "¿Habéis terminado de desayunar? Llevad por favor los platos, vasos y tazas de vuelta a la cocina.", "¿Usáis vosotros mismos la cocina? Lavad la vajilla o metedla en el lavavajillas, y dejad la cocina y vuestra mesa limpias.", "Vuestra propia compra se guarda en la nevera blanca para invitados. Las bebidas frías están en el honesty bar."],
         herKop:"Todavía sin desayuno", herTekst:d => `Para ${d} todavía no nos habéis dicho nada.`, naarOntbijt:"Pedir desayuno", geenOntbijt:"No, sin desayuno", geenOk:"Anotado: sin desayuno. ¿Habéis cambiado de idea? Todavía podéis pedirlo.", geenNog:d => `Sin desayuno para ${d}. ¿Habéis cambiado de idea? Todavía podéis pedirlo.`, vaste:"Lo de siempre", geenKort:"sin desayuno", geenZeker:d => `¿Estáis seguros? Entonces anotamos que no hay desayuno para ${d}.`, ontbijtDoor:"Desayuno enviado ✓", barToe:"añadido", barAf:"quitado",
-        groepen:{ Drank:"Bebidas", Fris:"Refrescos", Water:"Agua", Bier:"Cerveza", "Wijn en cava":"Vino y cava", Sterk:"Licores", Warm:"Bebidas calientes", Eten:"Comida", "Ontbijt en avonden":"Desayuno y cenas", Diensten:"Lavadora (4 € por lavado, avisadnos antes)" },
+        groepen:{ Drank:"Bebidas", Fris:"Refrescos", Water:"Agua", Bier:"Cerveza", "Wijn en cava":"Vino y cava", Sterk:"Licores", Warm:"Bebidas calientes", Eten:"Comida", "Ontbijt en avonden":"Desayuno y cenas", Diensten:"Lavadora (4 € por lavado, avisadnos antes)", Stroom:"Electricidad" },
         extrasUitleg:"¿Queréis completar vuestra estancia? Pedidlo aquí. Os diremos lo antes posible cuándo es posible.", taxiKop:"Taxi", taxiUitleg:"¿Necesitáis un taxi? Llamad directamente a Taxi Coín, es lo más rápido. Dad como dirección Finca KaYu en Coín.",
         extraNamen:{ knippen:"Corte de pelo por Loes", knippen_kind:"Corte de pelo niño", massage:"Masaje en la finca", reiki:"Private Reiki Experience con Lincy", tour:"Ruta en bici o a pie por Málaga con nuestra amiga neerlandesa Merle como guía", buggy:"Ruta en buggy por la montaña", padel:"Pádel en La Trocha", workstay:"Work & Stay", dj:"DJ en la finca" },
         extraInfo:{ knippen:"{p_knippen} € por persona", knippen_kind:"{p_knippen_kind} € por niño", massage:"{p_massage} € por persona, 60 minutos", reiki:"{p_reiki} € por persona, de 75 a 90 minutos. Una sesión personal uno a uno, totalmente adaptada a ti, al aire libre siempre que sea posible.", tour:"precio a convenir", buggy:"Con Andalusie Buggy Tours desde Coín, 2 personas por buggy. Ruta de tarde 2,5 h 199 €, pueblos blancos 3,5 h 299 €, ruta de montaña 4,5 a 5 h 399 € por buggy. Reservad directamente en su web:", padel:"En la azotea del centro comercial La Trocha, a 10 minutos en coche, están las cinco pistas exteriores de Bluelife Padel. Reserváis vosotros mismos y se hace en un minuto: descargad la app Playtomic, buscad \"BlueLife Padel\" en Coín, elegid pista y hora y pagad en la app. Palas y bolas se alquilan en el club. Abierto de lunes a viernes de 08:00 a 23:00, sábado de 09:00 a 21:00, domingo de 09:00 a 14:00. El club en Playtomic:", workstay:"Ayuda al día a cambio de una plaza de autocaravana, con uso de todas las instalaciones. Cuántas horas lo acordamos juntos. Contadnos quiénes sois, qué sabéis hacer y cuánto tiempo os quedáis, y miramos si encaja.", dj:"500 € por una sesión de 5 horas, íntegramente en vinilo. Selección musical a convenir. Hora y precio negociables, sujeto a disponibilidad." },
@@ -6335,7 +6412,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Pane tostato bianco o integrale con avocado fresco, 2 uova e pomodorini.", "Yoghurt Bowl": "Yogurt cremoso con frutta fresca, granola, semi di chia e frutta secca.", "Overnight Apple Oat": "Fiocchi d'avena con latte di mandorla, mela, cannella, frutta secca e semi di chia.", "Uitsmijter ham": "3 uova fritte con prosciutto e formaggio, su pane tostato bianco o integrale.", "Uitsmijter kip": "3 uova fritte con pollo e formaggio, su pane tostato bianco o integrale.", "Pannenkoekenwafels": "Pancake a forma di waffle, con frutta di stagione, cioccolato e panna montata."},
         keukenKop:"Cucina e colazione", keuken:["La colazione è servita tra le {ovan} e le {otot}, € {p_ontbijt} a persona, bambini € {p_ontbijt_kind}.", "Caffè e tè potete prenderli da soli quando volete.", "Fino alle 11:00 la cucina è il nostro spazio di lavoro: prepariamo la colazione, serviamo e riordiniamo. Vi chiediamo di non usarla prima.", "Dalle 11:00 potete usare la cucina per prepararvi un pasto leggero. Nei giorni in cui cuciniamo noi alla finca, la cucina resta aperta fino alle 16:00.", "Cibo e stoviglie restano al bar, in cucina o sulla terrazza comune, non nelle camere.", "Finita la colazione? Riportate per favore piatti, bicchieri e tazze in cucina.", "Usate voi stessi la cucina? Lavate le stoviglie o mettetele in lavastoviglie, e lasciate la cucina e il vostro tavolo puliti.", "La vostra spesa si conserva nel frigorifero bianco per gli ospiti. Le bevande fresche sono nell'honesty bar."],
         herKop:"Colazione non ancora indicata", herTekst:d => `Per ${d} non ci avete ancora detto niente.`, naarOntbijt:"Ordinare la colazione", geenOntbijt:"No, niente colazione", geenOk:"Annotato: niente colazione. Cambiato idea? Potete ancora ordinarla.", geenNog:d => `Niente colazione per ${d}. Cambiato idea? Potete ancora ordinarla.`, vaste:"I vostri soliti", geenKort:"niente colazione", geenZeker:d => `Siete sicuri? Allora segniamo niente colazione per ${d}.`, ontbijtDoor:"Colazione inviata ✓", barToe:"aggiunto", barAf:"tolto",
-        groepen:{ Drank:"Bevande", Fris:"Bibite", Water:"Acqua", Bier:"Birra", "Wijn en cava":"Vino e cava", Sterk:"Superalcolici", Warm:"Bevande calde", Eten:"Cibo", "Ontbijt en avonden":"Colazione e cene", Diensten:"Lavatrice (€ 4 a ciclo, avvisateci prima)" },
+        groepen:{ Drank:"Bevande", Fris:"Bibite", Water:"Acqua", Bier:"Birra", "Wijn en cava":"Vino e cava", Sterk:"Superalcolici", Warm:"Bevande calde", Eten:"Cibo", "Ontbijt en avonden":"Colazione e cene", Diensten:"Lavatrice (€ 4 a ciclo, avvisateci prima)", Stroom:"Elettricità" },
         extrasUitleg:"Volete rendere il soggiorno ancora più completo? Richiedetelo qui. Vi diremo il prima possibile quando è possibile.", taxiKop:"Taxi", taxiUitleg:"Serve un taxi? Chiamate direttamente Taxi Coín, è la cosa più veloce. Come indirizzo: Finca KaYu a Coín.",
         extraNamen:{ knippen:"Taglio di capelli da Loes", knippen_kind:"Taglio di capelli bambino", massage:"Massaggio in loco", reiki:"Private Reiki Experience con Lincy", tour:"Tour in bici o a piedi di Málaga con la nostra amica olandese Merle come guida", buggy:"Tour in buggy tra le montagne", padel:"Padel a La Trocha", workstay:"Work & Stay", dj:"DJ alla finca" },
         extraInfo:{ knippen:"€ {p_knippen} a persona", knippen_kind:"€ {p_knippen_kind} a bambino", massage:"€ {p_massage} a persona, 60 minuti", reiki:"€ {p_reiki} a persona, da 75 a 90 minuti. Una sessione personale uno a uno, completamente su misura per te, quando possibile all'aperto nella natura.", tour:"prezzo da concordare", buggy:"Con Andalusie Buggy Tours da Coín, 2 persone per buggy. Tour serale 2,5 h € 199, borghi bianchi 3,5 h € 299, tour in montagna 4,5-5 h € 399 per buggy. Prenotate direttamente sul loro sito:", padel:"Sul tetto del centro commerciale La Trocha, a 10 minuti in auto, ci sono i cinque campi all'aperto di Bluelife Padel. Prenotate voi stessi, ci vuole un minuto: scaricate l'app Playtomic, cercate \"BlueLife Padel\" a Coín, scegliete campo e orario e pagate nell'app. Racchette e palline si noleggiano al club. Aperto dal lunedì al venerdì 08:00-23:00, sabato 09:00-21:00, domenica 09:00-14:00. Il club su Playtomic:", workstay:"Aiuto al giorno in cambio di una piazzola, con uso di tutte le strutture. Quante ore lo concordiamo insieme. Raccontateci chi siete, cosa sapete fare e quanto restate, e vediamo se funziona.", dj:"€ 500 per un set di 5 ore, interamente su vinile. Scelta musicale da concordare. Orario e prezzo trattabili, in base alla disponibilità." },
@@ -6378,7 +6455,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Pain grillé blanc ou complet avec avocat frais, 2 œufs et tomates cerises.", "Yoghurt Bowl": "Yaourt crémeux avec fruits frais, granola, graines de chia et fruits secs.", "Overnight Apple Oat": "Flocons d'avoine au lait d'amande, pomme, cannelle, fruits secs et graines de chia.", "Uitsmijter ham": "3 œufs au plat avec jambon et fromage, sur pain grillé blanc ou complet.", "Uitsmijter kip": "3 œufs au plat avec poulet et fromage, sur pain grillé blanc ou complet.", "Pannenkoekenwafels": "Pancakes en forme de gaufres, avec fruits de saison, chocolat et chantilly."},
         keukenKop:"Cuisine et petit-déjeuner", keuken:["Le petit-déjeuner est servi entre {ovan} et {otot}, {p_ontbijt} € par personne, enfants {p_ontbijt_kind} €.", "Le café et le thé sont en libre-service, à tout moment.", "Jusqu'à 11h00, la cuisine est notre espace de travail : nous préparons le petit-déjeuner, servons et rangeons. Merci de ne pas l'utiliser avant.", "À partir de 11h00, vous pouvez utiliser la cuisine pour vous préparer un petit repas. Les jours où nous cuisinons à la finca, la cuisine est ouverte jusqu'à 16h00.", "La nourriture et la vaisselle restent au bar, dans la cuisine ou sur la terrasse commune, pas dans les chambres.", "Vous avez fini le petit-déjeuner ? Rapportez vos assiettes, verres et tasses à la cuisine, s'il vous plaît.", "Vous utilisez la cuisine vous-même ? Lavez votre vaisselle ou mettez-la au lave-vaisselle, et laissez la cuisine et votre table propres.", "Vos propres courses se rangent dans le frigo blanc des hôtes. Les boissons fraîches sont à l'honesty bar."],
         herKop:"Pas encore de petit-déjeuner", herTekst:d => `Pour ${d} vous ne nous avez encore rien dit.`, naarOntbijt:"Commander le petit-déjeuner", geenOntbijt:"Non, pas de petit-déjeuner", geenOk:"Noté : pas de petit-déjeuner. Vous avez changé d'avis ? Vous pouvez encore commander.", geenNog:d => `Pas de petit-déjeuner pour ${d}. Vous avez changé d'avis ? Vous pouvez encore commander.`, vaste:"Vos habitudes", geenKort:"pas de petit-déjeuner", geenZeker:d => `Vous êtes sûrs ? Alors nous notons pas de petit-déjeuner pour ${d}.`, ontbijtDoor:"Petit-déjeuner transmis ✓", barToe:"ajouté", barAf:"retiré",
-        groepen:{ Drank:"Boissons", Fris:"Sodas", Water:"Eau", Bier:"Bière", "Wijn en cava":"Vin et cava", Sterk:"Spiritueux", Warm:"Boissons chaudes", Eten:"À manger", "Ontbijt en avonden":"Petit-déjeuner et soirées", Diensten:"Machine à laver (4 € par cycle, prévenez-nous)" },
+        groepen:{ Drank:"Boissons", Fris:"Sodas", Water:"Eau", Bier:"Bière", "Wijn en cava":"Vin et cava", Sterk:"Spiritueux", Warm:"Boissons chaudes", Eten:"À manger", "Ontbijt en avonden":"Petit-déjeuner et soirées", Diensten:"Machine à laver (4 € par cycle, prévenez-nous)", Stroom:"Électricité" },
         extrasUitleg:"Envie de rendre votre séjour encore plus complet ? Demandez-le ici. Nous vous dirons au plus vite quand c'est possible.", taxiKop:"Taxi", taxiUitleg:"Besoin d'un taxi ? Appelez directement Taxi Coín, c'est le plus rapide. Indiquez Finca KaYu à Coín comme adresse.",
         extraNamen:{ knippen:"Coupe de cheveux par Loes", knippen_kind:"Coupe de cheveux enfant", massage:"Massage sur place", reiki:"Private Reiki Experience avec Lincy", tour:"Visite à vélo ou à pied de Málaga avec notre amie néerlandaise Merle comme guide", buggy:"Balade en buggy dans la montagne", padel:"Padel à La Trocha", workstay:"Work & Stay", dj:"DJ à la finca" },
         extraInfo:{ knippen:"{p_knippen} € par personne", knippen_kind:"{p_knippen_kind} € par enfant", massage:"{p_massage} € par personne, 60 minutes", reiki:"{p_reiki} € par personne, de 75 à 90 minutes. Une séance personnelle en tête-à-tête, entièrement adaptée à vous, dehors dans la nature si possible.", tour:"prix à convenir", buggy:"Avec Andalusie Buggy Tours depuis Coín, 2 personnes par buggy. Balade du soir 2,5 h 199 €, villages blancs 3,5 h 299 €, balade en montagne 4,5 à 5 h 399 € par buggy. Réservez directement sur leur site :", padel:"Sur le toit du centre commercial La Trocha, à 10 minutes en voiture, se trouvent les cinq terrains extérieurs de Bluelife Padel. Vous réservez vous-même, en une minute : téléchargez l'appli Playtomic, cherchez \"BlueLife Padel\" à Coín, choisissez un terrain et un horaire et payez dans l'appli. Raquettes et balles se louent au club. Ouvert du lundi au vendredi de 08:00 à 23:00, samedi de 09:00 à 21:00, dimanche de 09:00 à 14:00. Le club sur Playtomic :", workstay:"Aide par jour en échange d'un emplacement, avec l'usage de toutes les installations. Le nombre d'heures, nous en convenons ensemble. Dites-nous qui vous êtes, ce que vous savez faire et combien de temps vous restez, et nous verrons si cela convient.", dj:"500 € pour un set de 5 heures, entièrement sur vinyle. Choix musical à convenir. Horaire et prix négociables, selon disponibilité." },
@@ -6421,7 +6498,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Pão torrado branco ou escuro com abacate fresco, 2 ovos e tomate cereja.", "Yoghurt Bowl": "Iogurte cremoso com fruta fresca, granola, sementes de chia e frutos secos.", "Overnight Apple Oat": "Flocos de aveia com leite de amêndoa, maçã, canela, frutos secos e sementes de chia.", "Uitsmijter ham": "3 ovos estrelados com fiambre e queijo, sobre pão torrado branco ou escuro.", "Uitsmijter kip": "3 ovos estrelados com frango e queijo, sobre pão torrado branco ou escuro.", "Pannenkoekenwafels": "Panquecas em forma de waffle, com fruta da época, chocolate e chantilly."},
         keukenKop:"Cozinha e pequeno-almoço", keuken:["Servimos o pequeno-almoço entre as {ovan} e as {otot}, {p_ontbijt} € por pessoa, crianças {p_ontbijt_kind} €.", "O café e o chá servem-se à vontade, a qualquer hora.", "Até às 11:00 a cozinha é o nosso espaço de trabalho: preparamos o pequeno-almoço, servimos e arrumamos. Por isso, até essa hora não a podem usar.", "A partir das 11:00 podem usar a cozinha para preparar uma refeição ligeira. Nos dias em que somos nós a cozinhar na finca, a cozinha fica aberta até às 16:00.", "A comida e a loiça ficam no bar, na cozinha ou no terraço comum, não nos quartos.", "Já acabaram o pequeno-almoço? Levem os vossos pratos, copos e chávenas de volta para a cozinha, por favor.", "Usam vocês mesmos a cozinha? Então lavem a loiça ou ponham-na na máquina, e deixem a cozinha e a vossa mesa limpas.", "As vossas próprias compras guardam-se no frigorífico branco dos hóspedes. As bebidas frescas estão no honesty bar."],
         herKop:"Ainda sem pequeno-almoço", herTekst:d => `Para ${d} ainda não nos disseram nada.`, naarOntbijt:"Encomendar o pequeno-almoço", geenOntbijt:"Não, sem pequeno-almoço", geenOk:"Registado: sem pequeno-almoço. Mudaram de ideias? Ainda podem encomendar.", geenNog:d => `Sem pequeno-almoço para ${d}. Mudaram de ideias? Ainda podem encomendar.`, vaste:"O vosso costume", geenKort:"sem pequeno-almoço", geenZeker:d => `Têm a certeza? Então registamos sem pequeno-almoço para ${d}.`, ontbijtDoor:"Pequeno-almoço enviado ✓", barToe:"adicionado", barAf:"retirado",
-        groepen:{ Drank:"Bebidas", Fris:"Refrigerantes", Water:"Água", Bier:"Cerveja", "Wijn en cava":"Vinho e cava", Sterk:"Destilados", Warm:"Bebidas quentes", Eten:"Para comer", "Ontbijt en avonden":"Pequeno-almoço e jantares", Diensten:"Máquina de lavar (4 € por ciclo, avisem-nos)" },
+        groepen:{ Drank:"Bebidas", Fris:"Refrigerantes", Water:"Água", Bier:"Cerveja", "Wijn en cava":"Vinho e cava", Sterk:"Destilados", Warm:"Bebidas quentes", Eten:"Para comer", "Ontbijt en avonden":"Pequeno-almoço e jantares", Diensten:"Máquina de lavar (4 € por ciclo, avisem-nos)", Stroom:"Eletricidade" },
         extrasUitleg:"Querem tornar a vossa estadia ainda mais completa? Peçam aqui. Dizemos-vos o mais depressa possível quando é que dá.", taxiKop:"Táxi", taxiUitleg:"Precisam de um táxi? Liguem diretamente para o Táxi Coín, é o mais rápido. Deem como morada Finca KaYu em Coín.",
         extraNamen:{ knippen:"Corte de cabelo pela Loes", knippen_kind:"Corte de cabelo criança", massage:"Massagem no local", reiki:"Private Reiki Experience com a Lincy", tour:"Passeio de bicicleta ou a pé por Málaga com a nossa amiga neerlandesa Merle como guia", buggy:"Passeio de buggy pela montanha", padel:"Padel em La Trocha", workstay:"Work & Stay", dj:"DJ na fince" },
         extraInfo:{ knippen:"{p_knippen} € por pessoa", knippen_kind:"{p_knippen_kind} € por criança", massage:"{p_massage} € por pessoa, 60 minutos", reiki:"{p_reiki} € por pessoa, de 75 a 90 minutos. Uma sessão pessoal a dois, totalmente adaptada a vocês, ao ar livre sempre que for possível.", tour:"preço a combinar", buggy:"Com a Andalusie Buggy Tours desde Coín, 2 pessoas por buggy. Passeio ao fim da tarde 2,5 h 199 €, aldeias brancas 3,5 h 299 €, passeio de montanha 4,5 a 5 h 399 € por buggy. Reservem diretamente no site deles:", padel:"No telhado do centro comercial La Trocha, a 10 minutos de carro, ficam os cinco campos exteriores do Bluelife Padel. Reservam vocês mesmos, demora um minuto: descarreguem a app Playtomic, procurem \"BlueLife Padel\" em Coín, escolham campo e hora e paguem na app. Raquetes e bolas alugam-se no clube. Aberto de segunda a sexta das 08:00 às 23:00, sábado das 09:00 às 21:00, domingo das 09:00 às 14:00. O clube no Playtomic:", workstay:"Ajuda por dia em troca de um lugar para a autocaravana, com uso de todas as instalações. Quantas horas combinamos juntos. Contem-nos quem são, o que sabem fazer e quanto tempo ficam, e vemos se encaixa.", dj:"500 € por um set de 5 horas, inteiramente em vinil. Escolha musical a combinar. Hora e preço negociáveis, sujeito a disponibilidade." },
@@ -6464,7 +6541,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Opečený tmavý nebo světlý chléb s čerstvým avokádem, 2 vejci a cherry rajčátky.", "Yoghurt Bowl": "Krémový jogurt s čerstvým ovocem, granolou, chia semínky a ořechy.", "Overnight Apple Oat": "Ovesné vločky s mandlovým mlékem, jablkem, skořicí, ořechy a chia semínky.", "Uitsmijter ham": "3 volská oka se šunkou a sýrem na opečeném tmavém nebo světlém chlebu.", "Uitsmijter kip": "3 volská oka s kuřecím masem a sýrem na opečeném tmavém nebo světlém chlebu.", "Pannenkoekenwafels": "Palačinkové vafle se sezónním ovocem, čokoládou a šlehačkou."},
         keukenKop:"Kuchyně a snídaně", keuken:["Snídani podáváme mezi {ovan} a {otot}, {p_ontbijt} € za osobu, děti {p_ontbijt_kind} €.", "Káva a čaj jsou samoobslužné, kdykoli.", "Do 11:00 je kuchyně naše pracoviště: připravujeme snídani, servírujeme a uklízíme. Do té doby ji prosím nepoužívejte.", "Od 11:00 můžete kuchyň použít a připravit si malé jídlo. Ve dny, kdy na fince vaříme, je kuchyně otevřená do 16:00.", "Jídlo a nádobí zůstávají u baru, v kuchyni nebo na společné terase, ne na pokojích.", "Dosnídali jste? Odneste prosím talíře, sklenice a hrnky zpět do kuchyně.", "Vaříte si sami? Umyjte po sobě nádobí nebo ho dejte do myčky a nechte kuchyň i svůj stůl čisté.", "Vlastní nákup si uložte do bílé lednice pro hosty. Studené nápoje jsou v honesty baru."],
         herKop:"Zatím neobjednaná snídaně", herTekst:d => `Na ${d} jste nám zatím nic nedali vědět.`, naarOntbijt:"Objednat snídani", geenOntbijt:"Ne, bez snídaně", geenOk:"Zapsáno: bez snídaně. Rozmysleli jste si to? Objednat můžete stále.", geenNog:d => `Na ${d} bez snídaně. Rozmysleli jste si to? Objednat můžete stále.`, vaste:"Jako obvykle", geenKort:"bez snídaně", geenZeker:d => `Opravdu? Pak zapíšeme na ${d} bez snídaně.`, ontbijtDoor:"Snídaně odeslána ✓", barToe:"přidáno", barAf:"odebráno",
-        groepen:{ Drank:"Nápoje", Fris:"Nealko", Water:"Voda", Bier:"Pivo", "Wijn en cava":"Víno a cava", Sterk:"Tvrdý alkohol", Warm:"Teplé nápoje", Eten:"Jídlo", "Ontbijt en avonden":"Snídaně a večeře", Diensten:"Pračka (4 € za várku, dejte nám prosím vědět)" },
+        groepen:{ Drank:"Nápoje", Fris:"Nealko", Water:"Voda", Bier:"Pivo", "Wijn en cava":"Víno a cava", Sterk:"Tvrdý alkohol", Warm:"Teplé nápoje", Eten:"Jídlo", "Ontbijt en avonden":"Snídaně a večeře", Diensten:"Pračka (4 € za várku, dejte nám prosím vědět)", Stroom:"Elektřina" },
         extrasUitleg:"Chcete si pobyt ještě zpříjemnit? Požádejte o to tady. Co nejdříve vám dáme vědět, kdy to půjde.", taxiKop:"Taxi", taxiUitleg:"Potřebujete taxi? Zavolejte přímo Taxi Coín, to je nejrychlejší. Jako adresu uveďte Finca KaYu v Coín.",
         extraNamen:{ knippen:"Stříhání vlasů od Loes", knippen_kind:"Dětské stříhání", massage:"Masáž na místě", reiki:"Private Reiki Experience s Lincy", tour:"Projížďka na kole nebo procházka Málagou s naší nizozemskou kamarádkou Merle jako průvodkyní", buggy:"Projížďka bugginou po horách", padel:"Padel v La Trocha", workstay:"Work & Stay", dj:"DJ na fince" },
         extraInfo:{ knippen:"{p_knippen} € za osobu", knippen_kind:"{p_knippen_kind} € za dítě", massage:"{p_massage} € za osobu, 60 minut", reiki:"{p_reiki} € za osobu, 75 až 90 minut. Osobní sezení jeden na jednoho, zcela přizpůsobené vám, pokud možno venku v přírodě.", tour:"cena na dotaz", buggy:"S Andalusie Buggy Tours z Coín, 2 osoby na buggy. Večerní projížďka 2,5 h 199 €, bílé vesnice 3,5 h 299 €, horská projížďka 4,5 až 5 h 399 € za buggy. Rezervujte přímo na jejich webu:", padel:"Na střeše nákupního centra La Trocha, 10 minut autem, je pět venkovních kurtů Bluelife Padel. Rezervujete si sami a trvá to minutu: stáhněte si aplikaci Playtomic, vyhledejte \"BlueLife Padel\" v Coín, vyberte kurt a čas a zaplaťte v aplikaci. Rakety a míčky si můžete půjčit v klubu. Otevřeno pondělí až pátek 08:00 až 23:00, sobota 09:00 až 21:00, neděle 09:00 až 14:00. Klub na Playtomic:", workstay:"Pomoc každý den výměnou za místo pro karavan, včetně využití všeho zázemí. Kolik hodin, domluvíme spolu. Napište nám, kdo jste, co umíte a jak dlouho zůstáváte, a uvidíme, jestli to sedí.", dj:"500 € za 5hodinový set, hraný celý z vinylu. Výběr hudby po domluvě s vámi. Čas a cena k jednání, podle dostupnosti." },
@@ -6506,7 +6583,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Paahdettua tummaa tai vaaleaa leipää tuoreen avokadon, 2 kananmunan ja kirsikkatomaattien kera.", "Yoghurt Bowl": "Kermaista jogurttia tuoreiden hedelmien, granolan, chiansiementen ja pähkinöiden kera.", "Overnight Apple Oat": "Kaurahiutaleita mantelimaidon, omenan, kanelin, pähkinöiden ja chiansiementen kera.", "Uitsmijter ham": "3 paistettua kananmunaa, kinkkua ja juustoa paahdetun tumman tai vaalean leivän päällä.", "Uitsmijter kip": "3 paistettua kananmunaa, kanaa ja juustoa paahdetun tumman tai vaalean leivän päällä.", "Pannenkoekenwafels": "Pannukakkutyylisiä vohveleita sesongin hedelmien, suklaan ja kermavaahdon kera."},
         keukenKop:"Keittiö ja aamiainen", keuken:["Tarjoilemme aamiaista klo {ovan} ja {otot} välillä, € {p_ontbijt} henkilöltä, lapset € {p_ontbijt_kind}.", "Kahvi ja tee ovat itsepalvelua, milloin tahansa.", "Klo 11:00 asti keittiö on meidän työtilamme: valmistamme aamiaisen, tarjoilemme ja siivoamme. Pyydämme, ettette käytä keittiötä ennen sitä.", "Klo 11:00 alkaen voitte valmistaa keittiössä itse pienen aterian. Päivinä, jolloin kokkaamme fincalla, keittiö on avoinna klo 16:00 asti.", "Ruoka ja astiat pysyvät baarissa, keittiössä tai yhteisellä terassilla, ei huoneissa.", "Aamiainen syöty? Tuokaa ystävällisesti lautaset, lasit ja kupit takaisin keittiöön.", "Käytättekö keittiötä itse? Tiskatkaa astianne tai laittakaa ne astianpesukoneeseen, ja jättäkää keittiö ja pöytänne siistiin kuntoon.", "Säilyttäkää omat ruokaostoksenne valkoisessa vierasjääkaapissa. Kylmät juomat ovat honesty barissa."],
         herKop:"Aamiaista ei ole vielä tilattu", herTekst:d => `${d}: emme ole vielä saaneet aamiaistilaustanne.`, naarOntbijt:"Tilaa aamiainen", geenOntbijt:"Ei, ei aamiaista", geenOk:"Merkitty: ei aamiaista. Muutitteko mielenne? Voitte vielä tilata.", geenNog:d => `${d}: ei aamiaista. Muutitteko mielenne? Voitte vielä tilata.`, vaste:"Tavallinen tilauksenne", geenKort:"ei aamiaista", geenZeker:d => `Oletteko varmoja? Merkitsemme silloin: ei aamiaista (${String(d).charAt(0).toLowerCase() + String(d).slice(1)}).`, ontbijtDoor:"Aamiainen lähetetty ✓", barToe:"lisätty", barAf:"poistettu",
-        groepen:{ Drank:"Juomat", Fris:"Virvoitusjuomat", Water:"Vesi", Bier:"Olut", "Wijn en cava":"Viini ja cava", Sterk:"Väkevät", Warm:"Kuumat juomat", Eten:"Ruoka", "Ontbijt en avonden":"Aamiainen ja illalliset", Diensten:"Pesukone (€ 4 kerta, kertokaa meille)" },
+        groepen:{ Drank:"Juomat", Fris:"Virvoitusjuomat", Water:"Vesi", Bier:"Olut", "Wijn en cava":"Viini ja cava", Sterk:"Väkevät", Warm:"Kuumat juomat", Eten:"Ruoka", "Ontbijt en avonden":"Aamiainen ja illalliset", Diensten:"Pesukone (€ 4 kerta, kertokaa meille)", Stroom:"Sähkö" },
         extrasUitleg:"Haluatteko tehdä oleskelustanne vielä paremman? Pyytäkää sitä täällä. Kerromme teille mahdollisimman pian, milloin se onnistuu.", taxiKop:"Taksi", taxiUitleg:"Tarvitsetteko taksin? Soittakaa suoraan Taxi Coínille, se on nopeinta. Antakaa osoitteeksi Finca KaYu, Coín.",
         extraNamen:{ knippen:"Hiustenleikkaus Loesilta", knippen_kind:"Lasten hiustenleikkaus", massage:"Hieronta paikan päällä", reiki:"Yksityinen Reiki-kokemus Lincyltä", tour:"Pyörä- tai kävelykierros Málagassa, oppaananne hollantilainen ystävämme Merle", buggy:"Buggy-retki vuoristossa", padel:"Padel La Trochassa", workstay:"Work & Stay", dj:"DJ fincalla" },
         extraInfo:{ knippen:"€ {p_knippen} henkilöltä", knippen_kind:"€ {p_knippen_kind} lapselta", massage:"€ {p_massage} henkilöltä, 60 minuuttia", reiki:"€ {p_reiki} henkilöltä, 75–90 minuuttia. Henkilökohtainen kahdenkeskinen sessio, täysin teille räätälöity, mahdollisuuksien mukaan ulkona luonnossa.", tour:"hinta pyynnöstä", buggy:"Andalusie Buggy Toursin kanssa Coínista, 2 henkilöä buggya kohden. Iltakierros 2,5 h € 199, valkoiset kylät 3,5 h € 299, vuoristokierros 4,5–5 h € 399 buggya kohden. Varatkaa suoraan heidän sivuiltaan:", padel:"La Trocha -ostoskeskuksen katolla, 10 minuutin ajomatkan päässä, ovat Bluelife Padelin viisi ulkokenttää. Varaatte itse, ja se käy minuutissa: ladatkaa Playtomic-sovellus, hakekaa sovelluksesta \"BlueLife Padel\" (Coín), valitkaa kenttä ja aika ja maksakaa sovelluksessa. Mailoja ja palloja voi vuokrata klubilta. Avoinna maanantaista perjantaihin 08:00–23:00, lauantaisin 09:00–21:00, sunnuntaisin 09:00–14:00. Klubi Playtomicissa:", workstay:"Auttakaa päivittäin ja saatte vastineeksi matkailuautopaikan, sisältäen kaikkien tilojen käytön. Tuntimäärästä sovimme yhdessä. Kertokaa meille, keitä olette, mitä osaatte ja kuinka kauan viivytte, niin katsomme, sopiiko se.", dj:"€ 500, 5 tunnin setti, soitettuna kokonaan vinyyleiltä. Musiikkivalinnasta sovitaan kanssanne. Aika ja hinta neuvoteltavissa, saatavuuden mukaan." },
@@ -6549,7 +6626,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Ristet grovt eller hvitt brød med fersk avokado, 2 egg og cherrytomater.", "Yoghurt Bowl": "Kremet yoghurt med fersk frukt, granola, chiafrø og nøtter.", "Overnight Apple Oat": "Havregryn med mandelmelk, eple, kanel, nøtter og chiafrø.", "Uitsmijter ham": "3 stekte egg med skinke og ost, på ristet grovt eller hvitt brød.", "Uitsmijter kip": "3 stekte egg med kylling og ost, på ristet grovt eller hvitt brød.", "Pannenkoekenwafels": "Pannekaker i vaffelform, med sesongens frukt, sjokolade og pisket krem."},
         keukenKop:"Kjøkken og frokost", keuken:["Frokost serverer vi mellom kl. {ovan} og {otot}, € {p_ontbijt} per person, barn € {p_ontbijt_kind}.", "Kaffe og te kan dere alltid ta selv.", "Frem til kl. 11:00 er kjøkkenet arbeidsplassen vår: vi lager frokost, serverer og rydder. Derfor kan dere ikke bruke det selv da.", "Fra kl. 11:00 kan dere bruke kjøkkenet til å lage et lite måltid selv. På dager da vi står for maten på fincaen, er kjøkkenet åpent til kl. 16:00.", "Mat og servise blir i baren, på kjøkkenet eller på fellesterrassen, ikke på rommene.", "Ferdige med frokosten? Vær så snill å ta med tallerkener, glass og kopper tilbake til kjøkkenet.", "Bruker dere kjøkkenet selv? Vask opp eller sett serviset i oppvaskmaskinen, og la kjøkkenet og bordet deres være rent etter dere.", "Egne matvarer oppbevarer dere i det hvite gjestekjøleskapet. Kalde drikker står i honesty bar."],
         herKop:"Ingen frokost bestilt ennå", herTekst:d => `For ${String(d).toLowerCase()} har dere ikke gitt oss beskjed ennå.`, naarOntbijt:"Bestill frokost", geenOntbijt:"Nei, ingen frokost", geenOk:"Notert: ingen frokost. Ombestemt dere? Dere kan fortsatt bestille.", geenNog:d => `Ingen frokost ${String(d).toLowerCase()}. Fått lyst likevel? Dere kan fortsatt bestille.`, vaste:"Det dere pleier å ta", geenKort:"ingen frokost", geenZeker:d => `Er dere sikre? Da noterer vi ingen frokost for ${String(d).toLowerCase()}.`, ontbijtDoor:"Frokost sendt ✓", barToe:"lagt til", barAf:"fjernet",
-        groepen:{ Drank:"Drikke", Fris:"Brus", Water:"Vann", Bier:"Øl", "Wijn en cava":"Vin og cava", Sterk:"Brennevin", Warm:"Varme drikker", Eten:"Mat", "Ontbijt en avonden":"Frokost og kvelder", Diensten:"Vaskemaskin (€ 4 per vask, gi oss beskjed)" },
+        groepen:{ Drank:"Drikke", Fris:"Brus", Water:"Vann", Bier:"Øl", "Wijn en cava":"Vin og cava", Sterk:"Brennevin", Warm:"Varme drikker", Eten:"Mat", "Ontbijt en avonden":"Frokost og kvelder", Diensten:"Vaskemaskin (€ 4 per vask, gi oss beskjed)", Stroom:"Strøm" },
         extrasUitleg:"Vil dere gjøre oppholdet enda bedre? Send en forespørsel her. Vi gir dere beskjed så snart som mulig om når det passer.", taxiKop:"Taxi", taxiUitleg:"Trenger dere taxi? Ring Taxi Coín selv, det går raskest. Oppgi Finca KaYu i Coín som adresse.",
         extraNamen:{ knippen:"Hårklipp av Loes", knippen_kind:"Hårklipp for barn", massage:"Massasje på stedet", reiki:"Private Reiki Experience med Lincy", tour:"Sykkel- eller gåtur i Málaga med vår nederlandske venninne Merle som guide", buggy:"Buggytur i fjellene", padel:"Padel på La Trocha", workstay:"Work & Stay", dj:"DJ på fincaen" },
         extraInfo:{ knippen:"€ {p_knippen} per person", knippen_kind:"€ {p_knippen_kind} per barn", massage:"€ {p_massage} per person, 60 minutter", reiki:"€ {p_reiki} per person, 75 til 90 minutter. En personlig 1:1-økt, helt tilpasset deg, om mulig ute i naturen.", tour:"pris etter avtale", buggy:"Med Andalusie Buggy Tours fra Coín, 2 personer per buggy. Kveldstur 2,5 timer € 199, de hvite landsbyene 3,5 timer € 299, fjelltur 4,5 til 5 timer € 399 per buggy. Book direkte på nettsiden til Andalusie Buggy Tours:", padel:"På taket av kjøpesenteret La Trocha, 10 minutter med bil, ligger de fem utendørsbanene til Bluelife Padel. Dere booker selv, og det er fort gjort: last ned appen Playtomic, søk etter \"BlueLife Padel\" i Coín, velg bane og tidspunkt og betal i appen. Racketer og baller kan leies i klubben. Åpent mandag til fredag 08:00 til 23:00, lørdag 09:00 til 21:00, søndag 09:00 til 14:00. Klubben på Playtomic:", workstay:"Hjelp til hver dag i bytte mot en bobilplass, inkludert bruk av alle fasilitetene. Antall timer avtaler vi sammen. Fortell oss hvem dere er, hva dere kan og hvor lenge dere blir, så ser vi om det passer.", dj:"€ 500 for et sett på 5 timer, spilt helt på vinyl. Musikkvalg etter avtale. Tid og pris kan forhandles, avhengig av tilgjengelighet." },
@@ -6592,7 +6669,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Rostat mörkt eller ljust bröd med färsk avokado, 2 ägg och körsbärstomater.", "Yoghurt Bowl": "Krämig yoghurt med färsk frukt, granola, chiafrön och nötter.", "Overnight Apple Oat": "Havregryn med mandelmjölk, äpple, kanel, nötter och chiafrön.", "Uitsmijter ham": "3 stekta ägg med skinka och ost, på rostat mörkt eller ljust bröd.", "Uitsmijter kip": "3 stekta ägg med kyckling och ost, på rostat mörkt eller ljust bröd.", "Pannenkoekenwafels": "Pannkakor i våffelform, med säsongens frukt, choklad och vispgrädde."},
         keukenKop:"Kök och frukost", keuken:["Frukost serverar vi mellan kl. {ovan} och {otot}, € {p_ontbijt} per person, barn € {p_ontbijt_kind}.", "Kaffe och te kan ni alltid ta själva.", "Fram till kl. 11:00 är köket vår arbetsplats: vi förbereder frukosten, serverar och plockar undan. Därför kan ni inte använda det då.", "Från kl. 11:00 kan ni använda köket för att laga en enklare måltid själva. De dagar vi står för maten på fincan är köket öppet till kl. 16:00.", "Mat och porslin stannar vid baren, i köket eller på den gemensamma terrassen, inte på rummen.", "Klara med frukosten? Var snälla och ta tillbaka tallrikar, glas och koppar till köket.", "Använder ni köket själva? Diska då ert porslin eller ställ in det i diskmaskinen, och lämna köket och ert bord rent efter er.", "Egna matvaror förvarar ni i det vita gästkylskåpet. Kalla drycker finns i honesty bar."],
         herKop:"Ingen frukost beställd än", herTekst:d => `För ${String(d).toLowerCase()} har ni inte meddelat oss något än.`, naarOntbijt:"Beställ frukost", geenOntbijt:"Nej, ingen frukost", geenOk:"Noterat: ingen frukost. Ångrat er? Ni kan fortfarande beställa.", geenNog:d => `Ingen frukost ${String(d).toLowerCase()}. Blivit sugna ändå? Ni kan fortfarande beställa.`, vaste:"Det ni brukar ta", geenKort:"ingen frukost", geenZeker:d => `Är ni säkra? Då noterar vi ingen frukost för ${String(d).toLowerCase()}.`, ontbijtDoor:"Frukost skickad ✓", barToe:"har lagts till", barAf:"har tagits bort",
-        groepen:{ Drank:"Dryck", Fris:"Läsk", Water:"Vatten", Bier:"Öl", "Wijn en cava":"Vin och cava", Sterk:"Sprit", Warm:"Varma drycker", Eten:"Mat", "Ontbijt en avonden":"Frukost och kvällar", Diensten:"Tvättmaskin (€ 4 per tvätt, säg till oss)" },
+        groepen:{ Drank:"Dryck", Fris:"Läsk", Water:"Vatten", Bier:"Öl", "Wijn en cava":"Vin och cava", Sterk:"Sprit", Warm:"Varma drycker", Eten:"Mat", "Ontbijt en avonden":"Frukost och kvällar", Diensten:"Tvättmaskin (€ 4 per tvätt, säg till oss)", Stroom:"El" },
         extrasUitleg:"Vill ni göra vistelsen ännu bättre? Skicka en förfrågan här. Vi hör av oss så snart som möjligt om när det går.", taxiKop:"Taxi", taxiUitleg:"Behöver ni en taxi? Ring Taxi Coín själva, det går snabbast. Uppge Finca KaYu i Coín som adress.",
         extraNamen:{ knippen:"Klippning av Loes", knippen_kind:"Klippning för barn", massage:"Massage på plats", reiki:"Private Reiki Experience med Lincy", tour:"Cykel- eller promenadtur i Málaga med vår nederländska väninna Merle som guide", buggy:"Buggytur i bergen", padel:"Padel på La Trocha", workstay:"Work & Stay", dj:"DJ på fincan" },
         extraInfo:{ knippen:"€ {p_knippen} per person", knippen_kind:"€ {p_knippen_kind} per barn", massage:"€ {p_massage} per person, 60 minuter", reiki:"€ {p_reiki} per person, 75 till 90 minuter. En personlig 1:1-session, helt anpassad efter dig, om möjligt utomhus i naturen.", tour:"pris enligt överenskommelse", buggy:"Med Andalusie Buggy Tours från Coín, 2 personer per buggy. Kvällstur 2,5 timmar € 199, de vita byarna 3,5 timmar € 299, bergstur 4,5 till 5 timmar € 399 per buggy. Boka direkt på deras webbplats:", padel:"På taket till köpcentret La Trocha, 10 minuter med bil, ligger Bluelife Padels fem utomhusbanor. Ni bokar själva och det går snabbt: ladda ner appen Playtomic, sök på \"BlueLife Padel\" i Coín, välj bana och tid och betala i appen. Racketar och bollar kan hyras på klubben. Öppet måndag till fredag 08:00 till 23:00, lördag 09:00 till 21:00, söndag 09:00 till 14:00. Klubben på Playtomic:", workstay:"Hjälp till varje dag i utbyte mot en husbilsplats, inklusive tillgång till alla faciliteter. Hur många timmar kommer vi överens om tillsammans. Berätta vilka ni är, vad ni kan och hur länge ni stannar, så ser vi om det passar.", dj:"€ 500 för ett set på 5 timmar, helt på vinyl. Musikval i samråd med er. Tid och pris förhandlingsbara, beroende på tillgänglighet." },
@@ -6634,7 +6711,7 @@ const GT = {
         gerechtInfo:{"Avocado Smash": "Tost z ciemnego albo jasnego pieczywa ze świeżym awokado, 2 jajkami i pomidorkami koktajlowymi.", "Yoghurt Bowl": "Kremowy jogurt ze świeżymi owocami, granolą, nasionami chia i orzechami.", "Overnight Apple Oat": "Płatki owsiane z mlekiem migdałowym, jabłkiem, cynamonem, orzechami i nasionami chia.", "Uitsmijter ham": "3 jajka sadzone z szynką i serem na tostowanym ciemnym albo jasnym pieczywie.", "Uitsmijter kip": "3 jajka sadzone z kurczakiem i serem na tostowanym ciemnym albo jasnym pieczywie.", "Pannenkoekenwafels": "Gofry naleśnikowe z owocami sezonowymi, czekoladą i bitą śmietaną."},
         keukenKop:"Kuchnia i śniadanie", keuken:["Śniadanie podajemy między {ovan} a {otot}, € {p_ontbijt} od osoby, dzieci € {p_ontbijt_kind}.", "Kawa i herbata są samoobsługowe, o każdej porze.", "Do 11:00 kuchnia jest naszym miejscem pracy: przygotowujemy śniadanie, podajemy i sprzątamy. Prosimy nie korzystać z niej wcześniej.", "Od 11:00 możecie korzystać z kuchni, żeby samemu przygotować mały posiłek. W dni, gdy gotujemy na fince, kuchnia jest otwarta do 16:00.", "Jedzenie i naczynia zostają w barze, w kuchni albo na wspólnym tarasie, nie w pokojach.", "Skończyliście śniadanie? Odnieście talerze, szklanki i kubki do kuchni.", "Sami korzystacie z kuchni? Umyjcie naczynia albo włóżcie je do zmywarki i zostawcie kuchnię i stół w czystości.", "Własne zakupy trzymajcie w białej lodówce dla gości. Zimne napoje są w barze samoobsługowym."],
         herKop:"Jeszcze nie zamówiono śniadania", herTekst:d => `${d}: jeszcze nic nam nie przekazaliście.`, naarOntbijt:"Zamów śniadanie", geenOntbijt:"Nie, bez śniadania", geenOk:"Zapisane: bez śniadania. Zmieniliście zdanie? Nadal możecie zamówić.", geenNog:d => `${d}: bez śniadania. Zmieniliście zdanie? Nadal możecie zamówić.`, vaste:"Wasz stały wybór", geenKort:"bez śniadania", geenZeker:d => `Na pewno? Wtedy zapiszemy: ${d}, bez śniadania.`, ontbijtDoor:"Śniadanie wysłane ✓", barToe:"dodano", barAf:"usunięto",
-        groepen:{ Drank:"Napoje", Fris:"Napoje bezalkoholowe", Water:"Woda", Bier:"Piwo", "Wijn en cava":"Wino i cava", Sterk:"Mocne alkohole", Warm:"Napoje gorące", Eten:"Jedzenie", "Ontbijt en avonden":"Śniadania i kolacje", Diensten:"Pralka (€ 4 za wsad, dajcie nam znać)" },
+        groepen:{ Drank:"Napoje", Fris:"Napoje bezalkoholowe", Water:"Woda", Bier:"Piwo", "Wijn en cava":"Wino i cava", Sterk:"Mocne alkohole", Warm:"Napoje gorące", Eten:"Jedzenie", "Ontbijt en avonden":"Śniadania i kolacje", Diensten:"Pralka (€ 4 za wsad, dajcie nam znać)", Stroom:"Prąd" },
         extrasUitleg:"Chcecie, żeby wasz pobyt był jeszcze przyjemniejszy? Poproście tutaj. Jak najszybciej damy znać, kiedy to możliwe.", taxiKop:"Taxi", taxiUitleg:"Potrzebujecie taksówki? Zadzwońcie bezpośrednio do Taxi Coín, tak jest najszybciej. Jako adres podajcie Finca KaYu w Coín.",
         extraNamen:{ knippen:"Strzyżenie u Loes", knippen_kind:"Strzyżenie dla dzieci", massage:"Masaż na miejscu", reiki:"Prywatna sesja Reiki z Lincy", tour:"Wycieczka rowerowa albo piesza po Maladze z naszą holenderską przyjaciółką Merle jako przewodniczką", buggy:"Wycieczka buggy po górach", padel:"Padel w La Trocha", workstay:"Work & Stay", dj:"DJ na fince" },
         extraInfo:{ knippen:"€ {p_knippen} od osoby", knippen_kind:"€ {p_knippen_kind} od dziecka", massage:"€ {p_massage} od osoby, 60 minut", reiki:"€ {p_reiki} od osoby, 75 do 90 minut. Osobista sesja indywidualna, w pełni dopasowana do was, w miarę możliwości na zewnątrz, w przyrodzie.", tour:"cena na zapytanie", buggy:"Z Andalusie Buggy Tours z Coín, 2 osoby na buggy. Wycieczka wieczorna 2,5 h € 199, białe miasteczka 3,5 h € 299, wycieczka górska 4,5 do 5 h € 399 za buggy. Rezerwujcie bezpośrednio na ich stronie:", padel:"Na dachu centrum handlowego La Trocha, 10 minut samochodem, jest pięć odkrytych kortów Bluelife Padel. Rezerwujecie sami, to zajmuje minutę: pobierzcie aplikację Playtomic, wyszukajcie \"BlueLife Padel\" w Coín, wybierzcie kort i godzinę i zapłaćcie w aplikacji. Rakiety i piłki można wypożyczyć w klubie. Otwarte od poniedziałku do piątku od 08:00 do 23:00, w sobotę od 09:00 do 21:00, w niedzielę od 09:00 do 14:00. Klub w Playtomic:", workstay:"Codziennie pomagacie w zamian za miejsce dla kampera, z możliwością korzystania ze wszystkich udogodnień. Ile godzin, ustalamy razem. Napiszcie, kim jesteście, co potraficie i jak długo zostajecie, a zobaczymy, czy to pasuje.", dj:"€ 500 za 5-godzinny set, grany w całości z winyli. Muzyka do uzgodnienia z wami. Godzina i cena do negocjacji, w miarę dostępności." },
@@ -6840,7 +6917,7 @@ document.addEventListener("click", async e => {
   if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
 });
 let gastToastTimer = null, gastVasteLijst = null;
-const VERSIE = "23-11-2026 a";
+const VERSIE = "24-11-2026 f";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -7534,8 +7611,10 @@ function gastRegelsHtml(){
   const lijst = isCamperPlek(gastData.kamer) ? r.camper : r.kamer;
   const esc = x => String(x).replace(/&/g,"&amp;").replace(/</g,"&lt;");
   /* 20-11-2026 a (Bart): op de open gastenpagina van een camper de huisregels met tegels bovenaan en blokken om open te tikken;
-     vóór aankomst (wachtpagina) en op de losse huisregelspagina blijft alles open, daar moet de gast alles lezen */
-  const klap = isCamperPlek(gastData.kamer) && !regelsZicht && !gastWachtNodig();
+     vóór aankomst (wachtpagina) en op de losse huisregelspagina blijft alles open, daar moet de gast alles lezen.
+     24-11-2026 b (Bart: "fijner als het gewoon in 1 keer leest ... zonder al die plusjes en minnetjes"): niets klapt meer dicht; klap betekent
+     nu alleen "de lijst met foto's bovenaan en In het kort met kopjes", voor campers én kamers (niet voor groepen, die hebben hun eigen kaart) */
+  const klap = gastData.kamer !== "Hele finca" && !regelsZicht && !gastWachtNodig();
   const volledig = gastInfoHtml(klap).replace(/<div class="dag hl">/g, '<div class="sub hl">').replace(/class="dag hl (hrblok|hrroute)"/g, 'class="sub hl $1"').replace(/<h2>/g, "<h3>").replace(/<\/h2>/g, "</h3>");
   /* "In het kort" (de vijf regels in GT_REGELS) staat op verzoek van Bart (20-09-2026) uit; zet REGELS_KORT op true om hem terug te zetten */
   const REGELS_KORT = false;
@@ -7568,6 +7647,11 @@ function aankomstKaart(){
   const vet = s => esc(s).replace(/\*(.+?)\*/g, "<b>$1</b>");
   const welkom = vulGeheim(tk.kamerWelkom({ naam:"", link:"", groep: gastData.kamer === "Hele finca", aank:"" }), gastData, false);
   const poort = welkom.find(x => String(x).startsWith("🚪")) || "", wifi = welkom.find(x => String(x).startsWith("🌐")) || "";
+  /* 23-11-2026 b (Bart: "voor groepen hetzelfde"): ook hier de regel Parkeren, met rechts het fotootje van de kaart naar de P */
+  const park = welkom.find(x => String(x).startsWith("🅿")) || "";
+  /* review 23-11 c: ook de poortfoto bij de poortregel (zoals bij kamers); beide regels laten niets naast het fotootje doorlopen */
+  const regel = x => x === park || x === poort ? `<div class="info hlregel hlpark" style="margin-top:6px;font-size:14px;line-height:1.5">${hlFotoKnop(x === park ? "plek" : "poort")}${vet(x)}</div>`
+    : `<div class="info" style="margin-top:6px;font-size:14px;line-height:1.5">${vet(x)}</div>`;
   const bron = tk.kamerCheckin || tk.kamer24u;
   const inch = bron({ naam:"", vandaag:false, kamer:"", link:"", totDag:"" }).find(x => String(x).startsWith("⏰")) || "";
   /* KaYu efficiëntieronde 3 (27-09-2026 i): de kaart volgt het moment. Vóór en op de aankomstdag: route en inchecken;
@@ -7577,10 +7661,10 @@ function aankomstKaart(){
   const kopKnop = w => w ? `<button type="button" class="kopieer" data-kopieer="${esc(w)}">📋 ${esc(w)}</button>` : "";
   const kopieren = (code || ww) ? `<div class="vink">${kopKnop(code)}${kopKnop(ww)}</div>` : "";
   if(tijdens) return `<div class="dag aankomst"><h2>${gIcoonLijn("sleutel")} ${POORTWIFI_KOP[gastTaal] || POORTWIFI_KOP.en}</h2>` +
-    [poort, wifi].filter(Boolean).map(x => `<div class="info" style="margin-top:6px;font-size:14px;line-height:1.5">${vet(x)}</div>`).join("") + kopieren + `</div>`;
+    [poort, park, wifi].filter(Boolean).map(regel).join("") + kopieren + `</div>`;
   return `<div class="dag aankomst"><h2>${gIcoonLijn("speld")} ${AANKOMST_KOP[gastTaal] || AANKOMST_KOP.en}</h2>` +
     `<div class="vink"><a class="knop aan" href="${ROUTE}" target="_blank" rel="noopener">${OMG_ROUTE[gastTaal] || OMG_ROUTE.en} · Google Maps</a></div>` + routeStopHtml() +
-    [inch, poort, wifi].filter(Boolean).map(x => `<div class="info" style="margin-top:6px;font-size:14px;line-height:1.5">${vet(x)}</div>`).join("") + kopieren + `</div>`;
+    [inch, poort, park, wifi].filter(Boolean).map(regel).join("") + kopieren + `</div>`;
 }
 const POORTWIFI_KOP = { nl:"Poort en wifi", en:"Gate and wifi", de:"Tor und WLAN", es:"Portón y wifi", it:"Cancello e wifi", fr:"Portail et wifi", pt:"Portão e wifi", cs:"Brána a wifi", fi: "Portti ja wifi", no: "Port og wifi", sv: "Grind och wifi", pl:"Brama i wifi" };
 /* iemand vergeten bij de check-in: terug naar het formulier, dat dan in de stand "persoon toevoegen" opent (27-09-2026 i) */
@@ -7702,7 +7786,7 @@ function gastInfoHtml(klap){
   /* campers (plan 29-09-2026): bovenaan de handleiding "In het kort" met inchecktijden, route, poort en wifi uit het welkomstbericht,
      zodat de gast die op zijn pagina vindt (het welkomstbericht hoeft niet meer los gestuurd te worden) */
   const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"), escA = s => esc(s).replace(/"/g,"&quot;");
-  const klapCamper = !!klap && camper;
+  const klapCamper = !!klap && camper, klapKamer = !!klap && !camper && gastData.kamer !== "Hele finca"; /* 24-11-2026 b */
   let boven = "";
   if(camper){
     const kop = "📌 " + ((GT[gastTaal] || GT.nl).kort || "In het kort");
@@ -7739,24 +7823,54 @@ function gastInfoHtml(klap){
       lijst = [kop, ...top.filter(x => !/^(⏰|📍|🌐)/.test(x)), ...lijst];
     }
   }
+  if(klapKamer){
+    /* 24-11-2026 b (Bart: kamers net zo fijn leesbaar als campers): bovenaan dezelfde lijst als bij campers (route, vijfsprong, poortcode,
+       Parkeren met de kaart naar de P, wifi, inchecken en uitchecken), daaronder In het kort met het kopje vet op een eigen regel
+       ("🚪 Poort: tekst" wordt "🚪 *Poort*" + "Tekst"; alleen de weergave, de tekst en het WhatsApp-bericht blijven gelijk).
+       Route, wifi en tijden staan dan in de lijst en niet nog eens in In het kort; de regel "Hieronder vind je ..." valt weg (zoals bij campers). */
+    const bron = gastData || {}, w = k => String(bron[k] || "").trim(), st = lijst.indexOf(STREEP);
+    const voor = (st >= 0 ? lijst.slice(0, st) : lijst).map(String), na = st >= 0 ? lijst.slice(st) : [];
+    const zoek = e => voor.find(x => x.startsWith(e)), hl = hlL();
+    const rij = (icoon, soort, titel, sub, rechts) => `<div class="hlrij" data-hlrij="${soort}">${gIcoonLijn(icoon)}<div class="hltekst"><b>${esc(titel)}</b>` +
+      (sub ? `<span>${esc(sub)}</span>` : "") + `</div>${rechts || ""}</div>`;
+    const rijen = [], route = zoek("📍"), url = route ? (route.match(/https?:\/\/[^\s]+/) || [""])[0] : "", wifi = zoek("🌐");
+    const etiket = x => ((x || "").replace(/^\S+\s+/, "").replace(/\*/g, "").match(/^([^:\d]{1,30}?)\s*:/) || [])[1] || "";
+    if(url) rijen.push(rij("pijl", "route", (GT[gastTaal] || GT.nl).route.replace(/,\s*/, " "), hl.routeSub, `<a class="hlpil" href="${escA(url)}" target="_blank" rel="noopener">${esc(hl.openen)}</a>`));
+    rijen.push(rij("speld", "vijfsprong", hlT("vijfsprong").kop, hlT("vijfsprong").sub, hlFotoKnop("vijfsprong")));
+    if(zoek("🚪") && w("poortcode")) rijen.push(rij("kluis", "poort", hlT("poort").kop + " " + w("poortcode"), hlT("poort").sub, hlFotoKnop("poort")));
+    if(zoek("🅿")) rijen.push(rij("parkeer", "plek", hlTitel("plek"), hlT("plek").subKamer || HL_TEKST.en.plek.subKamer, hlFotoKnop("plek")));
+    if(wifi && w("wifi_wachtwoord")) rijen.push(rij("wifi", "wifi", (etiket(wifi) || "Wifi") + (w("wifi_netwerk") ? ": " + w("wifi_netwerk") : ""), w("wifi_wachtwoord"),
+      `<button type="button" class="hlpil" data-hrkopieer="${escA(w("wifi_wachtwoord"))}">${esc(hl.kopieer)}</button>`));
+    const kaal = x => x ? x.replace(/^\S+\s+/, "").replace(/\*/g, "").replace(/^([^\d:]{1,30}?)\s*:\s*/, "$1 ").trim() : ""; /* fr: "Départ : ..." (spatie vóór de dubbele punt) */
+    const inch = kaal(zoek("⏰")), uit = kaal(zoek("🚗"));
+    if(inch || uit) rijen.push(rij("cal", "tijden", inch || uit, inch ? uit : "", ""));
+    boven = `<div class="hllijst">${rijen.join("")}</div>`;
+    const kopje = x => x.replace(/^(\S+)\s+([^:*\d]{1,30}?)\s*:\s*(.+)$/u, (m, e, k, t) => `${e} *${k}*\n${t.replace(/^([¿¡«"„]*)(\p{L})/u, (z, a, c) => a + c.toUpperCase())}`); /* review: ook "¿Estáis ..." */
+    const vragen = voor.find(x => /\+34/.test(x) && !/^🚪/.test(x));
+    lijst = [...(/^📌/.test(voor[0] || "") ? [voor[0]] : []), ...voor.filter(x => /^(🚪|🅿|🍳|💵)/.test(x)).map(kopje), ...(vragen ? [vragen] : []), ...na];
+  }
   const opmaak = s => esc(s).replace(/\*(.+?)\*/g, "<b>$1</b>").replace(/(https?:\/\/[^\s]+)/g, m => `<a href="${m}" target="_blank" rel="noopener">${m.replace(/^https?:\/\//, "").slice(0, 40)}${m.length > 48 ? "…" : ""}</a>`).replace(/\+34 722 162 962/g, m => `<a href="tel:+34722162962">${m}</a>`); /* poortregel (30-09-2026 a): nummer direct aan te tikken om te bellen */
   let h = boven, open = false, groet = false, nr = 0;
-  /* 20-11-2026 a: met klap wordt elk blok een <details> (dicht), anders een gewone kaart */
-  const blokOpen = kop => klapCamper ? `<details class="dag hl hrblok" data-k="${nr++}"><summary><h2>${kop}</h2></summary>` : `<div class="dag hl">` + (kop ? `<h2>${kop}</h2>` : "");
-  const blokDicht = () => klapCamper ? `</details>` : `</div>`;
+  /* 20-11-2026 a: met klap werd elk blok een <details> (dicht). 24-11-2026 b (Bart): niets klapt meer dicht, elk blok is een gewone kaart */
+  const blokOpen = kop => `<div class="dag hl">` + (kop ? `<h2>${kop}</h2>` : "");
+  const blokDicht = () => `</div>`;
   /* een kop: alleen hoofdletters (ook Ě, Ż en dergelijke), minstens twee, eventueel met iets tussen haakjes erachter ("🌿 EXTRA'S (op aanvraag)").
      20-11-2026 a: eerder vielen "EXTRA'S (op aanvraag)", cs "DĚTI", no "RO" en pl "WAŻNE" erbuiten en stonden ze als gewone regel in het blok ervoor */
   const isKop = s => { const k = s.replace(/[\u{1F300}-\u{1FAFF}☀-➿☎️]/gu, "").replace(/\s*\([^()]*\)\s*$/, "").trim(); return s.length < 45 && !/\p{Ll}/u.test(k) && (k.match(/\p{Lu}/gu) || []).length >= 2; };
   lijst = lijst.flatMap(x => String(x).split("\n")); /* 01-10-2026 b: zin onder de routelink staat met een regeleinde in dezelfde regel */
   /* 23-11-2026 a: welke fotogroep bij een regel hoort (een fotootje rechts in de regel); kopjes in hoofdletters (🐕 HUISDIEREN) niet */
-  const hlBij = s => /^📍/.test(s) && /https?:\/\//.test(s) ? (klapCamper ? "" : "vijfsprong") : /^🚪/.test(s) ? (klapCamper ? "" : "poort")
-    : /^🚐/.test(s) ? (klapCamper ? "" : "plek") : /^🐕/.test(s) ? "honden" : "";
+  /* 23-11-2026 b: 🅿️ (kamers en groepen) = de kaart naar de P; 🚪 alleen vóór de streep (bij groepen staat er daarna "🚪 Ben je de laatste
+     die 's avonds de bar verlaat?", daar hoort geen foto van de poort bij) */
+  let naStreep = false;
+  const hlBij = s => /^📍/.test(s) && /https?:\/\//.test(s) ? (klapCamper ? "" : "vijfsprong") : /^🚪/.test(s) ? (klapCamper || klapKamer || naStreep ? "" : "poort")
+    : /^🚐/.test(s) ? (klapCamper ? "" : "plek") : /^🅿/.test(s) ? (klapKamer || naStreep ? "" : "plek") : /^🐕/.test(s) ? "honden" : "";
   for(const s of lijst){
-    if(s === STREEP || s === ""){ continue; }
+    if(s === STREEP){ naStreep = true; continue; }
+    if(s === ""){ continue; }
     /* 21-11-2026 a (Bart): In het kort staat open, de blokken eronder blijven dicht */
     if(String(s).startsWith("📌")){ if(open) h += open === "div" ? `</div>` : blokDicht(); h += blokOpen(esc(s.replace(/\*/g, ""))).replace("<details ", "<details open "); open = true; continue; }
     if(isKop(s)){ if(open) h += open === "div" ? `</div>` : blokDicht(); h += blokOpen(esc(s)); open = true; continue; }
-    if(!open){ h += klapCamper ? `<div class="dag hl">` : blokOpen(""); open = "div"; }
+    if(!open){ h += blokOpen(""); open = "div"; }
     /* routeregel: de link als grote knop, de tekst zonder de kale link */
     const hg = isKop(s) ? "" : hlBij(String(s)), hf = hg ? hlFotoKnop(hg) : "";
     if(camper && String(s).startsWith("📍") && /https?:\/\//.test(s)){
@@ -7765,7 +7879,7 @@ function gastInfoHtml(klap){
       continue;
     }
     if(/^[•\-] /.test(s)) h += `<div class="info" style="padding-left:14px;text-indent:-14px">${opmaak(s)}</div>`;
-    else h += `<div class="info${hf ? " hlregel" : ""}" style="margin:4px 0">${hf}${opmaak(s)}</div>`;
+    else h += `<div class="info${hf ? " hlregel" : ""}${hf && /^🅿/.test(s) ? " hlpark" : ""}" style="margin:4px 0">${hf}${opmaak(s)}</div>`;
   }
   if(open) h += open === "div" ? `</div>` : blokDicht();
   return h;
@@ -7774,7 +7888,7 @@ function gastInfoHtml(klap){
    lijn-icoontje (dezelfde tekeningen als bij Omgeving) of een klein grijs puntje; in een kop of knop valt de emoji gewoon weg, en een
    emoji achteraan ("... goed door 👇") ook. Alleen de weergave: de teksten zelf (teksten.js, GT) en de WhatsApp-berichten blijven zoals
    ze zijn. De emoji zelf blijft in de pagina staan, maar verborgen (span.hweg), zodat de tekst van de pagina gelijk blijft. */
-const GAST_EMOJI_ICOON = { "📌":"speld", "📍":"speld", "🚪":"sleutel", "🔑":"sleutel", "🌐":"wifi", "🍳":"koffie", "💵":"bon", "🛏":"bed" };
+const GAST_EMOJI_ICOON = { "🅿":"parkeer" /* 24-11-2026 b */, "📌":"speld", "📍":"speld", "🚪":"sleutel", "🔑":"sleutel", "🌐":"wifi", "🍳":"koffie", "💵":"bon", "🛏":"bed" };
 function gastIcoontjes(root){
   const voor = /^(\s*(?:[•·]\s*)?)(\p{Extended_Pictographic}\uFE0F?)(\s*)/u, achter = /(\s\p{Extended_Pictographic}\uFE0F?\s*)$/u;
   const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), lijst = [];
@@ -8018,9 +8132,17 @@ function tekenGast(){
   if(gastTab === "bar"){
     /* wasmachine en droger alleen voor campers: bij een groep (hele finca) niet, en bij kamergasten sinds 20-09-2026 ook niet
        (die wassen zelden; die ene keer regelt Bart zelf). Bij een groep ook geen losse glazen wijn of cava (zij nemen flessen). */
-    const wasProduct = p => p.naam === "Wassen" || p.naam === "Drogen";
+    /* 24-11-2026 e (Bart: "een gast denkt geen stroom nodig te hebben, maar komt er tijdens zijn verblijf achter"): Stroom per nacht
+       (eigen kop Stroom, onder de wasmachine) alleen voor campers; de database weigert het ook voor kamers en groepen (gast_bar_zet) */
+    const wasProduct = p => p.naam === "Wassen" || p.naam === "Drogen" || p.naam === "Stroom per nacht" || p.groep === "Stroom";
     const barProducten = gastIsGroep() ? producten.filter(p => !wasProduct(p) && !/^Glas /.test(p.naam))
       : isCamperPlek(gastData.kamer) ? producten : producten.filter(p => !wasProduct(p));
+    /* stroom die al in de boeking staat (Bart zette die in het profiel): zelfde telling als de rekening */
+    const stroomAl = isCamperPlek(gastData.kamer) && gastData.verblijf ? (gastData.verblijf.stroom_dagen || []).length : 0;
+    const stroomAlHtml = p => p.naam === "Stroom per nacht" && stroomAl ? `<small class="stroomal">${STROOM_AL[gastTaal] || STROOM_AL.en} ${(DATUM_T[gastTaal] || DATUM_T.en).nachten(stroomAl).replace(" ", "\u00a0")}</small>` : "";
+    /* review 24-11 e: niet meer stroom dan nachten (boeking + zelf aangetikt); daarna is de + uit */
+    const stroomVol = p => p.naam === "Stroom per nacht" && isCamperPlek(gastData.kamer) && gastData.verblijf
+      && stroomAl + gastBarAantal(p.naam) >= nachten({ in: gastData.verblijf.in, uit: gastData.verblijf.uit });
     const groepen = [...new Set(barProducten.map(p => p.groep))];
     h += barLampRij(); /* 21-11-2026 f: Laatste in de bar? bovenaan */
     h += `<div class="dag"><div class="info" style="margin-bottom:6px">${t.barUitleg}</div>`;
@@ -8028,8 +8150,8 @@ function tekenGast(){
     else if(!gastBarMag()) h += `<div class="melding">${t.barDicht}</div>`;
     const barRij = p => {
       const n = gastBarAantal(p.naam);
-      return `<div class="barrij${n ? " aan" : ""}"><span class="nm">${productNaam(p.naam, gastTaal)}</span><span class="pr">${eur(p.prijs)}</span>` +
-        (gastBarMag() ? `<span class="stap gstap"><button data-gb="${p.naam}" data-stap="-1" ${n ? "" : "disabled"}>−</button><b>${n}</b><button data-gb="${p.naam}" data-stap="1" class="plus">+</button></span>` : `<span class="stap"><b>${n}</b></span>`) + `</div>`;
+      return `<div class="barrij${n ? " aan" : ""}"><span class="nm">${productNaam(p.naam, gastTaal)}${stroomAlHtml(p)}</span><span class="pr">${eur(p.prijs)}</span>` +
+        (gastBarMag() ? `<span class="stap gstap"><button data-gb="${p.naam}" data-stap="-1" ${n ? "" : "disabled"}>−</button><b>${n}</b><button data-gb="${p.naam}" data-stap="1" class="plus"${stroomVol(p) ? " disabled" : ""}>+</button></span>` : `<span class="stap"><b>${n}</b></span>`) + `</div>`;
     };
     /* binnen een groep op naam gesorteerd, in de taal van de gast, zodat de volgorde vast en logisch is */
     const opNaam = (a, b) => productNaam(a.naam, gastTaal).localeCompare(productNaam(b.naam, gastTaal), GT_LOCALE[gastTaal] || "nl");
@@ -8734,7 +8856,7 @@ async function haal(){
 }
 /* 20-11-2026 d: foto's die gasten van hun camper maakten (tabel gast_fotos, één per gastenlink-nr). Eerst alleen nr en datum; daarna
    alleen de foto's die nieuw of veranderd zijn. Zonder tabel (oude database) of bij een leesfout: geen foto's, geen melding. */
-let gastFotos = {};
+let gastFotos = {}, gastFotosProef = {}; /* 24-11-2026 d: op de testsite zelf gemaakte foto's (alleen in dit tabblad) */
 async function gastFotosHaal(){
   let r = null; try { r = await db.from("gast_fotos").select("nr,gemaakt"); } catch(e){ return; }
   if(!r || r.error || !Array.isArray(r.data)) return;
@@ -8746,6 +8868,7 @@ async function gastFotosHaal(){
     if(f && !f.error) (f.data || []).forEach(x => { const u = camFotoGeldig(x.foto) ? gastFotoAdres(x.foto) : ""; if(u){ nieuw[x.nr] = { gemaakt:x.gemaakt, foto:u }; anders.add(x.nr); } });
   }
   /* review 20-11 d: de foto als blob-adres (kort), zodat de agenda niet bij elke verversing de hele foto in de HTML zet; oude adressen vrijgeven */
+  Object.keys(gastFotosProef).forEach(n => { if(!nieuw[n]) nieuw[n] = gastFotosProef[n]; }); /* testsite: eigen foto's blijven staan */
   Object.keys(gastFotos).forEach(n => { if(gastFotos[n] && (!nieuw[n] || nieuw[n] !== gastFotos[n])) try { URL.revokeObjectURL(gastFotos[n].foto); } catch(e){} });
   gastFotos = nieuw;
   if(anders.size){
@@ -8765,6 +8888,48 @@ function toonDetailOpnieuw(){
 }
 const gastFotoVan = nr => { const o = nr == null ? null : gastFotos[String(nr)]; return o && o.foto ? o.foto : ""; };
 const gastFotoKnop = nr => { const f = gastFotoVan(nr); return f ? `<button type="button" class="dfoto" data-dfoto="${vrij(String(nr))}" aria-label="Foto bekijken"><img src="${f}" alt=""></button>` : ""; };
+/* 24-11-2026 d: knop om zelf een foto van de camper te maken (camper zonder foto, met een gastenlink, nog niet vertrokken) */
+const gastFotoMaakKnop = b => {
+  if(!b || b.gestald || DEMO(b.id) || gastFotoVan(b.id) || !camFotoInst().campers || !camFotoZelfAan()) return "";
+  const vd = iso(new Date());
+  /* review 24-11 d: alleen wie er nu is (niet wie nog komt: dan kan de foto van een andere camper bij deze gast terechtkomen) en niet na het uitchecken */
+  if((b.uit || "") < vd || (b.in || "") > vd || b.uitgecheckt || !(gastLinks[b.id] && gastLinks[b.id].code)) return "";
+  return `<button type="button" class="dfoto dfotomaak" data-dfotomaak="${vrij(String(b.id))}" aria-label="Foto van de camper maken"><svg class="gi" aria-hidden="true"><use href="#gi-camera"/></svg></button>`;
+};
+let fotoMaakNr = null;
+function gastFotoMaak(nr){
+  fotoMaakNr = nr;
+  let i = document.getElementById("hostFotoInvoer");
+  if(!i){ i = document.createElement("input"); i.type = "file"; i.accept = "image/*"; i.setAttribute("capture", "environment"); i.id = "hostFotoInvoer"; i.hidden = true;
+    i.onchange = () => { const f = i.files && i.files[0]; i.value = ""; if(f && fotoMaakNr) gastFotoMaakBewaar(fotoMaakNr, f); }; document.body.appendChild(i); }
+  i.click();
+}
+async function gastFotoMaakBewaar(nr, f){
+  const code = gastLinks[nr] && gastLinks[nr].code; if(!code) return;
+  wachtAan("Foto bewaren…"); let klaar = false;
+  try {
+    let d = null; try { d = await camFotoVerklein(f); } catch(e){}
+    if(!d){ klaar = true; wachtMeld("Deze foto kunnen we niet openen. Probeer het nog eens, of maak de foto opnieuw."); return; }
+    /* testsite: niets naar de database; de foto blijft alleen in dit tabblad (gastFotosProef, ook na het verversen van de gegevens) */
+    if(TESTVERSIE){ const u = gastFotoAdres(d); if(u){ gastFotosProef[String(nr)] = { gemaakt: new Date().toISOString(), foto: u }; gastFotos[String(nr)] = gastFotosProef[String(nr)]; }
+      klaar = true; wachtUit(); if(modus === "nu") tekenNu(); if(document.getElementById("detail").open) toonDetailOpnieuw(); return; }
+    let data = null, error = null;
+    try { ({ data, error } = await Promise.race([db.rpc("gast_foto_zet", { p_code: code, p_foto: d }),
+      new Promise(ok => setTimeout(() => ok({ data:null, error:{ message:"geen antwoord" } }), 30000))])); }
+    catch(e){ error = { message: "geen verbinding" }; }
+    if(error || !data || !data.ok){
+      const w = data && data.fout;
+      klaar = true;
+      wachtMeld(w === "uit" ? "Foto van de camper vragen staat uit (Meer, Gasten). Zet die eerst aan."
+        : w === "verlopen" ? "De gastenlink van deze gast is verlopen; een foto kan niet meer."
+        : w === "onbekend" ? "Deze gast heeft geen geldige gastenlink meer; een foto kan niet."
+        : "Bewaren lukte niet" + (error && error.message ? " (" + error.message + ")" : "") + ". Probeer het nog eens.");
+      return;
+    }
+    klaar = true; wachtUit();
+    await gastFotosHaal(); if(document.getElementById("detail").open) toonDetailOpnieuw();
+  } finally { if(!klaar) wachtUit(); }
+}
 function gastFotoGroot(nr){
   const f = gastFotoVan(nr); if(!f) return;
   const d = document.getElementById("gfotoDlg");
@@ -10311,6 +10476,8 @@ function kalPas(kort, maxW){
    Gezien zet bron op 'gast-gezien'; een nieuwe wijziging van de gast zet hem in de database weer op 'gast'. */
 const meldingOntbijtAan = () => (instellingen.melding_ontbijt || "aan") === "aan";
 const meldingBroodjesAan = () => (instellingen.melding_broodjes || "aan") === "aan";
+/* 24-11-2026 f (Bart: "als iemand stroom heeft aangezet in de app, melding"): instelling melding_stroom (Meer > Gasten), standaard aan */
+const meldingStroomAan = () => (instellingen.melding_stroom || "aan") === "aan";
 const brStuks = o => Object.values(brAantallen(o && o.regels)).reduce((t, n) => t + n, 0);
 const brSamenNl = o => Object.entries(brAantallen(o && o.regels)).map(([n, x]) => `${x}× ${vrij(n)}`).join(", ") + (o && o.opmerking ? ` · ${obEsc(o.opmerking_nl || o.opmerking)}` : "");
 /* alleen als de bestelling sinds het tekenen niet meer is veranderd: wijzigt de gast intussen, dan blijft de melding staan */
@@ -10341,9 +10508,12 @@ async function brVolgenWissel(){
   if(error){ alert("Opslaan mislukt: " + error.message); await haal(); }
 }
 async function meldingWissel(soort){
-  const sleutel = soort === "ontbijt" ? "melding_ontbijt" : "melding_broodjes", aan = soort === "ontbijt" ? meldingOntbijtAan() : meldingBroodjesAan();
+  const sleutel = soort === "ontbijt" ? "melding_ontbijt" : soort === "stroom" ? "melding_stroom" : "melding_broodjes";
+  const aan = soort === "ontbijt" ? meldingOntbijtAan() : soort === "stroom" ? meldingStroomAan() : meldingBroodjesAan();
   const wat = soort === "ontbijt" ? "een ontbijt" : "broodjes", nieuw = aan ? "uit" : "aan";
-  if(!confirm(nieuw === "aan" ? `Aanzetten? Bestelt of wijzigt een gast ${wat}, dan staat dat in Berichten (de teller rechtsboven op Vandaag) tot je op Gezien tikt.`
+  if(!confirm(soort === "stroom" ? (nieuw === "aan" ? "Aanzetten? Tikt een camper zelf stroom aan, dan staat dat in Berichten (de teller rechtsboven op Vandaag) tot je op Gezien tikt."
+      : "Uitzetten? Dan komt zelf aangetikte stroom niet meer in Berichten. Je ziet het nog wel op de rekening en in het profiel.")
+    : nieuw === "aan" ? `Aanzetten? Bestelt of wijzigt een gast ${wat}, dan staat dat in Berichten (de teller rechtsboven op Vandaag) tot je op Gezien tikt.`
     : `Uitzetten? Dan komt een bestelling van ${wat} niet meer in Berichten.`)) return;
   instellingen[sleutel] = nieuw; tekenMeer(); if(modus === "nu") tekenNu();
   const { error } = await db.from("instellingen").upsert({ sleutel, waarde:nieuw, bijgewerkt:new Date().toISOString() }, { onConflict:"sleutel" });
@@ -10434,7 +10604,10 @@ function kalenderBlok(vandaag){
       if(ruimte && tekst.length * 6 > ruimte) tekst = (persoon ? kalPas(kalKortNaam(persoon), ruimte) : "") || String(naam).trim().split(/\s+/)[0] || tekst;
       const rond = hk ? `<u class="hk hk${hk}" role="img" aria-label="${HERKOMST_NAAM[hk]}" title="${HERKOMST_NAAM[hk]}">${hk}</u>` : "";
       const fotoR = fotoK ? `<img class="kfoto" src="${fotoK}" alt="">` : "";
-      return `<b class="${klas} ${soort}${b.uit <= vandaag ? " weg" : ""}" ${sleutel}>${label ? `<i${maxW ? ` style="max-width:${maxW}px"` : ""}>${fotoR}${rond}${vrij(tekst)}</i>` : ""}</b>`;
+      /* 24-11-2026 d (Bart: "Ik zie in de agenda niet wie ik al heb uitgecheckt"): wie vandaag vertrekt, wordt pas lichter na het uitchecken;
+         eerder vertrokken altijd licht; dichtgezet en de eigen plekken G en C (geen check-out) zoals vroeger op de datum */
+      const klaar = b.uit < vandaag || (b.uit === vandaag && (b.dicht || eigenRij || b.gestald /* review: gestald wordt niet uitgecheckt */ || (kamer ? !!kUitgecheckt(b) : !!b.uitgecheckt)));
+      return `<b class="${klas} ${soort}${klaar ? " weg" : ""}" ${sleutel}>${label ? `<i${maxW ? ` style="max-width:${maxW}px"` : ""}>${fotoR}${rond}${vrij(tekst)}</i>` : ""}</b>`;
     };
     /* eerst de boekingen van deze rij eruit halen, dan per dag alleen die paar vergelijken (190 dagen x 16 rijen) */
     const vanRij = bron.filter(x => hoort(x) && x.uit >= eersteDag && x.in <= laatsteDag);
@@ -10932,7 +11105,9 @@ function tekenNu(){
      Nu = moet nu (wettelijk of blokkerend), Vandaag = vandaag regelen, Later = kan wachten (ingeklapt).
      Pure informatie (gewone bevestigingen, aanmeldingen boven het minimum, gelezen ontbijt) staat hier niet meer;
      die blijft zichtbaar in de tijdlijn en de blokken eronder. Wat wel bij een gast hoort staat als stip in Nu hier. */
-  const let_ = { nu:[], vandaag:[], later:[] };
+  /* 24-11-2026 c (Bart: "altijd bovenaan ... dan kan ik ze nooit over het hoofd zien"): document controleren en SES-meldingen staan in een eigen
+     groep "boven", altijd bovenaan Let op (eerst de documenten, dan SES), ook op de aankomst- en vertrekdag, en ook als Let op is ingeklapt */
+  const let_ = { boven:[], nu:[], vandaag:[], later:[] };
   const wegL = letWeg();
   const wanneerKort = d => d === vandaag ? "vandaag" : d === morgen ? "morgen" : `${DG[parse(d).getDay()]} ${kort(d)}`;
   /* elke regel krijgt een vinkje: zit er een echt vinkje achter, dan zet het dat vinkje aan;
@@ -11018,21 +11193,22 @@ function tekenNu(){
   /* campers met de nieuwe check-in: zelfde meldingen als kamers */
   actief.filter(b => bNieuw(b) && cCheckin(b) === "leeg" && b.uit > vandaag && dagenTot(b.in) <= 0 && dagenTot(b.in) >= -1 && !eigenRegel(b)) /* 30-09-2026 d: morgen en overmorgen staan bovenaan Vandaag */
     .forEach(b => letAdd(`<span data-naargast="c:${vrij(b.id)}">Check-in nog niet ingevuld door <b>${vrij(b.naam || "de gast")}</b> (${vrij(b.plek)}${dagenTot(b.in) === 1 ? ", komt morgen" : ""}) <span class="letbekijk">Bekijk ›</span></span>`, dagenTot(b.in) <= 0 ? "vandaag" : "later"));
-  actief.filter(b => bNieuw(b) && cCheckin(b) === "controleren" && b.uit > vandaag && dagenTot(b.in) <= 0 && !eigenRegel(b))
-    .forEach(b => letAdd(`<span data-naarcheckin="${vrij(b.id)}">Document controleren van <b>${vrij(b.naam || "de gast")}</b> (${vrij(b.plek)}) <span class="letbekijk">Controleren ›</span></span>`, "nu"));
-  kamers.filter(k => kNieuw(k) && kCheckin(k) === "controleren" && k.uit > vandaag && dagenTot(k.in) <= 0 && !eigenRegel(k))
-    .forEach(k => letAdd(`<span data-naarcheckin="${vrij(k.nr)}">Document controleren van <b>${vrij(kNaam(k) || "de gast")}</b> (${vrij(k.kamer)}) <span class="letbekijk">Controleren ›</span></span>`, "nu"));
+  /* 24-11-2026 c: ook op de aankomst- en vertrekdag (die hebben daarnaast hun eigen regel met de knop), in de groep "boven" */
+  actief.filter(b => bNieuw(b) && cCheckin(b) === "controleren" && b.uit >= vandaag && dagenTot(b.in) <= 0)
+    .forEach(b => letAdd(`<span data-naarcheckin="${vrij(b.id)}">Document controleren van <b>${vrij(b.naam || "de gast")}</b> (${vrij(b.plek)}) <span class="letbekijk">Controleren ›</span></span>`, "boven"));
+  kamers.filter(k => kNieuw(k) && kCheckin(k) === "controleren" && k.uit >= vandaag && dagenTot(k.in) <= 0)
+    .forEach(k => letAdd(`<span data-naarcheckin="${vrij(k.nr)}">Document controleren van <b>${vrij(kNaam(k) || "de gast")}</b> (${vrij(k.kamer)}) <span class="letbekijk">Controleren ›</span></span>`, "boven"));
   /* SES: mislukte of onzekere melding, of (zolang de koppeling uit staat) nog zelf melden */
   Object.values(ciStatus).filter(s => CI_SES_ACTIE.includes(s.status) || (s.status === "gecontroleerd" && !s.ses_wachtrij)).forEach(s => {
     const k = kamers.find(x => x.nr === s.nr) || { nr:s.nr, kamer:(gastLinks[s.nr] || {}).kamer || "" };
     const wat = s.status === "onzeker" ? "SES-melding onzeker, controleer het portaal" : CI_SES_ACTIE.includes(s.status) ? "SES-melding mislukt" : "Nog melden bij SES (portaal, binnen 24 uur)";
-    letAdd(`<span data-naarcheckin="${vrij(s.nr)}">${wat}: <b>${vrij(kNaam(k) || "gast")}</b>${k.kamer ? ` (${vrij(k.kamer)})` : ""} <span class="letbekijk">Bekijk ›</span></span>`, "nu");
+    letAdd(`<span data-naarcheckin="${vrij(s.nr)}">${wat}: <b>${vrij(kNaam(k) || "gast")}</b>${k.kamer ? ` (${vrij(k.kamer)})` : ""} <span class="letbekijk">Bekijk ›</span></span>`, "boven");
   });
   /* 24-10-2026 b (Bart): een kamer die eerder (of later) vertrekt dan bij SES gemeld. Het ministerie vraagt dan een nieuwe melding.
      Bij de check-out vraagt de app "Ook SES aanpassen?"; Nee vinkt deze regel meteen af. Het automatisch aanpassen bouwen we apart. */
   kamers.filter(k => sesAanpassenNodig(k) && dagenTot(k.uit) >= -14).forEach(k => {
     const s = ciStatus[k.nr] || {};
-    letPush(`<span data-naarcheckin="${vrij(k.nr)}">SES-melding aanpassen voor <b>${vrij(kNaam(k) || "gast")}</b> (${vrij(k.kamer)}): gemeld vertrek ${s.vertrek ? kort(s.vertrek) : "onbekend"}, nu ${kort(k.uit)}. Annuleer in het SES-portaal de melding en meld opnieuw met de nieuwe datum <span class="letbekijk">Bekijk ›</span></span>`, ["weg","sesvertrek",k.nr,k.uit], "nu");
+    letPush(`<span data-naarcheckin="${vrij(k.nr)}">SES-melding aanpassen voor <b>${vrij(kNaam(k) || "gast")}</b> (${vrij(k.kamer)}): gemeld vertrek ${s.vertrek ? kort(s.vertrek) : "onbekend"}, nu ${kort(k.uit)}. Annuleer in het SES-portaal de melding en meld opnieuw met de nieuwe datum <span class="letbekijk">Bekijk ›</span></span>`, ["weg","sesvertrek",k.nr,k.uit], "boven");
   });
   kamers.filter(k => !kNieuw(k) && kVink(k,"paspoort") && !kVink(k,"welkom") && k.uit > vandaag && dagenTot(k.in) <= 1 && !eigenRegel(k))
     .forEach(k => letPush(`Welkomstbericht (handleiding) nog niet verstuurd aan <b>${kNaam(k) || k.kamer}</b>${dagenTot(k.in) === 1 ? " (komt morgen)" : ""}`, ["k","welkom",k.nr], "vandaag"));
@@ -11063,14 +11239,15 @@ function tekenNu(){
   takenLetOp(vandaag).forEach(t => letAdd(`<b>Niet vergeten:</b> ${vrij(t.tekst)}${t.datum < vandaag ? ` <span class="letsinds">(sinds ${wanneerKort(t.datum)})</span>` : ""}<button class="letvink" data-tkklaar="${vrij(t.id)}" title="Klaar">✓</button>`, "vandaag"));
   const letNieuwHtml = todoLetOpAan() ? `<div class="letlater"><button data-letnieuw="1">+ Zelf iets toevoegen</button></div>` : "";
   let letEl = null;
-  const nAandacht = let_.nu.length + let_.vandaag.length, nLater = let_.later.length;
+  const nAandacht = let_.boven.length + let_.nu.length + let_.vandaag.length, nLater = let_.later.length;
   /* fase 1: één lijst zonder tussenkopjes (Nu eerst), Later blijft ingeklapt; geen wegvegen meer (bedieningsconcept: een status verandert door een handeling) */
-  const letLijst = let_.nu.concat(let_.vandaag);
+  const letLijst = let_.boven.concat(let_.nu, let_.vandaag);
   const laterHtml = () => nLater ? `<div class="letlater"><button data-letlater="1">${letLaterOpen ? "Later verbergen" : `Later (${nLater})`}</button></div>` + (letLaterOpen ? let_.later.map(x => `<div class="letregel">${x}</div>`).join("") : "") : "";
   if(nAandacht){
     const el = document.createElement("div"); el.className = "blok let" + (letBlokOpen ? "" : " ingeklapt");
     el.innerHTML = `<h2 class="klap" data-ltoggle="1">Let op<b>${nAandacht}</b></h2>` +
-      (letBlokOpen ? letLijst.map(x => `<div class="letregel">${x}</div>`).join("") + laterHtml() + letNieuwHtml : "");
+      (letBlokOpen ? letLijst.map(x => `<div class="letregel">${x}</div>`).join("") + laterHtml() + letNieuwHtml
+        : let_.boven.map(x => `<div class="letregel">${x}</div>`).join("")); /* 24-11-2026 c: ingeklapt blijven document en SES staan */
     bak.appendChild(el); letEl = el;
   } else if(NIEUW){
     const el = document.createElement("div"); el.className = "blok rustig";
@@ -12269,6 +12446,27 @@ function inboxItems(alles){
       wat:`<b>Datum zelf aangepast</b>: nu ${dk(b.in)} t/m ${dk(b.uit)} (was ${dk(w.aankomst)} t/m ${dk(w.vertrek)})` +
         (w.plek && w.plek !== b.plek ? `. Staat nu op ${vrij(b.plek)} (was ${vrij(w.plek)}).` : "."),
       knoppen:`<button class="hoofd" data-dtgezien="${vrij(b.id)}">Gezien</button><button data-dtbekijk="${vrij(b.id)}">Boeking bekijken</button>` }); });
+  /* 24-11-2026 f (Bart: "als iemand stroom heeft aangezet in de app, melding"): stroom die een camper zelf aantikt, tot Gezien. Eén bericht per
+     boeking met het totaal (review: per dag een eigen rij in consumpties, dus anders deelaantallen). Gezien en het kruisje bewaren de stand (het
+     totaal) in let_weg (ib|st<boeking>|<totaal>); tikt de gast een nacht bij of af, dan komt het bericht terug. Zette Bart het al op Gezien en haalt
+     de gast daarna alles weg, dan "Stroom weer uitgezet". Na vertrek niet meer. */
+  if(meldingStroomAan()){
+    const stTot = {}, stLaatst = {}, stGeld = {};
+    consumpties.filter(c => c.naam === "Stroom per nacht" && c.bron === "gast" && !c.auto && Number(c.aantal) > 0).forEach(c => { const id = String(c.boeking_id || c.nr || "");
+      stTot[id] = (stTot[id] || 0) + Number(c.aantal); stGeld[id] = (stGeld[id] || 0) + Number(c.aantal) * (c.prijs != null ? Number(c.prijs) : STROOM);
+      if(c.datum && (!stLaatst[id] || c.datum > stLaatst[id])) stLaatst[id] = c.datum; });
+    const wegS = letWeg(), gezienMet = {};
+    Object.keys(wegS).forEach(k => { const m = /^ib\|st(.+)\|(\d+)$/.exec(k); if(m) (gezienMet[m[1]] = gezienMet[m[1]] || new Set()).add(Number(m[2])); });
+    new Set([...Object.keys(stTot), ...Object.keys(gezienMet)]).forEach(id => {
+      const b = boekingen.find(x => String(x.id) === id); if(!b || DEMO(b.id) || (b.uit && b.uit < vandaag)) return;
+      const n = stTot[id] || 0, st = stand(n), d = stLaatst[id];
+      if(!n && !(gezienMet[id] && [...gezienMet[id]].some(k => k > 0))) return;
+      antwoord.push({ id:"st" + id, stand:st, nr:b.id, naam:b.naam, plek:b.plek, wanneer:!d ? "" : d === vandaag ? "Vandaag" : dk(d),
+        wat:n ? `<b>Stroom aangezet</b>: nu ${n} ${n === 1 ? "nacht" : "nachten"} zelf aangetikt (${eur(stGeld[id]).replace(" ", "\u00a0")})`
+          : `<b>Stroom weer uitgezet</b>: de gast heeft de zelf aangetikte stroom weggehaald`,
+        knoppen:`<button class="hoofd" data-stgezien="${vrij("ib|st" + id + "|" + st)}">Gezien</button>` });
+    });
+  }
   /* aanvraaglinks die nog niet zijn ingevuld: zo zie je wie nog moet reageren */
   camperAanvragen.filter(a => !a.ingevuld_op).forEach(a => info.push({ id:"l" + a.id, stand:stand(a.aangemaakt), nr:"", naam:a.naam || "Naam niet ingevuld", plek:"aanvraaglink", wanneer:tijdTekst(a.aangemaakt),
     wat:`Aanvraaglink verstuurd (${(TAAL_NL[a.taal] || a.taal || "")}), nog niet ingevuld`,
@@ -12338,6 +12536,9 @@ function tekenInbox(){
   bak.querySelectorAll("[data-oaanvraag]").forEach(kn => kn.onclick = () => ontbijtAanvraagAntwoord(kn.dataset.oaanvraag));
   bak.querySelectorAll("[data-obgezien]").forEach(kn => kn.onclick = () => ontbijtGezien(...kn.dataset.obgezien.split("|")));
   bak.querySelectorAll("[data-brgezien]").forEach(kn => kn.onclick = () => broodjesGezien(kn.dataset.brgezien));
+  /* 24-11-2026 f: stroom gezien = weg uit Berichten met deze stand (zelfde opslag als het kruisje, zonder vraag) */
+  bak.querySelectorAll("[data-stgezien]").forEach(kn => kn.onclick = async () => { const klaar = letWegZet(kn.dataset.stgezien);
+    tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox(); await klaar; tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox(); });
   bak.querySelectorAll("[data-pugezien]").forEach(kn => kn.onclick = async () => { const u = poetsUren.find(x => x.id === kn.dataset.pugezien); if(!u) return;
     const nu = new Date().toISOString(); u.gezien_finca = nu; tekenNu();
     const { error } = await db.from("poets_uren").update({ gezien_finca: nu }).eq("id", u.id); if(error){ u.gezien_finca = null; tekenNu(); alert("Opslaan mislukt: " + error.message); } });
@@ -12702,7 +12903,11 @@ function tekenMeer(){
     meerZet("meerCamFoto", cf.campers ? "Uitzetten" : "Aanzetten");
     meerZet("mpCamFotoKamers", cf.kamers ? "Staat aan: kamergasten, groepen en het gastenverblijf zien een rondje om een foto (van zichzelf) toe te voegen."
       : "Staat uit: kamergasten, groepen en het gastenverblijf zien geen rondje voor een foto.");
-    meerZet("meerCamFotoKamers", cf.kamers ? "Uitzetten" : "Aanzetten"); }
+    meerZet("meerCamFotoKamers", cf.kamers ? "Uitzetten" : "Aanzetten");
+    meerZet("mpCamFotoZelf", !cf.campers ? (camFotoZelfAan() ? "Staat aan, maar werkt pas als Foto van de camper vragen ook aan staat." : "Staat uit. Werkt alleen als Foto van de camper vragen aan staat.")
+      : camFotoZelfAan() ? "Staat aan: in het profiel van een camper zonder foto staat een knop om zelf een foto te maken. De gast ziet die foto op zijn pagina en kan hem vervangen of weghalen. Fotografeer van opzij, zonder kenteken."
+      : "Staat uit: geen knop om zelf een foto te maken.");
+    meerZet("meerCamFotoZelf", camFotoZelfAan() ? "Uitzetten" : "Aanzetten"); }
   /* 19-11-2026 d: het rad */
   meerZet("mpRad", radRijen === null ? "Het rad staat nog niet in de database." : radAan() ? "Staat aan: wie ons tagt met een mooie foto, kan van jou een draai krijgen. Dat zet je in het profiel van de gast, bij Aan het rad draaien; daar kies je ook de prijs."
     : "Staat uit: gasten zien de gewone kaart \"Mooie foto gemaakt?\" en niemand kan draaien.");
@@ -12728,6 +12933,9 @@ function tekenMeer(){
   meerZet("meerObMelding", meldingOntbijtAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpBrMelding", meldingBroodjesAan() ? "Staat aan: bestelt, wijzigt of zegt een gast broodjes af, dan staat dat in Berichten (de teller rechtsboven op Vandaag) tot je op Gezien tikt." : "Staat uit: een bestelling van een gast staat alleen bij de broodjes.");
   meerZet("meerBrMelding", meldingBroodjesAan() ? "Uitzetten" : "Aanzetten");
+  meerZet("mpStroomMelding", meldingStroomAan() ? "Staat aan: tikt een camper op zijn gastenpagina stroom per nacht aan, dan staat dat in Berichten (de teller rechtsboven op Vandaag) tot je op Gezien tikt."
+    : "Staat uit: zelf aangetikte stroom zie je alleen op de rekening en in het profiel.");
+  meerZet("meerStroomMelding", meldingStroomAan() ? "Uitzetten" : "Aanzetten");
   meerZet("mpBrVolgen", brVolgenAan() ? (b => `Staat aan: op een dag met een andere ontbijttijd halen gasten de broodjes in dezelfde tijd op, en bestellen kan tot ${(g => g > 0 ? g + " minuten ervoor" : "de ophaaltijd")(Math.max(0, minutenVan(b.ophalen_van) - minutenVan(b.bestellen_tot)))}. Op een dag zonder ontbijt zijn er geen broodjes. Die dagen stel je in bij Meer, Ontbijt, Tijden van het ontbijt.`)(brTijden())
     : "Staat uit: de broodjes houden altijd hun eigen tijden (Tijden hierboven).");
   meerZet("meerBrVolgen", brVolgenAan() ? "Uitzetten" : "Aanzetten");
@@ -13508,6 +13716,16 @@ async function camFotoWissel(soort){
   if(!confirm(vraag)) return;
   await bewaarInstelling("gast_foto", JSON.stringify({ campers: soort === "campers" ? nieuw : i.campers, kamers: soort === "kamers" ? nieuw : i.kamers }));
 }
+/* 24-11-2026 d (Bart): zelf een foto van de camper maken, vanuit het profiel. Instelling gast_foto_zelf ('uit' = uit; geen rij = aan). Geen
+   databasewijziging: de app gebruikt dezelfde functie als de gast (gast_foto_zet met de code van zijn gastenlink), dus dezelfde regels
+   (alleen met een geldige link, niet als Foto van de camper vragen uit staat, na vertrek vanzelf weg). De gast ziet de foto op zijn pagina. */
+const camFotoZelfAan = () => String(instellingen.gast_foto_zelf || "").trim() !== "uit";
+async function camFotoZelfWissel(){
+  const nieuw = camFotoZelfAan() ? "uit" : "aan";
+  if(!confirm(nieuw === "aan" ? "Aanzetten? In het profiel van een camper zonder foto staat dan een knop om zelf een foto van de camper te maken. De gast ziet die foto op zijn pagina."
+    : "Uitzetten? Dan staat er geen knop meer om zelf een foto te maken. Foto's die er al zijn, blijven staan tot ze na vertrek vanzelf weggaan.")) return;
+  await bewaarInstelling("gast_foto_zelf", nieuw);
+}
 async function kamersCampersWissel(){
   const nieuw = kamersCampersAan() ? "uit" : "aan";
   if(!confirm(nieuw === "aan" ? "Aanzetten? Campers zien dan op hun startpagina een tegel Kamers: vrienden of familie kunnen hier in een kamer slapen, met knoppen naar de kamers en de hele finca op de website."
@@ -14244,7 +14462,7 @@ function toonDetail(b){
   document.getElementById("dEdit").hidden = false;
   document.getElementById("dDel").hidden = false;
   detailNu = { soort:"c", id:b.id };
-  document.getElementById("dName").innerHTML = gastFotoKnop(b.id) /* 20-11-2026 d */ + vrij(b.naam) + `<span class="tag camper">camper</span>` + (b.gestald ? `<span class="tag">gestald</span>` : "");
+  document.getElementById("dName").innerHTML = (gastFotoKnop(b.id) || gastFotoMaakKnop(b)) /* 20-11-2026 d; 24-11-2026 d: of de knop Foto maken */ + vrij(b.naam) + `<span class="tag camper">camper</span>` + (b.gestald ? `<span class="tag">gestald</span>` : "");
   const n = nachten(b);
   const voor = boekingen.find(x => x.plek===b.plek && x.uit===b.in && x.id!==b.id);
   const na   = boekingen.find(x => x.plek===b.plek && x.in===b.uit && x.id!==b.id);
@@ -14299,6 +14517,8 @@ function toonDetail(b){
       : `<div class="pkknoppen"><button type="button" data-dafrond="1" class="vol">Afrekenen · ${eur(alles(b) - (b.alContant || 0))}</button></div>`);
   /* stroom per nacht: één regel, tik opent de nachten (zelfde knoppen data-n als vroeger) */
   const stroomN = (b.stroomDagen||[]).length;
+  /* 24-11-2026 e: stroom die de camper zelf aantikte (staat op de rekening bij de honesty bar), zodat je niet nog eens dezelfde nachten aanzet */
+  const stroomZelf = barVan(b.id).filter(c => c.naam === "Stroom per nacht").reduce((s, c) => s + (Number(c.aantal) || 0), 0);
   const stroomInhoud = `<div class="nachten pkbinnen">` + nachtLijst(b).map(dt => { const aan = (b.stroomDagen||[]).includes(dt); const dd = parse(dt);
       return `<div class="nacht"><span>${DG[dd.getDay()].slice(0,2)} ${dd.getDate()} ${MND[dd.getMonth()].slice(0,3)}</span><button class="${aan?"aan":""}" data-n="${dt}">${aan?"€ 3":"geen"}</button></div>`; }).join("") + `</div>`;
   const notitie = String(b.notities || "").trim();
@@ -14316,7 +14536,8 @@ function toonDetail(b){
       item("Check-in", `${DG[parse(b.in).getDay()]} ${datumLang(b.in)}${b.tijd ? ` rond ${vrij(b.tijd)}` : ""}`) +
       pkRij(`data-cdbewerk="1"`, "Check-out", `${DG[parse(b.uit).getDay()]} ${datumLang(b.uit)}`) +
       pkRij(`data-cdbewerk="1"`, "Personen", `${b.personen}${extraPers(b)?` (${extraPers(b)} extra, tarief geldt voor ${INBEGREPEN})`:""}`) +
-      pkKlap(b.id, "stroom", "Stroom", stroomN ? `${stroomN} ${stroomN === 1 ? "nacht" : "nachten"} · ${eur(stroomN*STROOM)}` : "geen", stroomInhoud) +
+      pkKlap(b.id, "stroom", "Stroom", (stroomN ? `${stroomN} ${stroomN === 1 ? "nacht" : "nachten"} · ${eur(stroomN*STROOM)}` : "geen") +
+        (stroomZelf ? ` · gast tikte zelf ${stroomZelf} ${stroomZelf === 1 ? "nacht" : "nachten"} aan` : ""), stroomInhoud) +
       /* 21-10-2026 c (Bart): gasten vragen eerst; met één tik mag deze camper één keer zelf verlengen op zijn gastenpagina */
       (magVerlengenKnop(b) ? pkRij(`data-cdmagverleng="1"`, "Zelf verlengen", b.magVerlengen ? "Mag 1 keer ✓" : "niet toegestaan", b.magVerlengen ? "goed" : "") : "") +
       /* 03-11-2026 e (Bart): de gast past zelf zijn datum aan; per gast geeft Bart hier toestemming en stuurt hij de link */
@@ -15809,15 +16030,19 @@ document.getElementById("vrOpslaan").onclick = async () => {
    product. Andere soorten (ontbijt, diensten, broodjes) alleen de prijs, zoals vroeger: die namen gebruikt de app zelf. */
 const BAR_GROEPEN = ["Fris", "Water", "Bier", "Wijn en cava", "Sterk", "Warm", "Drank", "Eten"];
 const isBarProduct = p => BAR_GROEPEN.includes(p.groep) && p.naam !== "Ontbijt";
+/* 24-11-2026 e: Stroom per nacht (campers tikken het zelf aan op hun gastenpagina) kan uit en aan, maar niet weg; de prijs ligt vast
+   op STROOM, zodat zelf aangetikte stroom altijd evenveel kost als stroom die jij in het profiel aanzet */
+const isStroomProduct = p => p.naam === "Stroom per nacht";
+const magAanUit = p => isBarProduct(p) || isStroomProduct(p);
 let prBezig = false;
 function tekenPrijzen(){
   const ingevuld = {}; document.querySelectorAll("#prijsLijst [data-pid]").forEach(i => { ingevuld[i.dataset.pid] = i.value; });
   const groepen = [...new Set(producten.map(p => p.groep))];
   document.getElementById("prijsLijst").innerHTML = groepen.map(g => `<p class="groep">${vrij(g)}</p>` + producten.filter(p => p.groep === g).map(p => {
-    const bar = isBarProduct(p), uit = p.actief === false;
-    return `<div class="prijsrij${bar ? " barprod" : ""}${uit ? " uit" : ""}"><span>${vrij(p.naam)}${uit ? "<small>Staat uit: gasten zien het niet</small>" : ""}</span>` +
-      `<input type="number" step="0.05" min="0" value="${vrij(ingevuld[p.id] != null ? ingevuld[p.id] : Number(p.prijs).toFixed(2))}" data-pid="${vrij(p.id)}" data-org="${vrij(Number(p.prijs).toFixed(2))}" aria-label="Prijs ${vrij(p.naam)}">` +
-      (bar ? `<div class="prknoppen"><button type="button" data-praan="${vrij(p.id)}">${uit ? "Aanzetten" : "Uitzetten"}</button><button type="button" data-prweg="${vrij(p.id)}">Weghalen</button></div>` : "") + `</div>`;
+    const bar = isBarProduct(p), stroom = isStroomProduct(p), uit = p.actief === false;
+    return `<div class="prijsrij${bar || stroom ? " barprod" : ""}${uit ? " uit" : ""}"><span>${vrij(p.naam)}${uit ? "<small>Staat uit: gasten zien het niet</small>" : stroom ? `<small>Campers tikken dit zelf aan. Prijs vast € ${STROOM}, zoals stroom in het profiel.</small>` : ""}</span>` +
+      `<input type="number" step="0.05" min="0" value="${vrij(stroom ? Number(p.prijs).toFixed(2) : ingevuld[p.id] != null ? ingevuld[p.id] : Number(p.prijs).toFixed(2))}" data-pid="${vrij(p.id)}" data-org="${vrij(Number(p.prijs).toFixed(2))}" aria-label="Prijs ${vrij(p.naam)}"${stroom ? ` readonly` : ""}>` +
+      (bar || stroom ? `<div class="prknoppen"><button type="button" data-praan="${vrij(p.id)}">${uit ? "Aanzetten" : "Uitzetten"}</button>${bar ? `<button type="button" data-prweg="${vrij(p.id)}">Weghalen</button>` : ""}</div>` : "") + `</div>`;
   }).join("")).join("");
   document.querySelectorAll("#prijsLijst [data-praan]").forEach(k => k.onclick = () => prAanUit(k.dataset.praan));
   document.querySelectorAll("#prijsLijst [data-prweg]").forEach(k => k.onclick = () => prWeg(k.dataset.prweg));
@@ -15834,7 +16059,7 @@ async function bewaarRij(q, wat){
 }
 const NIET_GEVONDEN = wat => `${wat} is niet bewaard (product niet gevonden). Herlaad de app en probeer het opnieuw.`;
 async function prAanUit(id){
-  const p = producten.find(x => x.id === id && isBarProduct(x)), err = document.getElementById("prErr");
+  const p = producten.find(x => x.id === id && magAanUit(x)), err = document.getElementById("prErr");
   if(!p || prBezig) return;
   prBezig = true; prKnoppen(false);
   const fout = await bewaarRij(db.from("producten").update({ actief: p.actief === false }).eq("id", p.id), (p.actief === false ? "Aanzetten" : "Uitzetten") + ` van ${p.naam}`);
@@ -16337,7 +16562,8 @@ document.getElementById("fCancel").onclick = () => {
 document.getElementById("wNee").onclick = () => document.getElementById("weetje").close();
 document.getElementById("dClose").onclick = () => document.getElementById("detail").close();
 /* 20-11-2026 d: tik op de foto in het profiel: groot, met weghalen */
-document.getElementById("dName").addEventListener("click", e => { const k = e.target.closest("[data-dfoto]"); if(k){ e.stopPropagation(); gastFotoGroot(k.dataset.dfoto); } });
+document.getElementById("dName").addEventListener("click", e => { const m = e.target.closest("[data-dfotomaak]"); if(m){ e.stopPropagation(); gastFotoMaak(m.dataset.dfotomaak); return; }
+  const k = e.target.closest("[data-dfoto]"); if(k){ e.stopPropagation(); gastFotoGroot(k.dataset.dfoto); } });
 document.getElementById("gfotoSluit").onclick = () => document.getElementById("gfotoDlg").close();
 document.getElementById("gfotoWeg").onclick = () => gastFotoWeg();
 
@@ -16858,6 +17084,7 @@ if(NIEUW){
     if(w === "gastenboek"){ gastenboekWissel(); return; }
     if(w === "kamerscampers"){ kamersCampersWissel(); return; }
     if(w === "camfoto"){ camFotoWissel("campers"); return; } /* 20-11-2026 d */
+    if(w === "camfotozelf"){ camFotoZelfWissel(); return; } /* 24-11-2026 d */
     if(w === "camfotokamers"){ camFotoWissel("kamers"); return; }
     if(w === "fotoinsta"){ wijzigInstagram(); return; }
     if(w === "radaan"){ radAanWissel(); return; } /* 19-11-2026 d */
@@ -16871,6 +17098,7 @@ if(NIEUW){
     if(w === "kamerwissel"){ kwWissel("kamer_wissel"); return; }
     if(w === "obmelding"){ meldingWissel("ontbijt"); return; }
     if(w === "brmelding"){ meldingWissel("broodjes"); return; }
+    if(w === "stroommelding"){ meldingWissel("stroom"); return; }
     if(w === "brvolgen"){ brVolgenWissel(); return; }
     if(w === "uitleg"){ uitlegWissel(); return; }
     if(w === "bargesch"){ barGeschWissel(); return; }
@@ -17489,6 +17717,8 @@ function fdCatVan(naam, groep){
   const n = String(naam || "").toLowerCase(), g = String(groep || "").toLowerCase();
   if(n === "korting") return "korting";
   if(n === "fooi") return "fooi";
+  /* 24-11-2026 e: stroom die een camper zelf aantikt hoort bij het verblijf van de camper, net als de stroom uit de boeking */
+  if(n === "stroom per nacht") return "campers";
   if(/ontbijt|breakfast|desayuno|uitsmijter/.test(n)) return "ontbijt";
   if(/lunch/.test(n)) return "lunch";
   if(/paella|diner|dinner|barbecue|bbq|avond|shared dining|three-course|driegangen/.test(n)) return "diner";
@@ -20477,7 +20707,7 @@ const PRODUCT_ES = {
   "Fles rosé wijn":"Botella de vino rosado", "Fles Rioja Blanco Reserva":"Botella Rioja Blanco Reserva",
   "Fles cava":"Botella de cava", "Kan sangria":"Jarra de sangría", "Pizza":"Pizza",
   "Tosti":"Sándwich tostado", "Chips":"Patatas fritas", "IJsco":"Helado", "Ontbijt":"Desayuno",
-  "Wassen":"Lavadora", "Drogen":"Secadora", "Knippen":"Corte de pelo", "Knippen kind":"Corte de pelo niño",
+  "Wassen":"Lavadora", "Drogen":"Secadora", "Stroom per nacht":"Electricidad por noche", "Knippen":"Corte de pelo", "Knippen kind":"Corte de pelo niño",
   "Overnachting":"Noche", "Fooi":"Propina", "Korting":"Descuento"
 };
 const PRODUCT_IT = {
@@ -20492,7 +20722,7 @@ const PRODUCT_IT = {
   "Fles rosé wijn":"Bottiglia di vino rosato", "Fles Rioja Blanco Reserva":"Bottiglia Rioja Blanco Reserva",
   "Fles cava":"Bottiglia di cava", "Kan sangria":"Caraffa di sangria", "Pizza":"Pizza",
   "Tosti":"Toast", "Chips":"Patatine", "IJsco":"Gelato", "Ontbijt":"Colazione",
-  "Wassen":"Lavatrice", "Drogen":"Asciugatrice", "Knippen":"Taglio di capelli", "Knippen kind":"Taglio di capelli bambino",
+  "Wassen":"Lavatrice", "Drogen":"Asciugatrice", "Stroom per nacht":"Elettricità a notte", "Knippen":"Taglio di capelli", "Knippen kind":"Taglio di capelli bambino",
   "Overnachting":"Notte", "Fooi":"Mancia", "Korting":"Sconto", "Massage":"Massaggio"
 };
 const PRODUCT_FR = {
@@ -20507,7 +20737,7 @@ const PRODUCT_FR = {
   "Fles rosé wijn":"Bouteille de rosé", "Fles Rioja Blanco Reserva":"Bouteille Rioja Blanco Reserva",
   "Fles cava":"Bouteille de cava", "Kan sangria":"Pichet de sangria", "Pizza":"Pizza",
   "Tosti":"Croque-monsieur", "Chips":"Chips", "IJsco":"Glace", "Ontbijt":"Petit-déjeuner",
-  "Wassen":"Lessive", "Drogen":"Séchage", "Knippen":"Coupe de cheveux", "Knippen kind":"Coupe de cheveux enfant",
+  "Wassen":"Lessive", "Drogen":"Séchage", "Stroom per nacht":"Électricité par nuit", "Knippen":"Coupe de cheveux", "Knippen kind":"Coupe de cheveux enfant",
   "Overnachting":"Nuit", "Fooi":"Pourboire", "Korting":"Remise", "Massage":"Massage"
 };
 const PRODUCT_PT = {
@@ -20523,7 +20753,7 @@ const PRODUCT_PT = {
   "Fles rosé wijn":"Garrafa de rosé", "Fles Rioja Blanco Reserva":"Garrafa Rioja Blanco Reserva",
   "Fles cava":"Garrafa de cava", "Kan sangria":"Jarro de sangria", "Pizza":"Pizza",
   "Tosti":"Tosta mista", "Chips":"Batatas fritas", "IJsco":"Gelado", "Ontbijt":"Pequeno-almoço",
-  "Wassen":"Lavagem", "Drogen":"Secagem", "Knippen":"Corte de cabelo", "Knippen kind":"Corte de cabelo criança",
+  "Wassen":"Lavagem", "Drogen":"Secagem", "Stroom per nacht":"Eletricidade por noite", "Knippen":"Corte de cabelo", "Knippen kind":"Corte de cabelo criança",
   "Overnachting":"Noite", "Fooi":"Gorjeta", "Korting":"Desconto", "Massage":"Massagem"
 };
 const PRODUCT_CS = {
@@ -20539,7 +20769,7 @@ const PRODUCT_CS = {
   "Fles rosé wijn":"Láhev růžového vína", "Fles Rioja Blanco Reserva":"Láhev Rioja Blanco Reserva",
   "Fles cava":"Láhev cavy", "Kan sangria":"Džbán sangrie", "Pizza":"Pizza",
   "Tosti":"Toast", "Chips":"Chipsy", "IJsco":"Zmrzlina", "Ontbijt":"Snídaně",
-  "Wassen":"Praní", "Drogen":"Sušení", "Knippen":"Stříhání vlasů", "Knippen kind":"Dětské stříhání",
+  "Wassen":"Praní", "Drogen":"Sušení", "Stroom per nacht":"Elektřina za noc", "Knippen":"Stříhání vlasů", "Knippen kind":"Dětské stříhání",
   "Overnachting":"Noc", "Fooi":"Spropitné", "Korting":"Sleva", "Massage":"Masáž"
 };
 const PRODUCT_FI = {
@@ -20558,7 +20788,7 @@ const PRODUCT_FI = {
   "Fles cava":"Pullo cavaa", "Kan sangria":"Kannu sangriaa", "Pizza":"Pizza",
   "Tosti":"Lämmin voileipä", "Chips":"Sipsit", "IJsco":"Jäätelö", "Ontbijt":"Aamiainen",
   "Paella-avond":"Paellailta", "Paella-avond kind":"Paellailta, lapsi",
-  "Wassen":"Pyykinpesu", "Drogen":"Kuivaus", "Knippen":"Hiustenleikkaus", "Knippen kind":"Lasten hiustenleikkaus",
+  "Wassen":"Pyykinpesu", "Drogen":"Kuivaus", "Stroom per nacht":"Sähkö per yö", "Knippen":"Hiustenleikkaus", "Knippen kind":"Lasten hiustenleikkaus",
   "Overnachting":"Yö", "Fooi":"Tippi", "Korting":"Alennus", "Massage":"Hieronta", "Reiki":"Reiki"
 };
 const PRODUCT_NO = {
@@ -20577,7 +20807,7 @@ const PRODUCT_NO = {
   "Fles cava":"Flaske cava", "Kan sangria":"Mugge sangria", "Pizza":"Pizza",
   "Tosti":"Toast", "Chips":"Potetgull", "IJsco":"Is", "Ontbijt":"Frokost",
   "Paella-avond":"Paellakveld", "Paella-avond kind":"Paellakveld, barn",
-  "Wassen":"Klesvask", "Drogen":"Tørking", "Knippen":"Hårklipp", "Knippen kind":"Hårklipp barn",
+  "Wassen":"Klesvask", "Drogen":"Tørking", "Stroom per nacht":"Strøm per natt", "Knippen":"Hårklipp", "Knippen kind":"Hårklipp barn",
   "Overnachting":"Overnatting", "Fooi":"Tips", "Korting":"Rabatt", "Massage":"Massasje", "Reiki":"Reiki"
 };
 const PRODUCT_SV = {
@@ -20596,7 +20826,7 @@ const PRODUCT_SV = {
   "Fles cava":"Flaska cava", "Kan sangria":"Kanna sangria", "Pizza":"Pizza",
   "Tosti":"Varm smörgås", "Chips":"Chips", "IJsco":"Glass", "Ontbijt":"Frukost",
   "Paella-avond":"Paellakväll", "Paella-avond kind":"Paellakväll, barn",
-  "Wassen":"Tvätt", "Drogen":"Torkning", "Knippen":"Klippning", "Knippen kind":"Klippning barn",
+  "Wassen":"Tvätt", "Drogen":"Torkning", "Stroom per nacht":"El per natt", "Knippen":"Klippning", "Knippen kind":"Klippning barn",
   "Overnachting":"Övernattning", "Fooi":"Dricks", "Korting":"Rabatt", "Massage":"Massage", "Reiki":"Reiki"
 };
 const PRODUCT_PL = {
@@ -20615,9 +20845,12 @@ const PRODUCT_PL = {
   "Fles cava":"Butelka cavy", "Kan sangria":"Dzban sangrii", "Pizza":"Pizza",
   "Tosti":"Tost z serem", "Chips":"Chipsy", "IJsco":"Lody", "Ontbijt":"Śniadanie",
   "Paella-avond":"Wieczór paelli", "Paella-avond kind":"Wieczór paelli, dziecko",
-  "Wassen":"Pranie", "Drogen":"Suszenie", "Knippen":"Strzyżenie", "Knippen kind":"Strzyżenie, dziecko",
+  "Wassen":"Pranie", "Drogen":"Suszenie", "Stroom per nacht":"Prąd za noc", "Knippen":"Strzyżenie", "Knippen kind":"Strzyżenie, dziecko",
   "Overnachting":"Nocleg", "Fooi":"Napiwek", "Korting":"Rabat", "Massage":"Masaż", "Reiki":"Reiki"
 };
+/* 24-11-2026 e: kleine regel onder Stroom per nacht op de Bar-pagina van een camper, als er al stroom in de boeking staat
+   ("Al op je rekening: 2 nachten"; "2 nachten" uit DATUM_T[taal].nachten, die ook het Tsjechisch en Pools goed vervoegt) */
+const STROOM_AL = { nl:"Al op je rekening:", en:"Already on your bill:", de:"Schon auf eurer Rechnung:", es:"Ya en vuestra cuenta:", it:"Già sul vostro conto:", fr:"Déjà sur votre note :", pt:"Já na vossa conta:", cs:"Už na vašem účtu:", fi:"Jo laskullanne:", no:"Allerede på regningen deres:", sv:"Redan på er nota:", pl:"Już na waszym rachunku:" };
 const ONTBIJT_KIND_NAAM = { en:"Breakfast child", de:"Frühstück Kind", es:"Desayuno niño", it:"Colazione bambino", fr:"Petit-déjeuner enfant", pt:"Pequeno-almoço criança", cs:"Snídaně dítě", fi:"Aamiainen, lapsi", no:"Frokost, barn", sv:"Frukost, barn", pl:"Śniadanie, dziecko" };
 const KORTING_NAAM = { en:"Discount", de:"Rabatt", es:"Descuento", it:"Sconto", fr:"Remise", pt:"Desconto", cs:"Sleva", fi:"Alennus", no:"Rabatt", sv:"Rabatt", pl:"Rabat" };
 /* 20-10-2026 c: zelf toegevoegde broodjes hebben hun vertalingen in producten.naam_vertaald (JSON per taal, als tekst).
@@ -20686,7 +20919,8 @@ function overzichtTekst(b, taal, opmaak){
   const bar = samenvoegen(barVan(b.id));
   if(bar.length){
     bon.push("", t.bar.toUpperCase());
-    bar.forEach(c => { const l = c.naam === "Korting" ? productNaam(c.naam, taal) : `${c.aantal}x ${productNaam(c.naam, taal)}`;
+    /* 24-11-2026 e: zelf aangetikte stroom met het korte woord van de bon (Stroom), anders wordt "Stroom per nacht" afgekapt */
+    bar.forEach(c => { const l = c.naam === "Korting" ? productNaam(c.naam, taal) : c.naam === "Stroom per nacht" ? `${c.aantal}x ${t.stroom}` : `${c.aantal}x ${productNaam(c.naam, taal)}`;
       bon.push(bonRegel(l, l, Number(c.prijs)*c.aantal)); });
     bon.push(bonRegel(t.subtot, t.subtot, barTotaal(b.id)));
   }

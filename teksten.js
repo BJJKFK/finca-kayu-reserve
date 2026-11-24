@@ -1666,6 +1666,7 @@ nl: {
     "", "Alles wat je aantikt zien wij meteen.", ""] : []),
     "📌 *In het kort*",
     "🚪 Poort: sta je bij de poort? Bel ons even. Zijn we thuis, dan doen we open. Zo niet, dan laat je jezelf binnen met code {poortcode}. Naar buiten: druk op de knop, daarna heb je ongeveer 60 seconden.",
+    "🅿️ Parkeren: na de poort ga je links naar de parkeerplaats voor het huis.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Ontbijt: jij regelt het ontbijt voor de hele groep via de gastenpagina, uiterlijk een dag van tevoren"
                      : "🍳 Ontbijt: bestellen via de gastenpagina, uiterlijk een dag van tevoren")
@@ -2013,6 +2014,7 @@ en: {
     "", "We see everything you tick straight away.", ""] : []),
     "📌 *In short*",
     "🚪 Gate: at the gate? Give us a quick call. If we're home, we'll open up. If not, let yourself in with code {poortcode}. To get out: press the button, then you have about 60 seconds.",
+    "🅿️ Parking: after the gate, turn left to the car park in front of the house.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Breakfast: you arrange breakfast for the whole group via the guest page, one day in advance at the latest"
                      : "🍳 Breakfast: order via the guest page, one day in advance at the latest")
@@ -2355,6 +2357,7 @@ de: {
     "", "Alles, was ihr antippt, sehen wir sofort.", ""] : []),
     "📌 *Kurz und knapp*",
     "🚪 Tor: steht ihr am Tor? Ruft uns kurz an. Sind wir zu Hause, machen wir auf. Wenn nicht, lasst ihr euch mit dem Code {poortcode} selbst herein. Nach draußen: auf den Knopf drücken, danach habt ihr etwa 60 Sekunden.",
+    "🅿️ Parken: nach dem Tor biegt ihr links zum Parkplatz vor dem Haus ab.",
     "🌐 WLAN: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Frühstück: du organisierst das Frühstück für die ganze Gruppe über die Gästeseite, spätestens einen Tag vorher"
                      : "🍳 Frühstück: bestellen über die Gästeseite, spätestens einen Tag vorher")
@@ -2697,6 +2700,7 @@ es: {
     "", "Todo lo que apuntáis lo vemos al momento.", ""] : []),
     "📌 *En resumen*",
     "🚪 Puerta: ¿estáis en la puerta? Llamadnos. Si estamos en casa, os abrimos. Si no, entrad vosotros mismos con el código {poortcode}. Para salir: pulsad el botón, después tenéis unos 60 segundos.",
+    "🅿️ Aparcar: después de la puerta, girad a la izquierda hacia el aparcamiento delante de la casa.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Desayuno: tú organizas el desayuno para todo el grupo desde la página de huéspedes, como muy tarde un día antes"
                      : "🍳 Desayuno: se pide desde la página de huéspedes, como muy tarde un día antes")
@@ -3038,6 +3042,7 @@ it: {
     "", "Tutto quello che segnate lo vediamo subito.", ""] : []),
     "📌 *In breve*",
     "🚪 Cancello: siete al cancello? Chiamateci. Se siamo a casa, vi apriamo noi. Altrimenti entrate da soli con il codice {poortcode}. Per uscire: premete il pulsante, poi avete circa 60 secondi.",
+    "🅿️ Parcheggio: dopo il cancello girate a sinistra verso il parcheggio davanti alla casa.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Colazione: tu organizzi la colazione per tutto il gruppo dalla pagina ospiti, al più tardi un giorno prima"
                      : "🍳 Colazione: si ordina dalla pagina ospiti, al più tardi un giorno prima")
@@ -3379,6 +3384,7 @@ fr: {
     "", "Tout ce que vous cochez, nous le voyons tout de suite.", ""] : []),
     "📌 *En bref*",
     "🚪 Portail : vous êtes au portail ? Appelez-nous. Si nous sommes à la maison, nous vous ouvrons. Sinon, entrez vous-mêmes avec le code {poortcode}. Pour sortir : appuyez sur le bouton, vous avez ensuite environ 60 secondes.",
+    "🅿️ Stationnement : après le portail, tournez à gauche vers le parking devant la maison.",
     "🌐 Wifi : {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Petit-déjeuner : vous organisez le petit-déjeuner pour tout le groupe depuis la page d'accueil, au plus tard la veille"
                      : "🍳 Petit-déjeuner : à commander depuis la page d'accueil, au plus tard la veille")
@@ -3720,6 +3726,7 @@ pt: {
     "", "Tudo o que registarem, vemos logo.", ""] : []),
     "📌 *Em resumo*",
     "🚪 Portão: estão ao portão? Liguem-nos. Se estivermos em casa, nós abrimos. Senão, entrem vocês mesmos com o código {poortcode}. Para sair: carreguem no botão e têm cerca de 60 segundos.",
+    "🅿️ Estacionamento: depois do portão, virem à esquerda para o estacionamento em frente à casa.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Pequeno-almoço: tratam do pequeno-almoço de todo o grupo através da página de hóspedes, no máximo até ao dia anterior"
                      : "🍳 Pequeno-almoço: encomendem através da página de hóspedes, no máximo até ao dia anterior")
@@ -4060,6 +4067,7 @@ cs: {
     "", "Všechno, co zapíšete, vidíme okamžitě.", ""] : []),
     "📌 *Stručně*",
     "🚪 Brána: stojíte u brány? Zavolejte nám. Pokud jsme doma, otevřeme vám. Pokud ne, otevřete si sami kódem {poortcode}. Ven: stiskněte tlačítko, pak máte asi 60 sekund.",
+    "🅿️ Parkování: za bránou odbočte doleva na parkoviště před domem.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Snídaně: snídani pro celou skupinu zařizujete vy přes stránku pro hosty, nejpozději den předem"
                      : "🍳 Snídaně: objednávejte přes stránku pro hosty, nejpozději den předem")
@@ -4402,6 +4410,7 @@ fi: {
     "", "Näemme heti kaiken, mitä merkitsette.", ""] : []),
     "📌 *Lyhyesti*",
     "🚪 Portti: oletteko portilla? Soittakaa meille. Jos olemme kotona, avaamme teille. Jos emme, päästäkää itsenne sisään koodilla {poortcode}. Ulos päästäksenne: painakaa nappia, sitten teillä on noin 60 sekuntia aikaa.",
+    "🅿️ Pysäköinti: portin jälkeen kääntykää vasemmalle talon edessä olevalle pysäköintialueelle.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Aamiainen: järjestätte aamiaisen koko ryhmälle vierassivun kautta, viimeistään päivää etukäteen"
                      : "🍳 Aamiainen: tilatkaa vierassivun kautta, viimeistään päivää etukäteen")
@@ -4745,6 +4754,7 @@ no: {
     "", "Alt dere legger inn, ser vi med en gang.", ""] : []),
     "📌 *Kort fortalt*",
     "🚪 Porten: står dere ved porten? Ring oss. Er vi hjemme, åpner vi. Hvis ikke, kommer dere inn selv med koden {poortcode}. Ut: trykk på knappen, så har dere ca. 60 sekunder.",
+    "🅿️ Parkering: etter porten svinger dere til venstre mot parkeringen foran huset.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Frokost: dere bestiller frokost for hele gruppen via gjestesiden, senest dagen før"
                      : "🍳 Frokost: bestill via gjestesiden, senest dagen før")
@@ -5086,6 +5096,7 @@ sv: {
     "", "Allt ni registrerar ser vi direkt.", ""] : []),
     "📌 *I korthet*",
     "🚪 Grinden: står ni vid grinden? Ring oss. Är vi hemma öppnar vi. Är vi inte hemma släpper ni in er själva med koden {poortcode}. Ut: tryck på knappen, sedan har ni ungefär 60 sekunder.",
+    "🅿️ Parkering: efter grinden svänger ni vänster till parkeringen framför huset.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Frukost: ni beställer frukost för hela gruppen via gästsidan, senast dagen innan"
                      : "🍳 Frukost: beställ via gästsidan, senast dagen innan")
@@ -5429,6 +5440,7 @@ pl: {
     "", "Wszystko, co zaznaczycie, widzimy od razu.", ""] : []),
     "📌 *W skrócie*",
     "🚪 Brama: jesteście przy bramie? Zadzwońcie do nas. Jeśli jesteśmy w domu, otworzymy. Jeśli nie, wejdźcie sami z kodem {poortcode}. Żeby wyjechać: naciśnijcie przycisk, potem macie około 60 sekund.",
+    "🅿️ Parking: za bramą skręćcie w lewo na parking przed domem.",
     "🌐 Wifi: {wifi_netwerk} / {wifi_wachtwoord}",
     c.link ? (c.groep ? "🍳 Śniadanie: zamawiacie śniadanie dla całej grupy przez stronę gościa, najpóźniej dzień wcześniej"
                      : "🍳 Śniadanie: zamawiajcie przez stronę gościa, najpóźniej dzień wcześniej")
