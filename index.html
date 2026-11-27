@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="versie" content="24-11-2026 f"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
+<meta name="versie" content="27-11-2026 c"><!-- gelijk aan VERSIE in het script; hieraan ziet een open pagina dat er een nieuwe versie is (05-11-2026 a) -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFF8F1">
 <title>Finca KaYu</title>
@@ -81,7 +81,9 @@
   function el(tag, cls, html){ var e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; }
   function vrij(t){ return String(t == null ? "" : t).replace(/[&<>"]/g, function(c){ return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]; }); }
   /* zichtbaar zoals de app het bedoelt: niet verborgen met hidden of style display none, tot aan het blok grens (dat zelf even verborgen mag zijn) */
-  function zichtbaarIn(e, grens){ if(!e) return false; for(var x = e; x && x !== grens; x = x.parentElement){ if(x.hidden || (x.style && x.style.display === "none")) return false; } return true; }
+  function zichtbaarIn(e, grens){ if(!e) return false; for(var x = e; x && x !== grens; x = x.parentElement){ if(x.hidden || (x.style && x.style.display === "none")) return false; }
+    /* 27-11-2026 c (personeel): ook wat de app met een klasse verbergt (alleenEigenaar, alleenPersoneel, alleenRollen) */
+    return getComputedStyle(e).display !== "none"; }
   function wacht(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
   function tekst(knop, sel){ var e = knop && knop.querySelector(sel); return e ? e.textContent.trim() : ""; }
   var ICOON = {
@@ -170,7 +172,7 @@
     var logo = (document.querySelector("#kop2 .logovak img") || {}).src || "logo.png";
     var bandnaam = ((document.querySelector("#khband span") || {}).textContent || "").split(" · ").slice(1).join(", ");
     /* alleen opnieuw opbouwen als er echt iets veranderd is (anders gaan een tik of de focus verloren) */
-    var handtekening = [logo, bandnaam].concat(rijen.map(function(r){ return r.el.textContent.replace(/\s+/g, " ") + "|" + (r.el.querySelector(".meerzet") || {}).textContent; })).join("\n");
+    var handtekening = [logo, bandnaam, ((document.getElementById("meerWie") || {}).textContent || "")].concat(rijen.map(function(r){ return r.el.textContent.replace(/\s+/g, " ") + "|" + (r.el.querySelector(".meerzet") || {}).textContent; })).join("\n");
     var doos = menu.querySelector(":scope > .khg-meer");
     if(doos && handtekening === vorige) return;
     vorige = handtekening;
@@ -182,6 +184,7 @@
     var regel = tekst(acc, "small") || tekst(inst, "small");
     var naam = bandnaam || (regel ? regel.split(" · ")[0] : "") || (document.title || "").trim() || "Je accommodatie";
     if(regel.indexOf(naam + " · ") === 0) regel = regel.slice(naam.length + 3); else if(regel === naam) regel = "";
+    var wie = ((document.getElementById("meerWie") || {}).textContent || "").trim(); if(wie) regel = wie; /* 27-11-2026 c: "Ingelogd als Maria" */
     var kop = el("div", "khg-acc", '<img alt="" src="' + vrij(logo) + '"><b>' + vrij(naam) + "</b>" + (regel ? "<small>" + vrij(regel) + "</small>" : ""));
     if(acc){ var kn = el("button", "", "Je accommodatie inrichten"); kn.type = "button"; kn.onclick = function(e){ e.stopPropagation(); acc.click(); }; kop.appendChild(kn); }
     doos.appendChild(kop);
@@ -196,7 +199,8 @@
     groep(doos, "geld", "euro", "khg-c1", "Geld", van("geld"));
     if(inst) doos.appendChild(proxyRij(inst, "tandwiel", "khg-c5"));
     groep(doos, "overig", "meer", "khg-c5", "Overig", eersteKaart.filter(function(r){ return !BEKEND[r.pagina]; }).map(function(r){ return r.el; }));
-    groep(doos, "bev", "slot", "khg-c5", "Beveiliging en app", rest.filter(function(r){ return r.meer !== "bUit"; }).map(function(r){ return r.el; }), "Code bij openen en meer");
+    var bev = rest.filter(function(r){ return r.meer !== "bUit"; });
+    groep(doos, "bev", "slot", "khg-c5", "Beveiliging en app", bev.map(function(r){ return r.el; }), bev.some(function(r){ return r.meer === "pinwijzig" || (r.el.querySelector && r.el.querySelector("#meerPin")); }) ? "Code bij openen en meer" : null);
     var uit = rest.filter(function(r){ return r.meer === "bUit"; })[0];
     if(uit){ doos.appendChild(el("div", "khg-groep", "")); doos.appendChild(proxyRij(uit.el, "uit", "khg-c5", null, "")); }
   }
@@ -2056,6 +2060,39 @@
   .inboxdlg .ibrij .knoppen .wa::before{content:"";width:16px;height:16px;flex:0 0 16px;background:#1F1F1F;
     -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z'/%3E%3C/svg%3E") center/contain no-repeat;
             mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.885-9.885 9.885m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z'/%3E%3C/svg%3E") center/contain no-repeat}
+/* 27-11-2026 c (personeel, wens Bart): wat personeel niet ziet; Personeel en Logboek alleen voor Bart en Loes met de nieuwe database */
+html.alspersoneel .alleenEigenaar{display:none!important}
+html:not(.alspersoneel) .alleenPersoneel{display:none!important}
+html:not(.rollen) .alleenRollen{display:none!important}
+html.kh-google #meerWie{display:none} /* in de Google-stijl staat "Ingelogd als" al in de kop van Meer */
+.pe-rij{display:flex;align-items:center;gap:10px;padding:11px 12px}
+.pe-blok + .pe-blok{border-top:1px solid #E6DED2}
+.pe-rij > span:first-child{flex:1;display:flex;flex-direction:column;min-width:0}
+.pe-rij small{color:var(--muted);font-size:12.5px}
+.pe-tag{font-size:12px;padding:2px 9px;border-radius:999px;background:#E7F0E9;color:#2F5D50;white-space:nowrap}
+.pe-tag.uit{background:#EEE9E2;color:var(--muted)}
+/* 27-11-2026 c (Bart: "aan en uit kunnen zetten, link actief en inactief"): schakelaar per medewerker, met Aan of Uit ernaast */
+.pe-aanuit{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.pe-aanuit em{font-style:normal;font-size:13px;color:var(--muted);min-width:22px;text-align:right}
+.pe-sch{width:52px;height:32px;padding:0;border-radius:999px;border:2px solid #80868B;background:#EEEBE7;position:relative;flex:0 0 52px;cursor:pointer}
+.pe-sch::after{content:"";position:absolute;top:50%;left:6px;width:16px;height:16px;margin-top:-8px;border-radius:50%;background:#80868B;transition:all .15s}
+.pe-sch[aria-checked="true"]{background:#9E543E;border-color:#9E543E}
+.pe-sch[aria-checked="true"]::after{left:24px;width:22px;height:22px;margin-top:-11px;background:#FFFFFF}
+.pe-sch:focus-visible{outline:3px solid #2F5D50;outline-offset:2px}
+.pe-knoppen{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 11px}
+.pe-link{padding:12px;background:#FFF8F1;border-radius:12px;margin:8px 0}
+.pe-knoppen a{text-decoration:none;text-align:center}
+.pe-niet{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;font-size:14px}
+.pe-niet + .pe-niet{border-top:1px solid #E6DED2}
+.pe-niet em{font-style:normal;color:var(--muted);white-space:nowrap}
+.lb-rij{padding:10px 2px;cursor:pointer}
+.lb-rij + .lb-rij{border-top:1px solid #E6DED2}
+.lb-kop{display:flex;gap:8px;font-size:13px;color:var(--muted)}
+.lb-zin{font-size:14.5px;margin-top:2px}
+.lb-detail{font-size:13px;margin-top:6px;padding:8px 10px;background:#FFF8F1;border-radius:10px}
+.lb-detail div{margin:2px 0;overflow-wrap:anywhere}
+.ki-rij{display:flex;justify-content:space-between;gap:10px;padding:8px 0;font-size:14px}
+.ki-rij + .ki-rij{border-top:1px solid #E6DED2}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style id="khstijl">
@@ -2547,7 +2584,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
     <div id="poetsInhoud"></div>
     <div class="knoprij pbeheer">
       <button id="pLinks">Poetslinks</button>
-      <button id="pExport">Exporteren</button>
+      <button id="pExport" class="alleenEigenaar">Exporteren</button>
     </div>
     <p class="opfinca">Het poetsteam ziet dezelfde pagina in het Spaans, zonder gastnamen</p>
   </div>
@@ -2577,25 +2614,31 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
        een tik opent de pagina van dat onderwerp met hoe het nu staat en de knoppen om het te wijzigen. -->
   <div class="meermenu" data-pagina="menu">
     <h3>Meer</h3>
+    <p class="alleenPersoneel" id="meerWie" style="margin:-4px 0 10px;font-size:13.5px;color:var(--muted)"></p>
     <div class="meerkaart">
     <button class="meerrij meeronderwerp" data-meerpagina="ontbijt"><svg class="gi"><use href="#gi-pan"/></svg><span><b>Ontbijt</b><small id="msOntbijt"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     <button class="meerrij meeronderwerp" data-meerpagina="broodjes"><svg class="gi"><use href="#gi-brood"/></svg><span><b>Broodjes</b><small id="msBroodjes"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     <button class="meerrij meeronderwerp" data-meerpagina="schoonmaken"><svg class="gi"><use href="#gi-bezem"/></svg><span><b>Schoonmaken</b><small id="msSchoonmaken"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     <button class="meerrij meeronderwerp" data-meerpagina="gasten"><svg class="gi"><use href="#gi-mensen"/></svg><span><b>Gasten</b><small id="msGasten"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     <button class="meerrij meeronderwerp" data-meerpagina="boodschappen"><svg class="gi"><use href="#gi-mand"/></svg><span><b>Boodschappen en taken</b><small id="msBoodschappen"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
-    <button class="meerrij meeronderwerp" data-meerpagina="geld"><svg class="gi"><use href="#gi-euro"/></svg><span><b>Geld</b><small id="msGeld"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+    <!-- 27-11-2026 c (Bart): personeel zet zelf kosten in (poets, tuinman), zonder Cijfers of totalen -->
+    <button class="meerrij meeronderwerp alleenPersoneel" data-meer="kostenin"><svg class="gi"><use href="#gi-euro"/></svg><span><b>Kosten invoeren</b><small>Poets, tuinman, een bonnetje</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+    <button class="meerrij meeronderwerp alleenEigenaar" data-meerpagina="geld"><svg class="gi"><use href="#gi-euro"/></svg><span><b>Geld</b><small id="msGeld"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     <!-- 24-10-2026 c (proefversie): alles wat voor Finca KaYu vastligt wordt een instelling; hier begint dat. 15-11-2026 e: altijd zichtbaar (Financiën) -->
-    <button class="meerrij meeronderwerp" data-meerpagina="instellingen" id="msInstellingenKnop"><svg class="gi"><use href="#gi-gereedschap"/></svg><span><b>Instellingen</b><small id="msInstellingen"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+    <button class="meerrij meeronderwerp alleenEigenaar" data-meerpagina="instellingen" id="msInstellingenKnop"><svg class="gi"><use href="#gi-gereedschap"/></svg><span><b>Instellingen</b><small id="msInstellingen"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+    <!-- 27-11-2026 c (Bart): personeel met een eigen link, en een logboek van wie wat wanneer deed; alleen voor Bart en Loes -->
+    <button class="meerrij meeronderwerp alleenRollen" data-meer="personeel"><svg class="gi"><use href="#gi-mensen"/></svg><span><b>Personeel</b><small id="msPersoneel">Eigen link per medewerker</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+    <button class="meerrij meeronderwerp alleenRollen" data-meer="logboek"><svg class="gi"><use href="#gi-taak"/></svg><span><b>Logboek</b><small>Wie wat wanneer deed, en terugzetten</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
     <div class="meerkaart">
       <!-- 03-11-2026 c (Bart): code van 4 cijfers bij het openen; standaard voor Finca KaYu aan, 5 minuten -->
-      <div class="meerinst"><span><b>Code bij openen</b><small id="mpPin"></small></span><button type="button" class="meerzet" data-meer="pinaan" id="meerPin"></button></div>
-      <button class="meerrij" data-meer="pinwijzig"><span><b>Code wijzigen</b><small>4 cijfers, voor Loes en jou dezelfde</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
-      <button class="meerrij" data-meer="pinminuten"><span><b>Opnieuw vragen na</b><small id="mpPinMin"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <div class="meerinst alleenEigenaar"><span><b>Code bij openen</b><small id="mpPin"></small></span><button type="button" class="meerzet" data-meer="pinaan" id="meerPin"></button></div>
+      <button class="meerrij alleenEigenaar" data-meer="pinwijzig"><span><b>Code wijzigen</b><small>4 cijfers, voor Loes en jou dezelfde</small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij alleenEigenaar" data-meer="pinminuten"><span><b>Opnieuw vragen na</b><small id="mpPinMin"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 05-11-2026 c (Bart: "informatie-icoontje"): kleine i naast een paar kopjes met een korte uitleg, standaard aan -->
       <div class="meerinst"><span><b>Uitleg-icoontjes (i)</b><small id="mpUitleg"></small></span><button type="button" class="meerzet" data-meer="uitleg" id="meerUitleg"></button></div>
       <!-- 11-11-2026 d (Bart): kijken of de koppeling met MyTourist nog werkt; alleen lezen (de lijst kamertypes), verandert niets -->
-      <button class="meerrij" data-meer="mttest"><span><b>MyTourist-koppeling</b><small id="mpMtTest"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij alleenEigenaar" data-meer="mttest"><span><b>MyTourist-koppeling</b><small id="mpMtTest"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="bUit"><svg class="gi"><use href="#gi-uit"/></svg><span><b>Uitloggen</b></span></button>
     </div>
   </div>
@@ -2624,7 +2667,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
       <div class="meerinst"><span><b>Melding in Berichten bij een bestelling van een gast</b><small id="mpObMelding"></small></span><button type="button" class="meerzet" data-meer="obmelding" id="meerObMelding"></button></div>
     </div>
     <div class="meerkaart">
-      <button class="meerrij" data-meer="naarPrijzen"><span><b>Prijs van het ontbijt</b><small id="mpObPrijs"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij alleenEigenaar" data-meer="naarPrijzen"><span><b>Prijs van het ontbijt</b><small id="mpObPrijs"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
   </section>
   <section class="meerpagina" data-pagina="broodjes" hidden>
@@ -2637,7 +2680,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
       <div class="meerinst"><span><b>Broodjes bestellen</b><small id="mpWinkel"></small></span><button type="button" class="meerzet" data-meer="bCampersOntbijt" id="meerBroodjes"></button></div>
     </div>
     <div class="meerkaart">
-      <button class="meerrij" data-meer="broodsoorten"><span><b>Soorten en prijzen</b><small id="mpBrSoorten"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij alleenEigenaar" data-meer="broodsoorten"><span><b>Soorten en prijzen</b><small id="mpBrSoorten"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
     <!-- 02-11-2026 a (Bart): tijden van de broodjes instelbaar -->
     <div class="meerkaart">
@@ -2658,12 +2701,14 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
     <div class="meerkaart">
       <button class="meerrij" data-meer="poets"><span><b>Planning en poetsteam</b><small id="mpPoets"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <!-- 03-11-2026 a (Bart): wat het poetsteam heeft ingevuld, aanpassen en op Betaald zetten -->
-      <button class="meerrij" data-meer="poetsuren"><span><b>Gewerkte uren</b><small id="mpPoetsUren"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij alleenEigenaar" data-meer="poetsuren"><span><b>Gewerkte uren</b><small id="mpPoetsUren"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <!-- 27-11-2026 c (Bart): herinnering in Let op als het poetsteam de uren van een poetsdag nog niet heeft ingevuld -->
+      <button class="meerrij alleenEigenaar" data-meer="poetsherinner"><span><b>Herinnering als uren ontbreken</b><small id="mpPoetsHerinner"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
     </div>
     <!-- 03-11-2026 a: zo staat de poetspagina voor het team; Finca KaYu: alle uitcheckdagen, personen en vrije regels aan, 31 dagen terug -->
     <div class="meerkaart">
-      <button class="meerrij" data-meer="poetstarief"><span><b>Uurtarief van het poetsteam</b><small id="mpPoetsTarief"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
-      <button class="meerrij" data-meer="poetswas"><span><b>Bedrag voor de was</b><small id="mpPoetsWas"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij alleenEigenaar" data-meer="poetstarief"><span><b>Uurtarief van het poetsteam</b><small id="mpPoetsTarief"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
+      <button class="meerrij alleenEigenaar" data-meer="poetswas"><span><b>Bedrag voor de was</b><small id="mpPoetsWas"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <button class="meerrij" data-meer="poetsmelding"><span><b>Melding bovenaan hun pagina</b><small id="mpPoetsMelding"></small></span><svg class="gi meerpijl"><use href="#gi-pijl"/></svg></button>
       <div class="meerinst"><span><b>Alle uitcheckdagen tonen</b><small id="mpPoetsAlle"></small></span><button type="button" class="meerzet" data-meer="poetsalle" id="meerPoetsAlle"></button></div>
       <div class="meerinst"><span><b>Aantal personen vragen</b><small id="mpPoetsPers"></small></span><button type="button" class="meerzet" data-meer="poetspers" id="meerPoetsPers"></button></div>
@@ -3051,7 +3096,7 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
   <!-- 27-10-2026 a (Bart): wie wat hoe laat geplust of gemint heeft (logboek in de database, alleen lezen) -->
   <button type="button" class="barhist" id="barGesch" data-bargesch="bar">Geschiedenis bar</button>
   <div class="barhistlijst" id="barGeschLijst" hidden></div>
-  <button class="barknop" id="naarPrijzen">Producten en prijzen</button>
+  <button class="barknop alleenEigenaar" id="naarPrijzen">Producten en prijzen</button>
   <p class="leeg" id="barLive" style="margin:8px 0 0">Elke tik wordt meteen opgeslagen. De gast ziet dezelfde lijst op zijn eigen pagina.</p>
   <div class="acts">
     <button class="go" id="barNaarAf" hidden>Klaar, naar afrekenen</button><!-- 01-11-2026 e: alleen als je hier vanuit Afrekenen komt -->
@@ -3244,6 +3289,50 @@ html.khs.kh-google.nieuw #app::before{background:url("data:image/svg+xml,%3Csvg 
     <button class="go" id="bsBwWeg">Van de lijst halen</button>
     <button class="go" id="bsBwSluit">Annuleren</button>
   </div>
+</div></dialog>
+<!-- 27-11-2026 c (Bart): personeel met een eigen link; alleen voor Bart en Loes -->
+<dialog id="personeelDlg"><div class="dlg meerdlg">
+  <h3>Personeel</h3>
+  <p class="cf-klein" style="margin:0 0 10px;font-size:13.5px">Iedere medewerker krijgt een eigen link. Eén keer openen op de eigen telefoon, daarna blijft hij ingelogd. Personeel kan alles wat jullie kunnen, behalve Cijfers, het maandoverzicht en de instellingen.</p>
+  <div class="meerkaart" id="peLijst"></div>
+  <div id="peLink" class="pe-link" hidden></div>
+  <button class="ib-knop" id="peToevoegen" style="width:100%">+ Medewerker toevoegen</button>
+  <div id="peNieuw" class="meerkaart" style="padding:12px" hidden>
+    <label class="ib-veld">Naam<input id="peNaam" maxlength="60" autocomplete="off" placeholder="bijvoorbeeld Maria"></label>
+    <p class="cf-klein" style="margin:0 0 8px">Alleen een naam; de link stuur je zelf via WhatsApp.</p>
+    <button class="ib-knop" id="peMaak" style="width:100%">Link maken</button>
+  </div>
+  <p class="ib-melding" id="peMelding" aria-live="polite"></p>
+  <p class="zone">Wat ziet personeel niet?</p>
+  <div class="meerkaart" id="peNiet"></div>
+  <p class="cf-klein" style="margin:10px 0 0">Staat Code bij openen aan, dan vraagt de app ook een medewerker om die code van 4 cijfers. Geef hem de code erbij.</p>
+  <p class="cf-klein" style="margin:6px 0 0">Verbergen is geen kluis: iemand die veel van techniek weet, kan met een account van personeel toch bij de cijfers. Geef een link alleen aan iemand die je vertrouwt.</p>
+  <div class="acts"><button id="peDicht">Sluiten</button></div>
+</div></dialog>
+<dialog id="logboekDlg"><div class="dlg meerdlg">
+  <h3>Logboek</h3>
+  <div class="vrmodi" id="lbFilter"><button type="button" data-lbf="vandaag" class="aan">Vandaag</button><button type="button" data-lbf="gisteren">Gisteren</button><button type="button" data-lbf="gast">Per gast</button><button type="button" data-lbf="wie">Per medewerker</button></div>
+  <label class="ib-veld" id="lbKiesVeld" hidden><span id="lbKiesLabel">Gast</span><select id="lbKies"></select></label>
+  <div id="lbLijst" style="margin-top:8px"></div>
+  <p class="cf-klein" style="margin:10px 0 0">Alleen voor jou en Loes. Tik op een regel om te zien wat het was en wat het werd.</p>
+  <div class="acts"><button id="lbDicht">Sluiten</button></div>
+</div></dialog>
+<!-- 27-11-2026 c (Bart): personeel zet kosten in (poets, tuinman, een bonnetje), en ziet alleen wat het zelf vandaag invoerde -->
+<dialog id="kostenInDlg"><div class="dlg meerdlg">
+  <h3>Kosten invoeren</h3>
+  <div class="ib-veld">Wat<div class="vrmodi" id="kiWat"><button type="button" data-kiwat="schoonmaak">Poets</button><button type="button" data-kiwat="tuinonderhoud">Tuinman</button><button type="button" data-kiwat="inkopen">Boodschappen</button><button type="button" data-kiwat="overig">Anders</button></div></div>
+  <p class="cf-klein" id="kiPoetsUitleg" style="margin:0 0 8px" hidden>Vult het poetsteam de uren zelf in met de eigen poetslink? Dan staan die al in de app; zet ze hier niet nog een keer.</p>
+  <label class="ib-veld">Wat precies (mag leeg)<input id="kiOmschr" maxlength="80" autocomplete="off" placeholder="bijvoorbeeld snoeien"></label>
+  <label class="ib-veld">Bedrag<input id="kiBedrag" inputmode="decimal" placeholder="bijvoorbeeld 48,00" autocomplete="off"></label>
+  <div class="ib-veld">Betaald met<div class="vrmodi" id="kiMet"><button type="button" data-kimet="contant">Contant</button><button type="button" data-kimet="bank">Bank</button></div></div>
+  <div class="ib-knoppen"><label class="ib-knop licht">📷 Bonnetje (mag leeg)<input type="file" id="kiFoto" accept="image/*" capture="environment" aria-label="Foto van het bonnetje"></label></div>
+  <div class="ib-fotos" id="kiFotos"></div>
+  <button class="ib-knop" id="kiBewaar" style="width:100%">Opslaan</button>
+  <p class="ib-melding" id="kiMelding" aria-live="polite"></p>
+  <div class="cf-label">Vandaag door jou ingevoerd</div>
+  <div id="kiLijst"></div>
+  <p class="cf-klein" style="margin:10px 0 0">Je ziet alleen wat je zelf invoerde, niet de totalen of andere kosten.</p>
+  <div class="acts"><button id="kiDicht">Sluiten</button></div>
 </div></dialog>
 <dialog id="betaalDlg"><div class="dlg">
   <h3 id="bwTitel">Afrekenen</h3>
@@ -3561,6 +3650,7 @@ let taken = [], takenStand = 0;
    De echte app wordt hier niet door geraakt: zonder ?proef=1 en buiten kayu-proef.… bestaat deze code alleen als tekst. */
 const PROEF = /(^|-)kayu-proef\./.test(location.hostname) || (new URLSearchParams(location.search).get("proef") === "1" && !/^finca-kayu(-test)?\./.test(location.hostname) && !/github\.io$|fincakayu\.com$/.test(location.hostname)); /* review c: nooit op de echte app of de testsite; review e: ook niet op het reserve-adres */
 const RESERVE = /github\.io$/.test(location.hostname); /* 25-10-2026 e: het reserve-adres buiten Cloudflare */
+let MIJN_ROL = "eigenaar", MIJN_NAAM = "", ROLLEN_BEKEND = false, MIJN_UID = null; /* 27-11-2026 c: wie er is ingelogd (zie bepaalRol); vooraan, zodat alles het kan lezen */
 function proefZaad(){
   const d0 = new Date(); d0.setHours(12, 0, 0, 0);
   const dag = n => { const d = new Date(d0); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
@@ -3812,6 +3902,9 @@ function proefDb(){
     if(naam === "gast_taal_zet"){ const l = rijen("gast_links").find(x => x.nr === p.p_nr); if(l){ l.taal = p.p_taal; bewaar(); } return { data:{ ok:true }, error:null }; }
     if(naam === "poets_lijst") return { data:{ fout:"onbekend" }, error:null }; /* 15-11-2026 f: de poetspagina werkt hier niet; netjes melden in plaats van vastlopen */
     /* 25-10-2026 d: de aangepaste handleiding voor de gastenpagina in de proefversie */
+    /* 27-11-2026 c: in de proefversie ben je Bart; met ?als=personeel zie je de app zoals een medewerker (alleen in dit tabblad) */
+    if(naam === "mijn_account"){ let als = null; try { const q = new URLSearchParams(location.search).get("als"); if(q) sessionStorage.setItem("kayu_proef_als", q); als = sessionStorage.getItem("kayu_proef_als"); } catch(e){}
+      return { data: als === "personeel" ? { rol:"personeel", naam:"Maria (proef)" } : { rol:"eigenaar", naam:"Bart" }, error:null }; }
     if(naam === "gast_teksten_lees"){ const r = rijen("gast_teksten").find(x => x.soort === p.p_soort && x.taal === p.p_taal); return { data: r ? { regels: kopie(r.regels), bijgewerkt: r.bijgewerkt || null } : null, error:null }; }
     return { data:null, error:{ message:"Niet in de proefversie (" + naam + ")" } };
   };
@@ -3846,7 +3939,7 @@ const db = PROEF ? proefDb() : !TESTVERSIE ? echteDb : (() => {
   /* 15-11-2026 (Bart: "geen risico dat testen onze administratie beïnvloedt"): de testversie schrijft niets meer in de echte database.
      Weg: de uitzondering voor checkin_status van 26-09-2026 (Gecontroleerd zette een kamergast in de SES-wachtrij, ses_modus echt) en
      poets_lijst (zet poets_links.laatst_gezien). Wachtwoord wijzigen of opvragen kan hier ook niet. Alleen functies die echt alleen lezen. */
-  const LEES_RPC = new Set(["gast_ontbijt", "gast_checkin_lees", "camper_aanvraag_lees", "gast_samen_links", "gast_verleng_info", "gast_teksten_lees", "gast_datum_info", "gast_rad", "gast_prijzen", "gast_foto", "gast_info", "gast_info_fotos"]); /* 20-11-2026 d: gast_foto alleen lezen; gast_foto_zet niet (de testsite houdt de foto in het tabblad) */
+  const LEES_RPC = new Set(["gast_ontbijt", "gast_checkin_lees", "camper_aanvraag_lees", "gast_samen_links", "gast_verleng_info", "gast_teksten_lees", "gast_datum_info", "gast_rad", "gast_prijzen", "gast_foto", "gast_info", "gast_info_fotos", "mijn_account"]); /* 20-11-2026 d: gast_foto alleen lezen; gast_foto_zet niet (de testsite houdt de foto in het tabblad) */
   const geenAuth = async () => ({ data:null, error:{ message:"Testversie: alleen kijken, er wordt niets opgeslagen" } });
   /* 15-11-2026 e (Bart: "laat me daarna de complete versie beoordelen"): btw, beoordelen en afsluiten kun je op de testsite proberen.
      Dat komt alleen in dit tabblad (sessionStorage), nooit in de database. */
@@ -3928,7 +4021,7 @@ const vouwKop = (g, kop, aan, regels) =>
   `<div class="bsgroep bvg" data-bvg="${vouwVeilig(g)}"><span>${barVouw.has(g) ? "\u25be" : "\u25b8"} ${vouwVeilig(kop)}</span>` +
   `<b class="${aan ? "aan" : ""}">${aan ? aan + "\u00d7" : regels}</b></div>`;
 const vouwWissel = (g, opnieuw) => { if(barVouw.has(g)) barVouw.delete(g); else barVouw.add(g); opnieuw(); };
-let poetsUren = []; /* 03-11-2026 a: gewerkte uren van het poetsteam (tabel poets_uren) */
+let poetsUren = [], poetsUrenGelezen = false; /* 03-11-2026 a: gewerkte uren van het poetsteam (tabel poets_uren) */
 let poetsWeg = []; /* review 03-11-2026 a: weggehaalde regels (poets_uren_log, actie weg), voor de Inbox en de geschiedenis per maand */
 const poetsWegGezien = () => new Set(String(instellingen.poets_weg_gezien || "").split(",").map(x => x.trim()).filter(Boolean));
 let gastLinkFouten = []; /* 12-11-2026 c */
@@ -4109,6 +4202,13 @@ async function start(){
   if(hr){ return startHuisregels(hr); }
   const pcode = new URLSearchParams(location.search).get("poets");
   if(pcode){ eigenManifest("Limpieza KaYu", "Limpieza Finca KaYu"); return startPoets(pcode.trim()); }
+  /* 27-11-2026 c (personeel): de eigen link van een medewerker, en de melding na intrekken */
+  /* de code staat na een # (review 27-11: dan komt hij niet in de logboeken van de server); ?personeel= werkt ook */
+  const perCode = new URLSearchParams(location.hash.replace(/^#/, "")).get("personeel") || new URLSearchParams(location.search).get("personeel");
+  if(perCode){ return startPersoneelLink(perCode.trim()); }
+  { const ig = new URLSearchParams(location.search).get("ingetrokken");
+    if(ig === "1" || ig === "2"){ history.replaceState(null, "", location.pathname); toon("login");
+      document.getElementById("lErr").textContent = ig === "2" ? "Dit account staat niet op de lijst van de app. Vraag Bart of Loes om een link." : "Je toegang tot de app staat uit. Vraag Bart of Loes om een nieuwe link."; return; } }
   /* terug uit de mail "wachtwoord vergeten": eerst een nieuw wachtwoord kiezen */
   if(/type=recovery/.test(location.hash) || new URLSearchParams(location.search).get("nieuwww") === "1"){ toon("nieuwww"); return; }
   const { data:{ session } } = await db.auth.getSession();
@@ -6917,7 +7017,7 @@ document.addEventListener("click", async e => {
   if(bak) bak.innerHTML = `<div class="info" style="color:var(--pine);font-size:15px">✓ ${tg.wachtGelezen || GT.nl.wachtGelezen}</div>`;
 });
 let gastToastTimer = null, gastVasteLijst = null;
-const VERSIE = "24-11-2026 f";
+const VERSIE = "27-11-2026 c";
 /* 25-10-2026 e: de map waar de app in staat ("/" op het eigen adres, "/finca-kayu-reserve/" op het reserve-adres bij GitHub Pages).
    Reden: op zondag 25-10 blokkeerde de mobiele provider van Bart het Cloudflare-adres van de app (LaLiga-blokkades in Spanje
    tijdens wedstrijden); het reserve-adres staat niet op Cloudflare. Links die de app maakt volgen het adres waar je op zit. */
@@ -8697,6 +8797,8 @@ async function naarApp_(naWachtwoord){
   /* review 03-11-2026 c: 5 keer een foute code = alleen nog inloggen met het wachtwoord, ook als uitloggen niet lukte (geen verbinding) */
   if(!naWachtwoord && pinGeblokkeerd()){ try { await db.auth.signOut(); } catch(e){}
     verberg("app"); toon("login"); document.getElementById("lErr").textContent = "5 keer een foute code. Log opnieuw in met je wachtwoord."; return; }
+  /* 27-11-2026 c (personeel): eerst wie er is ingelogd (eigenaar of personeel); ingetrokken = meteen uitloggen */
+  { const rol = await bepaalRol(); if(rol === "uit" || rol === "onbekend") return toegangIngetrokken(rol); } /* review 2: onbekend ook */
   pinBijStart(naWachtwoord); /* 03-11-2026 c: eerst het slot, dan pas de app */
   verberg("login"); toon("app");
   await haal();
@@ -8766,6 +8868,9 @@ document.getElementById("bUit").onclick = async () => {
 let haalNr = 0;
 async function haal(){
   const mijn = ++haalNr, takenVoor = takenStand;
+  /* 27-11-2026 c: tegelijk met de rest; ingetrokken = uitloggen. Nacontrole 27-11: is de rol al eens gelezen, dan niet wachten (slecht bereik) */
+  const rolAlBekend = rolGelezen, rolKlaar = bepaalRol();
+  if(rolAlBekend) rolKlaar.then(rol => { if(rol === "uit" || rol === "onbekend") toegangIngetrokken(rol); }).catch(() => {});
   if(betaalKolom && (betaalKolom.kosten === null || betaalKolom.poets === null)) betaalKolomCheck().then(() => { if(modus === "meer") tekenMeer(); }).catch(() => {}); /* 17-11-2026: één keer, wacht er niet op */
   const [bk, pr, co, kv, ob, gl, pd, pl, ak, am, ins, av, tp, bn, br, ep, ca, kd, ko, gt, tk, pu, pw, rd] = await Promise.all([
     alleRijen(() => db.from("boekingen").select("*", { count:"exact" }).order("aankomst").order("id")),
@@ -8794,6 +8899,7 @@ async function haal(){
     db.from("rad").select("*") /* 19-11-2026 d: het rad; zonder tabel (oude database) gewoon geen rad, geen foutmelding */
   ]);
   if(mijn !== haalNr) return;
+  if(!rolAlBekend){ const rol = await rolKlaar; if(rol === "uit" || rol === "onbekend") return toegangIngetrokken(rol); }
   if(bk.error){ console.error(bk.error); syncMag = false; appLaadFout = laadFout = "boekingen: " + bk.error.message; try { tekenNu(); } catch(e){} return; }
   /* een tabel die niet gelezen kan worden (bijvoorbeeld door ontbrekende rechten) mag nooit stil blijven: dat zie je bovenaan het startscherm */
   laadFout = [["producten", pr], ["consumpties", co], ["kamer_vinkjes", kv], ["ontbijt", ob], ["gast_links", gl], ["poets_dagen", pd], ["poets_links", pl], ["aankondigingen", ak], ["aanmeldingen", am], ["instellingen", ins], ["aanvragen", av], ["tips", tp], ["bonnen", bn], ["broodjes", br], ["eigen_plekken", ep], ["camper_aanvragen", ca], ["kamer_dicht", kd], ["kosten", ko], ["gast_teksten", gt], ["taken", tk], ["poets_uren", pu]]
@@ -8827,7 +8933,7 @@ async function haal(){
   eigen = (ep.data || []).map(naarEigen);
   kosten = ko.data || [];
   /* 25-10-2026 d: bij een leesfout de vorige lijst houden (de vaste tekst blijft dan staan) */
-  if(!pu.error) poetsUren = pu.data || []; /* 03-11-2026 a */
+  if(!pu.error){ poetsUren = pu.data || []; poetsUrenGelezen = true; } /* 03-11-2026 a; 27-11-2026 c: herinnering pas na een goede lezing */
   if(!pw.error) poetsWeg = pw.data || []; else laadFout = [laadFout, "poets_uren_log: " + pw.error.message].filter(Boolean).join(" · ");
   if(document.getElementById("poetsUrenDlg").open) tekenPoetsUren(); /* review: open venster ververst mee */
   if(!gt.error){ gastTeksten = {}; (gt.data || []).forEach(r => gastTeksten[gtSleutel(r.soort, r.taal)] = { regels: Array.isArray(r.regels) ? r.regels : [], nog_vertalen: Array.isArray(r.nog_vertalen) ? r.nog_vertalen : [], bijgewerkt: r.bijgewerkt }); }
@@ -10106,8 +10212,8 @@ function poetsStatusTekst(vandaag){
   const nieuw = poetsUren.filter(u => !u.gezien_finca).length;
   const open = poetsUren.filter(u => !u.betaald_op).reduce((t, u) => t + Number(u.totaal || 0), 0);
   const delen = [];
-  if(nieuw) delen.push(`${nieuw} nieuw ingevuld`);
-  if(open) delen.push(`${eur(open)} open`);
+  if(nieuw && !alsPersoneel()) delen.push(`${nieuw} nieuw ingevuld`); /* 27-11-2026 c: uren en bedragen van het poetsteam niet voor personeel */
+  if(open && !alsPersoneel()) delen.push(`${eur(open)} open`);
   if(delen.length) return delen.join(" · ");
   const volgende = Object.values(poetsDagen).filter(p => p.datum >= vandaag && (p.kamers||[]).length).map(p => p.datum).sort()[0];
   return volgende ? `volgende uitcheck ${DG[parse(volgende).getDay()].slice(0,2)} ${kort(volgende)}` : "geen uitchecks bekend";
@@ -11121,6 +11227,18 @@ function tekenNu(){
      komt in de berichten. In Let op alleen nog als er geen poetslinks zijn. */
   { const naar = t => `<span data-naarpoets="1">${t} <span class="letbekijk">Bekijk ›</span></span>`;
     if(!poetsLinks.length) letPush(naar("Poets: nog geen poetslinks aangemaakt"), ["weg","poetslinks"], "later");
+    /* 27-11-2026 c (Bart: "als die poets zijn uren binnen 24 uur niet heeft ingevuld, dan wil ik een reminder krijgen bij Let op"): een poetsdag
+       (kamers schoon te maken, en zichtbaar voor het poetsteam) zonder uren, zodra het 24 uur (instelling) na 12:00 op die dag is. Alleen voor
+       Bart en Loes en alleen met een poetslink. Vullen ze de uren in, dan gaat de regel vanzelf weg; afvinken verbergt hem voor die dag.
+       Poetsdagen worden 7 dagen terug opgehaald, dus de regel blijft hooguit een week staan. */
+    const wachtU = poetsHerinnerUren();
+    if(wachtU != null && poetsLinks.length && !alsPersoneel() && poetsUrenGelezen){ /* review 27-11: niet als de uren niet te lezen waren */
+      const nu = Date.now();
+      Object.values(poetsDagen).filter(p => (p.kamers || []).length && p.status !== "nee" && (poetsAan("poets_alle_dagen") || p.gedeeld)
+          && new Date(p.datum + "T12:00:00").getTime() + wachtU * 36e5 <= nu && !poetsUren.some(u => u.datum === p.datum))
+        .sort((a, b) => a.datum.localeCompare(b.datum))
+        .forEach(p => letPush(naar(`Poetsteam heeft de uren van ${DG[parse(p.datum).getDay()]} ${kort(p.datum)} nog niet ingevuld`), ["weg","poetsuren",p.datum], "vandaag"));
+    }
   }
   /* Bedieningsconcept fase 1 (29-09-2026 a): een gast die vandaag in- of uitcheckt heeft een eigen regel in Vandaag met de volgende stap als knop;
      die staat dus niet ook nog in Let op. Let op houdt alleen wat geen eigen regel heeft. */
@@ -11217,8 +11335,9 @@ function tekenNu(){
     .forEach(k => letPush(`Naam onbekend voor <b>${k.kamer}</b> ${kort(k.in)} t/m ${kort(k.uit)} (${bronNaam(k)})`, ["weg","naam",k.nr], dagenTot(k.in) <= 2 ? "vandaag" : "later"));
   /* fase 2 (29-09-2026 b): extra's-aanvragen staan in de Inbox (Berichten), niet meer in Let op */
   /* bankoverschrijving bij afronden (tot 23-10-2026 d: Tikkie): blijft staan tot hij binnen is (Bart, 25-09-2026) */
+  /* 27-11-2026 c: rekende personeel af per betaalverzoek (verzoek_nodig), dan staat er "betaalverzoek nog sturen"; personeel ziet geen knop Binnen */
   bonnen.filter(x => Number(x.tikkie) > 0 && !x.tikkie_binnen).sort((a,b) => String(a.datum).localeCompare(String(b.datum))).forEach(x =>
-    letAdd(`${x.rekening ? vrij(REK_NAAM[x.rekening]) : "Bankoverschrijving"} <b>${eur(Number(x.tikkie))}</b> van <b>${vrij(x.gast) || vrij(x.plek)}</b> (${vrij(x.plek)}), afgerond ${kort(String(x.datum).slice(0,10))}: nog niet binnen<button data-tikbinnen="${vrij(x.id)}">Binnen</button>`, "vandaag")); /* Bart 25-09-2026: een Tikkie blijft zichtbaar in Let op tot hij binnen is */
+    letAdd(`${x.verzoek_nodig ? "Betaalverzoek" : x.rekening ? vrij(REK_NAAM[x.rekening]) : "Bankoverschrijving"} <b>${eur(Number(x.tikkie))}</b> van <b>${vrij(x.gast) || vrij(x.plek)}</b> (${vrij(x.plek)}), afgerond ${kort(String(x.datum).slice(0,10))}: ${x.verzoek_nodig ? (alsPersoneel() ? "Bart of Loes sturen het" : "nog sturen, staat in Berichten") : "nog niet binnen"}${alsPersoneel() ? "" : `<button data-tikbinnen="${vrij(x.id)}">Binnen</button>`}`, "vandaag")); /* Bart 25-09-2026: een Tikkie blijft zichtbaar in Let op tot hij binnen is */
   /* 19-10-2026 a (Bart): elke dag de prullenbakken van de camperplaats legen. Afvinken geldt alleen voor vandaag
      (de datum zit in de sleutel) en op elk apparaat (let_weg in instellingen); de volgende dag staat hij er weer */
   letPush(`<b>Prullenbakken</b> camperplaats legen`, ["weg","prullenbakken",vandaag], "vandaag");
@@ -11644,6 +11763,7 @@ function tekenNu(){
 /* vertrekt eerder of later: zit in het kamergastprofiel; de agenda in MyTourist loopt mee (26-10-2026 a) */
 let checkoutBezig = false; /* review 26-10 a: geen tweede tik tijdens het wachten op MyTourist */
 async function vertrektEerder(k){
+  if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return; } /* review 2 (27-11): MyTourist, en anders een dubbele boeking */
   if(checkoutBezig) return;
   checkoutBezig = true;
   try {
@@ -11697,10 +11817,13 @@ async function checkoutNaarMyTourist(k, datum){
   const geluktVan = r => !r.error && !!(r.data && r.data.ok);
   const toch = (r, wat) => confirm(`${wat} in MyTourist ${r.error ? "mislukte: " + r.error.message : "is maar deels gelukt (controleer het daar)"}.\n\nToch de nieuwe datum bewaren? Zet die nachten dan zelf ${wat === "Dichtzetten" ? "dicht" : "open"} in MyTourist.`);
   const wacht = `Bezig in MyTourist voor ${naam} (${k.kamer})… een halve minuut geduld.`;
+  /* nacontrole 27-11: moet MyTourist mee, dan doen Bart of Loes het (geen vraag "toch bewaren", anders lopen app en MyTourist uit elkaar) */
+  const mtNodig = () => { alert(`Hiervoor moet ${k.kamer} in MyTourist mee open of dicht. Dat doen Bart of Loes; er is niets veranderd.`); return { gelukt:false }; };
   if(k.bron === "dicht"){
     const d = kamerDicht.find(x => x.id === k.dichtId);
     if(!d){ alert("De dichtzetting van deze gast is niet gevonden. Sluit het profiel, wacht even en probeer het opnieuw."); return { gelukt:false }; }
     if(nieuwUit !== d.uit){
+      if(alsPersoneel()) return mtNodig();
       let r, wat;
       if(nieuwUit > d.uit){ wat = "Dichtzetten"; r = await mtSchrijvenMetWacht({ actie:"dicht", kamer:d.kamer, van:d.uit, tot:nieuwUit }, wacht); }
       else { wat = "Openzetten"; const anderen = kamerDicht.filter(x => x.id !== d.id && x.in < d.uit && x.uit > nieuwUit);
@@ -11714,6 +11837,7 @@ async function checkoutNaarMyTourist(k, datum){
     return { gelukt:true, datum:null };
   }
   const was = k.uit > k.uitMt ? k.uit : k.uitMt, wordt = nieuwUit > k.uitMt ? nieuwUit : k.uitMt;
+  if(wordt !== was && alsPersoneel()) return mtNodig();
   if(wordt > was){
     const r = await mtSchrijvenMetWacht({ actie:"dicht", kamer:k.kamer, van:was, tot:wordt }, wacht);
     if(!geluktVan(r) && !toch(r, "Dichtzetten")) return { gelukt:false };
@@ -11935,7 +12059,7 @@ function tekenPoetsTab(){
   const tot_ = document.createElement("div"); tot_.className = "pdag";
   tot_.innerHTML = `<div class="kop"><b>Gewerkte uren ${MND[poetsMaand.getMonth()]}</b><em>${mUren.length ? `${eur(mTot)}${mOpen ? ` · ${eur(mOpen)} open` : " · betaald"}` : "nog niets ingevuld"}</em></div>` +
     `<div class="vink"><button data-pgewerkt="1">Gewerkte uren bekijken</button></div>`;
-  el.appendChild(tot_);
+  if(!alsPersoneel()) el.appendChild(tot_); /* review 2 (27-11): uren, bedragen en uitbetalen van het poetsteam niet voor personeel */
   if(!lijst.length){ const leeg = document.createElement("p"); leeg.className = "leeg"; leeg.textContent = tot < vandaag ? "Geen uitcheckdagen bewaard voor deze maand" : "Geen uitchecks bekend in deze maand"; el.appendChild(leeg); }
   lijst.forEach(p => el.appendChild(poetsRij(p, vandaag)));
   bak.appendChild(el);
@@ -11945,6 +12069,20 @@ function tekenPoetsTab(){
 const POETS_MELDING_NL = "Hier staan alle uitcheckdagen. Stem altijd eerst even af met Loes voordat jullie komen poetsen.";
 const poetsAan = sleutel => (instellingen[sleutel] || "aan") !== "uit";
 const poetsWasBedrag = () => { const w = String(instellingen.poets_was_bedrag || "").trim(); if(w === "") return null; const n = Number(w.replace(",", ".")); return isFinite(n) && n >= 0 ? n : null; };
+/* 27-11-2026 c: hoeveel uur na 12:00 op een poetsdag de herinnering komt (instelling poets_herinner_uren; leeg = 24, "uit" = geen herinnering) */
+const poetsHerinnerUren = () => { const w = String(instellingen.poets_herinner_uren || "").trim(); if(w === "uit") return null;
+  return /^[0-9]{1,3}$/.test(w) && Number(w) >= 1 && Number(w) <= 168 ? Number(w) : 24; };
+const poetsHerinnerTekst = () => { const u = poetsHerinnerUren(); if(u == null) return "Uit";
+  return u === 24 ? "Aan: de dag erna om 12:00 in Let op, als er nog geen uren zijn" : `Aan: ${u} uur na 12:00 op de poetsdag in Let op, als er nog geen uren zijn`; };
+async function wijzigPoetsHerinner(){
+  if(alsPersoneel()) return;
+  const u = poetsHerinnerUren();
+  const t = prompt("Na hoeveel uur wil je in Let op zien dat het poetsteam de uren van een poetsdag nog niet heeft ingevuld? Het telt vanaf 12:00 op die dag (24 = de dag erna om 12:00; 1 tot 168). Typ 0 om de herinnering uit te zetten.", u == null ? "0" : String(u));
+  if(t === null) return;
+  const w = t.trim(); if(!/^[0-9]{1,3}$/.test(w) || Number(w) > 168){ alert("Vul een aantal uur in, van 1 tot 168, of 0 voor uit."); return; }
+  await poetsInstelling("poets_herinner_uren", Number(w) === 0 ? "uit" : Number(w) === 24 ? "" : String(Number(w)));
+  if(modus === "nu") tekenNu();
+}
 const poetsDagenTerug = () => { const w = String(instellingen.poets_dagen_terug || "").trim(); return /^[0-9]{1,3}$/.test(w) && Number(w) >= 1 && Number(w) <= 366 ? Number(w) : 31; };
 async function poetsInstelling(sleutel, waarde){
   const oud = instellingen[sleutel]; instellingen[sleutel] = waarde; tekenMeer();
@@ -12007,6 +12145,7 @@ function bindPoets(bak, herteken){
    alles wat open staat op Betaald zetten, en per regel de geschiedenis zien (poets_uren_log). */
 let guMaand = new Date(new Date().getFullYear(), new Date().getMonth(), 1), guBezig = false; const guGeschOpen = new Set();
 function openPoetsUren(maand){
+  if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return; } /* review 2 (27-11) */
   if(maand) guMaand = new Date(maand.getFullYear(), maand.getMonth(), 1);
   tekenPoetsUren();
   const d = document.getElementById("poetsUrenDlg"); if(!d.open) d.showModal();
@@ -12418,8 +12557,13 @@ function inboxItems(alles){
     info.push({ id:"t" + t.id, stand:stand(t.gemaakt), nr:t.nr, naam:t.gast, plek:t.plek, wanneer:tijdTekst(t.gemaakt),
       wat:`<b>${idee ? "Ontbijtidee" : "Tip"}</b>: "${tekst.replace(/</g, "&lt;")}"${t.tekst_nl && t.tekst_nl.toLowerCase() !== (t.tekst || "").toLowerCase() ? `<br><span style="color:var(--muted)">${String(t.tekst_nl).replace(/^Ontbijtidee:\s*/i, "").replace(/</g, "&lt;")}</span>` : ""}`,
       knoppen:`<button data-tgezien="${vrij(t.id)}">Gezien</button>` }); });
+  /* 27-11-2026 c (personeel): een medewerker rekende (deels) af per betaalverzoek; Bart of Loes stuurt het, daarna Verstuurd */
+  if(!alsPersoneel()) bonnen.filter(x => x.verzoek_nodig && Number(x.tikkie) > 0 && !x.tikkie_binnen).forEach(x => antwoord.push({ id:"bv" + x.id, stand:stand(x.gemaakt),
+    nr:x.boeking_id || x.nr || "", naam:x.gast || "", plek:x.plek || "", wanneer:tijdTekst(x.gemaakt),
+    wat:`<b>Betaalverzoek sturen</b>: ${eur(Number(x.tikkie))}${Number(x.contant) ? ` (${eur(Number(x.contant))} kreeg het personeel contant)` : ""}, afgerekend door personeel`,
+    knoppen:`<button class="hoofd" data-bvverstuurd="${vrij(x.id)}">Verstuurd</button>` }));
   /* 03-11-2026 a (Bart: "dan moet ik een berichtje in mijn berichtenbox krijgen dat er iets is ingevuld"): uren van het poetsteam */
-  poetsUren.filter(u => !u.gezien_finca).sort((a, b) => String(a.gewijzigd || a.gemaakt).localeCompare(String(b.gewijzigd || b.gemaakt))).forEach(u => {
+  (alsPersoneel() ? [] : poetsUren).filter(u => !u.gezien_finca).sort((a, b) => String(a.gewijzigd || a.gemaakt).localeCompare(String(b.gewijzigd || b.gemaakt))).forEach(u => {
     const gewijzigd = u.gewijzigd && u.gemaakt && Math.abs(new Date(u.gewijzigd) - new Date(u.gemaakt)) > 60000;
     antwoord.push({ id:"pu" + u.id, stand:stand(u.gewijzigd || u.gemaakt), nr:"", naam:u.door || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(u.gewijzigd || u.gemaakt),
       wat:`<b>${gewijzigd ? "Uren gewijzigd" : "Uren ingevuld"}</b>: ${DG[parse(u.datum).getDay()].slice(0,2)} ${kort(u.datum)} · ${poetsInvoerNl(u)} = ${eur(u.totaal)}`,
@@ -12427,7 +12571,7 @@ function inboxItems(alles){
   });
   /* review 03-11-2026 a: ook als het poetsteam iets weghaalt, tot Bart op Gezien tikt (instelling poets_weg_gezien: de ids van de geziene logregels) */
   { const gezien = poetsWegGezien();
-    poetsWeg.filter(w => w.door === "poets" && w.oud && !gezien.has(String(w.id))).forEach(w => antwoord.push({ id:"pw" + w.id, stand:stand(w.tijd), nr:"", naam:w.door_naam || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(w.tijd),
+    (alsPersoneel() ? [] : poetsWeg).filter(w => w.door === "poets" && w.oud && !gezien.has(String(w.id))).forEach(w => antwoord.push({ id:"pw" + w.id, stand:stand(w.tijd), nr:"", naam:w.door_naam || "poetsteam", plek:"poetsteam", wanneer:tijdTekst(w.tijd),
       wat:`<b>Uren weggehaald</b>: ${DG[parse(w.oud.datum).getDay()].slice(0,2)} ${kort(w.oud.datum)} · ${poetsInvoerNl(w.oud)} = ${eur(w.oud.totaal)}`,
       knoppen:`<button class="hoofd" data-pwgezien="${vrij(w.id)}">Gezien</button>`, geenWa:true })); }
   /* versie h: camper heeft het aanvraagformulier ingevuld; de boeking staat er al (met automatisch gekozen plek, alleen intern) */
@@ -12537,6 +12681,7 @@ function tekenInbox(){
   bak.querySelectorAll("[data-obgezien]").forEach(kn => kn.onclick = () => ontbijtGezien(...kn.dataset.obgezien.split("|")));
   bak.querySelectorAll("[data-brgezien]").forEach(kn => kn.onclick = () => broodjesGezien(kn.dataset.brgezien));
   /* 24-11-2026 f: stroom gezien = weg uit Berichten met deze stand (zelfde opslag als het kruisje, zonder vraag) */
+  bak.querySelectorAll("[data-bvverstuurd]").forEach(kn => kn.onclick = () => verzoekVerstuurd(kn.dataset.bvverstuurd)); /* 27-11-2026 c */
   bak.querySelectorAll("[data-stgezien]").forEach(kn => kn.onclick = async () => { const klaar = letWegZet(kn.dataset.stgezien);
     tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox(); await klaar; tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox(); });
   bak.querySelectorAll("[data-pugezien]").forEach(kn => kn.onclick = async () => { const u = poetsUren.find(x => x.id === kn.dataset.pugezien); if(!u) return;
@@ -12970,6 +13115,7 @@ function tekenMeer(){
   meerZet("mpPoetsVrij", poetsAan("poets_vrije_regels") ? "Aan: zij kunnen iets anders met een bedrag toevoegen" : "Uit");
   meerZet("meerPoetsVrij", poetsAan("poets_vrije_regels") ? "Uitzetten" : "Aanzetten");
   meerZet("mpPoetsTerug", `${poetsDagenTerug()} dagen; wat niet betaald is, blijft te wijzigen`);
+  meerZet("mpPoetsHerinner", poetsHerinnerTekst()); /* 27-11-2026 c */
   /* gasten */
   const md = mededelingActief(), a = aankActief();
   meerZet("mpMededeling", md ? "Staat aan: " + meerKort(md, 70) : "Staat uit");
@@ -13007,6 +13153,7 @@ function tekenMeer(){
   }
 }
 function meerToon(naam){
+  if(alsPersoneel() && ["geld", "instellingen", "kosten"].includes(naam)) naam = "menu"; /* 27-11-2026 c: niet voor personeel (review 2: ook Kosten per maand) */
   document.querySelectorAll("#meer2 [data-pagina]").forEach(el => el.hidden = el.dataset.pagina !== naam);
   const dlg = document.querySelector("#meer2 .dlg"); if(dlg) dlg.scrollTop = 0;
   /* geen zwarte focusrand op de eerste regel (het venster zet de focus vanzelf op de eerste knop); de focus gaat naar de kop
@@ -14221,6 +14368,7 @@ document.getElementById("pLinks").onclick = () => {
   };
 };
 document.getElementById("pExport").onclick = () => {
+  if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return; } /* review 2 (27-11): de uren met bedragen */
   /* 03-11-2026 a: de gewerkte uren van de maand (poets_uren), één regel per keer dat het poetsteam iets invulde */
   const van = iso(poetsMaand), tot = iso(new Date(poetsMaand.getFullYear(), poetsMaand.getMonth()+1, 0, 12));
   const lijst = poetsUren.filter(u => u.datum >= van && u.datum <= tot).sort((a, b) => a.datum.localeCompare(b.datum));
@@ -14748,16 +14896,21 @@ function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, tit
     d.querySelectorAll(".infouitleg").forEach(x => x.remove());
     const ibB = d.querySelector('[data-info="betalen"]'); if(ibB){ ibB.hidden = !(opties && opties.aanpassen); ibB.setAttribute("aria-expanded", "false"); }
     /* 01-11-2026 g: de bankknoppen volgens Meer > Geld > Betaalwijzen; staan ze allebei uit, dan één knop Bankoverschrijving */
-    const kn = bankKnoppen(), aanK = kn.filter(x => x.aan), vulKnop = (el, k) => { el.hidden = !k.aan; el.innerHTML = `${vrij(k.naam)}${k.rek ? `<small>${vrij(k.rek)}</small>` : ""}`; };
+    /* 27-11-2026 c (Bart): personeel kan geen betaalverzoek sturen; dan één knop Betaalverzoek (rekening leeg), en Bart of Loes krijgt een
+       bericht. De bankknoppen gelden dan niet. */
+    const pers = alsPersoneel();
+    const kn = pers ? bankKnoppen().map(x => ({ ...x, aan:false })) : bankKnoppen(), aanK = kn.filter(x => x.aan), vulKnop = (el, k) => { el.hidden = !k.aan; el.innerHTML = `${vrij(k.naam)}${k.rek ? `<small>${vrij(k.rek)}</small>` : ""}`; };
     vulKnop(document.getElementById("bwAlIng"), kn[0]); vulKnop(document.getElementById("bwAlSab"), kn[1]);
     vulKnop(document.getElementById("bwDeelIng"), kn[0]); vulKnop(document.getElementById("bwDeelSab"), kn[1]);
     document.getElementById("bwAlBank").hidden = aanK.length > 0;
-    const namenOf = aanK.length ? aanK.map(x => x.naam).join(" of ") : "bankoverschrijving";
-    document.getElementById("bwBankUitleg").textContent = aanK.length ? `${aanK.map(x => x.naam).join(" en ")} ${aanK.length === 1 ? "blijft" : "blijven"} in Let op staan tot je op Binnen tikt.` : "Een bankoverschrijving blijft in Let op staan tot je op Binnen tikt.";
+    document.getElementById("bwAlBank").innerHTML = pers ? "Betaalverzoek<small>sturen Bart of Loes</small>" : "Bankoverschrijving";
+    document.getElementById("bwDeelsKnop").innerHTML = pers ? "Deels<small>contant + rest per betaalverzoek</small>" : "Deels<small>contant + bank</small>";
+    const namenOf = pers ? "betaalverzoek" : aanK.length ? aanK.map(x => x.naam).join(" of ") : "bankoverschrijving";
+    document.getElementById("bwBankUitleg").textContent = pers ? "Betaalverzoek: Bart en Loes krijgen een bericht en sturen het. Tot het geld binnen is, staat het in Let op. De gast mag gewoon vertrekken." : aanK.length ? `${aanK.map(x => x.naam).join(" en ")} ${aanK.length === 1 ? "blijft" : "blijven"} in Let op staan tot je op Binnen tikt.` : "Een bankoverschrijving blijft in Let op staan tot je op Binnen tikt.";
     /* 03-11-2026 g: Deels is een knop in het raster; de volledige uitleg staat in aria-label. Drie knoppen (één of geen bankknop): Deels breed eronder */
     const dk = document.getElementById("bwDeelsKnop"); dk.setAttribute("aria-label", `Deels: contant + bank, rest per ${namenOf}`); /* review 03-11 g: begint met de zichtbare tekst */ dk.classList.toggle("bwbreed", aanK.length !== 2);
     document.getElementById("bwRestLabel").textContent = `Rest per ${namenOf} €`;
-    document.getElementById("bwRestUitleg").textContent = `Vul het contante bedrag in; de rest rekent de app als ${namenOf}.${aanK.length > 1 ? " Kies hierboven welke." : ""}`;
+    document.getElementById("bwRestUitleg").textContent = pers ? "Vul in hoeveel de gast contant gaf; de rest sturen Bart of Loes als betaalverzoek." : `Vul het contante bedrag in; de rest rekent de app als ${namenOf}.${aanK.length > 1 ? " Kies hierboven welke." : ""}`;
     document.querySelector("#bwDeels .bwrek").hidden = aanK.length < 2;
     c.value = bedragVeld(voor || totaal); t.value = voor && totaal - voor > 0.005 ? bedragVeld(totaal - voor) : ""; err.textContent = "";
     /* 23-10-2026 h (Bart): één tik op een betaalwijze; deels contant via de knop Deels (open als er al eerder iets contant kwam) */
@@ -14768,7 +14921,7 @@ function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, tit
     toonDeels(!!voor);
     deelsKnop.onclick = () => { toonDeels(true); c.focus(); c.select(); };
     /* 01-11-2026 e: bij deels contant kies je ook voor de rest de rekening; nog niets gekozen bij openen */
-    let deelRek = (opties && opties.rekening) || (aanK.length === 1 ? aanK[0].code : null); /* één knop aan: die is het */
+    let deelRek = pers ? null : (opties && opties.rekening) || (aanK.length === 1 ? aanK[0].code : null); /* één knop aan: die is het */
     const di = document.getElementById("bwDeelIng"), ds = document.getElementById("bwDeelSab");
     const zetRek = r => { deelRek = r; di.setAttribute("aria-pressed", String(r === "ing")); ds.setAttribute("aria-pressed", String(r === "sabadell")); err.textContent = ""; };
     zetRek(deelRek);
@@ -14780,7 +14933,7 @@ function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, tit
     /* review 23-10 h: afronden op centen, zoals bij Bankoverschrijving (anders kan er 3,3000000000000003 in de database komen) */
     document.getElementById("bwAlContant").onclick = () => einde({ contant: Math.round(totaal * 100) / 100, tikkie: 0, rekening: null });
     /* wat al eerder contant binnen was, blijft contant; de rest per Tikkie (ING) of Mollie (Sabadell) */
-    const perBank = rek => () => einde({ contant: voor, tikkie: Math.round((totaal - voor) * 100) / 100, rekening: totaal - voor > 0.005 ? rek : null });
+    const perBank = rek => () => einde({ contant: voor, tikkie: Math.round((totaal - voor) * 100) / 100, rekening: totaal - voor > 0.005 ? rek : null, ...(pers && totaal - voor > 0.005 ? { verzoek:true } : {}) });
     document.getElementById("bwAlIng").onclick = perBank("ing");
     document.getElementById("bwAlSab").onclick = perBank("sabadell");
     document.getElementById("bwAlBank").onclick = perBank(null);
@@ -14793,7 +14946,7 @@ function betaalwijzeVraag(totaal, wie, knopTekst, uitleg, alContant, regels, tit
       if(!isFinite(ct) || !isFinite(tk) || ct < 0 || tk < 0){ err.textContent = "Vul geldige bedragen in (bijvoorbeeld 40,00)."; return; }
       if(Math.abs(ct + tk - totaal) > 0.005){ err.textContent = `Contant en ${namenOf} samen is ${eur(ct + tk)}, maar het totaal is ${eur(totaal)}.`; /* review g */ return; }
       if(tk > 0.005 && !deelRek && aanK.length > 1){ err.textContent = `Kies of de rest per ${aanK.map(bankLabel).join(" of per ")} komt.`; return; }
-      einde({ contant: ct, tikkie: tk, rekening: tk > 0.005 ? deelRek : null });
+      einde({ contant: ct, tikkie: tk, rekening: tk > 0.005 ? deelRek : null, ...(pers && tk > 0.005 ? { verzoek:true } : {}) });
     };
     d.showModal();
     /* review 23-10 h: niets geselecteerd bij openen, zodat Enter niet meteen Contant kiest */
@@ -14833,7 +14986,7 @@ function rekeningAanpassen(k, b){
 }
 const rekNaam = r => REK_NAAM[r] || "bankoverschrijving";
 const betaalTekst = x => x && (x.contant != null || x.tikkie != null)
-  ? [Number(x.contant) ? `${eur(Number(x.contant))} contant` : "", Number(x.tikkie) ? `${eur(Number(x.tikkie))} per ${rekNaam(x.rekening)}` : ""].filter(Boolean).join(" · ") || "€ 0,00"
+  ? [Number(x.contant) ? `${eur(Number(x.contant))} contant` : "", Number(x.tikkie) ? `${eur(Number(x.tikkie))} per ${x.verzoek ? "betaalverzoek" : rekNaam(x.rekening)}` : ""].filter(Boolean).join(" · ") || "€ 0,00"
   : "";
 /* afronden: bevestigen, de bon bewaren zoals hij nu is, en de gast op Betaald zetten */
 let afrondBezig = false;
@@ -15163,7 +15316,7 @@ async function bonAfronden(k, b, alleenBewaren, naAanpassen, aanvullend, radKlaa
     }
     const wijze = await betaalwijzeVraag(totaal, `${naam || label}${naam ? ` · ${label}` : ""}`, aanv ? "Aanvullend afrekenen" : alleenBewaren ? "Bon bewaren" : "Afrekenen",
       aanv ? `Alleen wat er bij kwam na wat al is afgerekend (${eur(aanv.bonTotaal)}). Die bon blijft zoals hij is.`
-        : alleenBewaren ? "De bon wordt bewaard bij Afgeronde bonnen." : "Na je keuze is de rekening afgerond: de gast kan zelf niets meer aantikken. Contant telt meteen als ontvangen; per bank of Tikkie staat het als \"nog niet binnen\" in Let op tot je op Binnen tikt.",
+        : alleenBewaren ? "De bon wordt bewaard bij Afgeronde bonnen." : alsPersoneel() ? "Na je keuze is de rekening afgerond: de gast kan zelf niets meer aantikken. Contant telt meteen als ontvangen." : "Na je keuze is de rekening afgerond: de gast kan zelf niets meer aantikken. Contant telt meteen als ontvangen; per bank of Tikkie staat het als \"nog niet binnen\" in Let op tot je op Binnen tikt.",
       aanv ? 0 : kamer ? kAlContant(k) : (b.alContant || 0), regels, aanv ? "Afrekenen" : alleenBewaren ? "Bon bewaren" : "Afrekenen", { aanpassen: !alleenBewaren && !aanv });
     /* 01-11-2026 e (Bart): Rekening aanpassen opent de rekening van deze gast; met "Klaar, naar afrekenen" kom je hier terug, met het nieuwe totaal */
     if(wijze && wijze.aanpassen){
@@ -15193,6 +15346,7 @@ async function bonAfronden(k, b, alleenBewaren, naAanpassen, aanvullend, radKlaa
     await haal();
     alert(error
       ? `De gast staat op Betaald, maar de bon bewaren lukte niet: ${error.message}`
+      : wijze.verzoek ? `Afgerond op ${eur(totaal)} (${betaalTekst(wijze)}). De bon is bewaard.\n\nBart en Loes krijgen een bericht om het betaalverzoek van ${eur(wijze.tikkie)} te sturen. De gast mag gewoon vertrekken.` /* 27-11-2026 c: personeel */
       : `Afgerond op ${eur(totaal)} (${betaalTekst(wijze)}). De bon is bewaard; je vindt hem terug via Exporteren, onder Afgeronde bonnen.${wijze.tikkie ? `\n\n${wijze.rekening ? "De " + rekNaam(wijze.rekening) : "De bankoverschrijving"} van ${eur(wijze.tikkie)} staat in Let op tot je op Binnen tikt.` : ""}`);
   } finally { afrondBezig = false; }
 }
@@ -15451,16 +15605,17 @@ function toonKamerDetail(k){
   const notitie = String(kNotitie(k) || "").trim();
   h += `<p class="zone">Verblijf</p><div class="pkkaart">` +
     /* 16-11-2026 (Bart): andere kamer of ruilen, direct in het profiel */
-    (KW_KAMERS.includes(k.kamer) ? (kwAan() && k.uit > iso(new Date())
+    (KW_KAMERS.includes(k.kamer) ? (kwAan() && !alsPersoneel() && k.uit > iso(new Date())
       ? rij(`data-kdkamer="1"`, "Kamer", `${vrij(k.kamer)}${kwMtTekst(k)} · andere kamer`, kwNogMt(k) ? "actie" : "")
       : vast("Kamer", `${vrij(k.kamer)}${kwMtTekst(k)}`)) : "") +
     vast("Check-in", `${DG[parse(k.in).getDay()]} ${datumLang(k.in)}`) +
-    rij(`data-kdeerder="1"${kEerder(k) ? ` data-aan="1"` : ""}`, "Check-out", `${DG[parse(k.uit).getDay()]} ${datumLang(k.uit)}${kEerder(k) ? ` (${kLater(k) ? "blijft langer" : "vertrekt eerder"}, ${k.bron === "dicht" ? "afgesproken tot" : "MyTourist zegt"} ${kort(k.uitMt)})` : ""}`, kEerder(k) ? "actie" : "") +
+    /* review 2 (27-11): een andere vertrekdatum loopt via MyTourist, dus personeel ziet hem alleen */
+    (alsPersoneel() ? vast : (w, v) => rij(`data-kdeerder="1"${kEerder(k) ? ` data-aan="1"` : ""}`, w, v, kEerder(k) ? "actie" : ""))("Check-out", `${DG[parse(k.uit).getDay()]} ${datumLang(k.uit)}${kEerder(k) ? ` (${kLater(k) ? "blijft langer" : "vertrekt eerder"}, ${k.bron === "dicht" ? "afgesproken tot" : "MyTourist zegt"} ${kort(k.uitMt)})` : ""}`) +
     rij(`data-kdpersonen="1"`, "Personen", pers != null ? `${pers}` : (k.kamer === "Complete Finca" ? "nog niet ingevuld" : "2 (nog niet ingevuld)")) +
     (k.bron === "dicht" ? "" : radRij(k.nr, kVink(k, "betaald"))) + /* 19-11-2026 d: het rad */
     rij(`data-kdnotitie="1"`, "Notitie voor ons", notitie ? vrij(notitie).replace(/\n/g, " · ") : "nog niets") +
     /* 24-10-2026 f: familie of vrienden: de kamer staat dicht in MyTourist; hier weer openzetten (haalt ook de gastenpagina weg) */
-    (k.bron === "dicht" ? rij(`data-kdopen="1"`, "Kamer in MyTourist", "Dicht, geen boeking · weer openzetten") : "") +
+    (k.bron === "dicht" ? (alsPersoneel() ? vast("Kamer in MyTourist", "Dicht, geen boeking") : rij(`data-kdopen="1"`, "Kamer in MyTourist", "Dicht, geen boeking · weer openzetten")) : "") +
     `</div><p class="leeg pkuitleg">${k.bron === "dicht" ? "Familie of vrienden: geen boeking en geen factuur in MyTourist, de check-in gaat niet naar SES. " : ""}De notitie is alleen voor jullie: gasten zien hem nooit. Hij staat de dag ervoor en op de aankomstdag bij Let op.</p>`;
 
 
@@ -16080,6 +16235,7 @@ async function prWeg(id){
   await haal(); tekenPrijzen(); tekenBar();
 }
 document.getElementById("naarPrijzen").onclick = () => {
+  if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return; } /* review 2 (27-11) */
   document.getElementById("prijsLijst").innerHTML = "";
   const sel = document.getElementById("prNieuwGroep");
   const soorten = [...new Set(producten.filter(isBarProduct).map(p => p.groep))];
@@ -16593,6 +16749,7 @@ function zetModus(m){
    debiteur en een boeking (geen mail aan de gast); "Alleen dichtzetten" zet de kalender van die kamer én van de hele finca op 0
    voor die nachten en bewaart een regel in kamer_dicht (grijze balk in de kalender; via die balk weer open te zetten). */
 async function mtSchrijven(body){
+  if(alsPersoneel()) return { data:null, error:{ message: NIET_VOOR_PERSONEEL } }; /* 27-11-2026 c */
   if(!db.functions) return { data:null, error:{ message:"Niet beschikbaar in deze versie" } };
   try { const r = await db.functions.invoke("mytourist-schrijven", { body }); if(r.error) return { data:null, error:r.error };
     if(r.data && r.data.fout) return { data:null, error:{ message:r.data.fout } }; return { data:r.data, error:null }; }
@@ -16629,6 +16786,7 @@ async function mtSchrijvenMetWacht(body, tekst){
 }
 let knSoort = null;
 function kamerNieuwOpen(datum, kamer){
+  if(alsPersoneel()){ alert("Een kamer dichtzetten of een kamerboeking maken doen Bart of Loes (dat gaat via MyTourist)."); return; } /* 27-11-2026 c */
   const d = document.getElementById("kamerNieuw");
   knSoort = null;
   document.getElementById("knKamer").value = kamer || "Kamer 1";
@@ -16743,7 +16901,7 @@ function kwOpties(k){
 }
 let kwBezig = false; /* review 16-11: een tweede tik tijdens de MyTourist-aanroepen start geen tweede wissel */
 async function kamerWisselen(k){
-  if(!kwAan() || kwBezig) return;
+  if(!kwAan() || kwBezig || alsPersoneel()) return; /* 27-11-2026 c: via MyTourist, dus alleen Bart of Loes */
   if(!KW_KAMERS.includes(k.kamer)){ alert("Alleen een gast in Kamer 1 tot en met 5 kan naar een andere kamer."); return; }
   if(k.uit <= iso(new Date())){ alert("Deze gast vertrekt vandaag of is al weg; een andere kamer heeft geen zin meer."); return; }
   const opties = kwOpties(k), kan = opties.filter(o => o.soort !== "bezet"), niet = opties.filter(o => o.soort === "bezet");
@@ -16978,10 +17136,11 @@ async function kwWissel(sleutel){
 async function kamerDichtVenster(d){
   const kamerT = d.kamer === "Complete Finca" ? "De hele finca" : d.kamer, n = nachten(d);
   const keus = await coVraag({ titel: d.gastprofiel ? "Familie of vrienden" : "Dichtgezet", wie: d.naam || "", kop:`${kamerT} is dicht van ${kort(d.in)} tot ${kort(d.uit)} (${n} ${n === 1 ? "nacht" : "nachten"})`,
-    tekst: (d.mtGelukt ? "In MyTourist staan deze nachten op niet boekbaar." : "Let op: in MyTourist is dit niet (helemaal) gelukt; controleer het daar.") + " Openzetten zet MyTourist voor deze nachten weer op automatisch."
-      + (d.gastprofiel ? " De gastenpagina van deze gast werkt daarna niet meer en de kamer verdwijnt uit de kalender." : ""),
-    knoppen:[{ tekst:"Weer openzetten", waarde:"open", klasse:"vol" }, { tekst:"Laten staan", waarde:null }] });
-  if(keus !== "open") return;
+    tekst: (d.mtGelukt ? "In MyTourist staan deze nachten op niet boekbaar." : "Let op: in MyTourist is dit niet (helemaal) gelukt; controleer het daar.")
+      + (alsPersoneel() ? " Weer openzetten doen Bart of Loes." : " Openzetten zet MyTourist voor deze nachten weer op automatisch."
+      + (d.gastprofiel ? " De gastenpagina van deze gast werkt daarna niet meer en de kamer verdwijnt uit de kalender." : "")),
+    knoppen: alsPersoneel() ? [{ tekst:"Sluiten", waarde:null }] : [{ tekst:"Weer openzetten", waarde:"open", klasse:"vol" }, { tekst:"Laten staan", waarde:null }] });
+  if(keus !== "open" || alsPersoneel()) return; /* review 2 (27-11): openzetten loopt via MyTourist, dus alleen Bart of Loes */
   /* 24-10-2026 f: met gastenpagina: staat er nog iets open op de rekening, dan eerst zeggen (zoals bij het gastenverblijf) */
   if(d.gastprofiel && gastLinks[d.nr] && !kVink({ nr:d.nr }, "betaald") && kamerOpenstaand(d.nr) > 0
     && !confirm(`Let op: er staat nog ${eur(kamerOpenstaand(d.nr))} open op de rekening van ${d.naam || "deze gast"}, die zie je daarna niet meer in de app. Toch openzetten?`)) return;
@@ -17063,10 +17222,15 @@ if(NIEUW){
     /* uurtarief: de vraag komt over Meer heen; daarna toont de pagina meteen het nieuwe bedrag (review f) */
     if(w === "poetstarief"){ wijzigPoetsTarief(() => { tekenMeer(); if(modus === "nu") tekenNu(); }); return; }
     /* 03-11-2026 a: poetspagina instellen en de gewerkte uren */
-    if(w === "poetsuren"){ openPoetsUren(); return; }
+    if(w === "poetsuren"){ if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return; } openPoetsUren(); return; }
+    /* 27-11-2026 c: personeel, logboek, kosten invoeren */
+    if(w === "personeel"){ openPersoneel(); return; }
+    if(w === "logboek"){ openLogboek(); return; }
+    if(w === "kostenin"){ openKostenIn(); return; }
     if(w === "poetswas"){ wijzigPoetsWas(); return; }
     if(w === "poetsmelding"){ wijzigPoetsMelding(); return; }
     if(w === "poetsterug"){ wijzigPoetsTerug(); return; }
+    if(w === "poetsherinner"){ wijzigPoetsHerinner(); return; } /* 27-11-2026 c */
     if(w === "poetsalle" || w === "poetspers" || w === "poetsvrij"){ poetsSchakel({ poetsalle:"poets_alle_dagen", poetspers:"poets_personen", poetsvrij:"poets_vrije_regels" }[w]); return; }
     if(w === "verlengmax"){ wijzigVerlengMax(); return; }
     if(w === "verlengwie"){ wijzigVerlengWie(); return; }
@@ -17106,8 +17270,8 @@ if(NIEUW){
     if(w === "voorraadaan"){ voorraadWissel(); return; } /* 30-10-2026 l */
     if(w === "aankvertrek"){ aankVertrekWissel(); return; } /* 29-10-2026 c */
     if(w === "pinaan"){ pinSchakel(); return; } /* 03-11-2026 c */
-    if(w === "pinwijzig"){ pinToon("wijzig"); return; }
-    if(w === "pinminuten"){ pinZetMinuten(); return; }
+    if(w === "pinwijzig"){ if(alsPersoneel()) return; pinToon("wijzig"); return; } /* nacontrole 27-11: niet voor personeel */
+    if(w === "pinminuten"){ if(alsPersoneel()) return; pinZetMinuten(); return; }
     if(w === "mttest"){ openMtTest(); return; } /* 11-11-2026 d */
     if(w === "agendasperdag"){ agendasPerDagWissel(); return; } /* 03-11-2026 a */
     if(w === "betaalknoppen"){ openBetaalKnoppen(); return; } /* 01-11-2026 g */
@@ -19067,6 +19231,7 @@ async function openGv(){
 document.getElementById("gvPeriode").onchange = () => gvTeken();
 document.getElementById("gvDicht").onclick = () => document.getElementById("gv2").close();
 async function openCijfers(houdMaand){
+  if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return; } /* 27-11-2026 c */
   const dlg = document.getElementById("cijfers2");
   fdBeoordeel = ""; fdMcMelding = ""; fdMcPlek = ""; fdConcept = null; fdAfConcept = null; /* review 15-11 e */
   cfFout = ""; cfData = null; cfBankOpen = false; cfKasOpen = false; cfBetaalOpen = false; cfBetaalMelding = ""; if(houdMaand !== true){ cfMaand = null; fdOpenTegel = ""; fdOpenCat = ""; fdMetBtw = true; } tekenCijfers(); /* 01-11-2026 i: weer de huidige maand (review i: niet na het sluiten van Inkoop) */ /* review e: formulier en melding niet laten staan */
@@ -19195,6 +19360,8 @@ const pinWegTeLang = (weg, minuten) => { if(!weg) return true; const d = Date.no
 const pinWeg = () => Number(opslag("s", o => o.getItem("kayu_weg")) || 0) || pinWegMem; /* geheugen als sessionStorage niet werkt */
 /* bij het openen van de app (vóór het ophalen): staat er een code op dit toestel, dan meteen het slot */
 function pinBijStart(naWachtwoord){
+  /* review 2 (27-11): personeel krijgt geen codescherm (de code is van Bart en Loes; personeel logt in met een eigen link en kan worden ingetrokken) */
+  if(alsPersoneel()){ pinOpen = true; return; }
   if(naWachtwoord){ pinOntgrendeld(); return; }
   const c = pinCache(); if(!c){ return; }
   /* opnieuw laden kort na het wegleggen (bijvoorbeeld een nieuwe versie): geen nieuwe vraag */
@@ -19207,6 +19374,7 @@ function pinBijStart(naWachtwoord){
 /* na het ophalen van de instellingen: aan of uit, code gekozen of nog niet */
 function pinNaLaden(){
   if(!instellingenGeladen) return; /* niets weten: zoals het op dit toestel stond */
+  if(alsPersoneel()){ opslag("l", o => o.removeItem("kayu_pin")); if(pinIsDicht() && pinNodig()) pinSluit(); pinOpen = true; return; } /* review 2 (27-11) */
   pinBewaarCache();
   if(!pinAan()){ if(pinIsDicht() && pinNodig()) pinSluit(); pinOpen = true; return; }
   if(pinOpen || pinIsDicht()) return;
@@ -19216,7 +19384,7 @@ function pinNaLaden(){
 const pinIsApp = () => kel("app").style.display !== "none";
 function pinWegZet(){ if(!pinIsApp() || !pinOpen) return; pinWegMem = Date.now(); opslag("s", o => o.setItem("kayu_weg", String(pinWegMem))); }
 document.addEventListener("visibilitychange", () => {
-  const c = pinCache();
+  const c = alsPersoneel() ? null : pinCache(); /* review 2 (27-11): geen codescherm voor personeel */
   if(document.visibilityState === "hidden"){ pinWegZet(); if(c && pinIsApp()) document.documentElement.classList.add("pinweg"); return; }
   const weg = pinWeg();
   if(pinIsApp() && c && pinOpen && pinWegTeLang(weg, c.minuten)){ pinToon("invoer"); if(pinBezig) kel("pinMelding").textContent = "Even geduld…"; } /* review 3: nieuwe code wordt nog bewaard */
@@ -19291,6 +19459,7 @@ async function pinUitloggen(){ opslag("s", o => { o.removeItem("kayu_pin_open");
 kel("pinVergeten").onclick = () => { if(confirm("Uitloggen? Daarna log je in met je e-mailadres en wachtwoord, en kun je in Meer een nieuwe code kiezen.")) pinUitloggen(); };
 kel("pinStop").onclick = () => { if(pinBezig) return; pinSluit(); }; /* review 3: tijdens opslaan telt Annuleren niet (de code wordt toch bewaard) */
 async function pinSchakel(){
+  if(alsPersoneel()) return; /* review 2 (27-11) */
   if(pinAan()){
     if(!confirm("Code bij openen uitzetten? Dan opent de app zonder code, ook als iemand anders je telefoon pakt.")) return;
     if(await pinInstelling("app_code_aan", "uit")) pinBewaarCache(); return;
@@ -21301,6 +21470,7 @@ document.getElementById("tkSluit").onclick = () => document.getElementById("take
 
 /* bankoverschrijving, Tikkie of Mollie na afronden "Binnen" zetten; vanuit Let op en (04-11-2026 c/d) vanuit de barlijst */
 async function bonBinnen(id){
+  if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return false; } /* 27-11-2026 c */
   const x = bonnen.find(y => String(y.id) === String(id)); if(!x) return false;
   if(!confirm(`${x.rekening ? REK_NAAM[x.rekening] : "Bankoverschrijving"} van ${eur(Number(x.tikkie))} van ${x.gast || x.plek} is binnen?`)) return false; /* review 01-11 e */
   const nu = new Date().toISOString();
@@ -21362,15 +21532,18 @@ function tekenBarKies(){
     `</button>`).join("") : (kamersHeel ? `<p class="leeg">Vandaag is er niemand op de finca.</p>` : "");
   if(weg.length) bak.innerHTML += `<p class="bkkop">Vertrokken, nog niet afgerekend</p>` + weg.map(r =>
     `<button class="bkrij" data-bkweg="${r.soort}|${esc(r.nr)}"><span class="bkwie"><b>${esc(r.naam)}</b><em>${esc(r.plek)} · weg ${kort(r.uit)}${r.erbij ? " · na afrekenen erbij" : ""}</em></span>${bedragHtml(r.bedrag)}</button>`).join("");
-  if(bank.length) bak.innerHTML += `<p class="bkkop">Betaalverzoek verstuurd, nog niet binnen</p>` + bank.map(x =>
-    `<div class="bkrij bkbank"><span class="bkwie"><b>${esc(x.gast || x.plek)}</b><em>${esc(x.gast && x.plek ? x.plek + " · " : "")}${esc((x.rekening && REK_NAAM[x.rekening]) || "Bank")} · ${kort(String(x.datum).slice(0,10))}</em></span>` +
-    `${bedragHtml(rond2(Number(x.tikkie)))}<button data-bkbinnen="${esc(x.id)}">Binnen</button></div>`).join("");
+  /* review 2 (27-11): een betaalverzoek dat nog gestuurd moet worden apart; Binnen en het totaal alleen voor Bart en Loes */
+  const bankRij = x => `<div class="bkrij bkbank"><span class="bkwie"><b>${esc(x.gast || x.plek)}</b><em>${esc(x.gast && x.plek ? x.plek + " · " : "")}${esc(x.verzoek_nodig ? (alsPersoneel() ? "Bart of Loes sturen het" : "nog sturen, staat in Berichten") : (x.rekening && REK_NAAM[x.rekening]) || "Bank")} · ${kort(String(x.datum).slice(0,10))}</em></span>` +
+    `${bedragHtml(rond2(Number(x.tikkie)))}${alsPersoneel() ? "" : `<button data-bkbinnen="${esc(x.id)}">Binnen</button>`}</div>`;
+  const bankNog = bank.filter(x => x.verzoek_nodig), bankWeg = bank.filter(x => !x.verzoek_nodig);
+  if(bankNog.length) bak.innerHTML += `<p class="bkkop">Betaalverzoek nog sturen</p>` + bankNog.map(bankRij).join("");
+  if(bankWeg.length) bak.innerHTML += `<p class="bkkop">Betaalverzoek verstuurd, nog niet binnen</p>` + bankWeg.map(bankRij).join("");
   /* onderaan de streep: alles wat nog open is. Zijn de kamers niet (allemaal) binnen, dan zegt de regel dat zelf ook
      (review: de melding bovenaan kan weggescrold zijn) */
   const totaalOpen = rond2([...rijen.filter(r => !r.betaald), ...weg].reduce((s, r) => s + (Number.isFinite(r.bedrag) ? r.bedrag : 0), 0)
     + rijen.filter(r => r.betaald).reduce((s, r) => s + (r.erbij || 0), 0)
     + bank.reduce((s, x) => s + (rond2(Number(x.tikkie)) || 0), 0));
-  bak.innerHTML += `<div class="bktotaal" id="bkTotaal"><span>Totaal nog open${!kamersHeel ? " (kamers nog niet compleet)" : !appHeel ? " (niet compleet, ververs de app)" : ""}</span><span>${eur(totaalOpen)}</span></div>`;
+  if(!alsPersoneel()) bak.innerHTML += `<div class="bktotaal" id="bkTotaal"><span>Totaal nog open${!kamersHeel ? " (kamers nog niet compleet)" : !appHeel ? " (niet compleet, ververs de app)" : ""}</span><span>${eur(totaalOpen)}</span></div>`;
   bak.querySelectorAll("[data-bk]").forEach(kn => kn.onclick = () => {
     const i = kn.dataset.bk.indexOf("|");
     const soort = kn.dataset.bk.slice(0, i), nr = kn.dataset.bk.slice(i + 1);
@@ -21557,6 +21730,347 @@ document.querySelectorAll("[data-ktaal]").forEach(kn => {
 
 const sel = document.getElementById("fPlek");
 PLEKKEN.forEach(p => { const o = document.createElement("option"); o.value = p; o.textContent = p; sel.appendChild(o); });
+/* ---------- 27-11-2026 c: personeel (wens Bart: "precies hetzelfde als ons, alleen geen cijfers of financiën") ----------
+   MIJN_ROL komt uit de database (mijn_account): "eigenaar" (Bart, Loes), "personeel", "uit" (ingetrokken) of "onbekend" (een account
+   dat niet op de lijst staat: zelfde beperkingen als personeel). Zonder het databasescript van 27-11-2026 c is er geen mijn_account:
+   dan is iedereen eigenaar, precies zoals vroeger, en zijn Personeel en Logboek er niet. Verbergen is geen afscherming (alle tabellen
+   zeggen nog "ingelogd mag alles"); dat staat ook op de pagina Personeel. */
+function alsPersoneel(){ return MIJN_ROL !== "eigenaar"; }
+let rolGelezen = false;
+/* een account van personeel heeft altijd zo'n adres (de Edge Function personeel maakt het, de medewerker kan het niet kiezen) */
+const isPersoneelMail = m => /^personeel-[0-9a-f]{32}@fincakayu\.com$/i.test(String(m || ""));
+async function bepaalRol(){
+  let r = null, mail = "";
+  try { const { data:{ session } } = await db.auth.getSession(); MIJN_UID = session && session.user ? session.user.id : ""; mail = (session && session.user && session.user.email) || ""; } catch(e){}
+  /* review 2 (27-11): niet langer dan 5 seconden wachten (slecht bereik), dan zoals hieronder */
+  const vraag = (async () => { try { const { data, error } = await db.rpc("mijn_account"); return error ? null : data; } catch(e){ return null; } })();
+  const data = await Promise.race([vraag, new Promise(z => setTimeout(() => z(null), 5000))]);
+  if(data && typeof data === "object" && typeof data.rol === "string") r = data;
+  if(r){ rolGelezen = true; ROLLEN_BEKEND = true; MIJN_ROL = ["eigenaar", "personeel", "uit", "onbekend"].includes(r.rol) ? r.rol : "onbekend"; MIJN_NAAM = typeof r.naam === "string" ? r.naam : ""; }
+  /* review 2 (27-11): geen antwoord en een adres van personeel: altijd als personeel (nooit de app van de eigenaar), ook als het antwoord
+     eerder wel kwam */
+  else if(isPersoneelMail(mail)){ ROLLEN_BEKEND = true; if(MIJN_ROL === "eigenaar") MIJN_ROL = "personeel"; }
+  /* geen antwoord: oude database (geen mijn_account) of geen bereik. Wie al eens gelezen is, houdt zijn stand; anders zoals vroeger
+     (eigenaar). Dat is alleen wat de app laat zien: MyTourist, personeel en het logboek controleren zelf wie er belt. */
+  else if(!rolGelezen){ ROLLEN_BEKEND = false; MIJN_ROL = "eigenaar"; MIJN_NAAM = ""; }
+  document.documentElement.classList.toggle("alspersoneel", alsPersoneel());
+  document.documentElement.classList.toggle("rollen", ROLLEN_BEKEND && !alsPersoneel());
+  const w = document.getElementById("meerWie"); if(w) w.textContent = alsPersoneel() ? `Ingelogd als ${MIJN_NAAM || "medewerker"}` : "";
+  try { window.dispatchEvent(new Event("khstijl")); } catch(e){} /* de samengevatte Meer (Google-stijl) opnieuw opbouwen met wat nu zichtbaar is */
+  return MIJN_ROL;
+}
+async function toegangIngetrokken(rol){
+  try { await db.auth.signOut({ scope:"local" }); } catch(e){}
+  location.replace(location.pathname + (rol === "onbekend" ? "?ingetrokken=2" : "?ingetrokken=1"));
+}
+const NIET_VOOR_PERSONEEL = "Dit doen Bart of Loes: alleen zij kunnen dit (het gaat via MyTourist of over geld).";
+/* de link van een medewerker (#personeel=<code>): één keer, 24 uur. De Edge Function personeel geeft een inlogsleutel voor alleen dat
+   account; de app logt daarmee in. De code gaat meteen uit het adres (niet in de geschiedenis of op het beginscherm). */
+async function startPersoneelLink(code){
+  history.replaceState(null, "", location.pathname);
+  toon("login");
+  const meld = t => { document.getElementById("lErr").textContent = t; };
+  if(TESTVERSIE || PROEF || !db.functions){ meld("Inloggen met de link van een medewerker kan alleen in de echte app."); return; }
+  if(!/^[0-9A-Za-z]{22}$/.test(code)){ meld("Deze link werkt niet. Vraag Bart of Loes om een nieuwe link."); return; }
+  const { data:{ session } } = await db.auth.getSession();
+  if(session){
+    if(!confirm(`Op deze telefoon is al iemand ingelogd (${(session.user && session.user.email) || "een ander account"}). Met deze link log je in als medewerker; dat account is dan hier uitgelogd. Doorgaan?`)){ verberg("login"); return naarApp_(); }
+    try { await db.auth.signOut({ scope:"local" }); } catch(e){}
+  }
+  meld("Bezig met inloggen…");
+  let r; try { r = await db.functions.invoke("personeel", { body:{ actie:"inloggen", code } }); } catch(e){ r = { error:e }; }
+  const d = r && r.data;
+  if(!d || !d.ok || typeof d.token_hash !== "string"){ meld("Deze link werkt niet (meer). Een link werkt één keer en 24 uur lang. Vraag Bart of Loes om een nieuwe link."); return; }
+  let v = await db.auth.verifyOtp({ token_hash: d.token_hash, type: d.type === "email" ? "email" : "magiclink" });
+  if(v.error && d.type !== "email") v = await db.auth.verifyOtp({ token_hash: d.token_hash, type: "email" });
+  if(v.error){ meld("Inloggen lukte niet. Vraag Bart of Loes om een nieuwe link."); return; }
+  meld(""); await naarApp_(true);
+}
+async function personeelFunctie(body){
+  if(!db.functions) return { fout: TESTVERSIE ? "Op de testsite kan dit niet (er wordt niets opgeslagen)." : "Niet beschikbaar in deze versie." };
+  try { const r = await db.functions.invoke("personeel", { body });
+    if(r.data && r.data.fout) return { fout: r.data.fout };
+    if(r.error){ let m = r.error.message || String(r.error); try { const j = await r.error.context.json(); if(j && j.fout) m = j.fout; } catch(e){} return { fout: m }; }
+    return r.data || { fout: "geen antwoord" };
+  } catch(e){ return { fout: String(e && e.message || e) }; }
+}
+const peTijd = t => { if(!t) return ""; const d = new Date(t); if(isNaN(d)) return ""; const dag = iso(d), vandaag = iso(new Date()), g = new Date(); g.setDate(g.getDate() - 1);
+  return `${dag === vandaag ? "vandaag" : dag === iso(g) ? "gisteren" : DG[d.getDay()].slice(0, 2) + " " + kort(dag)} ${d.toTimeString().slice(0, 5)}`; };
+const peLinkUrl = code => location.origin + MAP + "#personeel=" + encodeURIComponent(code);
+let peRijen = [], peBezig = false;
+function peMeld(t, soort){ const m = document.getElementById("peMelding"); m.textContent = t; m.className = "ib-melding" + (soort ? " " + soort : ""); }
+function peToonLink(naam, code, tot){
+  const bak = document.getElementById("peLink"), url = peLinkUrl(code);
+  const tekst = `Hoi ${naam}, dit is jouw link voor de app van Finca KaYu. Open hem op je eigen telefoon; hij werkt één keer, tot ${peTijd(tot)}. Daarna blijf je ingelogd.\n${url}`;
+  bak.innerHTML = `<b>Link voor ${vrij(naam)}</b><p class="cf-klein" style="margin:4px 0 8px">Werkt één keer, op één telefoon, tot ${vrij(peTijd(tot))}. Daarna blijft ${vrij(naam)} ingelogd tot je ${vrij(naam)} uitzet.</p>` +
+    `<div class="pe-knoppen" style="padding:0"><a class="ib-knop" href="https://wa.me/?text=${encodeURIComponent(tekst)}" target="_blank" rel="noopener">WhatsApp</a><button type="button" class="ib-knop licht" id="peKopie">Kopiëren</button></div>`;
+  bak.hidden = false;
+  document.getElementById("peKopie").onclick = async () => { const ok = await kopieer(tekst); peMeld(ok ? "Gekopieerd." : "Kopiëren lukte niet.", ok ? "goed" : "fout"); };
+  bak.scrollIntoView({ block:"nearest" });
+}
+function peTekenNiet(){
+  document.getElementById("peNiet").innerHTML = [["Cijfers, maandoverzicht en alles onder Geld", "Verborgen"], ["Instellingen en de code bij openen", "Verborgen"],
+    ["Prijzen, uurtarief en bedrag voor de was", "Verborgen"], ["Betaalverzoek sturen en geld op Binnen zetten", "Alleen jullie"],
+    ["Kamer dichtzetten, kamerboeking, andere kamer en eerder vertrek van een kamergast (MyTourist)", "Alleen jullie"], ["Personeel en Logboek", "Alleen jullie"]]
+    .map(([a, b]) => `<div class="pe-niet"><span>${a}</span><em>${b}</em></div>`).join("");
+}
+async function peHaal(){
+  const { data, error } = await db.from("personeel").select("id,user_id,naam,rol,actief,code_tot,gemaakt,ingetrokken_op").eq("rol", "personeel").order("gemaakt");
+  if(error){ peRijen = null; peMeld("De lijst kon niet worden geladen (" + error.message + ").", "fout"); return; }
+  peRijen = data || [];
+  const ids = peRijen.map(x => x.user_id).filter(Boolean), laatst = {};
+  if(ids.length){ const { data: lb } = await db.from("logboek").select("wie,tijd").in("wie", ids).order("tijd", { ascending:false }).limit(500);
+    (lb || []).forEach(x => { if(x.wie && !laatst[x.wie]) laatst[x.wie] = x.tijd; }); }
+  peRijen.forEach(x => x.laatst = laatst[x.user_id] || null);
+}
+function peTeken(){
+  const bak = document.getElementById("peLijst");
+  if(peRijen === null){ bak.innerHTML = ""; bak.hidden = true; return; }
+  bak.hidden = !peRijen.length;
+  const nu = new Date().toISOString();
+  bak.innerHTML = peRijen.map(x => {
+    const sub = !x.actief ? `Uit sinds ${kort(iso(new Date(x.ingetrokken_op || x.gemaakt)))}; kan de app niet openen` : x.laatst ? `Laatst actief: ${peTijd(x.laatst)}`
+      : x.code_tot && x.code_tot > nu ? `Link nog niet gebruikt, werkt tot ${peTijd(x.code_tot)}` : "Nog niet ingelogd; maak een nieuwe link";
+    return `<div class="pe-blok"><div class="pe-rij"><span><b>${vrij(x.naam)}</b><small>${vrij(sub)}</small></span>` +
+      `<span class="pe-aanuit"><em>${x.actief ? "Aan" : "Uit"}</em><button type="button" class="pe-sch" role="switch" aria-checked="${x.actief ? "true" : "false"}" aria-label="Toegang van ${vrij(x.naam)}" data-pewissel="${vrij(x.id)}"></button></span></div>` +
+      (x.actief ? `<div class="pe-knoppen"><button type="button" class="ib-knop licht" data-penieuw="${vrij(x.id)}">Nieuwe link</button></div>` : "") + `</div>`;
+  }).join("");
+  bak.querySelectorAll("[data-penieuw]").forEach(k => k.onclick = () => peNieuweLink(k.dataset.penieuw));
+  bak.querySelectorAll("[data-pewissel]").forEach(k => k.onclick = () => { const x = (peRijen || []).find(y => y.id === k.dataset.pewissel); if(x) (x.actief ? peIntrekken : peAanzetten)(x.id); });
+}
+async function openPersoneel(){
+  if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return; }
+  const d = document.getElementById("personeelDlg");
+  document.getElementById("peLink").hidden = true; document.getElementById("peNieuw").hidden = true; document.getElementById("peToevoegen").hidden = false;
+  peMeld(""); peTekenNiet(); document.getElementById("peLijst").innerHTML = `<p class="cf-klein" style="padding:10px 12px">Laden…</p>`;
+  if(!d.open) d.showModal();
+  await peHaal(); peTeken();
+}
+document.getElementById("peDicht").onclick = () => document.getElementById("personeelDlg").close();
+document.getElementById("peToevoegen").onclick = () => { document.getElementById("peNieuw").hidden = false; document.getElementById("peToevoegen").hidden = true; document.getElementById("peNaam").value = ""; document.getElementById("peNaam").focus(); };
+document.getElementById("peMaak").onclick = async () => {
+  if(peBezig) return;
+  const naam = document.getElementById("peNaam").value.trim();
+  if(!naam){ peMeld("Vul een naam in.", "fout"); return; }
+  if(naam.length > 60 || /[<>]/.test(naam)){ peMeld("Een naam van hooguit 60 tekens, zonder < of >.", "fout"); return; }
+  if((peRijen || []).some(x => x.actief && x.naam.toLowerCase() === naam.toLowerCase()) && !confirm(`Er is al een medewerker die ${naam} heet. Toch een tweede maken?`)) return;
+  peBezig = true; peMeld("Bezig…"); wachtAan("Medewerker maken…");
+  let r; try { r = await personeelFunctie({ actie:"maak", naam }); } finally { wachtUit(); peBezig = false; }
+  if(r.fout){ peMeld("Dat lukte niet: " + r.fout, "fout"); return; }
+  peMeld(""); document.getElementById("peNieuw").hidden = true; document.getElementById("peToevoegen").hidden = false;
+  await peHaal(); peTeken(); peToonLink(r.naam || naam, r.code, r.tot);
+};
+async function peNieuweLink(id){
+  if(peBezig) return; const x = (peRijen || []).find(y => y.id === id); if(!x) return;
+  if(!confirm(`Nieuwe link voor ${x.naam}? Een eerdere link die nog niet gebruikt is, werkt dan niet meer. Is ${x.naam} al ingelogd, dan blijft dat zo.`)) return;
+  peBezig = true; peMeld("Bezig…");
+  let r; try { r = await personeelFunctie({ actie:"nieuwe_link", id }); } finally { peBezig = false; }
+  if(r.fout){ peMeld("Dat lukte niet: " + r.fout, "fout"); return; }
+  peMeld(""); await peHaal(); peTeken(); peToonLink(x.naam, r.code, r.tot);
+}
+async function peIntrekken(id){
+  if(peBezig) return; const x = (peRijen || []).find(y => y.id === id); if(!x) return;
+  if(!confirm(`${x.naam} uitzetten? ${x.naam} kan de app dan niet meer openen. Wat ${x.naam} deed, blijft in het logboek staan. Weer aanzetten kan altijd.`)) return;
+  peBezig = true; peMeld("Bezig…");
+  let r; try { r = await personeelFunctie({ actie:"intrekken", id }); } finally { peBezig = false; }
+  if(r.fout){ peMeld("Dat lukte niet: " + r.fout, "fout"); return; }
+  document.getElementById("peLink").hidden = true;
+  peMeld(`${x.naam} staat uit en kan de app niet meer openen.`, "goed"); await peHaal(); peTeken();
+}
+/* 27-11-2026 c (Bart: "aan en uit kunnen zetten"): weer aan; de functie haalt de blokkade weg en geeft meteen een nieuwe link */
+async function peAanzetten(id){
+  if(peBezig) return; const x = (peRijen || []).find(y => y.id === id); if(!x) return;
+  /* review 27-11: na Aan kan een telefoon waarop de medewerker eerder ingelogd was, ook weer werken (de blokkade haalt sessies niet weg) */
+  if(!confirm(`${x.naam} weer aanzetten? Je krijgt meteen een nieuwe link om naar ${x.naam} te sturen. Let op: een telefoon waarop ${x.naam} eerder ingelogd was, kan dan ook weer werken. Was die telefoon kwijt? Laat ${x.naam} dan uit en maak een nieuwe medewerker.`)) return;
+  peBezig = true; peMeld("Bezig…");
+  let r; try { r = await personeelFunctie({ actie:"aanzetten", id }); } finally { peBezig = false; }
+  if(r.fout){ peMeld("Dat lukte niet: " + r.fout, "fout"); await peHaal(); peTeken(); return; }
+  peMeld(`${x.naam} staat weer aan. Stuur de link hieronder.`, "goed"); await peHaal(); peTeken(); peToonLink(x.naam, r.code, r.tot);
+}
+
+/* Logboek (alleen Bart en Loes): wie wat wanneer deed, met wat het was en wat het werd. Terugzetten alleen voor eenvoudige vinkjes en
+   uitchecken (en alleen als het sindsdien niet nog eens veranderde); de rest corrigeer je zelf, met de oude waarde ernaast. */
+const LB_TABEL = { boekingen:"boeking", kamer_vinkjes:"kamergast", consumpties:"rekening", bonnen:"afrekening", ontbijt:"ontbijt", broodjes:"broodjes",
+  checkin_status:"check-in", gast_links:"gastenlink", uitgaven:"kosten", inkoop_bonnen:"inkoopbon", kosten:"kosten per maand", vaste_lasten:"vaste lasten",
+  poets_dagen:"poetsplanning", poets_uren:"poetsuren", aanvragen:"aanvraag", aanmeldingen:"aanmelding", aankondigingen:"aankondiging", instellingen:"instelling",
+  kamer_dicht:"kamer dicht", eigen_plekken:"eigen plek", producten:"product", taken:"taak", boodschappen:"boodschap", camper_aanvragen:"aanvraaglink",
+  rad:"rad", tips:"tip", gast_teksten:"teksten voor gasten", personeel:"personeel",
+  checkin_personen:"gegevens bij de check-in", poets_links:"poetslink", gast_fotos:"foto van een gast", info_fotos:"foto bij de info", kluis:"kluis" };
+const LB_VELD = { uitgecheckt:"Uitgecheckt", betaald:"Betaald", verblijf_betaald:"Verblijf betaald", afspraken_betaald:"Afspraken betaald", paspoort:"Paspoort",
+  bericht:"Bericht", welkom:"Welkomstbericht", bedankt:"Bedankt", schoon:"Schoon", naam:"Naam", plek:"Plek", aankomst:"Aankomst", vertrek:"Vertrek", personen:"Personen",
+  telefoon:"Telefoon", aantal:"Aantal", prijs:"Prijs", totaal:"Totaal", contant:"Contant", tikkie:"Per bank of verzoek",
+  tikkie_binnen:"Geld binnen", status:"Status", bedrag:"Bedrag", betaald_met:"Betaald met", categorie:"Soort", omschrijving:"Omschrijving", waarde:"Waarde",
+  stroom_dagen:"Stroom", eerder_uit:"Eerder weg", borg_ontvangen:"Borg ontvangen", borg_terug:"Borg terug", al_contant:"Al contant", overzicht_gestuurd:"Overzicht gestuurd",
+  verzoek_nodig:"Betaalverzoek nodig", rekening:"Rekening", betaalverzoek:"Betaalverzoek", code:"Code", actief:"Actief", gast:"Gast", kamer:"Kamer", datum:"Datum", volw:"Volwassenen", kind:"Kinderen" };
+/* terugzetten mag alleen bij deze velden (een gewijzigde regel met alleen deze velden) */
+/* review 2 (27-11): betaald niet: de bon blijft dan staan, de gast staat weer open en kan dubbel worden afgerekend */
+const LB_TERUG = { boekingen:{ pk:"id", velden:["uitgecheckt", "paspoort", "bericht", "betaalverzoek", "bedankt", "overzicht_gestuurd"] },
+  kamer_vinkjes:{ pk:"nr", velden:["uitgecheckt", "paspoort", "bericht", "welkom", "bedankt", "schoon", "borg_ontvangen", "borg_terug", "link_gedeeld", "overzicht_gestuurd"] } };
+const lbWaarde = v => {
+  if(v === null || v === undefined || v === "") return "leeg";
+  if(v === true) return "ja"; if(v === false) return "nee";
+  if(typeof v === "string" && /^\d{4}-\d\d-\d\dT/.test(v)) return peTijd(v) || v;
+  if(typeof v === "string" && /^\d{4}-\d\d-\d\d$/.test(v)) return kort(v);
+  if(typeof v === "number") return String(v).replace(".", ",");
+  const t = typeof v === "string" ? v : JSON.stringify(v); return t.length > 90 ? t.slice(0, 88) + "…" : t;
+};
+const lbWie = r => r.rol === "gast" ? "Gast" : r.rol === "systeem" ? "Automatisch" : (r.wie_naam || (r.rol === "eigenaar" ? "Bart of Loes" : "?"));
+function lbZin(r){
+  const w = r.nieuw || r.oud || {}, o = r.onderwerp ? ` (${r.onderwerp})` : "", t = LB_TABEL[r.tabel] || r.tabel;
+  const sleutels = Object.keys(r.actie === "gewijzigd" ? (r.nieuw || {}) : {});
+  if(r.rol === "systeem") return `${r.actie === "nieuw" ? "maakte" : r.actie === "weg" ? "haalde weg" : "wijzigde"}: ${t}${r.sleutel ? " " + r.sleutel : ""}`;
+  if(r.tabel === "bonnen" && r.actie === "nieuw") return `rekende af${o}: ${eur(Number(w.totaal || 0))}` + ([Number(w.contant) ? `${eur(Number(w.contant))} contant` : "", Number(w.tikkie) ? `${eur(Number(w.tikkie))} per ${w.rekening ? rekNaam(w.rekening) : "bank of verzoek"}` : ""].filter(Boolean).map(x => " · " + x).join(""));
+  if(r.tabel === "uitgaven" && r.actie === "nieuw") return `zette kosten ${kostCatNaam(w.categorie)} ${eur(Number(w.bedrag || 0))}${w.betaald_met ? ` (${w.betaald_met})` : ""}${w.omschrijving ? ": " + w.omschrijving : ""}`;
+  if(r.tabel === "consumpties" && r.actie !== "gewijzigd") return `${r.actie === "nieuw" ? "zette" : "haalde weg"}: ${w.aantal || 1}× ${w.naam || "?"}${o}`;
+  if((r.tabel === "boekingen" || r.tabel === "kamer_vinkjes") && sleutels.includes("uitgecheckt")) return `${r.nieuw.uitgecheckt ? "checkte uit" : "draaide het uitchecken terug"}${o}`;
+  if(r.tabel === "checkin_status" && sleutels.includes("status")) return `zette de check-in op ${r.nieuw.status}${r.sleutel ? " (" + r.sleutel + ")" : ""}`;
+  if(r.tabel === "instellingen") return `${r.actie === "weg" ? "haalde instelling weg" : "wijzigde instelling"} ${r.sleutel || ""}`;
+  if(r.actie === "nieuw") return `maakte ${t}${o}`;
+  if(r.actie === "weg") return `haalde weg: ${t}${o}`;
+  return `wijzigde ${t}${o}: ${sleutels.map(k => LB_VELD[k] || k).join(", ")}`;
+}
+function lbDetail(r){
+  const regels = [];
+  if(!r.nieuw && !r.oud) regels.push(r.rol === "systeem" ? "Gedaan door een vaste taak of koppeling (SES, MyTourist, opruimen); de inhoud staat bewust niet in het logboek." : "Geen details.");
+  else if(r.actie === "gewijzigd") Object.keys(r.nieuw || {}).forEach(k => regels.push(`${vrij(LB_VELD[k] || k)}: ${vrij(lbWaarde((r.oud || {})[k]))} → ${vrij(lbWaarde(r.nieuw[k]))}`));
+  else Object.entries(r.nieuw || r.oud).filter(([, v]) => v !== null && v !== "" && !(Array.isArray(v) && !v.length)).forEach(([k, v]) => regels.push(`${vrij(LB_VELD[k] || k)}: ${vrij(lbWaarde(v))}`));
+  const t = LB_TERUG[r.tabel], kan = r.actie === "gewijzigd" && t && r.sleutel && Object.keys(r.nieuw || {}).length && Object.keys(r.nieuw).every(k => t.velden.includes(k));
+  return `<div class="lb-detail">${regels.map(x => `<div>${x}</div>`).join("")}${kan ? `<div class="pe-knoppen" style="padding:6px 0 0"><button type="button" class="ib-knop licht" data-lbterug="${vrij(r.id)}">Terugzetten</button></div>` : ""}</div>`;
+}
+let lbFilter = "vandaag", lbRijen = [], lbOpen = new Set(), lbKeuze = "";
+function lbKiesOpties(){
+  const sel = document.getElementById("lbKies"), vandaag = iso(new Date()), van = iso(new Date(Date.now() - 14 * 864e5)), tot = iso(new Date(Date.now() + 2 * 864e5));
+  let opties = [];
+  if(lbFilter === "gast"){
+    boekingen.filter(b => b.uit >= van && b.in <= tot && !DEMO(b.id)).forEach(b => opties.push([String(b.id), `${b.naam} · ${b.plek} · ${kort(b.in)}`, b.in]));
+    kamers.filter(k => k.uit >= van && k.in <= tot).forEach(k => opties.push([String(k.nr), `${kNaam(k) || "Naam onbekend"} · ${k.kamer === "Complete Finca" ? "Hele finca" : k.kamer} · ${kort(k.in)}`, k.in]));
+    opties.sort((a, b) => String(b[2]).localeCompare(String(a[2])));
+  } else if(lbFilter === "wie") opties = (lbWieLijst || []).map(x => [x.user_id, `${x.naam}${x.rol === "eigenaar" ? "" : " (personeel)"}`]);
+  sel.innerHTML = `<option value="">Kies…</option>` + opties.map(o => `<option value="${vrij(o[0])}"${o[0] === lbKeuze ? " selected" : ""}>${vrij(o[1])}</option>`).join("");
+  document.getElementById("lbKiesLabel").textContent = lbFilter === "gast" ? "Gast (van de laatste twee weken)" : "Wie";
+  document.getElementById("lbKiesVeld").hidden = !(lbFilter === "gast" || lbFilter === "wie");
+  void vandaag;
+}
+let lbWieLijst = null;
+async function lbHaal(){
+  const bak = document.getElementById("lbLijst"); bak.innerHTML = `<p class="cf-klein">Laden…</p>`;
+  const begin = d => { const x = new Date(); x.setDate(x.getDate() - d); x.setHours(0, 0, 0, 0); return x.toISOString(); };
+  let q = db.from("logboek").select("*");
+  if(lbFilter === "vandaag") q = q.gte("tijd", begin(0));
+  else if(lbFilter === "gisteren") q = q.gte("tijd", begin(1)).lt("tijd", begin(0));
+  else if(!lbKeuze){ lbRijen = []; bak.innerHTML = `<p class="cf-klein">${lbFilter === "gast" ? "Kies een gast." : "Kies wie."}</p>`; return; }
+  else if(lbFilter === "gast") q = q.eq("koppel", lbKeuze);
+  else q = q.eq("wie", lbKeuze).gte("tijd", begin(30));
+  const { data, error } = await q.order("tijd", { ascending:false }).limit(500);
+  if(error){ bak.innerHTML = `<p class="cf-klein">Het logboek kon niet worden geladen (${vrij(error.message)}).</p>`; return; }
+  lbRijen = data || []; lbTeken();
+}
+function lbTeken(){
+  const bak = document.getElementById("lbLijst"), vandaag = iso(new Date());
+  if(!lbRijen.length){ bak.innerHTML = `<p class="cf-klein">Nog niets${lbFilter === "vandaag" ? " vandaag" : lbFilter === "gisteren" ? " gisteren" : ""}.</p>`; return; }
+  bak.innerHTML = lbRijen.map(r => { const d = new Date(r.tijd), tijd = iso(d) === vandaag ? d.toTimeString().slice(0, 5) : peTijd(r.tijd);
+    return `<div class="lb-rij" data-lbrij="${vrij(r.id)}"><div class="lb-kop"><span>${vrij(tijd)}</span><b>${vrij(lbWie(r))}</b></div><div class="lb-zin">${vrij(lbZin(r))}</div>${lbOpen.has(String(r.id)) ? lbDetail(r) : ""}</div>`; }).join("") +
+    (lbRijen.length >= 500 ? `<p class="cf-klein">Alleen de laatste 500 regels.</p>` : "");
+  bak.querySelectorAll("[data-lbrij]").forEach(el => el.onclick = e => { if(e.target.closest("[data-lbterug]")) return; const id = el.dataset.lbrij; if(lbOpen.has(id)) lbOpen.delete(id); else lbOpen.add(id); lbTeken(); });
+  bak.querySelectorAll("[data-lbterug]").forEach(k => k.onclick = () => lbTerug(k.dataset.lbterug));
+}
+async function lbTerug(id){
+  const r = lbRijen.find(x => String(x.id) === String(id)), t = r && LB_TERUG[r.tabel]; if(!r || !t) return;
+  const velden = Object.keys(r.nieuw || {});
+  if(!velden.length || !velden.every(k => t.velden.includes(k))) return;
+  if(!confirm(`Terugzetten naar wat het was?\n${velden.map(k => `${LB_VELD[k] || k}: ${lbWaarde(r.nieuw[k])} → ${lbWaarde((r.oud || {})[k])}`).join("\n")}`)) return;
+  let q = db.from(r.tabel).update(Object.fromEntries(velden.map(k => [k, (r.oud || {})[k] ?? null]))).eq(t.pk, r.sleutel);
+  velden.forEach(k => { const v = r.nieuw[k]; q = v === null ? q.is(k, null) : q.eq(k, v); }); /* alleen als het sindsdien niet nog eens veranderde */
+  const { data, error } = await q.select(t.pk);
+  if(error){ alert("Terugzetten lukte niet: " + error.message); return; }
+  if(!data || !data.length){ alert("Niet teruggezet: het is intussen al weer gewijzigd. Kijk in het profiel van de gast hoe het nu staat."); return; }
+  await haal(); await lbHaal();
+}
+async function openLogboek(){
+  if(alsPersoneel()){ alert(NIET_VOOR_PERSONEEL); return; }
+  const d = document.getElementById("logboekDlg"); lbOpen = new Set();
+  if(!lbWieLijst){ const { data } = await db.from("personeel").select("user_id,naam,rol").order("rol").order("naam"); lbWieLijst = (data || []).filter(x => x.user_id); }
+  document.querySelectorAll("#lbFilter [data-lbf]").forEach(b => b.classList.toggle("aan", b.dataset.lbf === lbFilter));
+  lbKiesOpties(); if(!d.open) d.showModal(); await lbHaal();
+}
+document.getElementById("lbFilter").onclick = e => { const b = e.target.closest("[data-lbf]"); if(!b) return; lbFilter = b.dataset.lbf; lbKeuze = ""; lbOpen = new Set();
+  document.querySelectorAll("#lbFilter [data-lbf]").forEach(x => x.classList.toggle("aan", x === b)); lbKiesOpties(); lbHaal(); };
+document.getElementById("lbKies").onchange = e => { lbKeuze = e.target.value; lbOpen = new Set(); lbHaal(); };
+document.getElementById("lbDicht").onclick = () => document.getElementById("logboekDlg").close();
+
+/* Kosten invoeren (personeel): Poets, Tuinman, Boodschappen of Anders, een bedrag, contant of bank, een foto mag. Gaat in uitgaven (zoals
+   Uitgave vastleggen), dus telt mee in Cijfers. De medewerker ziet alleen wat hij vandaag zelf invoerde. */
+const KI_WAT = { schoonmaak:"Poets", tuinonderhoud:"Tuinman", inkopen:"Boodschappen", overig:"Anders" };
+let kiWat = null, kiMet = null, kiFoto = null, kiBezig = false, kiId = null;
+function kiMeld(t, soort){ const m = document.getElementById("kiMelding"); m.textContent = t; m.className = "ib-melding" + (soort ? " " + soort : ""); }
+function kiZet(){
+  document.querySelectorAll("#kiWat [data-kiwat]").forEach(b => b.classList.toggle("aan", b.dataset.kiwat === kiWat));
+  document.querySelectorAll("#kiMet [data-kimet]").forEach(b => b.classList.toggle("aan", b.dataset.kimet === kiMet));
+  document.getElementById("kiPoetsUitleg").hidden = kiWat !== "schoonmaak";
+  document.getElementById("kiFotos").innerHTML = kiFoto ? `<div class="ib-foto">${kiFoto.url ? `<img src="${kiFoto.url}" alt="Bonnetje">` : "Foto"}<button type="button" id="kiFotoWeg" aria-label="Foto weghalen">×</button></div>` : "";
+  const w = document.getElementById("kiFotoWeg"); if(w) w.onclick = () => { if(kiFoto && kiFoto.url) URL.revokeObjectURL(kiFoto.url); kiFoto = null; kiZet(); };
+  document.getElementById("kiBewaar").disabled = kiBezig;
+}
+async function kiHaalLijst(){
+  const bak = document.getElementById("kiLijst"), b = new Date(); b.setHours(0, 0, 0, 0);
+  if(!MIJN_UID){ bak.innerHTML = ""; return; }
+  const { data, error } = await db.from("uitgaven").select("id,categorie,bedrag,betaald_met,omschrijving,gemaakt").eq("gemaakt_door", MIJN_UID).gte("gemaakt", b.toISOString()).order("gemaakt", { ascending:false });
+  if(error){ bak.innerHTML = `<p class="cf-klein">Kon niet worden geladen (${vrij(error.message)}).</p>`; return; }
+  bak.innerHTML = (data || []).length ? data.map(x => `<div class="ki-rij"><span>${vrij(KI_WAT[x.categorie] || kostCatNaam(x.categorie))}${x.betaald_met ? " · " + vrij(x.betaald_met) : ""}${x.omschrijving && x.omschrijving !== KI_WAT[x.categorie] ? " · " + vrij(x.omschrijving) : ""}<small style="display:block;color:var(--muted)">${new Date(x.gemaakt).toTimeString().slice(0, 5)}</small></span><b>${eur(Number(x.bedrag))}</b></div>`).join("")
+    : `<p class="cf-klein">Vandaag nog niets.</p>`;
+}
+function openKostenIn(){
+  const d = document.getElementById("kostenInDlg");
+  if(!kiBezig){ kiMeld(""); }
+  kiZet(); if(!d.open) d.showModal(); kiHaalLijst();
+}
+document.getElementById("kiWat").onclick = e => { const b = e.target.closest("[data-kiwat]"); if(b && !kiBezig){ kiWat = b.dataset.kiwat; kiMeld(""); kiZet(); } };
+document.getElementById("kiMet").onclick = e => { const b = e.target.closest("[data-kimet]"); if(b && !kiBezig){ kiMet = b.dataset.kimet; kiMeld(""); kiZet(); } };
+document.getElementById("kiFoto").onchange = async e => { const f0 = e.target.files && e.target.files[0]; e.target.value = ""; if(!f0) return;
+  if(!/^image\//.test(f0.type)){ kiMeld("Alleen een foto.", "fout"); return; }
+  const f = await ibVerklein(f0); if(f.size > IB_MAX){ kiMeld("Die foto is te groot (meer dan 10 MB).", "fout"); return; }
+  if(kiFoto && kiFoto.url) URL.revokeObjectURL(kiFoto.url);
+  kiFoto = { f, url: /^image\/(jpeg|png|webp)$/.test(f.type) ? URL.createObjectURL(f) : "" }; kiZet(); };
+document.getElementById("kiBewaar").onclick = async () => {
+  if(kiBezig) return;
+  if(!kiWat){ kiMeld("Kies eerst wat het is: Poets, Tuinman, Boodschappen of Anders.", "fout"); return; }
+  const bt = document.getElementById("kiBedrag").value.replace(/€|eur(o)?/gi, "").trim(), bedrag = !bt ? null : /\d\s+\d/.test(bt) ? NaN : bedragLees(bt);
+  if(!bt){ kiMeld("Vul het bedrag in, bijvoorbeeld 48,00.", "fout"); return; }
+  if(!isFinite(bedrag) || bedrag <= 0){ kiMeld("Dat bedrag kan ik niet lezen. Schrijf het als 48,00.", "fout"); return; }
+  if(bedrag >= 1e5){ kiMeld("Dat bedrag is te groot. Klopt het?", "fout"); return; }
+  if(!kiMet){ kiMeld("Kies hoe het betaald is: Contant of Bank.", "fout"); return; }
+  kiBezig = true; kiZet(); kiMeld("Bezig met opslaan…");
+  const id = kiId || (kiId = crypto.randomUUID()), datum = iso(new Date()), paden = [];
+  const extra = document.getElementById("kiOmschr").value.trim().slice(0, 80);
+  try {
+    if(kiFoto){ const pad = `${datum.slice(0, 4)}/${datum.slice(5, 7)}/${id}-1.${IB_SOORT[kiFoto.f.type] || "jpg"}`;
+      const { error } = await ibOpslag().upload(pad, kiFoto.f, { contentType: kiFoto.f.type, upsert: false }); if(error) throw new Error(error.message); paden.push(pad); }
+    const { error } = await db.from("uitgaven").insert({ id, datum, bedrag: Math.round(bedrag * 100) / 100, omschrijving: extra ? `${KI_WAT[kiWat]}: ${extra}` : KI_WAT[kiWat],
+      categorie: kiWat, soort: "bedrijf", btw: null, betaald_met: kiMet, fotos: paden });
+    if(error) throw new Error(error.message);
+  } catch(e){
+    let staatEr = false; try { const { data: er } = await db.from("uitgaven").select("id").eq("id", id); staatEr = (er || []).some(x => x && x.id === id); } catch(_){}
+    if(!staatEr){ if(paden.length) try { await ibOpslag().remove(paden); } catch(_){} kiBezig = false; kiZet(); kiMeld(`Opslaan lukte niet (${e.message || e}). Alles staat er nog; probeer het zo nog eens.`, "fout"); return; }
+  }
+  kiBezig = false; kiId = null; const wat = KI_WAT[kiWat];
+  if(kiFoto && kiFoto.url) URL.revokeObjectURL(kiFoto.url); kiFoto = null; kiWat = null; kiMet = null;
+  document.getElementById("kiBedrag").value = ""; document.getElementById("kiOmschr").value = "";
+  kiZet(); kiMeld(`${wat} ${eur(Math.round(bedrag * 100) / 100)} opgeslagen ✓`, "goed"); kiHaalLijst();
+};
+document.getElementById("kiDicht").onclick = () => document.getElementById("kostenInDlg").close();
+/* voor de tests (tests/personeel.mjs): de afrekenvraag, de betaaltekst en de MyTourist-poort van buiten bereikbaar */
+window.__personeel = { betaalwijzeVraag, betaalTekst, mtSchrijven, kamerNieuwOpen, rol: () => MIJN_ROL, vertrektEerder, kamerDichtVenster, openPoetsUren, meerToon, checkoutNaarMyTourist };
+/* Betaalverzoek gestuurd (Berichten): Bart of Loes kiest waarmee (Tikkie of Mollie); daarna staat het als "nog niet binnen" in Let op */
+async function verzoekVerstuurd(id){
+  if(alsPersoneel()) return;
+  const x = bonnen.find(y => String(y.id) === String(id)); if(!x) return;
+  const aan = bankKnoppen().filter(k => k.aan);
+  let rek = null;
+  if(aan.length){ rek = await kiesUit(`Betaalverzoek van ${eur(Number(x.tikkie))} aan ${x.gast || x.plek}: waarmee gestuurd?`, aan.map(k => ({ waarde:k.code, label:k.naam, uitleg:k.rek || "" })), null); if(!rek) return; }
+  const { error } = await db.from("bonnen").update({ verzoek_nodig: false, ...(rek ? { rekening: rek } : {}) }).eq("id", x.id);
+  if(error){ alert("Opslaan mislukt: " + error.message); return; }
+  x.verzoek_nodig = false; if(rek) x.rekening = rek; tekenNu(); tekenInboxTeller(); if(document.getElementById("inbox").open) tekenInbox();
+}
 start();
 </script>
 </body>
